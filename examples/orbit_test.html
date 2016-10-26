@@ -1,0 +1,124 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>My first three.js App</title>
+    <style>
+        body { margin: 0; }
+        canvas { width: 100%; height: 100% }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    <script src="three.js/build/three.js"></script>
+    <script src="three.js/examples/Detector.js"></script>
+    <script src="three.js/examples/js/libs/stats.min.js"></script>
+    <script src="three.js/examples/js/libs/dat.gui.min.js"></script>
+    <script src="three.js/examples/js/controls/OrbitControls.js"></script>
+    <!--<script src="three.js/examples/js/SkyShader.js"></script> -->
+    <script>
+        //Here the three.js functions
+        
+        var container, stats;
+        var camera, controls, scene, renderer;
+        var sky, sunSphere;
+       
+        init();
+        render();
+        
+        function initSky(){
+                /*
+                // Add Sky Mesh
+				sky = new THREE.Sky();
+				scene.add( sky.mesh );
+
+				// Add Sun Helper
+				sunSphere = new THREE.Mesh(
+					new THREE.SphereBufferGeometry( 20000, 16, 8 ),
+					new THREE.MeshBasicMaterial( { color: 0xffffff } )
+				);
+				sunSphere.position.y = - 700000;
+				sunSphere.visible = false;
+				scene.add( sunSphere );
+                */
+                 
+                //skybox
+                var imagePrefix = "textures/stars_for_skybox2/";
+                var directions  = ["xpos", "xneg", "ypos", "yneg", "zpos", "zneg"];
+                var imageSuffix = ".png";
+
+                var materialArray = [];
+                for (var i = 0; i < 6; i++)
+                    materialArray.push( new THREE.MeshBasicMaterial({
+                        map: THREE.ImageUtils.loadTexture( imagePrefix + directions[i] + imageSuffix ),
+                        side: THREE.BackSide
+                    }));
+
+                var skyGeometry = new THREE.CubeGeometry( 100000, 100000, 100000 );
+                var skyMaterial = new THREE.MeshFaceMaterial( materialArray );
+                var skyBox = new THREE.Mesh( skyGeometry, skyMaterial );
+                skyBox.rotation.x += Math.PI / 2;
+                scene.add( skyBox );
+        }
+        
+        function init(){
+            scene = new THREE.Scene();
+            //scene.fog = new THREE.FogExp2( 0xcccccc, 0.002 );
+            camera = new THREE.PerspectiveCamera(60 , window.innerWidth/window.innerHeight , 0.01, 500000);
+            camera.position.set( 0, 100, 2000 );
+            
+            var helper = new THREE.GridHelper( 10000, 20, 0xffffff, 0xffffff );
+            scene.add( helper );
+            
+            //controls
+            controls = new THREE.OrbitControls( camera );
+            controls.addEventListener( 'change', render );
+            
+            //skybox
+            initSky();
+            
+            //skybox
+            /*var imagePrefix = "textures/stars_for_skybox/";
+            var directions  = ["xpos", "xneg", "ypos", "yneg", "zpos", "zneg"];
+            var imageSuffix = ".png";
+
+            var materialArray = [];
+            for (var i = 0; i < 6; i++)
+                materialArray.push( new THREE.MeshBasicMaterial({
+                    map: THREE.ImageUtils.loadTexture( imagePrefix + directions[i] + imageSuffix ),
+                    side: THREE.BackSide
+                }));
+            
+            var skyGeometry = new THREE.CubeGeometry( 100000, 100000, 100000 );
+            var skyMaterial = new THREE.MeshFaceMaterial( materialArray );
+            var skyBox = new THREE.Mesh( skyGeometry, skyMaterial );
+            skyBox.rotation.x += Math.PI / 2;
+            scene.add( skyBox );*/
+            
+            
+            //renderer
+            renderer = new THREE.WebGLRenderer();
+            renderer.setPixelRatio( window.devicePixelRatio );
+            renderer.setSize( window.innerWidth, window.innerHeight );
+            container = document.getElementById( 'container' );
+            container.appendChild( renderer.domElement );
+            stats = new Stats();
+            container.appendChild( stats.dom );
+            window.addEventListener( 'resize', onWindowResize, false );
+        }
+        
+    function onWindowResize() {
+
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize( window.innerWidth, window.innerHeight );
+            render();
+    }
+        
+	function render() {
+            renderer.render( scene, camera );
+            stats.update();
+	}
+    
+    </script>
+</body>    
+</html>
