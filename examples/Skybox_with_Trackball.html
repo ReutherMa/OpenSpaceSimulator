@@ -25,16 +25,16 @@
              //we need a scene and a camera
             scene = new THREE.Scene();
             //scene.fog = new THREE.FogExp2( 0xcccccc, 0.002 );
-            camera = new THREE.PerspectiveCamera(60 , window.innerWidth/window.innerHeight , 0.1, 5000);
+            camera = new THREE.PerspectiveCamera(60 , window.innerWidth/window.innerHeight , 0.01, 500000);
            
             //controls
             controls = new THREE.TrackballControls(camera);
-            controls.zoomSpeed = 0.2;
+            controls.zoomSpeed = 0.02;
             controls.panSpeed = 0.8;
             controls.noZoom = false;
             controls.noPan = false;
             controls.staticMoving = true;
-            controls.dynamicDampingFactor = 0.3;
+            controls.dynamicDampingFactor = 100.3;
             controls.keys = [ 65, 83, 68 ];
             controls.addEventListener('change', render);
             
@@ -50,7 +50,7 @@
                     side: THREE.BackSide
                 }));
             
-            var skyGeometry = new THREE.CubeGeometry( 500, 500, 500 );
+            var skyGeometry = new THREE.CubeGeometry( 100000, 100000, 100000 );
             var skyMaterial = new THREE.MeshFaceMaterial( materialArray );
             var skyBox = new THREE.Mesh( skyGeometry, skyMaterial );
             skyBox.rotation.x += Math.PI / 2;
