@@ -1,0 +1,195 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Planets App</title>
+    <style>
+        body { margin: 0; }
+        canvas { width: 100%; height: 100% }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    <script src="three.js/build/three.js"></script>
+    <script src="three.js/examples/js/controls/TrackballControls.js"></script>
+    <script src="three.js/examples/Detector.js"></script>
+    <script src="three.js/examples/js/libs/stats.min.js"></script>
+    <script>
+        //Here the three.js functions
+        
+        var container, stats;
+        var camera, controls, scene, renderer;
+        
+        //const AU = 149600.000
+        //const RADIUS_SUN = 695.508
+        const BLOW_FACTOR = 300
+        
+        init();
+        animate();
+        
+        function init(){
+            
+            
+             //we need a scene and a camera
+            scene = new THREE.Scene();
+            //scene.fog = new THREE.FogExp2( 0xcccccc, 0.002 );
+            camera = new THREE.PerspectiveCamera(60 , window.innerWidth/window.innerHeight , 0.01, 500000);
+           
+            //controls
+            controls = new THREE.TrackballControls(camera);
+            controls.zoomSpeed = 0.02;
+            controls.panSpeed = 0.8;
+            controls.noZoom = false;
+            controls.noPan = false;
+            controls.staticMoving = true;
+            controls.dynamicDampingFactor = 0.03;
+            controls.keys = [ 65, 83, 68 ];
+            controls.addEventListener('change', render);
+            
+            //skybox
+            var imagePrefix = "textures/stars_for_skybox/";
+            var directions  = ["xpos", "xneg", "ypos", "yneg", "zpos", "zneg"];
+            var imageSuffix = ".png";
+
+            var materialArray = [];
+            for (var i = 0; i < 6; i++)
+                materialArray.push( new THREE.MeshBasicMaterial({
+                    map: THREE.ImageUtils.loadTexture( imagePrefix + directions[i] + imageSuffix ),
+                    side: THREE.BackSide
+                }));
+            
+            var skyGeometry = new THREE.CubeGeometry( 500000, 500000, 500000 );
+            var skyMaterial = new THREE.MeshFaceMaterial( materialArray );
+            var skyBox = new THREE.Mesh( skyGeometry, skyMaterial );
+            skyBox.rotation.x += Math.PI / 2;
+            scene.add( skyBox );
+            
+            //stars and planets
+            
+            //sun -> radius = 695.700 km
+            var geometry = new THREE.SphereGeometry( 695.7, 90, 90 );
+            var material = new THREE.MeshBasicMaterial( {color: 0xe77500} );
+            var sphere = new THREE.Mesh( geometry, material );
+            scene.add( sphere );
+            
+            
+            //merkur -> radius = 2.440 km
+            var geometry = new THREE.SphereGeometry( 2.440*BLOW_FACTOR, 90, 90);
+            var material = new THREE.MeshBasicMaterial( {color: 0xeb4949} );
+            var sphere = new THREE.Mesh( geometry, material );  
+            //distance sun -> merkur = 57.910.000 km
+            sphere.position.x = (57910+695.7);
+            scene.add( sphere );
+            
+            
+            //venus -> radius = 6.052
+            var geometry = new THREE.SphereGeometry( 6.052*BLOW_FACTOR, 90, 90);
+            var material = new THREE.MeshBasicMaterial( {color: 0xff0000} );
+            var sphere = new THREE.Mesh( geometry, material ); 
+            //distance sun -> venus 108.200.000 km
+            sphere.position.x = 108200+695.7;
+            scene.add( sphere );
+            
+            
+            //earth -> radius = 6.371 km
+            var geometry = new THREE.SphereGeometry( 6.371*BLOW_FACTOR, 90, 90);
+            var material = new THREE.MeshBasicMaterial( {color: 0x4169e1} );
+            var sphere = new THREE.Mesh( geometry, material );
+            //distance sun -> earth: 149.600.000 km
+            sphere.position.x = 149600+695.7;
+            scene.add( sphere );
+            
+            //circle around earth
+            //var geometry = new THREE.CircleGeometry( 10000, 90 );
+            //var material = new THREE.MeshBasicMaterial( { color: 0xffffff } );
+            //var circle = new THREE.Mesh( geometry, material );
+            //circle.position.x = 149600+695.7;
+            //scene.add( circle );
+            
+            //moon -> radius 1.737 km
+            var geometry = new THREE.SphereGeometry( 1.737*BLOW_FACTOR, 90, 90);
+            var material = new THREE.MeshBasicMaterial( {color: 0xeeeeee} );
+            var sphere = new THREE.Mesh( geometry, material ); 
+            //distance moon -> earth = 385.000 km
+            sphere.position.x = (149600+0.385)+695.7;
+            scene.add( sphere );
+               
+            
+            //mars -> radius = 3.390 km
+            var geometry = new THREE.SphereGeometry( 3.390*BLOW_FACTOR, 90, 90);
+            var material = new THREE.MeshBasicMaterial( {color: 0x7d4123} );
+            var sphere = new THREE.Mesh( geometry, material ); 
+            //distance sun -> mars 227.900.000 km
+            sphere.position.x = 227900+695.7;
+            scene.add( sphere );
+            
+            
+            //camera out of origin
+            camera.position.x = 0;
+            camera.position.y = 0;
+            camera.position.z = 1500;
+            
+            //add coordinates
+            axes = buildAxes( 500000 );
+	        scene.add( axes );
+            
+            
+            //renderer
+            renderer = new THREE.WebGLRenderer( { antialias: false } );
+            //renderer.setClearColor( scene.fog.color );
+            renderer.setPixelRatio( window.devicePixelRatio );
+            renderer.setSize( window.innerWidth, window.innerHeight );
+            container = document.getElementById( 'container' );
+            container.appendChild( renderer.domElement );
+            stats = new Stats();
+            container.appendChild( stats.dom );
+            
+            render();
+    }
+        
+        function animate() {
+            requestAnimationFrame( animate );
+            controls.update();
+	}
+
+	function render() {
+            renderer.render( scene, camera );
+            stats.update();
+	}
+        
+    function buildAxes( length ) {
+        var axes = new THREE.Object3D();
+
+        axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( length, 0, 0 ), 0xFF0000, false ) ); // +X
+        axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( -length, 0, 0 ), 0xFF0000, true) ); // -X
+        axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, length, 0 ), 0x00FF00, false ) ); // +Y
+        axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, -length, 0 ), 0x00FF00, true ) ); // -Y
+        axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 0, length ), 0x0000FF, false ) ); // +Z
+        axes.add( buildAxis( new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 0, -length ), 0x0000FF, true ) ); // -Z
+
+        return axes;
+
+    }
+        
+    function buildAxis( src, dst, colorHex, dashed ) {
+		var geom = new THREE.Geometry(),
+			mat; 
+
+		if(dashed) {
+			mat = new THREE.LineDashedMaterial({ linewidth: 100, color: colorHex, dashSize: 100, gapSize: 100 });
+		} else {
+			mat = new THREE.LineBasicMaterial({ linewidth: 100, color: colorHex });
+		}
+
+		geom.vertices.push( src.clone() );
+		geom.vertices.push( dst.clone() );
+		geom.computeLineDistances(); // This one is SUPER important, otherwise dashed lines will appear as simple plain lines
+
+		var axis = new THREE.Line( geom, mat, THREE.LinePieces );
+
+		return axis;
+
+	}
+    
+    </script>
+</body>    
+</html>
