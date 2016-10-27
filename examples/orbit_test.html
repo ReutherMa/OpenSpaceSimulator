@@ -73,6 +73,10 @@
             controls = new THREE.OrbitControls( camera );
             controls.addEventListener( 'change', render );
             
+            //axisHelper
+            var axisHelper = new THREE.AxisHelper( 500000 );
+            scene.add( axisHelper );
+            
             //skybox
             initSky();
             
