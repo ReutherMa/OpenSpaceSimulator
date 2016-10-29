@@ -15,12 +15,26 @@
     <script src="three.js/examples/js/libs/dat.gui.min.js"></script>
     <script src="three.js/examples/js/controls/OrbitControls.js"></script>
     <!--<script src="three.js/examples/js/SkyShader.js"></script> -->
+    
+    <script type="x-shader/x-vertex" id="vertexshader">
+        void main(){
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+    </script>
+    
+    <script type="x-shader/x-fragment" id="fragmentshader">
+        void main(){
+            gl_FragColor = vec4(1.0,0.5,0.0,1.0);
+        }
+    </script>
+    
     <script>
         //Here the three.js functions
         
         var container, stats;
         var camera, controls, scene, renderer;
         var sky, sunSphere;
+        var bulbLight, bulbMat;
        
         init();
         render();
@@ -42,7 +56,7 @@
                 */
                  
                 //skybox
-                var imagePrefix = "textures/stars_for_skybox2/";
+                var imagePrefix = "textures/stars_for_skybox/";
                 var directions  = ["xpos", "xneg", "ypos", "yneg", "zpos", "zneg"];
                 var imageSuffix = ".png";
 
@@ -69,6 +83,28 @@
             var helper = new THREE.GridHelper( 10000, 20, 0xffffff, 0xffffff );
             scene.add( helper );
             
+            
+            //light_shader
+            var fShader = document.getElementById("fragmentshader");
+            var vShader = document.getElementById("vertexshader");
+            var shaderMaterial = new THREE.ShaderMaterial({
+                vertexShader: vShader.textContent,
+                fragmentShader: fShader.textContent
+            });
+            var geometry = new THREE.SphereGeometry( 1000, 32, 32 );
+            var sphere = new THREE.Mesh( geometry, shaderMaterial );
+            sphere.position.set(2000,0,0);
+            scene.add( sphere );
+            
+            var geometry = new THREE.SphereGeometry( 1000, 32, 32 );
+            var material = new THREE.MeshBasicMaterial({ 
+                color: 0xffffff,
+                wireframe: false
+            });
+            var ball = new THREE.Mesh( geometry, material );
+            ball.position.set(0,0,0);
+            scene.add( ball );
+            
             //controls
             controls = new THREE.OrbitControls( camera );
             controls.addEventListener( 'change', render );
@@ -78,26 +114,7 @@
             scene.add( axisHelper );
             
             //skybox
-            initSky();
-            
-            //skybox
-            /*var imagePrefix = "textures/stars_for_skybox/";
-            var directions  = ["xpos", "xneg", "ypos", "yneg", "zpos", "zneg"];
-            var imageSuffix = ".png";
-
-            var materialArray = [];
-            for (var i = 0; i < 6; i++)
-                materialArray.push( new THREE.MeshBasicMaterial({
-                    map: THREE.ImageUtils.loadTexture( imagePrefix + directions[i] + imageSuffix ),
-                    side: THREE.BackSide
-                }));
-            
-            var skyGeometry = new THREE.CubeGeometry( 100000, 100000, 100000 );
-            var skyMaterial = new THREE.MeshFaceMaterial( materialArray );
-            var skyBox = new THREE.Mesh( skyGeometry, skyMaterial );
-            skyBox.rotation.x += Math.PI / 2;
-            scene.add( skyBox );*/
-            
+            initSky(); 
             
             //renderer
             renderer = new THREE.WebGLRenderer();
