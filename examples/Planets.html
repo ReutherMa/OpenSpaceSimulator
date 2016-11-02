@@ -34,7 +34,7 @@
              //we need a scene and a camera
             scene = new THREE.Scene();
             //scene.fog = new THREE.FogExp2( 0xcccccc, 0.002 );
-            camera = new THREE.PerspectiveCamera(60 , window.innerWidth/window.innerHeight , 0.01, 500000);
+            camera = new THREE.PerspectiveCamera(60 , window.innerWidth/window.innerHeight , 0.01, 5000000);
            
             //controls
             controls = new THREE.TrackballControls(camera);
@@ -48,7 +48,7 @@
             controls.addEventListener('change', render);
             
             //skybox
-            var imagePrefix = "textures/stars_for_skybox/";
+            var imagePrefix = "textures/stars_for_skybox3/";
             var directions  = ["xpos", "xneg", "ypos", "yneg", "zpos", "zneg"];
             var imageSuffix = ".png";
 
@@ -59,7 +59,7 @@
                     side: THREE.BackSide
                 }));
             
-            var skyGeometry = new THREE.CubeGeometry( 500000, 500000, 500000 );
+            var skyGeometry = new THREE.CubeGeometry( 5000000, 5000000, 5000000 );
             var skyMaterial = new THREE.MeshFaceMaterial( materialArray );
             var skyBox = new THREE.Mesh( skyGeometry, skyMaterial );
             skyBox.rotation.x += Math.PI / 2;
@@ -75,7 +75,7 @@
             
             
             //merkur -> radius = 2.440 km
-            var geometry = new THREE.SphereGeometry( 2.440*BLOW_FACTOR, 90, 90);
+            var geometry = new THREE.SphereGeometry( 2.440, 90, 90);
             var material = new THREE.MeshBasicMaterial( {color: 0xeb4949} );
             sphere_mercury = new THREE.Mesh( geometry, material );  
             //distance sun -> merkur = 57.910.000 km
@@ -83,22 +83,44 @@
             scene.add( sphere_mercury );
             
             
+            //ring around mercury
+            var geometry = new THREE.RingGeometry((57910+695.7)-5, (57910+695.7)+5, 200, 200, 0, Math.PI * 2);
+            var ring_mercury = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({color: 0xffffff, wireframe: false}));
+            ring_mercury.position.set(0, 0, 0);
+            scene.add(ring_mercury);
+            
+            //cirle around mercury
+            //var circleGeometry = new THREE.CircleGeometry( 57910+695.7, 60 );              
+            //var circle = new THREE.Mesh( circleGeometry, material );
+            //scene.add( circle );
+            
+            
             //venus -> radius = 6.052
-            var geometry = new THREE.SphereGeometry( 6.052*BLOW_FACTOR, 90, 90);
+            var geometry = new THREE.SphereGeometry( 6.052, 90, 90);
             var material = new THREE.MeshBasicMaterial( {color: 0xff0000} );
             var sphere_venus = new THREE.Mesh( geometry, material ); 
             //distance sun -> venus 108.200.000 km
             sphere_venus.position.x = 108200+695.7;
             scene.add( sphere_venus );
             
+            var geometry = new THREE.RingGeometry((108200+695.7)-5, (108200+695.7)+5, 200, 200, 0, Math.PI * 2);
+            var ring_venus = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({color: 0xffffff, wireframe: false}));
+            ring_venus.position.set(0, 0, 0);
+            scene.add(ring_venus);
+            
             
             //earth -> radius = 6.371 km
-            var geometry = new THREE.SphereGeometry( 6.371*BLOW_FACTOR, 90, 90);
+            var geometry = new THREE.SphereGeometry( 6.371, 90, 90);
             var material = new THREE.MeshBasicMaterial( {color: 0x4169e1} );
             var sphere_earth = new THREE.Mesh( geometry, material );
             //distance sun -> earth: 149.600.000 km
             sphere_earth.position.x = 149600+695.7;
             scene.add( sphere_earth );
+            
+            var geometry = new THREE.RingGeometry((149600+695.7)-5, (149600+695.7)+5, 200, 200, 0, Math.PI * 2);
+            var ring_earth = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({color: 0xffffff, wireframe: false}));
+            ring_earth.position.set(0, 0, 0);
+            scene.add(ring_earth);
             
             //circle around earth
             //var geometry = new THREE.CircleGeometry( 10000, 90 );
@@ -108,7 +130,7 @@
             //scene.add( circle );
             
             //moon -> radius 1.737 km
-            var geometry = new THREE.SphereGeometry( 1.737*BLOW_FACTOR, 90, 90);
+            var geometry = new THREE.SphereGeometry( 1.737, 90, 90);
             var material = new THREE.MeshBasicMaterial( {color: 0xeeeeee} );
             var sphere_moon = new THREE.Mesh( geometry, material ); 
             //distance moon -> earth = 385.000 km
@@ -117,12 +139,18 @@
                
             
             //mars -> radius = 3.390 km
-            var geometry = new THREE.SphereGeometry( 3.390*BLOW_FACTOR, 90, 90);
+            var geometry = new THREE.SphereGeometry( 3.390, 90, 90);
             var material = new THREE.MeshBasicMaterial( {color: 0x7d4123} );
             var sphere_mars = new THREE.Mesh( geometry, material ); 
             //distance sun -> mars 227.900.000 km
             sphere_mars.position.x = 227900+695.7;
             scene.add( sphere_mars );
+            
+            var geometry = new THREE.RingGeometry((227900+695.7)-5, (227900+695.7)+5, 200, 200, 0, Math.PI * 2);
+            var ring_mars = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({color: 0xffffff, wireframe: false}));
+            ring_mars.position.set(0, 0, 0);
+            scene.add(ring_mars);
+            
             
             
             //camera out of origin
@@ -131,7 +159,7 @@
             camera.position.z = 1500;
             
             //add coordinates
-            axes = buildAxes( 500000 );
+            axes = buildAxes( 5000000 );
 	        scene.add( axes );
             
             
@@ -158,8 +186,7 @@
             renderer.render( scene, camera );
         
             //rotation mercury
-            sphere_mercury.position.x += 100;
-        
+            //sphere_mercury.position.x += 100;
         
             stats.update();
 	}
