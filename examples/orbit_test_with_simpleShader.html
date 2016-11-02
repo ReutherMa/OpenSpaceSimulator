@@ -35,9 +35,11 @@
         var camera, controls, scene, renderer;
         var sky, sunSphere;
         var bulbLight, bulbMat;
+        var sphere_mercury;
+        var t = 0;
        
         init();
-        render();
+       // render();
         
         function initSky(){
                 /*
@@ -92,9 +94,9 @@
                 fragmentShader: fShader.textContent
             });
             var geometry = new THREE.SphereGeometry( 1000, 32, 32 );
-            var sphere = new THREE.Mesh( geometry, shaderMaterial );
-            sphere.position.set(2000,0,0);
-            scene.add( sphere );
+            sphere_mercury = new THREE.Mesh( geometry, shaderMaterial );
+            sphere_mercury.position.set(2000,0,0);
+            scene.add( sphere_mercury );
             
             var geometry = new THREE.SphereGeometry( 1000, 32, 32 );
             var material = new THREE.MeshBasicMaterial({ 
@@ -107,7 +109,7 @@
             
             //controls
             controls = new THREE.OrbitControls( camera );
-            controls.addEventListener( 'change', render );
+            //controls.addEventListener( 'change', render );
             
             //axisHelper
             var axisHelper = new THREE.AxisHelper( 500000 );
@@ -125,6 +127,7 @@
             stats = new Stats();
             container.appendChild( stats.dom );
             window.addEventListener( 'resize', onWindowResize, false );
+            
         }
         
     function onWindowResize() {
@@ -136,9 +139,20 @@
     }
         
 	function render() {
-            renderer.render( scene, camera );
+            requestAnimationFrame( render );
+            
+            //rotation mercury
+            //sphere_mercury.position.x += 1;
+            t += 0.1;          
+            sphere_mercury.rotation.y += 0.03;
+
+            sphere_mercury.position.x = 2000 + 2000*Math.cos(t) + 0;
+            sphere_mercury.position.z = 2000*Math.sin(t) + 0;
+        
             stats.update();
+            renderer.render( scene, camera );
 	}
+render();        
     
     </script>
 </body>    
