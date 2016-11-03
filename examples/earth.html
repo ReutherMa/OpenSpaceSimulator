@@ -1,0 +1,204 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>My first three.js App</title>
+    <style>
+        body { margin: 0; }
+        canvas { width: 100%; height: 100% }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    <script src="three.js/build/three.js"></script>
+    <script src="three.js/examples/Detector.js"></script>
+    <script src="three.js/examples/js/libs/stats.min.js"></script>
+    <script src="three.js/examples/js/libs/dat.gui.min.js"></script>
+    <script src="three.js/examples/js/controls/OrbitControls.js"></script>
+    <!--<script src="three.js/examples/js/SkyShader.js"></script> -->
+    
+    <script type="x-shader/x-vertex" id="vertexshader">
+        void main(){
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+    </script>
+    
+    <script type="x-shader/x-fragment" id="fragmentshader">
+        void main(){
+            gl_FragColor = vec4(1.0,0.5,0.0,1.0);
+        }
+    </script>
+    
+    <script>
+        //Here the three.js functions
+        
+        var container, stats;
+        var camera, controls, scene, renderer;
+        var sky, sunSphere;
+        var bulbLight, bulbMat;
+        var sphere_mercury;
+        var time = 0;
+        
+        var mesh_earth, clodMesh;
+       
+        init();
+       // render();
+        
+        function initSky(){
+                /*
+                // Add Sky Mesh
+				sky = new THREE.Sky();
+				scene.add( sky.mesh );
+
+				// Add Sun Helper
+				sunSphere = new THREE.Mesh(
+					new THREE.SphereBufferGeometry( 20000, 16, 8 ),
+					new THREE.MeshBasicMaterial( { color: 0xffffff } )
+				);
+				sunSphere.position.y = - 700000;
+				sunSphere.visible = false;
+				scene.add( sunSphere );
+                */
+                 
+                //skybox
+                var imagePrefix = "textures/stars_for_skybox2/";
+                var directions  = ["xpos", "xneg", "ypos", "yneg", "zpos", "zneg"];
+                var imageSuffix = ".png";
+
+                var materialArray = [];
+                for (var i = 0; i < 6; i++)
+                    materialArray.push( new THREE.MeshBasicMaterial({
+                        map: THREE.ImageUtils.loadTexture( imagePrefix + directions[i] + imageSuffix ),
+                        side: THREE.BackSide
+                    }));
+
+                var skyGeometry = new THREE.CubeGeometry( 100000, 100000, 100000 );
+                var skyMaterial = new THREE.MeshFaceMaterial( materialArray );
+                var skyBox = new THREE.Mesh( skyGeometry, skyMaterial );
+                skyBox.rotation.x += Math.PI / 2;
+                scene.add( skyBox );
+        }
+        
+        function init(){
+            scene = new THREE.Scene();
+            //scene.fog = new THREE.FogExp2( 0xcccccc, 0.002 );
+            camera = new THREE.PerspectiveCamera(60 , window.innerWidth/window.innerHeight , 0.01, 500000);
+            camera.position.set( 0, 100, 2000 );
+            
+            var light = new THREE.DirectionalLight( 0xffffff );
+            light.position.set( 0, 1, 1 ).normalize();
+            scene.add(light);
+            
+            var helper = new THREE.GridHelper( 10000, 20, 0xffffff, 0xffffff );
+            scene.add( helper );
+            
+            
+            //light_shader
+            var fShader = document.getElementById("fragmentshader");
+            var vShader = document.getElementById("vertexshader");
+            var shaderMaterial = new THREE.ShaderMaterial({
+                vertexShader: vShader.textContent,
+                fragmentShader: fShader.textContent
+            });
+            var geometry = new THREE.SphereGeometry( 1000, 32, 32 );
+            sphere_mercury = new THREE.Mesh( geometry, shaderMaterial );
+            sphere_mercury.position.set(2000,0,0);
+            scene.add( sphere_mercury );
+            
+/*            var geometry = new THREE.SphereGeometry( 1000, 32, 32 );
+            var material = new THREE.MeshBasicMaterial({ 
+                color: 0xffffff,
+                wireframe: false
+            });
+            var ball = new THREE.Mesh( geometry, material );
+            ball.position.set(0,0,0);
+            scene.add( ball );*/
+            
+            var geometry_earth = new THREE.SphereGeometry( 1000, 64, 64 );
+              
+            var material_earth = new THREE.MeshPhongMaterial();
+            
+            material_earth.map    = THREE.ImageUtils.loadTexture('textures/earth/earthmap_2.jpg');
+            
+            material_earth.bumpMap    = THREE.ImageUtils.loadTexture('textures/earth/earthbump_2.jpg');
+            material_earth.bumpScale = 3.0;
+            
+            material_earth.specularMap    = THREE.ImageUtils.loadTexture('textures/earth/earthspec_2.jpg');
+            material_earth.specular  = new THREE.Color(0x111111);
+            
+            var geometry_cloud   = new THREE.SphereGeometry(1008, 64, 64);
+            
+            //var canvasCloud = new THREE.ImageUtils.loadTexture('textures/earth/earthcloudmap.jpg');
+            
+            var material_cloud  = new THREE.MeshPhongMaterial({
+                map         : new THREE.ImageUtils.loadTexture('textures/earth/earthcloudmap.png'),
+                side        : THREE.DoubleSide,
+                opacity     : 0.8,
+                transparent : true,
+                depthWrite  : true,
+            });
+            cloudMesh = new THREE.Mesh(geometry_cloud, material_cloud);
+            //mesh_earth.add(cloudMesh);
+            scene.add(cloudMesh);
+            
+            
+            mesh_earth = new THREE.Mesh(geometry_earth,  material_earth);
+            mesh_earth.position.set = (0, 0, 0);
+            scene.add( mesh_earth );
+            
+            //controls
+            controls = new THREE.OrbitControls( camera );
+            //controls.addEventListener( 'change', render );
+            
+            //axisHelper
+            var axisHelper = new THREE.AxisHelper( 500000 );
+            scene.add( axisHelper );
+            
+            //skybox
+            initSky(); 
+            
+            //renderer
+            renderer = new THREE.WebGLRenderer();
+            renderer.setPixelRatio( window.devicePixelRatio );
+            renderer.setSize( window.innerWidth, window.innerHeight );
+            container = document.getElementById( 'container' );
+            container.appendChild( renderer.domElement );
+            stats = new Stats();
+            container.appendChild( stats.dom );
+            window.addEventListener( 'resize', onWindowResize, false );
+            
+        }
+        
+    function onWindowResize() {
+
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize( window.innerWidth, window.innerHeight );
+            render();
+    }
+        
+	function render() {
+            requestAnimationFrame( render );
+            
+            //rotation mercury
+            //sphere_mercury.position.x += 1;
+            time += 0.01;
+            
+            //rotation earth
+            mesh_earth.rotation.y += 0.0003;
+            cloudMesh.rotation.y += 0.0005;
+            cloudMesh.rotation.x += 0.0002;
+            
+        
+            sphere_mercury.rotation.y += 0.03;
+
+            sphere_mercury.position.x = 3000*Math.cos(time) + 0;
+            sphere_mercury.position.z = 5000*Math.sin(time) + 0;
+        
+            stats.update();
+            renderer.render( scene, camera );
+	}
+render();        
+    
+    </script>
+</body>    
+</html>
