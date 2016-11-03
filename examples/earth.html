@@ -38,7 +38,7 @@
         var sphere_mercury;
         var time = 0;
         
-        var mesh_earth, clodMesh;
+        var mesh_earth, clodMesh, mesh_moon, mesh_sun;
        
         init();
        // render();
@@ -71,7 +71,7 @@
                         side: THREE.BackSide
                     }));
 
-                var skyGeometry = new THREE.CubeGeometry( 100000, 100000, 100000 );
+                var skyGeometry = new THREE.CubeGeometry( 500000, 500000, 500000 );
                 var skyMaterial = new THREE.MeshFaceMaterial( materialArray );
                 var skyBox = new THREE.Mesh( skyGeometry, skyMaterial );
                 skyBox.rotation.x += Math.PI / 2;
@@ -82,14 +82,14 @@
             scene = new THREE.Scene();
             //scene.fog = new THREE.FogExp2( 0xcccccc, 0.002 );
             camera = new THREE.PerspectiveCamera(60 , window.innerWidth/window.innerHeight , 0.01, 500000);
-            camera.position.set( 0, 100, 2000 );
+            camera.position.set( 0, 100, 20000 );
             
             var light = new THREE.DirectionalLight( 0xffffff );
-            light.position.set( 0, 1, 1 ).normalize();
+            light.position.set( 0, 1, 0 );
             scene.add(light);
             
-            var helper = new THREE.GridHelper( 10000, 20, 0xffffff, 0xffffff );
-            scene.add( helper );
+            //var helper = new THREE.GridHelper( 10000, 20, 0xffffff, 0xffffff );
+            //scene.add( helper );
             
             
             //light_shader
@@ -99,10 +99,12 @@
                 vertexShader: vShader.textContent,
                 fragmentShader: fShader.textContent
             });
-            var geometry = new THREE.SphereGeometry( 1000, 32, 32 );
+            
+            //mercury
+/*            var geometry = new THREE.SphereGeometry( 1000, 32, 32 );
             sphere_mercury = new THREE.Mesh( geometry, shaderMaterial );
             sphere_mercury.position.set(2000,0,0);
-            scene.add( sphere_mercury );
+            scene.add( sphere_mercury );*/
             
 /*            var geometry = new THREE.SphereGeometry( 1000, 32, 32 );
             var material = new THREE.MeshBasicMaterial({ 
@@ -113,22 +115,26 @@
             ball.position.set(0,0,0);
             scene.add( ball );*/
             
-            var geometry_earth = new THREE.SphereGeometry( 1000, 64, 64 );
-              
+            //sun
+            var geometry_sun = new THREE.SphereGeometry( 10000, 64, 64 );
+            var material_sun = new THREE.MeshPhongMaterial();
+            material_sun.map    = THREE.ImageUtils.loadTexture('textures/sun/sun_map.jpg');
+            material_sun.bumpMap    = THREE.ImageUtils.loadTexture('textures/sun/sun_bump.jpg');
+            material_sun.bumpScale = 4.0;
+            mesh_sun = new THREE.Mesh(geometry_sun,  material_sun);
+            //mesh_sun.position.x = -50000;
+            scene.add( mesh_sun );
+            
+            //earth
+            var geometry_earth = new THREE.SphereGeometry( 1000, 64, 64 );   
             var material_earth = new THREE.MeshPhongMaterial();
-            
             material_earth.map    = THREE.ImageUtils.loadTexture('textures/earth/earthmap_2.jpg');
-            
             material_earth.bumpMap    = THREE.ImageUtils.loadTexture('textures/earth/earthbump_2.jpg');
             material_earth.bumpScale = 3.0;
-            
             material_earth.specularMap    = THREE.ImageUtils.loadTexture('textures/earth/earthspec_2.jpg');
-            material_earth.specular  = new THREE.Color(0x111111);
-            
-            var geometry_cloud   = new THREE.SphereGeometry(1008, 64, 64);
-            
-            //var canvasCloud = new THREE.ImageUtils.loadTexture('textures/earth/earthcloudmap.jpg');
-            
+            material_earth.specular  = new THREE.Color(0x111111);         
+            var geometry_cloud   = new THREE.SphereGeometry(1008, 64, 64);  
+            //var canvasCloud = new THREE.ImageUtils.loadTexture('textures/earth/earthcloudmap.jpg'); 
             var material_cloud  = new THREE.MeshPhongMaterial({
                 map         : new THREE.ImageUtils.loadTexture('textures/earth/earthcloudmap.png'),
                 side        : THREE.DoubleSide,
@@ -138,12 +144,24 @@
             });
             cloudMesh = new THREE.Mesh(geometry_cloud, material_cloud);
             //mesh_earth.add(cloudMesh);
+            cloudMesh.position.x = 23500;
             scene.add(cloudMesh);
             
             
             mesh_earth = new THREE.Mesh(geometry_earth,  material_earth);
-            mesh_earth.position.set = (0, 0, 0);
+            mesh_earth.position.x = 23500;
             scene.add( mesh_earth );
+            
+            //moon
+            var geometry_moon = new THREE.SphereGeometry( 100, 64, 64 );
+            var material_moon = new THREE.MeshPhongMaterial();
+            material_moon.map    = THREE.ImageUtils.loadTexture('textures/moon/moonmap2k.jpg');
+            material_moon.bumpMap    = THREE.ImageUtils.loadTexture('textures/earth/earthbump_2.jpg');
+            material_moon.bumpScale = 2.0;
+            mesh_moon = new THREE.Mesh(geometry_moon,  material_moon);
+            mesh_moon.position.x = 25000;
+            scene.add( mesh_moon );
+            
             
             //controls
             controls = new THREE.OrbitControls( camera );
@@ -160,6 +178,7 @@
             renderer = new THREE.WebGLRenderer();
             renderer.setPixelRatio( window.devicePixelRatio );
             renderer.setSize( window.innerWidth, window.innerHeight );
+            //renderer.setDepthTest(true);
             container = document.getElementById( 'container' );
             container.appendChild( renderer.domElement );
             stats = new Stats();
@@ -181,7 +200,7 @@
             
             //rotation mercury
             //sphere_mercury.position.x += 1;
-            time += 0.01;
+            time += 0.0003;
             
             //rotation earth
             mesh_earth.rotation.y += 0.0003;
@@ -189,13 +208,13 @@
             cloudMesh.rotation.x += 0.0002;
             
         
-            sphere_mercury.rotation.y += 0.03;
-
-            sphere_mercury.position.x = 3000*Math.cos(time) + 0;
-            sphere_mercury.position.z = 5000*Math.sin(time) + 0;
+            mesh_moon.rotation.y += 0.0003;
+            mesh_moon.position.x = -3000*Math.cos(time) + 25000;
+            mesh_moon.position.z = -5000*Math.sin(time) + 0;
         
             stats.update();
             renderer.render( scene, camera );
+        
 	}
 render();        
     
