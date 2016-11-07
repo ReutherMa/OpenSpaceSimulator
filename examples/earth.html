@@ -130,8 +130,7 @@
             cloudMesh = new THREE.Mesh(geometry_cloud, material_cloud);
             //mesh_earth.add(cloudMesh);
             cloudMesh.position.x = 23500;
-            scene.add(cloudMesh);
-            
+            scene.add(cloudMesh);       
             
             mesh_earth = new THREE.Mesh(geometry_earth,  material_earth);
             mesh_earth.position.x = 23500;
@@ -141,12 +140,11 @@
             var geometry_moon = new THREE.SphereGeometry( 100, 64, 64 );
             var material_moon = new THREE.MeshPhongMaterial();
             material_moon.map    = THREE.ImageUtils.loadTexture('textures/moon/moonmap2k.jpg');
-            material_moon.bumpMap    = THREE.ImageUtils.loadTexture('textures/earth/earthbump_2.jpg');
+            material_moon.bumpMap    = THREE.ImageUtils.loadTexture('textures/moon/moonbump.jpg');
             material_moon.bumpScale = 2.0;
             mesh_moon = new THREE.Mesh(geometry_moon,  material_moon);
             mesh_moon.position.x = 25000;
-            scene.add( mesh_moon );
-            
+            scene.add( mesh_moon );    
             
             //controls
             controls = new THREE.OrbitControls( camera );
