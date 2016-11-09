@@ -1,0 +1,46 @@
+{
+	"sun": {
+		"mass": 1.989e33,
+		"radius": 695508
+	},
+	"earth": {
+		"mass": 1.989e33,
+		"radius": 695.508
+	},
+	"mars": {
+		"mass": 1.989e33,
+		"radius": 695.508
+	},
+	"earth_moon": {
+		"mass": 1.989e33,
+		"radius": 695.508
+	},
+	"mercury": {
+		"mass": 1.989e33,
+		"radius": 695.508
+	},
+	"venus": {
+		"mass": 1.989e33,
+		"radius": 695.508
+	},
+	"jupiter": {
+		"mass": 1.989e33,
+		"radius": 695.508
+	},
+	"saturn": {
+		"mass": 1.989e33,
+		"radius": 695.508
+	},
+	"uranus": {
+		"mass": 1.989e33,
+		"radius": 695.508
+	},
+	"neptune": {
+		"mass": 1.989e33,
+		"radius": 695.508
+	},
+	"pluto": {
+		"mass": 1.989e33,
+		"radius": 695.508
+	}
+}
