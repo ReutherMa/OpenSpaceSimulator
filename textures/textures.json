@@ -1,0 +1,14 @@
+//List of all textures for Open Space
+
+{
+    "earth":    "earthmap_2.jpg",
+    "earth":    "earthbump_2.jpg",
+    "earth":    "earthcloudmap_2.png",
+    "earth":    "earthlights_2.jpg",
+    "mars":     "mars_bump.jpg",
+    "moon":     "moonmap2k.jpg",
+    "moon":     "moonbump.jpg",
+    "sun":      "sun_map.jpg",
+    "sun":      "sun_bump.jpg"
+}
+
