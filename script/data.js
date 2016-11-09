@@ -13,8 +13,7 @@ function loadData(url_var){
      var arr = $.map(data, function(el) { 
         //console.log(el);
         return el; 
-    });
-    console.log(el);
+    }); 
     
     //console.log(data);
     return data;
