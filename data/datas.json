@@ -1,0 +1,62 @@
+{
+	"sun": {
+		"mass": 1.989e33,
+		"radius": 695508e3
+	},
+    "mercury": {
+		"mass": 3.3010e26,
+		"radius": 2439.7e3,
+        "perihelion": 46e9,
+        "aphelia": 70e9
+	},
+    "venus": {
+		"mass": 4.8673e27,
+		"radius": 6051.8e3,
+        "perihelion": 107477e6,
+        "aphelia": 108939e6
+	},
+	"earth": {
+		"mass": 5.9722e27,
+		"radius": 6371.00e3,
+        "perihelion": 147095e6,
+        "aphelia": 151930e6,
+        "eququatorial inclination": 23.4393
+	},
+    "earth_moon": {
+		"mass": 7.3477e25,
+		"radius": 1737.5e3,
+        "perihelionToEarth": 2,
+        "apheliaToEarth":1
+        
+	},
+	"mars": {
+		"mass": 16.4169e26,
+		"radius": 3389.5e3,
+        "perihelion": 1,
+        "aphelia": 2
+	},
+	"jupiter": {
+		"mass": 1.8981e30,
+		"radius": 69911e3,
+        "perihelion": 1,
+        "aphelia": 2
+	},
+	"saturn": {
+		"mass": 5.6832e29,
+		"radius": 58232e3,
+        "perihelion": 1,
+        "aphelia": 2
+	},
+	"uranus": {
+		"mass": 8.6810e28,
+		"radius": 25362e3,
+        "perihelion": 1,
+        "aphelia": 2
+	},
+	"neptune": {
+		"mass": 1.0241e29,
+		"radius": 24622e3,
+        "perihelion": 1,
+        "aphelia": 2
+	}
+}

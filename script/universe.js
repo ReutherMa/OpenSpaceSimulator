@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 function buildUniverse() {
+=======
+function buildUniverse(data){
+>>>>>>> origin/master
     
     //Instant Vairables
     var universe = {};
@@ -20,11 +24,15 @@ function buildUniverse() {
             camera.position.set( 0, 100, 40000 );
             
             buildSkybox();
+<<<<<<< HEAD
         
         /*  var helper = new THREE.GridHelper( 10000, 20, 0xffffff, 0xffffff );
             scene.add( helper );
         */
         
+=======
+            console.log(data);
+>>>>>>> origin/master
             var light = new THREE.DirectionalLight( 0xffffff );
             light.position.set( 0, 1, 0 );
             scene.add(light);
