@@ -9,22 +9,13 @@ function loadData(url_var){
             data = output;
         }
     });
-    //console.log(data);
     
-    /*var arr = $.map(data, function(el) { 
+     var arr = $.map(data, function(el) { 
         //console.log(el);
         return el; 
-    });*/
+    });
+    console.log(el);
     
-    
-    var arr = [];
-    for (var prop in data) {
-        arr.push(data[prop]);
-    }
-    
-    
-    console.log(arr[0]);
-    
-    
+    //console.log(data);
     return data;
 }
