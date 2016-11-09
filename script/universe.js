@@ -20,7 +20,7 @@ function buildUniverse(data){
             camera.position.set( 0, 100, 40000 );
             
             buildSkybox();
-            console.log(data);
+            //console.log(data);
             var light = new THREE.DirectionalLight( 0xffffff );
             light.position.set( 0, 1, 0 );
             scene.add(light);
