@@ -36,8 +36,8 @@
     
     <script>
         //Here the three.js functions
-        var data = loadData("data/datas.json");
-        var universe = buildUniverse(data);
+        var universe = buildUniverse();
+        loadData("data/datas.json", universe);
         universe.render();
     </script>
 </body>    

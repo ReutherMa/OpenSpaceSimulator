@@ -1,4 +1,4 @@
-function buildUniverse(data){
+function buildUniverse(){
 
     
     //Instant Vairables
@@ -12,10 +12,10 @@ function buildUniverse(data){
     var mesh_earth, clodMesh, mesh_moon, mesh_sun;
     var segments = 64;
     
-    init();
+    universe.init = init;
     universe.render = render;
     
-    function init(){
+    function init(data){
             scene = new THREE.Scene();
             camera = new THREE.PerspectiveCamera(60 , window.innerWidth/window.innerHeight , 0.01, 1e27);
             camera.position.set( 0, 100, 40000 );
@@ -164,8 +164,12 @@ function buildUniverse(data){
             //sphere_mercury.position.x += 1;
             time += 0.0003;
         
-            stats.update();
-            renderer.render( scene, camera );
+            if (stats !== undefined) {
+                stats.update();
+            }
+            if (renderer !== undefined) {
+                renderer.render( scene, camera );
+            }
 	}
     
  return universe;

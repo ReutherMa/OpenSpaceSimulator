@@ -1,4 +1,4 @@
-function loadData(url_var){
+function loadData(url_var, universe){
     var data = {};
     
     $.ajax({
@@ -6,15 +6,15 @@ function loadData(url_var){
         async: false,
         dataType: 'json',
         success: function(output) {
-            data = output;
+            //console.log(data);
+            universe.init (output);
         }
     });
     
-     var arr = $.map(data, function(el) { 
+/*     var arr = $.map(data, function(el) { 
         //console.log(el);
         return el; 
-    }); 
+    }); */
     
-    //console.log(data);
-    return data;
+
 }
