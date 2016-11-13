@@ -1,4 +1,5 @@
 function buildUniverse(){
+
     
     //Instant Vairables
     var universe = {};
@@ -11,23 +12,25 @@ function buildUniverse(){
     var mesh_earth, clodMesh, mesh_moon, mesh_sun;
     var segments = 64;
     
-    init();
+    universe.init = init;
     universe.render = render;
     
-    function init(){
+    function init(data){
             scene = new THREE.Scene();
             camera = new THREE.PerspectiveCamera(60 , window.innerWidth/window.innerHeight , 0.01, 1e27);
             camera.position.set( 0, 100, 40000 );
             
             buildSkybox();
         
+        /*  var helper = new THREE.GridHelper( 10000, 20, 0xffffff, 0xffffff );
+            scene.add( helper );
+        */
+        
+            console.log(data);
+        
             var light = new THREE.DirectionalLight( 0xffffff );
             light.position.set( 0, 1, 0 );
             scene.add(light);
-            
-            //var helper = new THREE.GridHelper( 10000, 20, 0xffffff, 0xffffff );
-            //scene.add( helper );
-            
             
             //light_shader
             var fShader = document.getElementById("fragmentshader");
@@ -37,48 +40,39 @@ function buildUniverse(){
                 fragmentShader: fShader.textContent
             });
             
-    //point LOD (level of detail)    
-    var dotGeometry = new THREE.Geometry();
-    dotGeometry.vertices.push(new THREE.Vector3( 0, 0, 0));
-    var material = new THREE.PointsMaterial({color:0xffffff,size:10, sizeAttenuation: false});
-    var mesh = new THREE.Points(dotGeometry,  material);
-    mesh.position.x = 15000;
-    mesh.position.y = 1000;
-    scene.add( mesh );
+        /*  //point LOD (level of detail)    
+            var dotGeometry = new THREE.Geometry();
+            dotGeometry.vertices.push(new THREE.Vector3( 0, 0, 0));
+            var material = new THREE.PointsMaterial({color:0xffffff, size:10, sizeAttenuation:false});
+            var mesh = new THREE.Points(dotGeometry,  material);
+            mesh.position.x = 15000;
+            mesh.position.y = 1000;
+            scene.add( mesh );
+        */
 
             //sun
             var sun = new SpaceObject("Sun", 1000, 10000, {emissive: 0xffff80, color: 0x000000, specular: 0 } );
             sun.buildBody();
-            sun.setPosition(0,0,0);
+            sun.setPosition(0, 0, 0, 0);
             
             //earth
-            var earth = new SpaceObject("Earth", 1000, 1000, {color: 0x0000ff});
+            var earth = new SpaceObject("Earth", 1000, 1000, {color: 0x0099ff});
             earth.buildBody();
-            earth.setPosition(25000,0,0);
-            
-            //orbit line
-            var orbit_line_geometry = new THREE.CircleGeometry( 50000, 256 );
-            var orbit_line_material = new THREE.LineBasicMaterial( { color: 0xffff00 } );
-            var orbit_line = new THREE.Line( orbit_line_geometry, orbit_line_material );
-            orbit_line.rotation.x = Math.PI*.5;
-            scene.add( orbit_line );
+            earth.setPosition(25000, 0, 0, 23.4393);
+            earth.create_ellipse(0, 0, 25000, 30000);
         
             //moon
-            var geometry_moon = new THREE.SphereGeometry( 100, 64, 64 );
-            var material_moon = new THREE.MeshPhongMaterial();
-            material_moon.map    = THREE.ImageUtils.loadTexture('textures/moon/moonmap2k.jpg');
-            material_moon.bumpMap    = THREE.ImageUtils.loadTexture('textures/moon/moonbump.jpg');
-            material_moon.bumpScale = 2.0;
-            mesh_moon = new THREE.Mesh(geometry_moon,  material_moon);
-            mesh_moon.position.x = 25000;
-            scene.add( mesh_moon );    
+            var moon = new SpaceObject("Moon", 100, 100, {color: 0x999999});
+            moon.buildBody();
+            moon.setPosition(23000, 0, 0, 0);
+            moon.create_ellipse(25000, 0, 2000, 2000);   
             
             //controls
             controls = new THREE.OrbitControls( camera );
             //controls.addEventListener( 'change', render );
             
             //axisHelper
-            var axisHelper = new THREE.AxisHelper( 50000 );
+            var axisHelper = new THREE.AxisHelper( 1e26 );
             scene.add( axisHelper ); 
             
             //renderer
@@ -120,11 +114,13 @@ function buildUniverse(){
             render();
     }
     
+    //create a planet with mesh, position and orbit
     function SpaceObject(name, mass, radius, color){
         var mesh;
         this.name = name;
         this.mass = mass;
         this.radius = radius;
+        this.color = color;
         
         this.buildBody = function(){
             var geometry = new THREE.SphereGeometry( radius, segments, segments );
@@ -132,11 +128,33 @@ function buildUniverse(){
             mesh = new THREE.Mesh(geometry,  material);
             scene.add( mesh );
         }
-        this.setPosition = function(x,y,z){
+        
+        this.setPosition = function(x,y,z, equatorial_inclination){
             mesh.position.x = x;
             mesh.position.y = y;
             mesh.position.z = z;
+            mesh.rotation.z = equatorial_inclination * Math.PI / 180;          
         }
+        
+        this.create_ellipse = function(aX, aY, aphelion, perihelion){
+            var segments = 1000;
+            var curve = new THREE.EllipseCurve(      
+                aX,  aY,                // aX, aY
+                aphelion, perihelion,   // xRadius, yRadius
+                0,  2 * Math.PI,        // aStartAngle, aEndAngle
+                false,                  // aClockwise
+                0                       // aRotation
+            );
+            
+            var path = new THREE.Path( curve.getPoints( segments ) );
+            var path_geometry = path.createPointsGeometry( segments );
+            var path_material = new THREE.LineBasicMaterial( color );
+            
+            var ellipse = new THREE.Line( path_geometry, path_material );
+            ellipse.rotation.x = Math.PI*.5;
+            scene.add( ellipse );
+                
+            }
     }
         
 	function render() {
@@ -146,8 +164,12 @@ function buildUniverse(){
             //sphere_mercury.position.x += 1;
             time += 0.0003;
         
-            stats.update();
-            renderer.render( scene, camera );
+            if (stats !== undefined) {
+                stats.update();
+            }
+            if (renderer !== undefined) {
+                renderer.render( scene, camera );
+            }
 	}
     
  return universe;
