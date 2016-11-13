@@ -20,7 +20,7 @@
 		"radius": 6371.00e3,
         "perihelion": 147095e6,
         "aphelia": 151930e6,
-        "eququatorial inclination": 23.4393
+        "eququatorial_inclination": 23.4393
 	},
     "earth_moon": {
 		"mass": 7.3477e25,

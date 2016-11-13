@@ -18,7 +18,7 @@ function buildUniverse(){
     function init(data){
             scene = new THREE.Scene();
             camera = new THREE.PerspectiveCamera(60 , window.innerWidth/window.innerHeight , 0.01, 1e27);
-            camera.position.set( 0, 100, 40000 );
+            camera.position.set( 0, 0, data.sun.radius + 10000 );
             
             buildSkybox();
         
@@ -26,7 +26,7 @@ function buildUniverse(){
             scene.add( helper );
         */
         
-            console.log(data);
+            //console.log(data.earth.mass);
         
             var light = new THREE.DirectionalLight( 0xffffff );
             light.position.set( 0, 1, 0 );
@@ -40,7 +40,8 @@ function buildUniverse(){
                 fragmentShader: fShader.textContent
             });
             
-        /*  //point LOD (level of detail)    
+        /*  //point LOD (level of detail)
+            //kleine 16x16 textur, alphamap
             var dotGeometry = new THREE.Geometry();
             dotGeometry.vertices.push(new THREE.Vector3( 0, 0, 0));
             var material = new THREE.PointsMaterial({color:0xffffff, size:10, sizeAttenuation:false});
@@ -51,21 +52,21 @@ function buildUniverse(){
         */
 
             //sun
-            var sun = new SpaceObject("Sun", 1000, 10000, {emissive: 0xffff80, color: 0x000000, specular: 0 } );
+            var sun = new SpaceObject("Sun", data.sun.mass, data.sun.radius, {emissive: 0xffff80, color: 0x000000, specular: 0 } );
             sun.buildBody();
             sun.setPosition(0, 0, 0, 0);
             
             //earth
-            var earth = new SpaceObject("Earth", 1000, 1000, {color: 0x0099ff});
+            var earth = new SpaceObject("Earth", data.earth.mass, data.earth.radius, {color: 0x0099ff});
             earth.buildBody();
-            earth.setPosition(25000, 0, 0, 23.4393);
-            earth.create_ellipse(0, 0, 25000, 30000);
+            earth.setPosition(data.earth.perihelion, 0, 0, data.earth.eququatorial_inclination);
+            earth.create_ellipse(0, 0, data.earth.perihelion, data.earth.aphelia);
         
             //moon
-            var moon = new SpaceObject("Moon", 100, 100, {color: 0x999999});
+            var moon = new SpaceObject("Moon", data.earth_moon.mass, data.earth.radius, {color: 0x999999});
             moon.buildBody();
-            moon.setPosition(23000, 0, 0, 0);
-            moon.create_ellipse(25000, 0, 2000, 2000);   
+            moon.setPosition(data.earth.perihelion - data.earth_moon.perihelionToEarth, 0, 0, 0);
+            moon.create_ellipse(data.earth.perihelion, 0, data.earth_moon.perihelion, data.earth_moon.aphelia);   
             
             //controls
             controls = new THREE.OrbitControls( camera );
