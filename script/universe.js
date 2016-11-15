@@ -163,7 +163,7 @@ function buildUniverse(){
             
             //rotation mercury
             //sphere_mercury.position.x += 1;
-            time += 0.0003;
+            //time += 0.0003;
         
             if (stats !== undefined) {
                 stats.update();
