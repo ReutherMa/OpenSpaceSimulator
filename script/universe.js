@@ -90,7 +90,7 @@ function buildUniverse(){
     
     //skybox
     function buildSkybox(){
-        var imagePrefix = "textures/stars_for_skybox3/";
+        var imagePrefix = "textures/stars_for_skybox2/";
         var directions  = ["xpos", "xneg", "ypos", "yneg", "zpos", "zneg"];
         var imageSuffix = ".png";
 
