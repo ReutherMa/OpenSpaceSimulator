@@ -1,0 +1,182 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>My first three.js App</title>
+    <style>
+        body { margin: 0; }
+        canvas { width: 100%; height: 100% }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    <script src="three.js/build/three.js"></script>
+    <script src="three.js/examples/Detector.js"></script>
+    <script src="three.js/examples/js/libs/stats.min.js"></script>
+    <script src="three.js/examples/js/libs/dat.gui.min.js"></script>
+    <script src="three.js/examples/js/controls/OrbitControls.js"></script>
+  
+    <script type="x-shader/x-vertex" id="vertexshader">
+            uniform vec3 viewVector;
+            uniform float c;
+            uniform float p;
+            varying float intensity;
+        void main(){
+            vec3 vNormal = normalize(normalMatrix * normal);
+            vec3 vNormel = normalize(normalMatrix * viewVector);
+            intensity = pow(c - dot(vNormal, vNormel), p );
+            
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+    </script>
+    
+    <script type="x-shader/x-fragment" id="fragmentshader">
+            uniform vec3 glowColor;
+            varying float intensity;
+        void main(){
+            vec3 glow = glowColor * intensity;
+            gl_FragColor = vec4(glow,1.0);
+        }
+    </script>
+    
+    <script>
+        //Here the three.js functions
+        
+        var container, stats;
+        var camera, controls, scene, renderer;
+        var sky, sunSphere;
+        var bulbLight, bulbMat;
+        var sphere_mercury;
+        var time = 0;
+        
+        var mesh_earth;
+       
+        init();
+       // render();
+        
+        function initSky(){
+                //skybox
+                var imagePrefix = "textures/stars_for_skybox3/";
+                var directions  = ["xpos", "xneg", "ypos", "yneg", "zpos", "zneg"];
+                var imageSuffix = ".png";
+
+                var materialArray = [];
+                for (var i = 0; i < 6; i++)
+                    materialArray.push( new THREE.MeshBasicMaterial({
+                        map: THREE.ImageUtils.loadTexture( imagePrefix + directions[i] + imageSuffix ),
+                        side: THREE.BackSide
+                    }));
+
+                var skyGeometry = new THREE.CubeGeometry( 100000, 100000, 100000 );
+                var skyMaterial = new THREE.MeshFaceMaterial( materialArray );
+                var skyBox = new THREE.Mesh( skyGeometry, skyMaterial );
+                skyBox.rotation.x += Math.PI / 2;
+                scene.add( skyBox );
+        }
+        
+        function init(){
+            
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(60 , window.innerWidth/window.innerHeight ,1, 100);
+            camera.position.set( 0, 0, 50 );
+            var matrix = new THREE.Matrix4().set(1,  0, 0,  0, 
+                                                    0,  1, 0,  0,
+                                                    0,  0, 5,  0,
+                                                    0,  0, 0,  1);
+            var vector = new THREE.Vector3(100,0,0);
+            var matrixResolution = new THREE.Matrix4();
+            camera.lookAt = camera.projectionMatrix.makeTranslation(vector);
+            //matrixResolution.translate()
+            //matrixResolution.multiplyMatrices(camera.projectionMatrix, vector);
+            //camera.projectionMatrix = matrixResolution;
+            //console.log(camera.projectionMatrix);
+            //camera = camera matrix;
+            //  updateProjectionMatrix();
+            
+            
+            
+            //light
+            var light = new THREE.PointLight( 0xffffff );
+            light.position.set( -20000, 0, 0 );
+            scene.add(light); 
+            
+            var helper = new THREE.GridHelper( 10000, 20, 0xffffff, 0xffffff );
+            scene.add( helper );
+            
+            
+            //light_shader
+            var fShader = document.getElementById("fragmentshader");
+            var vShader = document.getElementById("vertexshader");
+            var shaderMaterial = new THREE.ShaderMaterial({
+                uniforms: {
+                    "c": { type: "f", value: 0.6 },
+                    "p": { type: "f", value: 1.7 },
+                    glowColor: { type: "c", value: new THREE.Color(0xffffff) },
+                    viewVector: { type: "v3", value: camera.position }
+                },
+                vertexShader: vShader.textContent,
+                fragmentShader: fShader.textContent,
+                side: THREE.BackSide,
+                blending: THREE.AdditiveBlending,
+                transparent: true                
+            });
+            var shaderMaterial_sun = new THREE.ShaderMaterial({
+                uniforms: {
+                    "c": { type: "f", value: 0.6 },
+                    "p": { type: "f", value: 1.7 },
+                    glowColor: { type: "c", value: new THREE.Color(0xff0000) },
+                    viewVector: { type: "v3", value: camera.position }
+                },
+                vertexShader: vShader.textContent,
+                fragmentShader: fShader.textContent,
+                side: THREE.BackSide,
+                blending: THREE.AdditiveBlending,
+                transparent: true                
+            });
+
+            
+            var geometry_earth = new THREE.SphereGeometry( 10, 64, 64 );
+            var material_earth = new THREE.MeshPhongMaterial();          
+            mesh_earth = new THREE.Mesh(geometry_earth,  material_earth);
+            mesh_earth.position.set = (0, 0, 0);
+            scene.add( mesh_earth );
+            
+            //controls
+            controls = new THREE.OrbitControls( camera );
+            //controls.addEventListener( 'change', render );
+            
+            //axisHelper
+            var axisHelper = new THREE.AxisHelper( 500000 );
+            scene.add( axisHelper );
+            
+            //skybox
+            initSky(); 
+            
+            //renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setPixelRatio( window.devicePixelRatio );
+            renderer.setSize( window.innerWidth, window.innerHeight );
+            container = document.getElementById( 'container' );
+            container.appendChild( renderer.domElement );
+            stats = new Stats();
+            container.appendChild( stats.dom );
+            window.addEventListener( 'resize', onWindowResize, false );
+            
+        }
+        
+    function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize( window.innerWidth, window.innerHeight );
+            render();
+    }
+        
+	function render() {
+            requestAnimationFrame( render );
+            stats.update();
+            renderer.render( scene, camera );
+	}
+render();        
+    
+    </script>
+</body>    
+</html>

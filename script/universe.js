@@ -11,6 +11,11 @@ function buildUniverse(){
     var time = 0;
     var mesh_earth, clodMesh, mesh_moon, mesh_sun;
     var segments = 64;
+    //Reference System for ModelViewMatrix
+    var base_sun = new THREE.Matrix4().set( 1,  0, 0,  0, 
+                                            0,  1, 0,  0,
+                                            0,  0, 1,  0,
+                                            0,  0, 0,  1 );
     
     universe.init = init;
     universe.render = render;
@@ -19,6 +24,7 @@ function buildUniverse(){
             scene = new THREE.Scene();
             camera = new THREE.PerspectiveCamera(60 , window.innerWidth/window.innerHeight , 0.01, 1e27);
             camera.position.set( 0, 0, data.sun.radius + 10000 );
+        
             
             buildSkybox();
         
@@ -51,21 +57,27 @@ function buildUniverse(){
             scene.add( mesh );
         */
 
+            
+            
+        
+        
             //sun
             var sun = new SpaceObject("Sun", data.sun.mass, data.sun.radius, {emissive: 0xffff80, color: 0x000000, specular: 0 } );
             sun.buildBody();
-            sun.setPosition(0, 0, 0, 0);
+            sun.setPosition(0, 0, 0, 0, base_sun);
             
             //earth
             var earth = new SpaceObject("Earth", data.earth.mass, data.earth.radius, {color: 0x0099ff});
             earth.buildBody();
-            earth.setPosition(data.earth.perihelion, 0, 0, data.earth.eququatorial_inclination);
+            //earth.setPosition(data.earth.perihelion, 0, 0, data.earth.eququatorial_inclination, base_sun);
             earth.create_ellipse(0, 0, data.earth.perihelion, data.earth.aphelia);
+            var base_earth = new THREE.Matrix4();
+            //base_earth = earth.makeTranslation( new THREE.Vector4(data.earth.perihelion, 0,0,1) );
         
             //moon
             var moon = new SpaceObject("Moon", data.earth_moon.mass, data.earth.radius, {color: 0x999999});
             moon.buildBody();
-            moon.setPosition(data.earth.perihelion - data.earth_moon.perihelionToEarth, 0, 0, 0);
+            moon.setPosition(data.earth.perihelion - data.earth_moon.perihelionToEarth, 0, 0, 0, base_earth);
             moon.create_ellipse(data.earth.perihelion, 0, data.earth_moon.perihelion, data.earth_moon.aphelia);   
             
             //controls
@@ -130,7 +142,17 @@ function buildUniverse(){
             scene.add( mesh );
         }
         
-        this.setPosition = function(x,y,z, equatorial_inclination){
+        this.setPosition = function(x,y,z, equatorial_inclination, base){
+            if( base == undefined ){
+                base = new THREE.Matrix4().set( 1,  0, 0,  0, 
+                                                0,  1, 0,  0,
+                                                0,  0, 1,  0,
+                                                0,  0, 0,  1 );
+                //console.log(base);
+            } else {
+                this.base = base;
+                //console.log("defined");
+            }
             mesh.position.x = x;
             mesh.position.y = y;
             mesh.position.z = z;
