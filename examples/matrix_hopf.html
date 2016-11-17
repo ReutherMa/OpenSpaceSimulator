@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset=utf-8>
+<title>Planets</title>
+<style>
+body { margin: 0; }
+canvas { width: 100%; height: 100% }
+</style>
+</head>
+<body>
+<script src=three.min.js></script>
+<script src="OrbitControls.js"></script>
+<script>
+var scene = new THREE.Scene();
+var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+var renderer = new THREE.WebGLRenderer();
+var controls = new THREE.OrbitControls( camera, renderer.domElement );
+renderer.setSize( window.innerWidth, window.innerHeight );
+document.body.appendChild( renderer.domElement );
+
+/*
+var geometry = new THREE.BoxGeometry( 1, 1, 1 );
+var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+var cube1 = new THREE.Mesh( geometry, material );
+scene.add( cube1 );
+
+var geometry = new THREE.BoxGeometry( 1, 1, 1 );
+var material = new THREE.MeshBasicMaterial( { color: 0x0000ff } );
+var cube2 = new THREE.Mesh( geometry, material );
+cube2.position.set (5, 0, 0);
+cube1.add( cube2 );
+
+var geometry = new THREE.BoxGeometry( 1, 1, 1 );
+var material = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
+var cube3 = new THREE.Mesh( geometry, material );
+cube3.position.set (2, 0, 0);
+cube2.add( cube3 );
+
+*/
+
+var group1   = new THREE.Group();
+scene.add( group1 );
+
+var geometry = new THREE.BoxGeometry( 1, 1, 1 );
+var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+var cube1 = new THREE.Mesh( geometry, material );
+group1.add( cube1 );
+
+var group2  = new THREE.Group();
+group2.position.set (5, 0, 0);
+group1.add( group2 );
+
+var geometry = new THREE.BoxGeometry( 1, 1, 1 );
+var material = new THREE.MeshBasicMaterial( { color: 0x0000ff } );
+var cube2 = new THREE.Mesh( geometry, material );
+group2.add( cube2 );
+
+var group3  = new THREE.Group();
+group3.position.set (2, 0, 0);
+group2.add( group3 );
+
+var geometry = new THREE.BoxGeometry( 1, 1, 1 );
+var material = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
+var cube3 = new THREE.Mesh( geometry, material );
+group3.add( cube3 );
+
+camera.position.z = 8;
+
+function render() {
+    requestAnimationFrame( render );
+    cube1.rotateY (.05);
+    group1.rotateY (.02);
+    cube2.rotateY (.3);
+    group2.rotateY (.05);
+    cube3.rotateY (.1);
+    renderer.render( scene, camera );
+}
+render();
+</script>
+</body></html>
