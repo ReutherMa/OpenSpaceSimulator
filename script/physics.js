@@ -1,14 +1,19 @@
 
+//initial values on game start
+rocket=saturnV;
+mass=rocket.mass
+fuel_mass=rocket.stage1.mass_fuel;
 
-// Main workhorse: calculate gravitational forces
+
+// calculate gravitational forces
     /** 
-        iterates through all space objects and calculates current speed and direction
+        iterates through all space objects and calculates influence on current object and object's speed and direction
         r: distance between objects in x, y, z dimensions
         dist: absolute distance
         accel: acceleration of current object
-        difftime: time since last rendering
+        
     **/
-function m_grav (difftime) {
+function calculateGravitation (difftime) {
     for (var o in objects) {
         var spaceObject = objects[o];
         
@@ -35,38 +40,54 @@ function m_grav (difftime) {
     
 };
 
-    //calculates current rocket speed and direction
-    function rocket_move (difftime) {
-        m_grav(difftime);
-        //coming soon
-        
-    };
-
-function loop() {
-    requestAnimationFrame (loop);
     
-    //render correct animation even in slow browsers via time request
-    var time = Date.now(); 
-    var difftime= time- lasttime;
+
+/**
+Rocket Science
+part 1: acceleration of direction and new position
+(part 2: acceleration of orientation coming soon)
+**/
+function move(throttleInPercent){
     
-    //may be unnecessary ; dependant on class structure
-    var circtime = (time % 20000) / 20000 * 2*Math.PI;
-    ctx.clearRect (0, 0, canv.width, canv.height);
-
-    ctx.save();
-    ctx.translate (.5*canv.width, .5*canv.height);
-
-    for (var o in objects) {
-        if (objects[o].move !== undefined)
-            objects[o].move (difftime);
-        // Simple explicit Euler integrator
-    objects[o].x += objects[o].speedx * difftime;
-    objects[o].y += objects[o].speedy * difftime;
-        objects[o].draw ();
-    }
-
-    ctx.restore();
-    lasttime = time;
+//calculates fuel-mass that will be lost in difftime
+mass_lost=difftime/saturnV.stage1.burningtime*throttleInPercent*rocket.stage1.mass_fuel;
+//checks if enough fuel
+if((fuel_mass-mass_lost)>=0){
+//a=F/m(now mass WITH fuel to lose)
+accel=saturnV.stage1.thrust/(mass);
+//new mass without lost fuel
+mass=mass-mass_lost;
+//current fuel mass for UI
+fuel_mass=fuel_mass-mass_lost;
 }
-loop();
+else{
+//error: not enough fuel
+}
+    //new rocket position; orientation is probably a matrix 
+    vec3 position_rocket=vec3((position_rocket+(accel*difftime))*orientation); 
+}
+
+//called during every rendering
+function calculatePhysics(){
     
+    //get values from UI:buttons pressed
+    
+    difftime=now-lasttime*timefactor;
+    
+    //calculates current speed for each space Object(Planets, Rocket)
+    for (var o in objects) {
+        objects[o].calculateGravitation(difftime);
+    }
+    move(getThrottleOnPercent);
+    orientation(getAccelX, getAccelY, getAccelZ);
+    lasttime=now;
+    
+
+}
+
+//next stage: UI-Event, initiated by user
+//for stage 1/2
+function nextStage(){
+    //wie kann man das generischer machen?
+    mass=mass-rocket.stage1.mass_empty-rocket.stage1.mass_fuel;
+}
