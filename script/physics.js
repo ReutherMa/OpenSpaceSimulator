@@ -1,8 +1,25 @@
 
 //initial values on game start
-rocket=saturnV;
-mass=rocket.mass
-fuel_mass=rocket.stage1.mass_fuel;
+var rocket=saturnV;
+var mass=rocket.mass
+var fuel_mass=rocket.stage1.mass_fuel;
+
+var keyPressed; //wasdqe
+var position; //vec3
+
+//in radiant
+var angleX=0;
+var angleY=0;
+var angleZ=0;
+
+//acceleration of orientation
+//int
+var accelOX;
+var accelOY;
+var accelOZ;
+
+
+
 
 
 // calculate gravitational forces
@@ -45,7 +62,7 @@ function calculateGravitation (difftime) {
 /**
 Rocket Science
 part 1: acceleration of direction and new position
-(part 2: acceleration of orientation coming soon)
+
 **/
 function move(throttleInPercent){
     
@@ -67,6 +84,52 @@ else{
     vec3 position_rocket=vec3((position_rocket+(accel*difftime))*orientation); 
 }
 
+/**
+Rocket Science
+part 2: orientation
+input: keyPressed(WASDQE) and position(as vec3)
+**/
+function rotateRocket(keyPressed, position){
+    var quaternion = new THREE.Quaternion();
+    
+    switch(keyPressed){
+        case w:
+            accelOX=accelOX+Math.PI/20;
+            angleX=angleX+accelOX*difftime*difftime;
+            angle=angleX;
+            accel=accelOX;
+            quaternion.setFromAxisAngle( new THREE.Vector3( 1, 0, 0 ), angleX);
+            break;
+        case s:
+            accelOX=accelOX-Math.PI/20;
+            angleX=angleX+accelOX*difftime*difftime;
+            quaternion.setFromAxisAngle( new THREE.Vector3( 1, 0, 0 ), angleX);
+            break;
+        case a:
+            accelOZ=accelOZ+Math.PI/20;
+            angleZ=angleZ+accelOZ*difftime*difftime;
+            quaternion.setFromAxisAngle( new THREE.Vector3( 1, 0, 0 ), angleZ);
+            break;
+        case d:
+            accelOZ=accelOZ-Math.PI/20;
+            angleZ=angleZ+accelOZ*difftime*difftime;
+            quaternion.setFromAxisAngle( new THREE.Vector3( 1, 0, 0 ), angleZ);
+            break;
+        case q:
+            accelOY=accelOY+Math.PI/20;
+            angleY=angleY+accelOY*difftime*difftime;
+            quaternion.setFromAxisAngle( new THREE.Vector3( 1, 0, 0 ), angleY);
+            break;
+        case e:
+            accelOY=accelOY-Math.PI/20;
+            angleY=angleY+accelOY*difftime*difftime;
+            quaternion.setFromAxisAngle( new THREE.Vector3( 1, 0, 0 ), angleY);
+            break;
+    }
+    position.applyQuaternion(quaternion);
+    
+}
+
 //called during every rendering
 function calculatePhysics(){
     
@@ -79,10 +142,9 @@ function calculatePhysics(){
         objects[o].calculateGravitation(difftime);
     }
     move(getThrottleOnPercent);
-    orientation(getAccelX, getAccelY, getAccelZ);
+    roateRocket(getKeyPressed,position_rocket);
     lasttime=now;
     
-
 }
 
 //next stage: UI-Event, initiated by user
