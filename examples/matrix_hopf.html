@@ -39,6 +39,8 @@ cube2.add( cube3 );
 
 */
 
+var objects = [];
+    
 var group1   = new THREE.Group();
 scene.add( group1 );
 
@@ -65,11 +67,50 @@ var material = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
 var cube3 = new THREE.Mesh( geometry, material );
 group3.add( cube3 );
 
+//test text
+var canvas = document.createElement('canvas');
+canvas.width = 64;
+canvas.height = 64;
+var context = canvas.getContext('2d');
+context.font = "24px Arial";
+context.fillStyle = "rgba(255,0,0,1)";
+context.fillText('Earth!', 0, 64);
+var tex = new THREE.Texture(canvas);
+tex.needsUpdate = true;
+var mate = new THREE.SpriteMaterial( { map: tex, color: 0xffffff } );
+var sprite = new THREE.Sprite( mate );
+sprite.position.set(0,2,0);
+cube2.add( sprite );
+
 camera.position.z = 8;
 
+//picking stuff
+var raycaster = new THREE.Raycaster();
+var mouse = new THREE.Vector2();
+document.addEventListener( 'click', onMouseMove, false );
+objects.push(cube1);
+objects.push(cube2);
+objects.push(cube3);
+console.log(objects);
+    
+
+function onMouseMove( event ) {
+    event.preventDefault();
+    mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+	mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+    raycaster.setFromCamera( mouse, camera );
+    var intersects = raycaster.intersectObjects( objects );
+    for ( var i = 0; i < intersects.length; i++ ) {
+        camera.position.x = intersects[i].object.position.x;
+        camera.position.y = intersects[i].object.position.y;
+        camera.position.z = intersects[i].object.position.z+3;
+		intersects[ i ].object.material.color.set( 0xff0000 );
+	}
+}
+    
 function render() {
     requestAnimationFrame( render );
-    cube1.rotateY (.05);
+    cube1.rotateY (.0009);
     group1.rotateY (.02);
     cube2.rotateY (.3);
     group2.rotateY (.05);
