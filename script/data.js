@@ -8,6 +8,7 @@ function loadData(url_var, universe){
         success: function(output) {
             //console.log(data);
             universe.init (output);
+            universe.render();
         }
     });
     
