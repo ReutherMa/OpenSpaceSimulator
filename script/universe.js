@@ -360,7 +360,7 @@ function SpaceObject(name, mass, radius, color, group, speedx, speedy, speedz){
 
 //this renders the scene
 function render() {
-<<<<<<< HEAD
+
     now = Date.now();
     difftime = now - lasttime;
     
@@ -369,12 +369,7 @@ function render() {
     calculatePhysics(difftime, spaceObjects);
     
     requestAnimationFrame( render );
-    
-    
-=======
-    //requestAnimationFrame( render );
 
->>>>>>> origin/master
     //rotation mercury
     //sphere_mercury.position.x += 1;
     //time += 0.0003;
