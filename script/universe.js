@@ -1,7 +1,10 @@
+// fill global with key-values, datatype: boolean
+var global = {};
+
 function buildUniverse(){
 
     
-//Instant Vairables
+//Instant Variables
 var universe = {};
 var container, stats;
 var camera, controls, scene, renderer, raycaster;
