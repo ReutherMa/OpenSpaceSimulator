@@ -335,7 +335,7 @@ function SpaceObject(name, mass, radius, color, group){
 
 //this renders the scene
 function render() {
-    requestAnimationFrame( render );
+    //requestAnimationFrame( render );
 
     //rotation mercury
     //sphere_mercury.position.x += 1;
