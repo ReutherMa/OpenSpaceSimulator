@@ -1,11 +1,16 @@
 {
 	"sun": {
+        "star": true,
 		"mass": 1.989e33,
-		"radius": 695508e3
+		"radius": 695508e3,
+        "color": {"emissive": "0xffff80", "color": "0x000000", "specular": "0" },
+        "group": "group1_sun"
 	},
     "mercury": {
 		"mass": 3.3010e26,
 		"radius": 2439.7e3,
+        "color": {"color": "0x555555"},
+        "group": "group2_mercury",
         "perihelion": 46e9,
         "aphelia": 70e9,
         "speedx": 100,
@@ -15,6 +20,8 @@
     "venus": {
 		"mass": 4.8673e27,
 		"radius": 6051.8e3,
+        "color": {"color": "0xff5555"},
+        "group": "group3_venus",
         "perihelion": 107477e6,
         "aphelia": 108939e6,
         "speedx": 100,
@@ -24,6 +31,8 @@
 	"earth": {
 		"mass": 5.9722e27,
 		"radius": 6371.00e3,
+        "color": {"color": "0x0099ff"},
+        "group": "group4_earth",
         "perihelion": 147095e6,
         "aphelia": 151930e6,
         "eququatorial_inclination": 23.4393,
@@ -34,6 +43,8 @@
     "earth_moon": {
 		"mass": 7.3477e25,
 		"radius": 1737.5e3,
+        "color": {"color": "0x999999"},
+        "group": "group41_moon",
         "perihelionToEarth": 363300e3,
         "apheliaToEarth":405500e3,
         "speedx": 100,
@@ -43,6 +54,8 @@
 	"mars": {
 		"mass": 16.4169e26,
 		"radius": 3389.5e3,
+        "color": {"color": "0x99ff55"},
+        "group": "group5_mars",
         "perihelion": 206.7e9,
         "aphelia": 249.2e9,
         "speedx": 100,
@@ -52,6 +65,8 @@
 	"jupiter": {
 		"mass": 1.8981e30,
 		"radius": 69911e3,
+        "color": {"color": "0xFF8C00"},
+        "group": "group6_jupiter",
         "perihelion": 740550e6,
         "aphelia": 778299e6,
         "speedx": 100,
@@ -61,6 +76,8 @@
 	"saturn": {
 		"mass": 5.6832e29,
 		"radius": 58232e3,
+        "color": {"color": "0xF4A460"},
+        "group": "group7_saturn",
         "perihelion": 1353.6e9,
         "aphelia": 1513325783e3,
         "speedx": 100,
@@ -70,6 +87,8 @@
 	"uranus": {
 		"mass": 8.6810e28,
 		"radius": 25362e3,
+        "color": {"color": "0x20B2aa"},
+        "group": "group8_uranus",
         "perihelion": 2735118.1e6,
         "aphelia": 3006224.7e6,
         "speedx": 100,
@@ -79,6 +98,8 @@
 	"neptune": {
 		"mass": 1.0241e29,
 		"radius": 24622e3,
+        "color": {"color": "0x2F4F4F"},
+        "group": "group9_neptune",
         "perihelion": 4.459e12,
         "aphelia": 4.537e12,
         "speedx": 100,

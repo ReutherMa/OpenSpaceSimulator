@@ -3,17 +3,19 @@ var global = {};
 
 function buildUniverse(){
 
+//constants
+const BLOW = 1000;
     
 //Instant Variables
 var universe = {};
 var container, stats;
 var camera, controls, scene, renderer, raycaster;
 var bulbLight, bulbMat;
-var time = 0;
 var segments = 64;
-var group_galaxy, group1_sun, group2_earth, group3_moon,
-    group4_mercury, group5_venus, group6_mars, group7_jupiter,
-    group8_saturn, group9_uranus, group10_neptune;
+var group_galaxy, group1_sun, group2_mercury, group3_venus, group4_earth, group41_moon, group5_mars, group6_jupiter,
+    group7_saturn, group8_uranus, group9_neptune;
+
+var sun, earth, moon, mercury, venus, mars, jupiter, saturn, uranus, neptune;
 var spaceObjects = [];
 var mouse = new THREE.Vector2(), INTERSECTED;
     
@@ -27,7 +29,7 @@ universe.render = render;
 function init(data){
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(60 , window.innerWidth/window.innerHeight , 0.01, 1e27);
-    camera.position.set( 0, 0, data.sun.radius + 10e10 );
+    camera.position.set( 0, 0, 695508e3 + 10e10 );
 
 
     buildSkybox();
@@ -167,128 +169,155 @@ function buildPlanets(data){
     group_galaxy.position.set(0,0,0);
     scene.add(group_galaxy);
     
+    for (var planet in data){
+        if (data[planet].star === true){
+            //console.log("Star...");
+            
+            var group_name = new THREE.Group();
+            scene.add(group_name);
+            
+            var planet_object = new SpaceObject(planet, data[planet].mass, data[planet].radius*10, {emissive: 0xffff80, color: 0x000000, specular: 0 }, group_name);
+            planet_object.buildBody();
+            spaceObjects.push(planet_object);
+            
+        }else{
+            //console.log("Planets...");
+            
+            var group_name = new THREE.Group();
+            scene.add(group_name);
+            
+            var planet_object = new SpaceObject(planet, data[planet].mass, data[planet].radius*BLOW, data[planet].color, group_name, data[planet].speedx, data[planet].speedy, data[planet].speedz);
+            planet_object.buildBody();
+            planet_object.setPosition(data[planet].perihelion,0,0,0);
+            spaceObjects.push(planet_object);
+            //planet.setLabel();
+        }
+    }
+    
+    
     //sun
-    group1_sun = new THREE.Group();
+/*    group1_sun = new THREE.Group();
     scene.add(group1_sun);
-    var sun = new SpaceObject("Sun", data.sun.mass, data.sun.radius*10, {emissive: 0xffff80, color: 0x000000, specular: 0 }, group1_sun );
+    sun = new SpaceObject("Sun", data.sun.mass, data.sun.radius, {emissive: 0xffff80, color: 0x000000, specular: 0 }, group1_sun);
     sun.buildBody();
     spaceObjects.push(sun);
-    sun.setLabel();
+    sun.setLabel();*/
 
-    //earth
-    group2_earth = new THREE.Group();
-    scene.add(group2_earth);
-    var earth = new SpaceObject("Earth", data.earth.mass, data.earth.radius*1000, {color: 0x0099ff}, group2_earth, data.earth.speedx, data.earth.speedy, data.earth.speedz);
-    earth.buildBody();
-    earth.setPosition(data.earth.perihelion,0,0, data.earth.eququatorial_inclination);
-    //earth.create_ellipse(-data.earth.perihelion, 0, data.earth.perihelion, data.earth.aphelia);
-    group_earth_rotate = new THREE.Group();
-    group_earth_rotate.add(group2_earth);
-    group_earth_rotate.add(group_galaxy);
-    scene.add(group_earth_rotate);
+/*    //mercury
+    group2_mercury = new THREE.Group();
+    scene.add(group2_mercury);
     
-    spaceObjects.push(earth);
-    
-    //earth_moon
-    group3_moon = new THREE.Group();
-    group2_earth.add(group3_moon);
-    var moon = new SpaceObject("Moon", data.earth_moon.mass, data.earth_moon.radius*1000, {color: 0x999999}, group3_moon, data.earth_moon.speedx, data.earth_moon.speedy, data.earth_moon.speedz);
-    moon.buildBody();
-    moon.setPosition(data.earth_moon.perihelionToEarth*100, 0, 0, 0);
-    //moon.create_ellipse(-data.earth_moon.perihelionToEarth, 0, data.earth_moon.perihelionToEarth, data.earth_moon.apheliaToEarth); 
-    
-    spaceObjects.push(moon);
-    
-    //mercury
-    group4_mercury = new THREE.Group();
-    scene.add(group4_mercury);
-    var mercury = new SpaceObject("Mercury", data.mercury.mass, data.mercury.radius*1000, {color: 0x555555}, group4_mercury, data.mercury.speedx, data.mercury.speedy, data.mercury.speedz);
+    mercury = new SpaceObject("Mercury", data.mercury.mass, data.mercury.radius*BLOW, {color: 0x555555}, group2_mercury, data.mercury.speedx, data.mercury.speedy, data.mercury.speedz);
     mercury.buildBody();
     mercury.setPosition(data.mercury.perihelion,0,0,0);
     group_mercury_rotate = new THREE.Group();
-    group_mercury_rotate.add(group4_mercury);
+    group_mercury_rotate.add(group2_mercury);
     group_mercury_rotate.add(group_galaxy);
     scene.add(group_mercury_rotate);
     
     spaceObjects.push(mercury);
     
     //venus
-    group5_venus = new THREE.Group();
-    scene.add(group5_venus);
-    var venus = new SpaceObject("Venus", data.venus.mass, data.venus.radius*1000, {color: 0xff5555}, group5_venus, data.venus.speedx, data.venus.speedy, data.venus.speedz);
+    group3_venus = new THREE.Group();
+    scene.add(group3_venus);
+    venus = new SpaceObject("Venus", data.venus.mass, data.venus.radius*BLOW, {color: 0xff5555}, group3_venus, data.venus.speedx, data.venus.speedy, data.venus.speedz);
     venus.buildBody();
     venus.setPosition(data.venus.perihelion,0,0,0);
     group_venus_rotate = new THREE.Group();
-    group_venus_rotate.add(group5_venus);
+    group_venus_rotate.add(group3_venus);
     group_venus_rotate.add(group_galaxy);
     scene.add(group_venus_rotate);
     
     spaceObjects.push(venus);
     
+    //earth
+    group4_earth = new THREE.Group();
+    scene.add(group4_earth);
+    earth = new SpaceObject("Earth", data.earth.mass, data.earth.radius*BLOW, {color: 0x0099ff}, group4_earth, data.earth.speedx, data.earth.speedy, data.earth.speedz);
+    earth.buildBody();
+    earth.setPosition(data.earth.perihelion,0,0, data.earth.eququatorial_inclination);
+    //earth.create_ellipse(-data.earth.perihelion, 0, data.earth.perihelion, data.earth.aphelia);
+    group_earth_rotate = new THREE.Group();
+    group_earth_rotate.add(group4_earth);
+    group_earth_rotate.add(group_galaxy);
+    scene.add(group_earth_rotate);
+    
+    spaceObjects.push(earth);
+    
+    //earth_moon
+    group41_moon = new THREE.Group();
+    group4_earth.add(group41_moon);
+    moon = new SpaceObject("Moon", data.earth_moon.mass, data.earth_moon.radius*BLOW, {color: 0x999999}, group41_moon, data.earth_moon.speedx, data.earth_moon.speedy, data.earth_moon.speedz);
+    moon.buildBody();
+    moon.setPosition(data.earth_moon.perihelionToEarth*100, 0, 0, 0);
+    //moon.create_ellipse(-data.earth_moon.perihelionToEarth, 0, data.earth_moon.perihelionToEarth, data.earth_moon.apheliaToEarth); 
+    
+    spaceObjects.push(moon);
+    
     //mars
-    group6_mars = new THREE.Group();
-    scene.add(group6_mars);
-    var mars = new SpaceObject("Mars", data.mars.mass, data.mars.radius*1000, {color: 0x99ff55}, group6_mars, data.mars.speedx, data.mars.speedy, data.mars.speedz);
+    group5_mars = new THREE.Group();
+    scene.add(group5_mars);
+    mars = new SpaceObject("Mars", data.mars.mass, data.mars.radius*BLOW, {color: 0x99ff55}, group5_mars, data.mars.speedx, data.mars.speedy, data.mars.speedz);
     mars.buildBody();
     mars.setPosition(data.mars.perihelion,0,0,0);
     group_mars_rotate = new THREE.Group();
-    group_mars_rotate.add(group6_mars);
+    group_mars_rotate.add(group5_mars);
     group_mars_rotate.add(group_galaxy);
     scene.add(group_mars_rotate);
     
     spaceObjects.push(mars);
     
     //jupiter
-    group7_jupiter = new THREE.Group();
-    scene.add(group7_jupiter);
-    var jupiter = new SpaceObject("Jupiter", data.jupiter.mass, data.jupiter.radius*1000, {color: 0xFF8C00}, group7_jupiter, data.jupiter.speedx, data.jupiter.speedy, data.jupiter.speedz);
+    group6_jupiter = new THREE.Group();
+    scene.add(group6_jupiter);
+    jupiter = new SpaceObject("Jupiter", data.jupiter.mass, data.jupiter.radius*BLOW, {color: 0xFF8C00}, group6_jupiter, data.jupiter.speedx, data.jupiter.speedy, data.jupiter.speedz);
     jupiter.buildBody();
     jupiter.setPosition(data.jupiter.perihelion,0,0,0);
     group_jupiter_rotate = new THREE.Group();
-    group_jupiter_rotate.add(group7_jupiter);
+    group_jupiter_rotate.add(group6_jupiter);
     group_jupiter_rotate.add(group_galaxy);
     scene.add(group_jupiter_rotate);
     
     spaceObjects.push(jupiter);
     
     //saturn
-    group8_saturn = new THREE.Group();
-    scene.add(group8_saturn);
-    var saturn = new SpaceObject("Saturn", data.saturn.mass, data.saturn.radius*1000, {color: 0xF4A460}, group8_saturn, data.saturn.speedx, data.saturn.speedy, data.saturn.speedz);
+    group7_saturn = new THREE.Group();
+    scene.add(group7_saturn);
+    saturn = new SpaceObject("Saturn", data.saturn.mass, data.saturn.radius*BLOW, {color: 0xF4A460}, group7_saturn, data.saturn.speedx, data.saturn.speedy, data.saturn.speedz);
     saturn.buildBody();
     saturn.setPosition(data.saturn.perihelion,0,0,0);
     group_saturn_rotate = new THREE.Group();
-    group_saturn_rotate.add(group8_saturn);
+    group_saturn_rotate.add(group7_saturn);
     group_saturn_rotate.add(group_galaxy);
     scene.add(group_saturn_rotate);
     
     spaceObjects.push(saturn);
     
     //uranus
-    group9_uranus = new THREE.Group();
-    scene.add(group9_uranus);
-    var uranus = new SpaceObject("Saturn", data.uranus.mass, data.uranus.radius*1000, {color: 0x20B2aa}, group9_uranus, data.uranus.speedx, data.uranus.speedy, data.uranus.speedz);
+    group8_uranus = new THREE.Group();
+    scene.add(group8_uranus);
+    uranus = new SpaceObject("Uranus", data.uranus.mass, data.uranus.radius*BLOW, {color: 0x20B2aa}, group8_uranus, data.uranus.speedx, data.uranus.speedy, data.uranus.speedz);
     uranus.buildBody();
     uranus.setPosition(data.uranus.perihelion,0,0,0);
     group_uranus_rotate = new THREE.Group();
-    group_uranus_rotate.add(group9_uranus);
+    group_uranus_rotate.add(group8_uranus);
     group_uranus_rotate.add(group_galaxy);
     scene.add(group_uranus_rotate);
     
     spaceObjects.push(uranus);
     
     //neptune
-    group10_neptune = new THREE.Group();
-    scene.add(group10_neptune);
-    var neptune = new SpaceObject("Saturn", data.neptune.mass, data.neptune.radius*1000, {color: 0x2F4F4F}, group10_neptune, data.neptune.speedx, data.neptune.speedy, data.neptune.speedz);
+    group9_neptune = new THREE.Group();
+    scene.add(group9_neptune);
+    neptune = new SpaceObject("Neptune", data.neptune.mass, data.neptune.radius*BLOW, {color: 0x2F4F4F}, group9_neptune, data.neptune.speedx, data.neptune.speedy, data.neptune.speedz);
     neptune.buildBody();
     neptune.setPosition(data.neptune.perihelion,0,0,0); 
     group_neptune_rotate = new THREE.Group();
-    group_neptune_rotate.add(group10_neptune);
+    group_neptune_rotate.add(group9_neptune);
     group_neptune_rotate.add(group_galaxy);
     scene.add(group_neptune_rotate);  
     
-    spaceObjects.push(neptune);
+    spaceObjects.push(neptune);*/
 }
 
 //create a planet with mesh, position and orbit
@@ -306,7 +335,7 @@ function SpaceObject(name, mass, radius, color, group, speedx, speedy, speedz){
 
     this.buildBody = function(){
         var geometry = new THREE.SphereGeometry( radius, segments, segments );
-        var material = new THREE.MeshPhongMaterial(color);
+        var material = new THREE.MeshPhongMaterial( color );
         mesh = new THREE.Mesh(geometry,  material);
         group.add( mesh ); 
         //spaceObjects.push(mesh);
@@ -360,7 +389,8 @@ function SpaceObject(name, mass, radius, color, group, speedx, speedy, speedz){
 
 //this renders the scene
 function render() {
-
+    
+    // current time in ms since 1.1.1970 -> 00:00:00 UTC Worldtime 
     now = Date.now();
     difftime = now - lasttime;
     
