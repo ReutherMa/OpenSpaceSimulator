@@ -3,7 +3,13 @@
         "star": true,
 		"mass": 1.989e33,
 		"radius": 695508e3,
-        "group": "group1_sun"
+        "group": "group1_sun",
+        "x":0,
+        "y":0,
+        "z":0,
+        "speedx":0,
+        "speedy":0,
+        "speedz":0
 	},
     "mercury": {
 		"mass": 3.3010e26,
@@ -12,9 +18,12 @@
         "group": "group2_mercury",
         "perihelion": 46e9,
         "aphelia": 70e9,
-        "speedx": 100,
-        "speedy": 100,
-        "speedz": 0
+        "x":1.909414528106045e10,
+        "y":-6.445757566399484310,
+        "z":-7.018694601045094e09,
+        "speedx":3.694237773369274e04,
+        "speedy":1.631512362594839e04,
+        "speedz":-2.056020531390888e03
 	},
     "venus": {
 		"mass": 4.8673e27,
@@ -23,9 +32,12 @@
         "group": "group3_venus",
         "perihelion": 107477e6,
         "aphelia": 108939e6,
-        "speedx": 100,
-        "speedy": 100,
-        "speedz": 0
+        "x":1.053411075395570e11,
+        "y":-2.648238442284194e10,
+        "z":-6.441959457233157e09,
+        "speedx":8.360830067311309e03,
+        "speedy":3.380818842203419e04,
+        "speedz":-1.890069237570557e05
 	},
 	"earth": {
 		"mass": 5.9722e27,
@@ -35,9 +47,12 @@
         "perihelion": 147095e6,
         "aphelia": 151930e6,
         "eququatorial_inclination": 23.4393,
-        "speedx": 100,
-        "speedy": 100,
-        "speedz": 0
+        "x":7.413990250923651e10,
+        "y":1.278038223564592e11,
+        "z":-5.166430709473789e12,
+        "speedx":-2.624738248536622e04,
+        "speedy":1.484690288633027e04,
+        "speedz":-1.497386889991681e06
 	},
     "earth_moon": {
 		"mass": 7.3477e25,
@@ -46,9 +61,12 @@
         "group": "group41_moon",
         "perihelionToEarth": 363300e3,
         "apheliaToEarth":405500e3,
-        "speedx": 100,
-        "speedy": 100,
-        "speedz": 0    
+        "x":-4.393435434589705e06,
+        "y":1.831847933951352e06,
+        "z":-1.092518198839412e04,
+        "speedx":5.325274538766682,
+        "speedy":-1.085449989578394e01,
+        "speedz":1.064172253848356   
 	},
 	"mars": {
 		"mass": 16.4169e26,
@@ -57,9 +75,12 @@
         "group": "group5_mars",
         "perihelion": 206.7e9,
         "aphelia": 249.2e9,
-        "speedx": 100,
-        "speedy": 100,
-        "speedz": 0
+        "x":2.046258423553024e11,
+        "y":-3.220910036770023e10,
+        "z":-5.696916886250153e09,
+        "speedx":4.694346169110541e03,
+        "speedy":2.600834528451878e04,
+        "speedz":4.298114322957751e02
 	},
 	"jupiter": {
 		"mass": 1.8981e30,
