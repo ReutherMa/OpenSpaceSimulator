@@ -187,7 +187,7 @@ function buildPlanets(data){
                 posx += data[base].perihelion;
             }
             
-            planet_object.setPosition(posx,0,0,0);
+            planet_object.setPosition(data[planet].x, data[planet].y, data[planet].z, 0);
             console.log(planet + posx);
             spaceObjects[planet] = planet_object;
             //planet.setLabel();
@@ -407,7 +407,7 @@ function render() {
     now = Date.now();
     difftime = (now - lasttime) * 1e-3;
     
-    difftime *= 1e3;
+    difftime *= 1e4;
     
     calculatePhysics(difftime, spaceObjects);
     
