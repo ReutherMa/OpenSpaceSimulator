@@ -16,12 +16,12 @@ var group_galaxy, group1_sun, group2_mercury, group3_venus, group4_earth, group4
     group7_saturn, group8_uranus, group9_neptune;
 
 var sun, earth, moon, mercury, venus, mars, jupiter, saturn, uranus, neptune;
-var spaceObjects = [];
+var spaceObjects = {};
 var mouse = new THREE.Vector2(), INTERSECTED;
     
 // variables for physics
 var now, difftime; 
-var lasttime = Date.now();
+var lasttime;
 
 universe.init = init;
 universe.render = render;
@@ -49,19 +49,6 @@ function init(data){
         vertexShader: vShader.textContent,
         fragmentShader: fShader.textContent
     });
-
-    
-    
-/*  //point LOD (level of detail)
-    //kleine 16x16 textur, alphamap
-    var dotGeometry = new THREE.Geometry();
-    dotGeometry.vertices.push(new THREE.Vector3( 0, 0, 0));
-    var material = new THREE.PointsMaterial({color:0xffffff, size:10, sizeAttenuation:false});
-    var mesh = new THREE.Points(dotGeometry,  material);
-    mesh.position.x = 15000;
-    mesh.position.y = 1000;
-    scene.add( mesh );
-*/
 
     buildPlanets(data);   
     
@@ -112,6 +99,8 @@ function init(data){
     container.appendChild( stats.dom );
     window.addEventListener( 'resize', onWindowResize, false );
     //window.addEventListener( 'click', onMouseClick, false );
+
+    lasttime = Date.now();
 }
 
 //skybox
@@ -170,6 +159,9 @@ function buildPlanets(data){
     scene.add(group_galaxy);
     
     for (var planet in data){
+        
+        var base = data[planet].base;
+        
         if (data[planet].star === true){
             //console.log("Star...");
             
@@ -178,18 +170,26 @@ function buildPlanets(data){
             
             var planet_object = new SpaceObject(planet, data[planet].mass, data[planet].radius*10, {emissive: 0xffff80, color: 0x000000, specular: 0 }, group_name);
             planet_object.buildBody();
-            spaceObjects.push(planet_object);
+            spaceObjects[planet] = planet_object;
             
         }else{
             //console.log("Planets...");
             
             var group_name = new THREE.Group();
             scene.add(group_name);
-            console.log(data[planet].color);
+            //console.log(data[planet].color);
             var planet_object = new SpaceObject(planet, data[planet].mass, data[planet].radius*BLOW, data[planet].color, group_name, data[planet].speedx, data[planet].speedy, data[planet].speedz);
             planet_object.buildBody();
-            planet_object.setPosition(data[planet].perihelion,0,0,0);
-            spaceObjects.push(planet_object);
+            
+            // for objects around other objects
+            var posx = data[planet].perihelion;
+            if (base){
+                posx += data[base].perihelion;
+            }
+            
+            planet_object.setPosition(posx,0,0,0);
+            console.log(planet + posx);
+            spaceObjects[planet] = planet_object;
             //planet.setLabel();
         }
     }
@@ -338,6 +338,16 @@ function SpaceObject(name, mass, radius, color, group, speedx, speedy, speedz){
         var material = new THREE.MeshPhongMaterial( color );
         mesh = new THREE.Mesh(geometry,  material);
         group.add( mesh ); 
+        
+        //point LOD (level of detail)
+        //kleine 16x16 textur, alphamap
+        var dotGeometry = new THREE.Geometry();
+        dotGeometry.vertices.push(new THREE.Vector3( 0, 0, 0));
+        var loader = new THREE.TextureLoader();
+        var material_point = new THREE.PointsMaterial({color:0xffffff, size:8, sizeAttenuation:false, map: loader.load("textures/earth.png")});
+        var mesh_point = new THREE.Points(dotGeometry,  material_point);
+        
+        group.add( mesh_point );
         //spaceObjects.push(mesh);
     }
 
@@ -390,15 +400,17 @@ function SpaceObject(name, mass, radius, color, group, speedx, speedy, speedz){
 //this renders the scene
 function render() {
     
+    requestAnimationFrame( render );
+    //setTimeout (render, 1000/60);
+
     // current time in ms since 1.1.1970 -> 00:00:00 UTC Worldtime 
     now = Date.now();
-    difftime = now - lasttime;
+    difftime = (now - lasttime) * 1e-3;
     
-    //difftime *= 1e13;
+    difftime *= 1e3;
     
     calculatePhysics(difftime, spaceObjects);
     
-    requestAnimationFrame( render );
 
     //rotation mercury
     //sphere_mercury.position.x += 1;
@@ -427,6 +439,7 @@ function render() {
         renderer.render( scene, camera );
     }
     
+    //console.log (Date.now() - now);
     lasttime = now;
 }
 

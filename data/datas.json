@@ -3,7 +3,10 @@
         "star": true,
 		"mass": 1.989e33,
 		"radius": 695508e3,
-        "group": "group1_sun"
+        "group": "group1_sun",
+        "speedx": 0,
+        "speedy": 0,
+        "speedz": 0
 	},
     "mercury": {
 		"mass": 3.3010e26,
@@ -12,8 +15,8 @@
         "group": "group2_mercury",
         "perihelion": 46e9,
         "aphelia": 70e9,
-        "speedx": 100,
-        "speedy": 100,
+        "speedx": 0,
+        "speedy": 5e5,
         "speedz": 0
 	},
     "venus": {
@@ -40,12 +43,13 @@
         "speedz": 0
 	},
     "earth_moon": {
+        "base": "earth",
 		"mass": 7.3477e25,
 		"radius": 1737.5e3,
         "color": {"color": "rgb(244, 244, 244)"},
         "group": "group41_moon",
-        "perihelionToEarth": 363300e3,
-        "apheliaToEarth":405500e3,
+        "perihelion": 363300e3,
+        "aphelia":405500e3,
         "speedx": 100,
         "speedy": 100,
         "speedz": 0    
@@ -64,7 +68,7 @@
 	"jupiter": {
 		"mass": 1.8981e30,
 		"radius": 69911e3,
-        "color": {"color": "rgb(160, 160, 160)"},
+        "color": {"color": "rgb(160, 160, 169)"},
         "group": "group6_jupiter",
         "perihelion": 740550e6,
         "aphelia": 778299e6,

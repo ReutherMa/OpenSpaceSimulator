@@ -1,4 +1,5 @@
 var gravConst = 6.673e-11;
+var ctr = 0;
 /*//initial values on game start
 var rocket = saturnV;
 //var rocket_mass = rocket.mass
@@ -27,25 +28,45 @@ var accelOZ;*/
         
     **/
 function calculateGravitation (difftime, spaceObjects, spaceObject) {
+    
+    //dependant on class definition/structure; based on project proposal
+    if (spaceObject.mass === undefined || spaceObject.name === "sun"){
+        return;   
+    }
+ 
     for (var o in spaceObjects) {
         
         //dependant on class definition/structure; based on project proposal
-        if (spaceObject.name === spaceObjects[o].name || spaceObject.mass === undefined){
+        if (spaceObject.name === spaceObjects[o].name){
             continue;   
         }
-
-        var rx      = (spaceObject.group.position.x - spaceObjects[o].group.position.x);
-        var ry      = (spaceObject.group.position.y - spaceObjects[o].group.position.y);
-        var rz      = (spaceObject.group.position.z - spaceObjects[o].group.position.z);
+        //console.log(spaceObject.group.position.x);
+        //console.log(spaceObject.name);
+            
+        var rx      = spaceObjects[o].group.position.x - spaceObject.group.position.x;
+        var ry      = spaceObjects[o].group.position.y - spaceObject.group.position.y;
+        var rz      = spaceObjects[o].group.position.z - spaceObject.group.position.z;
         var dist2   = rx * rx + ry * ry + rz * rz;
+       
+        var mindist2= spaceObjects[o].radius + spaceObject.radius;
+        mindist2 *= mindist2;
         
-        var accel   = gravConst * spaceObject.mass / dist2;
-        var dist    = Math.sqrt (dist2);
+        //if dist is > mindist
+        if (dist2 > mindist2){
+            var accel   = gravConst * spaceObjects[o].mass / dist2;
+            var dist    = Math.sqrt ( dist2 );
+
+            dist = 1 / dist;
+
+            spaceObject.speedx += accel * rx * dist * difftime;
+            spaceObject.speedy += accel * ry * dist * difftime;
+            spaceObject.speedz += accel * rz * dist * difftime;
+            
+            spaceObject.group.position.x += spaceObject.speedx * difftime;
+            spaceObject.group.position.y += spaceObject.speedy * difftime;
+            spaceObject.group.position.z += spaceObject.speedz * difftime;
+        }
         
-        dist = 1 / dist;
-        spaceObject.speedx += accel * rx * dist;
-        spaceObject.speedy += accel * ry * dist;
-        spaceObject.speedz += accel * rz * dist;
         
     }  
 }
