@@ -185,7 +185,7 @@ function buildPlanets(data){
             
             var group_name = new THREE.Group();
             scene.add(group_name);
-            
+            console.log(data[planet].color);
             var planet_object = new SpaceObject(planet, data[planet].mass, data[planet].radius*BLOW, data[planet].color, group_name, data[planet].speedx, data[planet].speedy, data[planet].speedz);
             planet_object.buildBody();
             planet_object.setPosition(data[planet].perihelion,0,0,0);
