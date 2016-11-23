@@ -47,6 +47,9 @@ function calculateGravitation (difftime, spaceObjects, spaceObject) {
         spaceObject.speedy += accel * ry * dist;
         spaceObject.speedz += accel * rz * dist;
         
+        //movement in x direction
+        //spaceObject.group.position.x += 1000000;
+        
     }  
 }
 
