@@ -50,6 +50,7 @@ function init(data){
         fragmentShader: fShader.textContent
     });
 
+    buildGalaxy();
     buildPlanets(data);   
     
     /*
@@ -150,43 +151,41 @@ function onMouseClick( event ) {
 	}
 }
 
-//build the planets
-function buildPlanets(data){
-    
-    //galaxy
+//build the galaxy
+function buildGalaxy(){
     group_galaxy = new THREE.Group();
     group_galaxy.position.set(0,0,0);
     scene.add(group_galaxy);
+}
+
+//build the planets
+function buildPlanets(data){
     
     for (var planet in data){
-        
+        //if planet has a base for example: earth and earth moon
         var base = data[planet].base;
         
+        //if "planet" is a star -> different object
         if (data[planet].star === true){
-            //console.log("Star...");
-            
             var group_name = new THREE.Group();
-            scene.add(group_name);
-            
+            scene.add(group_name);        
             var planet_object = new SpaceObject(planet, data[planet].mass, data[planet].radius*10, {emissive: 0xffff80, color: 0x000000, specular: 0 }, group_name);
             planet_object.buildBody();
             spaceObjects[planet] = planet_object;
             
+        //normal planets    
         }else{
-            //console.log("Planets...");
-            
             var group_name = new THREE.Group();
             scene.add(group_name);
             //console.log(data[planet].color);
             var planet_object = new SpaceObject(planet, data[planet].mass, data[planet].radius*BLOW, data[planet].color, group_name, data[planet].speedx, data[planet].speedy, data[planet].speedz);
             planet_object.buildBody();
             
-            // for objects around other objects
+            // for base onjects around other planets
             var posx = data[planet].perihelion;
             if (base){
                 posx += data[base].perihelion;
             }
-            
             planet_object.setPosition(data[planet].x, data[planet].y, data[planet].z, 0);
             console.log(planet + posx);
             spaceObjects[planet] = planet_object;
@@ -339,7 +338,7 @@ function SpaceObject(name, mass, radius, color, group, speedx, speedy, speedz){
         mesh = new THREE.Mesh(geometry,  material);
         group.add( mesh ); 
         
-        //point LOD (level of detail)
+        //point level of detail with texture
         //kleine 16x16 textur, alphamap
         var dotGeometry = new THREE.Geometry();
         dotGeometry.vertices.push(new THREE.Vector3( 0, 0, 0));

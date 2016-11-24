@@ -29,14 +29,13 @@ var accelOZ;*/
     **/
 function calculateGravitation (difftime, spaceObjects, spaceObject) {
     
-    //dependant on class definition/structure; based on project proposal
+    //do objects have a mass || is it a star
     if (spaceObject.mass === undefined || spaceObject.name === "sun"){
         return;   
     }
  
-    for (var o in spaceObjects) {
-        
-        //dependant on class definition/structure; based on project proposal
+    for (var o in spaceObjects) {       
+        //same objects do not have influence on themselfe
         if (spaceObject.name === spaceObjects[o].name){
             continue;   
         }
@@ -47,7 +46,7 @@ function calculateGravitation (difftime, spaceObjects, spaceObject) {
         var ry      = spaceObjects[o].group.position.y - spaceObject.group.position.y;
         var rz      = spaceObjects[o].group.position.z - spaceObject.group.position.z;
         var dist2   = rx * rx + ry * ry + rz * rz;
-       
+        
         var mindist2= spaceObjects[o].radius + spaceObject.radius;
         mindist2 *= mindist2;
         
