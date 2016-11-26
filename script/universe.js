@@ -6,6 +6,9 @@ function buildUniverse(){
 //constants
 const BLOW = 1000;
     
+//loaders
+var loader = new THREE.TextureLoader();
+    
 //Instant Variables
 var universe = {};
 var container, stats;
@@ -51,8 +54,16 @@ function init(data){
     });
 
     buildGalaxy();
-    buildPlanets(data);   
+    buildPlanets(data);
     
+    var path = "examples/textures/test/xneg.png";
+    var map = new THREE.TextureLoader().load(path);
+    var material = new THREE.SpriteMaterial( { map: map, color: 0xffffff} );
+    var sprite = new THREE.Sprite( material );
+    sprite.scale.set(5, 5, 5);
+    sprite.position.set(0,695508e5,0);
+    scene.add( sprite );
+
     /*
      *this is a text ("earth" etc) as a canvas. doesnt work
      *here but it same code works on another html file
@@ -109,7 +120,7 @@ function buildSkybox(){
     var imagePrefix = "textures/stars_for_skybox1/";
     var directions  = ["xpos", "xneg", "ypos", "yneg", "zpos", "zneg"];
     var imageSuffix = ".png";
-    var loader = new THREE.TextureLoader();
+    
 
     var materialArray = [];
     for (var i = 0; i < 6; i++)
@@ -172,6 +183,7 @@ function buildPlanets(data){
             var planet_object = new SpaceObject(planet, data[planet].mass, data[planet].radius*10, {emissive: 0xffff80, color: 0x000000, specular: 0 }, group_name);
             planet_object.buildBody();
             spaceObjects[planet] = planet_object;
+            //planet_object.setLabel();
             
         //normal planets    
         }else{
@@ -189,7 +201,8 @@ function buildPlanets(data){
             planet_object.setPosition(data[planet].x, data[planet].y, data[planet].z, 0);
             console.log(planet + posx);
             spaceObjects[planet] = planet_object;
-            //planet.setLabel();
+            planet_object.createEllipse(0, 0, data[planet].aphelia, data[planet].perihelion, group_galaxy);
+            //planet_object.setLabel();
         }
     }
     
@@ -333,6 +346,7 @@ function SpaceObject(name, mass, radius, color, group, speedx, speedy, speedz){
     this.speedz = speedz;
 
     this.buildBody = function(){
+        var path = "textures/"+name+".png";
         var geometry = new THREE.SphereGeometry( radius, segments, segments );
         var material = new THREE.MeshPhongMaterial( color );
         mesh = new THREE.Mesh(geometry,  material);
@@ -343,7 +357,8 @@ function SpaceObject(name, mass, radius, color, group, speedx, speedy, speedz){
         var dotGeometry = new THREE.Geometry();
         dotGeometry.vertices.push(new THREE.Vector3( 0, 0, 0));
         var loader = new THREE.TextureLoader();
-        var material_point = new THREE.PointsMaterial({color:0xffffff, size:8, sizeAttenuation:false, map: loader.load("textures/earth.png")});
+        var material_point = new THREE.PointsMaterial({color:0xffffff, size:4, sizeAttenuation:false, map: loader.load(path)});
+        material_point.transparent = true;
         var mesh_point = new THREE.Points(dotGeometry,  material_point);
         
         group.add( mesh_point );
@@ -355,7 +370,7 @@ function SpaceObject(name, mass, radius, color, group, speedx, speedy, speedz){
         mesh.rotation.z = equatorial_inclination * Math.PI / 180;      
     }
 
-    this.create_ellipse = function(aX, aY, aphelion, perihelion){
+    this.createEllipse = function(aX, aY, aphelion, perihelion, center){
         var segments = 1000;
         var curve = new THREE.EllipseCurve(      
             aX,  aY,                // aX, aY
@@ -370,29 +385,19 @@ function SpaceObject(name, mass, radius, color, group, speedx, speedy, speedz){
         var path_material = new THREE.LineBasicMaterial( color );
 
         var ellipse = new THREE.Line( path_geometry, path_material );
-        ellipse.rotation.x = Math.PI*.5;
-        group.add( ellipse );
+        //ellipse.rotation.x = Math.PI*.5;
+        center.add( ellipse );
     }
     
     this.setLabel = function(){
-        /*var lbl = makeTextSprite("hello");
-        lbl.position.set(0, 0, 0);
-        lbl.scale.set(1000,1000,1000);
-        scene.add(lbl);
-        function makeTextSprite( message ) {
-            var canvas = document.createElement('canvas');
-            canvas.width = 64;
-            canvas.height = 64;
-            var context = canvas.getContext('2d');
-            context.font = "24px Arial";
-            context.fillStyle = "rgba(255,0,0,1)";
-            context.fillText('Earth!', 0, 64);
-            var texture = new THREE.Texture(canvas)
-            texture.needsUpdate = true;
-            var material = new THREE.SpriteMaterial( { map: texture, color: 0xffffff, fog: true } );
-            var sprite = new THREE.Sprite( material );
-            return sprite;  
-        }*/
+        //var path = "textures/"+name+"_label.png"; 
+        var path = "examples/textures/test/xneg.png";
+        var map = new THREE.TextureLoader().load(path);
+        var material = new THREE.SpriteMaterial( { map: map, color: 0xffffff} );
+        var sprite = new THREE.Sprite( material );
+        sprite.scale.set(1e11, 1e11, 1e11);
+        sprite.position.set(0,695508e5,0)
+        group.add( sprite );
     }
 }
 
@@ -406,7 +411,7 @@ function render() {
     now = Date.now();
     difftime = (now - lasttime) * 1e-3;
     
-    difftime *= 1e4;
+    difftime *= 1e3;
     
     calculatePhysics(difftime, spaceObjects);
     
