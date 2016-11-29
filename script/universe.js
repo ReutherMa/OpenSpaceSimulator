@@ -5,7 +5,7 @@ var dae;
 function buildUniverse(){
 
 //constants
-const BLOW = 1;
+const BLOW = 1000;
     
 //loaders
 var loader = new THREE.TextureLoader();
@@ -220,7 +220,34 @@ function SpaceObject(name, mass, radius, color, group, speedx, speedy, speedz){
     this.buildBody = function(){
         var path = "textures/"+name+".png";
         var geometry = new THREE.SphereGeometry( radius, segments, segments );
-        var material = new THREE.MeshPhongMaterial( color );
+        var material = new THREE.MeshPhongMaterial();
+        
+        //texture
+        var path_tex = "textures/"+name;
+        material.map = loader.load(path_tex+"_map.jpg");
+        material.bumpMap =  loader.load(path_tex+"_bumpmap.jpg");
+        material.bumpScale = 4.0;
+        
+        //TODO: fix radius
+        /*
+        if (name == "earth"){
+            console.log("Earth Texture");
+            material.specularMap    = loader.load(path_tex+"_mapspec.jpg");
+            material.specular  = new THREE.Color(0x111111); 
+            console.log(radius);
+            var geometry_cloud   = new THREE.SphereGeometry(radius*1.1*BLOW, segments, segments);  
+            var material_cloud  = new THREE.MeshPhongMaterial({
+                map         : loader.load(path_tex+"_mapcloud.png"),
+                side        : THREE.DoubleSide,
+                opacity     : 0.8,
+                transparent : true,
+                depthWrite  : true,
+            });
+            var cloudMesh = new THREE.Mesh(geometry_cloud, material_cloud);
+            group.add( cloudMesh );
+        }
+        */
+        
         mesh = new THREE.Mesh(geometry,  material);
         group.add( mesh ); 
         
