@@ -32,8 +32,8 @@ universe.render = render;
 function init(data){
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(60 , window.innerWidth/window.innerHeight , 0.01, 1e27);
-    camera.position.set( 0, 0, 695508e3 + 10e10 );
-
+    camera.position.set( 0, 0, 695508e3 + 10e10 ); 
+    //camera.position.set( data["earth"].x, data["earth"].y, data["earth"].z +6371.00e3 ); EARTH
 
     buildSkybox();
 
@@ -143,6 +143,7 @@ function buildPlanets(data){
     for (var planet in data){
         //if planet has a base for example: earth and earth moon
         var base = data[planet].base;
+        console.log(base);
         
         //if "planet" is a star -> different object
         if (data[planet].star === true){
@@ -163,15 +164,19 @@ function buildPlanets(data){
             planet_object.setLabel();
             
             // for base onjects around other planets
-            var posx = data[planet].perihelion;
+            var posx = data[planet].x;
+            var posy = data[planet].y;
+            var posz = data[planet].z;
             if (base){
-                posx += data[base].perihelion;
+                posx += data[base].x;
+                posy += data[base].y;
+                posz += data[base].z;
             }
-            planet_object.setPosition(data[planet].x, data[planet].y, data[planet].z, 0);
-            console.log(planet + posx);
+            planet_object.setPosition(posx, posy, posz, 0);
             spaceObjects[planet] = planet_object;
             planet_object.createEllipse(0, 0, data[planet].aphelia, data[planet].perihelion, group_galaxy);
             planet_object.setLabel();
+            //console.log(planet + posx);
         }
     }
     
@@ -239,7 +244,7 @@ function SpaceObject(name, mass, radius, color, group, speedx, speedy, speedz){
         var material_name = new THREE.PointsMaterial({color:0xffffff, size:128, sizeAttenuation:false, map: loader.load(path)});
         material_name.transparent = true;
         var mesh_name = new THREE.Points(nameGeometry,  material_name);
-        mesh_name.position.x = radius*BLOW*2;
+        mesh_name.position.x = radius*2;
         group.add( mesh_name );
     }
 }

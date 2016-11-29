@@ -56,6 +56,7 @@
         "speedz":-1.497386889991681e6
 	},
     "earth_moon": {
+        "base": "earth",
 		"mass": 7.3477e25,
 		"radius": 1737.5e3,
         "color": {"color": "rgb(244, 244, 244)"},
