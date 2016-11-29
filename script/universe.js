@@ -1,5 +1,6 @@
 // fill global with key-values, datatype: boolean
 var global = {};
+var dae;
 
 function buildUniverse(){
 
@@ -21,6 +22,7 @@ var group_galaxy, group1_sun, group2_mercury, group3_venus, group4_earth, group4
 var sun, earth, moon, mercury, venus, mars, jupiter, saturn, uranus, neptune;
 var spaceObjects = {};
 var mouse = new THREE.Vector2(), INTERSECTED;
+
     
 // variables for physics
 var now, difftime; 
@@ -186,16 +188,18 @@ function buildPlanets(data){
             function placeRocket(){
             var loader = new THREE.ColladaLoader();
             loader.options.convertUpAxis = true;
-            loader.load( "models/saturnV.dae", function ( collada ) {
+            loader.load( "models/launchpad.dae", function ( collada ) {
             
     
-                var dae = collada.scene;
-                var skin = collada.skins[ 0 ];
+                dae = collada.scene;
+                //var skin = collada.skins[ 0 ];
         
-                dae.position.set(105508e5,0,0);//x,z,y- if you think in blender dimensions ;)
+                dae.position.set(spaceObjects.earth.group.position.x+spaceObjects.earth.radius, spaceObjects.earth.group.position.y, spaceObjects.earth.group.position.z);//x,z,y- if you think in blender dimensions ;)
                 dae.scale.set(695508e3,695508e3,695508e3);
+                //dae.color="rgb(153, 190, 153)";
                 scene.add(dae);
                 console.log("rocket function is called");
+                console.log(spaceObjects.earth.group.position.x);
     
             }); 
         }

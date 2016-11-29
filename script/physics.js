@@ -52,19 +52,28 @@ function calculateGravitation (difftime, spaceObjects, spaceObject) {
         
         //if dist is > mindist
         if (dist2 > mindist2){
-            var accel   = gravConst * spaceObjects[o].mass / dist2;
+            spaceObject.accelX = gravConst * spaceObjects[o].mass / dist2;
             var dist    = Math.sqrt ( dist2 );
 
             dist = 1 / dist;
+            
+            
 
-            spaceObject.speedx += accel * rx * dist * difftime;
-            spaceObject.speedy += accel * ry * dist * difftime;
-            spaceObject.speedz += accel * rz * dist * difftime;
+            spaceObject.speedx += spaceObject.accelX * rx * dist * difftime;
+            spaceObject.speedy += spaceObject.accelX * ry * dist * difftime;
+            spaceObject.speedz += spaceObject.accelX * rz * dist * difftime;
             
             spaceObject.group.position.x += spaceObject.speedx * difftime;
             spaceObject.group.position.y += spaceObject.speedy * difftime;
             spaceObject.group.position.z += spaceObject.speedz * difftime;
+            
+            
         }
+        
+        //rocket position before launch
+        //if(launched){}
+        //update rocket position
+        
         
     }  
 }
@@ -77,7 +86,7 @@ part 1: acceleration of direction and new position
 
 **/
 
-/*
+
 function move(throttleInPercent){
     
 //calculates fuel-mass that will be lost in difftime
@@ -104,7 +113,7 @@ part 2: orientation
 input: keyPressed(WASDQE) and position(as vec3)
 **/
 
-/*function rotateRocket(keyPressed, position){
+function rotateRocket(keyPressed, position){
     var quaternion = new THREE.Quaternion();
     
     switch(keyPressed){
@@ -149,7 +158,7 @@ input: keyPressed(WASDQE) and position(as vec3)
     position.applyQuaternion(quaternion);
     
 }
-*/
+
 
 //called during every rendering
 function calculatePhysics(difftime, spaceObjects){
@@ -160,6 +169,11 @@ function calculatePhysics(difftime, spaceObjects){
         //console.log(i);
         var spaceObject = spaceObjects[i];
         calculateGravitation(difftime, spaceObjects, spaceObject);
+    }
+    if(dae){
+    dae.position.x = spaceObjects.earth.group.position.x;
+    dae.position.y = spaceObjects.earth.group.position.y;
+    dae.position.z = spaceObjects.earth.group.position.z;
     }
     //move(getThrottleOnPercent);
     //roateRocket(getKeyPressed, position_rocket);
