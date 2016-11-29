@@ -81,6 +81,27 @@ var mate = new THREE.SpriteMaterial( { map: tex, color: 0xffffff } );
 var sprite = new THREE.Sprite( mate );
 sprite.position.set(0,2,0);
 cube2.add( sprite );
+    
+//Test with texture
+        var path = "textures/earth_label.png";
+        var map = new THREE.TextureLoader().load(path);
+        var material = new THREE.SpriteMaterial( { map: map, color: 0xffffff} );
+        var sprite = new THREE.Sprite( material );
+        //sprite.scale.set(1e11, 1e11, 1e11);
+        sprite.position.set(0,2,0)
+        //group1.add( sprite );
+
+//test with LOD
+    
+        var dotGeometry = new THREE.Geometry();
+        dotGeometry.vertices.push(new THREE.Vector3( 0, 3, 0));
+        var loader = new THREE.TextureLoader();
+        var material_point = new THREE.PointsMaterial({color:0xffffff, size:512, sizeAttenuation:false, map: loader.load("textures/labels/earth_label.png")});
+        material_point.transparent = true;
+        var mesh_point = new THREE.Points(dotGeometry,  material_point);
+        //mesh_point.scale.set(3, 0, 0);
+        
+        group1.add( mesh_point );
 
 camera.position.z = 8;
 
