@@ -68,19 +68,27 @@ var cube3 = new THREE.Mesh( geometry, material );
 group3.add( cube3 );
 
 //test text
-var canvas = document.createElement('canvas');
-canvas.width = 64;
-canvas.height = 64;
+/*var canvas = document.createElement('canvas');
+canvas.width = 512;
+canvas.height = 512;
 var context = canvas.getContext('2d');
-context.font = "24px Arial";
+context.font = "196px Arial";
 context.fillStyle = "rgba(255,0,0,1)";
-context.fillText('Earth!', 0, 64);
+context.fillText('Earth!', 0, 256);
 var tex = new THREE.Texture(canvas);
 tex.needsUpdate = true;
 var mate = new THREE.SpriteMaterial( { map: tex, color: 0xffffff } );
 var sprite = new THREE.Sprite( mate );
 sprite.position.set(0,2,0);
-cube2.add( sprite );
+sprite.scale.set(5,5,5);
+group2.add( sprite );*/
+
+var map = new THREE.TextureLoader().load("textures/test/xneg.png");
+var mate = new THREE.SpriteMaterial( { map: map, color: 0xffffff } );
+var sprite = new THREE.Sprite( mate );
+sprite.position.set(0,2,0);
+sprite.scale.set(1e10,1e10,1e10);
+group2.add(sprite);
 
 camera.position.z = 8;
 
