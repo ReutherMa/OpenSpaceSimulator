@@ -55,6 +55,7 @@ function init(data){
 
     buildGalaxy();
     buildPlanets(data);
+    placeRocket();
 
     //controls
     controls = new THREE.OrbitControls( camera );
@@ -181,6 +182,23 @@ function buildPlanets(data){
     }
     
 }
+    
+            function placeRocket(){
+            var loader = new THREE.ColladaLoader();
+            loader.options.convertUpAxis = true;
+            loader.load( "models/saturnV.dae", function ( collada ) {
+            
+    
+                var dae = collada.scene;
+                var skin = collada.skins[ 0 ];
+        
+                dae.position.set(105508e5,0,0);//x,z,y- if you think in blender dimensions ;)
+                dae.scale.set(695508e3,695508e3,695508e3);
+                scene.add(dae);
+                console.log("rocket function is called");
+    
+            }); 
+        }
 
 //create a planet with mesh, position and orbit
 //SpaceObject(name of object, mass of object, radius(size) of object, parameters, in which group object is)
