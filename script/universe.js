@@ -14,7 +14,7 @@ var universe = {};
 var container, stats;
 var camera, controls, scene, renderer, raycaster;
 var bulbLight, bulbMat;
-var segments = 64;
+var segments = 12;
 var group_galaxy, group1_sun, group2_mercury, group3_venus, group4_earth, group41_moon, group5_mars, group6_jupiter,
     group7_saturn, group8_uranus, group9_neptune;
 
@@ -122,7 +122,7 @@ function onMouseClick( event ) {
     //console.log(intersects[0].object.position);
     //camera.position = intersects[0].object.position;
     for ( var i = 0; i < intersects.length; i++ ) {
-        console.log("now");
+        //console.log("now");
         camera.position.x = intersects[i].object.position.x;
         camera.position.y = intersects[i].object.position.y;
         camera.position.z = intersects[i].object.position.z+3;
@@ -143,7 +143,7 @@ function buildPlanets(data){
     for (var planet in data){
         //if planet has a base for example: earth and earth moon
         var base = data[planet].base;
-        console.log(base);
+        //console.log(base);
         
         //if "planet" is a star -> different object
         if (data[planet].star === true){
@@ -269,8 +269,9 @@ function render() {
     //time += 0.0003;
     
     //Movement for groups
+    //console.log(spaceObjects.sun.group.children[0]); MESH
+    spaceObjects.sun.group.children[0].rotateY(0.5);
     /*
-    group1_sun.rotateY(0.0001);
     group2_earth.rotateY(0.01);
     group_mercury_rotate.rotateY(0.04);
     group_earth_rotate.rotateY(0.001);
