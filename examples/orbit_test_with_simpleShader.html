@@ -63,7 +63,7 @@
         function init(){
             scene = new THREE.Scene();
             //scene.fog = new THREE.FogExp2( 0xcccccc, 0.002 );
-            camera = new THREE.PerspectiveCamera(60 , window.innerWidth/window.innerHeight , 1, 500);
+            camera = new THREE.PerspectiveCamera(60 , window.innerWidth/window.innerHeight , 1, 50000);
             camera.position.set( 0, 0, 5 );
             
             //grid
@@ -104,6 +104,12 @@
 				pointLight = createLight();
 				scene.add( pointLight );
             
+            var helper = new THREE.CameraHelper( pointLight.shadow.camera );
+            scene.add( helper );
+            pointLight.shadowCameraRight     =  5;
+            pointLight.shadowCameraLeft     = -5;
+            pointLight.shadowCameraTop      =  5;
+            pointLight.shadowCameraBottom   = -5;
             
             //light_shader
             var fShader = document.getElementById("fragmentshader");
