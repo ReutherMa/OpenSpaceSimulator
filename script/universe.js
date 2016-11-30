@@ -43,9 +43,13 @@ function init(data){
     scene.add( helper ); */
 
     //provisionally directional light from the sky (up)
+/*    
     var light = new THREE.DirectionalLight( 0xffffff );
     light.position.set( 0, 1, 0 );
     scene.add(light);
+*/
+    var ambLight = new THREE.AmbientLight(0x3e3e3e3e);
+    scene.add(ambLight);
 
     //light_shader
     var fShader = document.getElementById("fragmentshader");
@@ -218,46 +222,57 @@ function SpaceObject(name, mass, radius, color, group, speedx, speedy, speedz){
     this.speedz = speedz;
 
     this.buildBody = function(){
-        var path = "textures/"+name+".png";
-        var geometry = new THREE.SphereGeometry( radius, segments, segments );
-        var material = new THREE.MeshPhongMaterial();
-        
-        //texture
-        var path_tex = "textures/"+name;
-        material.map = loader.load(path_tex+"_map.jpg");
-        material.bumpMap =  loader.load(path_tex+"_bumpmap.jpg");
-        material.bumpScale = 4.0;
-        
-        //TODO: fix radius
-        /*
-        if (name == "earth"){
-            console.log("Earth Texture");
-            material.specularMap    = loader.load(path_tex+"_mapspec.jpg");
-            material.specular  = new THREE.Color(0x111111); 
-            console.log(radius);
-            var geometry_cloud   = new THREE.SphereGeometry(radius*1.1*BLOW, segments, segments);  
-            var material_cloud  = new THREE.MeshPhongMaterial({
-                map         : loader.load(path_tex+"_mapcloud.png"),
-                side        : THREE.DoubleSide,
-                opacity     : 0.8,
-                transparent : true,
-                depthWrite  : true,
-            });
-            var cloudMesh = new THREE.Mesh(geometry_cloud, material_cloud);
-            group.add( cloudMesh );
-        }
-        */
-        
-        mesh = new THREE.Mesh(geometry,  material);
-        group.add( mesh ); 
-        
-        //point level of detail with texture
-        var dotGeometry = new THREE.Geometry();
-        dotGeometry.vertices.push(new THREE.Vector3( 0, 0, 0));
-        var material_point = new THREE.PointsMaterial({color:0xffffff, size:4, sizeAttenuation:false, map: loader.load(path)});
-        material_point.transparent = true;
-        var mesh_point = new THREE.Points(dotGeometry,  material_point);
-        group.add( mesh_point );
+          
+          var geometry;
+          var material;
+          //texture
+          if ( name == "sun" ){
+              geometry = new THREE.SphereGeometry( radius, segments, segments );
+              material = new THREE.MeshPhongMaterial( color );
+          }
+          
+          else{
+              var path = "textures/"+name+".png";
+              geometry = new THREE.SphereGeometry( radius, segments, segments );
+              material = new THREE.MeshPhongMaterial( {color: 0xffffff} );
+              var path_tex = "textures/"+name;
+              material.map = loader.load(path_tex+"_map.jpg");
+              material.bumpMap =  loader.load(path_tex+"_bumpmap.jpg");
+              material.bumpScale = 4.0;
+          }
+          
+          
+          //TODO: fix radius
+          /*
+          if ( name == "earth" ){
+              console.log("Earth Texture");
+              material.specularMap    = loader.load(path_tex+"_mapspec.jpg");
+              material.specular  = new THREE.Color(0x111111); 
+              console.log(radius);
+              var geometry_cloud   = new THREE.SphereGeometry(radius*1.1*BLOW, segments, segments);  
+              var material_cloud  = new THREE.MeshPhongMaterial({
+                  map         : loader.load(path_tex+"_mapcloud.png"),
+                  side        : THREE.DoubleSide,
+                  opacity     : 0.8,
+                  transparent : true,
+                  depthWrite  : true,
+              });
+              var cloudMesh = new THREE.Mesh(geometry_cloud, material_cloud);
+              group.add( cloudMesh );
+          }
+          */
+          
+          mesh = new THREE.Mesh(geometry,  material);
+          group.add( mesh ); 
+          
+          //point level of detail with texture
+          var dot_path = "textures/"+name+".png";
+          var dotGeometry = new THREE.Geometry();
+          dotGeometry.vertices.push(new THREE.Vector3( 0, 0, 0));
+          var material_point = new THREE.PointsMaterial({color:0xffffff, size:4, sizeAttenuation:false, map: loader.load(dot_path)});
+          material_point.transparent = true;
+          var mesh_point = new THREE.Points(dotGeometry,  material_point);
+          group.add( mesh_point );
     }
 
     this.setPosition = function(x, y, z, equatorial_inclination){
