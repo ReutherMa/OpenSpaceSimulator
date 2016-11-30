@@ -86,7 +86,7 @@ part 1: acceleration of direction and new position
 
 **/
 
-
+/*
 function move(throttleInPercent){
     
 //calculates fuel-mass that will be lost in difftime
@@ -106,7 +106,7 @@ else{
     //new rocket position; orientation is probably a matrix 
     vec3 position_rocket=vec3((position_rocket+(accel*difftime))*orientation); 
 }
-
+*/
 /**
 Rocket Science
 part 2: orientation
