@@ -34,7 +34,9 @@ function calculateGravitation (difftime, spaceObjects, spaceObject) {
         return;   
     }
  
-    for (var o in spaceObjects) {       
+    for (var o in spaceObjects) {
+if (spaceObjects[o].name != "sun")
+    continue;
         //same objects do not have influence on themselfe
         if (spaceObject.name === spaceObjects[o].name){
             continue;   
@@ -52,16 +54,21 @@ function calculateGravitation (difftime, spaceObjects, spaceObject) {
         
         //if dist is > mindist
         if (dist2 > mindist2){
-            spaceObject.accelX = gravConst * spaceObjects[o].mass / dist2;
+            
+            var accelX = 0;
+            accelX = gravConst * spaceObjects[o].mass / dist2;
+            
+if (spaceObject.name == "earth")
+    console.log (spaceObjects[o].name+": "+ accelX);
             var dist    = Math.sqrt ( dist2 );
 
             dist = 1 / dist;
             
             
 
-            spaceObject.speedx += spaceObject.accelX * rx * dist * difftime;
-            spaceObject.speedy += spaceObject.accelX * ry * dist * difftime;
-            spaceObject.speedz += spaceObject.accelX * rz * dist * difftime;
+            spaceObject.speedx += accelX * rx * dist * difftime;
+            spaceObject.speedy += accelX * ry * dist * difftime;
+            spaceObject.speedz += accelX * rz * dist * difftime;
             
             spaceObject.group.position.x += spaceObject.speedx * difftime;
             spaceObject.group.position.y += spaceObject.speedy * difftime;

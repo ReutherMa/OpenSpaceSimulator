@@ -15,7 +15,7 @@ var universe = {};
 var container, stats;
 var camera, controls, scene, renderer, raycaster;
 var bulbLight, bulbMat;
-var segments = 12;
+var segments = 64;
 var group_galaxy, group1_sun, group2_mercury, group3_venus, group4_earth, group41_moon, group5_mars, group6_jupiter,
     group7_saturn, group8_uranus, group9_neptune;
 
@@ -61,7 +61,28 @@ function init(data){
 
     buildGalaxy();
     buildPlanets(data);
-    placeRocket();
+    //placeRocket();
+    
+    
+                 //0 OBJECT
+            var geometry = new THREE.SphereGeometry( 695508e3, 64, 64 );
+            var material = new THREE.MeshPhongMaterial( { color: 0xff0000 } );
+            var sphere_mercury = new THREE.Mesh( geometry, material );
+            sphere_mercury.position.set(695508e3 * 3,0,0);
+            sphere_mercury.castShadow = true;
+            sphere_mercury.receiveShadow = true;
+            scene.add( sphere_mercury );
+            
+            //1 OBJECT
+            var geometry = new THREE.SphereGeometry( 695508e3, 64, 64 );
+            var material = new THREE.MeshPhongMaterial( { color: 0x00ff00 } );
+            var sphere_mercury = new THREE.Mesh( geometry, material );
+            sphere_mercury.castShadow = true;
+            sphere_mercury.receiveShadow = true;
+            sphere_mercury.position.set(695508e3 * 6,0,0);
+            scene.add( sphere_mercury );
+    
+    
 
     //controls
     controls = new THREE.OrbitControls( camera );
@@ -79,6 +100,8 @@ function init(data){
     renderer = new THREE.WebGLRenderer({ antialias: true, logarithmicDepthBuffer: true });
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.BasicShadowMap;
     //renderer.setDepthTest(true);
     container = document.getElementById( 'container' );
     container.appendChild( renderer.domElement );
@@ -227,18 +250,32 @@ function SpaceObject(name, mass, radius, color, group, speedx, speedy, speedz){
           var material;
           //texture
           if ( name == "sun" ){
+              
+              var pointLight = new THREE.PointLight( 0xffffff, 1, 1e26 );
+              pointLight.castShadow = true;
+              
               geometry = new THREE.SphereGeometry( radius, segments, segments );
               material = new THREE.MeshPhongMaterial( color );
+              
+              mesh = new THREE.Mesh(geometry,  material);
+              pointLight.add( mesh );
+              
           }
           
           else{
               var path = "textures/"+name+".png";
               geometry = new THREE.SphereGeometry( radius, segments, segments );
               material = new THREE.MeshPhongMaterial( {color: 0xffffff} );
+              
+              
               var path_tex = "textures/"+name;
               material.map = loader.load(path_tex+"_map.jpg");
               material.bumpMap =  loader.load(path_tex+"_bumpmap.jpg");
               material.bumpScale = 4.0;
+              
+              mesh = new THREE.Mesh(geometry,  material);
+              mesh.castShadow = true;
+              mesh.receiveShadow = true;
           }
           
           
@@ -262,7 +299,6 @@ function SpaceObject(name, mass, radius, color, group, speedx, speedy, speedz){
           }
           */
           
-          mesh = new THREE.Mesh(geometry,  material);
           group.add( mesh ); 
           
           //point level of detail with texture
@@ -307,6 +343,7 @@ function SpaceObject(name, mass, radius, color, group, speedx, speedy, speedz){
         nameGeometry.vertices.push(new THREE.Vector3( 0, 0, 0));
         var material_name = new THREE.PointsMaterial({color:0xffffff, size:128, sizeAttenuation:false, map: loader.load(path)});
         material_name.transparent = true;
+        material_name.depthTest = false;
         var mesh_name = new THREE.Points(nameGeometry,  material_name);
         mesh_name.position.x = radius*2;
         group.add( mesh_name );
@@ -323,7 +360,7 @@ function render() {
     now = Date.now();
     difftime = (now - lasttime) * 1e-3;
     
-    difftime *= 1e3;
+    difftime *= 1e6;
     
     calculatePhysics(difftime, spaceObjects);
     
@@ -358,6 +395,7 @@ function render() {
     
     //console.log (Date.now() - now);
     lasttime = now;
+    console.log (spaceObjects.earth.speedy);
 }
 
  return universe;
