@@ -35,30 +35,14 @@
         var camera, controls, scene, renderer;
         var sky, sunSphere;
         var bulbLight, bulbMat;
-        var sphere_mercury;
         var time = 0;
        
         init();
        // render();
         
         function initSky(){
-                /*
-                // Add Sky Mesh
-				sky = new THREE.Sky();
-				scene.add( sky.mesh );
-
-				// Add Sun Helper
-				sunSphere = new THREE.Mesh(
-					new THREE.SphereBufferGeometry( 20000, 16, 8 ),
-					new THREE.MeshBasicMaterial( { color: 0xffffff } )
-				);
-				sunSphere.position.y = - 700000;
-				sunSphere.visible = false;
-				scene.add( sunSphere );
-                */
-                 
                 //skybox
-                var imagePrefix = "textures/stars_for_skybox/";
+                var imagePrefix = "textures/stars_for_skybox3/";
                 var directions  = ["xpos", "xneg", "ypos", "yneg", "zpos", "zneg"];
                 var imageSuffix = ".png";
 
@@ -79,33 +63,88 @@
         function init(){
             scene = new THREE.Scene();
             //scene.fog = new THREE.FogExp2( 0xcccccc, 0.002 );
-            camera = new THREE.PerspectiveCamera(60 , window.innerWidth/window.innerHeight , 0.01, 500000);
-            camera.position.set( 0, 100, 2000 );
+            camera = new THREE.PerspectiveCamera(60 , window.innerWidth/window.innerHeight , 1, 500);
+            camera.position.set( 0, 0, 5 );
             
-            var helper = new THREE.GridHelper( 10000, 20, 0xffffff, 0xffffff );
-            scene.add( helper );
+            //grid
+            /*var helper = new THREE.GridHelper( 10000, 20, 0xffffff, 0xffffff );
+            scene.add( helper );*/
+            
+            //ambientlight
+            /*var light = new THREE.AmbientLight( 0x1e1e1e );
+            scene.add( light );*/ 
+            //pointLight
+          /*  var pLight = new THREE.PointLight( 0xffffff, 1, 100 );
+            pLight.position.set( 0, 0, 0 );
+            pLight.castShadow = true;
+            pLight.shadow.camera.near = 1;
+            pLight.shadow.camera.far = 100;
+            pLight.shadow.bias = 0.01;
+            scene.add( pLight );*/
+            
+            
+            function createLight( color ) {
+
+					var pointLight = new THREE.PointLight( color, 1, 100 );
+					pointLight.castShadow = true;
+					/*pointLight.shadow.camera.near = 1;
+					pointLight.shadow.camera.far = 100;*/
+					//pointLight.shadowCameraVisible = true;
+					//pointLight.shadow.bias = 0.01;
+
+					var geometry = new THREE.SphereGeometry( 1.5, 64, 64 );
+					var material = new THREE.MeshPhongMaterial( { emissive: 0xffff80, color: 0x000000, specular: 0 } );
+					var sphere = new THREE.Mesh( geometry, material );
+					pointLight.add( sphere );
+
+					return pointLight
+
+				}
+
+				pointLight = createLight();
+				scene.add( pointLight );
             
             
             //light_shader
             var fShader = document.getElementById("fragmentshader");
             var vShader = document.getElementById("vertexshader");
+            
+             //0 OBJECT
+            var geometry = new THREE.SphereGeometry( 1, 64, 64 );
+            var material = new THREE.MeshPhongMaterial( { color: 0xff0000, shininess: 100, specular: 0x222222 } );
+            var sphere_mercury = new THREE.Mesh( geometry, material );
+            sphere_mercury.position.set(-3,0,0);
+            sphere_mercury.castShadow = true;
+            sphere_mercury.receiveShadow = true;
+            scene.add( sphere_mercury );
+            
+            //1 OBJECT
+            var geometry = new THREE.SphereGeometry( 1, 64, 64 );
+            var material = new THREE.MeshPhongMaterial( { color: 0x00ff00, shininess: 100, specular: 0x222222 } );
+            var sphere_mercury = new THREE.Mesh( geometry, material );
+            sphere_mercury.castShadow = true;
+            sphere_mercury.receiveShadow = true;
+            sphere_mercury.position.set(3,0,0);
+            scene.add( sphere_mercury );
+            
+            //2 OBJECT
+            var geometry = new THREE.SphereGeometry( 7, 64, 64 );
+            var material = new THREE.MeshPhongMaterial( { color: 0x0000ff, shininess: 100, specular: 0x222222 } );
+            var sphere_mercury = new THREE.Mesh( geometry, material );
+            sphere_mercury.position.set(20,0,0);
+            sphere_mercury.castShadow = true;
+            sphere_mercury.receiveShadow = true;
+            scene.add( sphere_mercury );
+            
+            //1 SHADER
+            /*var geometry = new THREE.SphereGeometry( 1, 32, 32 );
             var shaderMaterial = new THREE.ShaderMaterial({
                 vertexShader: vShader.textContent,
                 fragmentShader: fShader.textContent
             });
-            var geometry = new THREE.SphereGeometry( 1000, 32, 32 );
-            sphere_mercury = new THREE.Mesh( geometry, shaderMaterial );
-            sphere_mercury.position.set(2000,0,0);
-            scene.add( sphere_mercury );
-            
-            var geometry = new THREE.SphereGeometry( 1000, 32, 32 );
-            var material = new THREE.MeshBasicMaterial({ 
-                color: 0xffffff,
-                wireframe: false
-            });
-            var ball = new THREE.Mesh( geometry, material );
+            var ball = new THREE.Mesh( geometry, shaderMaterial );
             ball.position.set(0,0,0);
-            scene.add( ball );
+            scene.add( ball );*/
             
             //controls
             controls = new THREE.OrbitControls( camera );
@@ -119,9 +158,11 @@
             initSky(); 
             
             //renderer
-            renderer = new THREE.WebGLRenderer();
+            renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setPixelRatio( window.devicePixelRatio );
             renderer.setSize( window.innerWidth, window.innerHeight );
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.BasicShadowMap;
             container = document.getElementById( 'container' );
             container.appendChild( renderer.domElement );
             stats = new Stats();
@@ -144,10 +185,10 @@
             //rotation mercury
             //sphere_mercury.position.x += 1;
             time += 0.01;          
-            sphere_mercury.rotation.y += 0.03;
+            /*sphere_mercury.rotation.y += 0.03;
 
             sphere_mercury.position.x = 3000*Math.cos(time) + 0;
-            sphere_mercury.position.z = 5000*Math.sin(time) + 0;
+            sphere_mercury.position.z = 5000*Math.sin(time) + 0;*/
         
             stats.update();
             renderer.render( scene, camera );
