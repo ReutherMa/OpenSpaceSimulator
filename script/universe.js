@@ -48,7 +48,7 @@ function init(data){
     light.position.set( 0, 1, 0 );
     scene.add(light);
 */
-    var ambLight = new THREE.AmbientLight(0x3e3e3e3e);
+    var ambLight = new THREE.AmbientLight(0xffffff); //0x3e3e3e3e
     scene.add(ambLight);
 
     //light_shader
@@ -341,7 +341,7 @@ function SpaceObject(name, mass, radius, color, group, speedx, speedy, speedz){
         var path = "textures/"+name+"_label.png";
         var nameGeometry = new THREE.Geometry();
         nameGeometry.vertices.push(new THREE.Vector3( 0, 0, 0));
-        var material_name = new THREE.PointsMaterial({color:0xffffff, size:128, sizeAttenuation:false, map: loader.load(path)});
+        var material_name = new THREE.PointsMaterial({color:0xffffff, size:64, sizeAttenuation:false, map: loader.load(path)});
         material_name.transparent = true;
         material_name.depthTest = false;
         var mesh_name = new THREE.Points(nameGeometry,  material_name);
