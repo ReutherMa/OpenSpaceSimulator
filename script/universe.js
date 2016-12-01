@@ -42,12 +42,6 @@ function init(data){
 /*  var helper = new THREE.GridHelper( 10000, 20, 0xffffff, 0xffffff );
     scene.add( helper ); */
 
-    //provisionally directional light from the sky (up)
-/*    
-    var light = new THREE.DirectionalLight( 0xffffff );
-    light.position.set( 0, 1, 0 );
-    scene.add(light);
-*/
     var ambLight = new THREE.AmbientLight(0x3e3e3e3e); //0x3e3e3e3e
     scene.add(ambLight);
 
@@ -263,7 +257,7 @@ function SpaceObject(name, mass, radius, color, group, speedx, speedy, speedz){
           var material;
           //texture
           if ( name == "sun" ){
-              var pointLight = new THREE.PointLight( 0xf39f18, 3, 0);
+              var pointLight = new THREE.PointLight( 0xffffe0, 2, 0);
               //pointLight.castShadow = true;
               scene.add( pointLight );
               
