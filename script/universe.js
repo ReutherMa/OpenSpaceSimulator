@@ -102,6 +102,7 @@ function init(data){
     renderer.setSize( window.innerWidth, window.innerHeight );
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.BasicShadowMap;
+    console.log(renderer.shadowMap);
     //renderer.setDepthTest(true);
     container = document.getElementById( 'container' );
     container.appendChild( renderer.domElement );
@@ -251,7 +252,7 @@ function SpaceObject(name, mass, radius, color, group, speedx, speedy, speedz){
           //texture
           if ( name == "sun" ){
               
-              var pointLight = new THREE.PointLight( 0xffffff, 1, 1e26 );
+              var pointLight = new THREE.PointLight( 0x0000ff, 1, 0);
               pointLight.castShadow = true;
               
               geometry = new THREE.SphereGeometry( radius, segments, segments );
@@ -260,9 +261,7 @@ function SpaceObject(name, mass, radius, color, group, speedx, speedy, speedz){
               mesh = new THREE.Mesh(geometry,  material);
               pointLight.add( mesh );
               
-          }
-          
-          else{
+          }else{
               var path = "textures/"+name+".png";
               geometry = new THREE.SphereGeometry( radius, segments, segments );
               material = new THREE.MeshPhongMaterial( {color: 0xffffff} );
@@ -272,6 +271,22 @@ function SpaceObject(name, mass, radius, color, group, speedx, speedy, speedz){
               material.map = loader.load(path_tex+"_map.jpg");
               material.bumpMap =  loader.load(path_tex+"_bumpmap.jpg");
               material.bumpScale = 4.0;
+              
+              if (name == "earth"){
+                  console.log("Earth Cloud-Texture");
+                  material.specularMap    = loader.load(path_tex+"_mapspec.jpg");
+                  material.specular  = new THREE.Color(0x111111); 
+                  var geometry_cloud   = new THREE.SphereGeometry(radius*1.02, segments, segments);  
+                  var material_cloud  = new THREE.MeshPhongMaterial({
+                      map         : loader.load(path_tex+"_mapcloud.png"),
+                      side        : THREE.DoubleSide,
+                      opacity     : 0.8,
+                      transparent : true,
+                      depthWrite  : true,
+                  });
+                  var cloudMesh = new THREE.Mesh(geometry_cloud, material_cloud);
+                  group.add( cloudMesh );
+              }
               
               mesh = new THREE.Mesh(geometry,  material);
               mesh.castShadow = true;
@@ -360,7 +375,7 @@ function render() {
     now = Date.now();
     difftime = (now - lasttime) * 1e-3;
     
-    difftime *= 1e6;
+    difftime *= 1e2;
     
     calculatePhysics(difftime, spaceObjects);
     
@@ -372,6 +387,9 @@ function render() {
     //Movement for groups
     //console.log(spaceObjects.sun.group.children[0]); MESH
     spaceObjects.sun.group.children[0].rotateY(0.5);
+    
+    //Earth cloudmap moving
+    spaceObjects.earth.group.children[0].rotateY(0.0001);
     /*
     group2_earth.rotateY(0.01);
     group_mercury_rotate.rotateY(0.04);
@@ -395,7 +413,7 @@ function render() {
     
     //console.log (Date.now() - now);
     lasttime = now;
-    console.log (spaceObjects.earth.speedy);
+    //console.log (spaceObjects.earth.speedy);
 }
 
  return universe;
