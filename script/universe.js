@@ -48,7 +48,7 @@ function init(data){
     light.position.set( 0, 1, 0 );
     scene.add(light);
 */
-    var ambLight = new THREE.AmbientLight(0xffffff); //0x3e3e3e3e
+    var ambLight = new THREE.AmbientLight(0x3e3e3e3e); //0x3e3e3e3e
     scene.add(ambLight);
 
     //light_shader
@@ -62,6 +62,18 @@ function init(data){
     buildGalaxy();
     buildPlanets(data);
     //placeRocket();
+    
+/*              var pointLightTest = new THREE.PointLight( 0xff0000, 100, 0);
+              //pointLightTest.castShadow = true;
+              
+              geometry_ = new THREE.SphereGeometry( 695508e3, segments, segments );
+              material_ = new THREE.MeshPhongMaterial( {color: 0xff0000} );
+              
+              var point_mesh = new THREE.Mesh(geometry_,  material_);
+              pointLightTest.position.set = ( 0, 0, 0);
+              //point_mesh.add( pointLightTest );
+              scene.add( pointLightTest )
+              
     
     
                  //0 OBJECT
@@ -80,7 +92,7 @@ function init(data){
             sphere_mercury.castShadow = true;
             sphere_mercury.receiveShadow = true;
             sphere_mercury.position.set(695508e3 * 6,0,0);
-            scene.add( sphere_mercury );
+            scene.add( sphere_mercury );*/
     
     
 
@@ -251,9 +263,9 @@ function SpaceObject(name, mass, radius, color, group, speedx, speedy, speedz){
           var material;
           //texture
           if ( name == "sun" ){
-              
-              var pointLight = new THREE.PointLight( 0x0000ff, 1, 0);
-              pointLight.castShadow = true;
+              var pointLight = new THREE.PointLight( 0xf39f18, 3, 0);
+              //pointLight.castShadow = true;
+              scene.add( pointLight );
               
               geometry = new THREE.SphereGeometry( radius, segments, segments );
               material = new THREE.MeshPhongMaterial( color );
@@ -292,28 +304,6 @@ function SpaceObject(name, mass, radius, color, group, speedx, speedy, speedz){
               mesh.castShadow = true;
               mesh.receiveShadow = true;
           }
-          
-          
-          //TODO: fix radius
-          /*
-          if ( name == "earth" ){
-              console.log("Earth Texture");
-              material.specularMap    = loader.load(path_tex+"_mapspec.jpg");
-              material.specular  = new THREE.Color(0x111111); 
-              console.log(radius);
-              var geometry_cloud   = new THREE.SphereGeometry(radius*1.1*BLOW, segments, segments);  
-              var material_cloud  = new THREE.MeshPhongMaterial({
-                  map         : loader.load(path_tex+"_mapcloud.png"),
-                  side        : THREE.DoubleSide,
-                  opacity     : 0.8,
-                  transparent : true,
-                  depthWrite  : true,
-              });
-              var cloudMesh = new THREE.Mesh(geometry_cloud, material_cloud);
-              group.add( cloudMesh );
-          }
-          */
-          
           group.add( mesh ); 
           
           //point level of detail with texture
