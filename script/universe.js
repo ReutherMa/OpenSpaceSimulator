@@ -1,6 +1,7 @@
 // fill global with key-values, datatype: boolean
 var global = {};
 var dae;
+var paused=false;
 
 function buildUniverse(){
 
@@ -358,6 +359,7 @@ function SpaceObject(name, mass, radius, color, group, speedx, speedy, speedz){
 //this renders the scene
 function render() {
     
+    if(!paused){
     requestAnimationFrame( render );
     //setTimeout (render, 1000/60);
 
@@ -404,6 +406,7 @@ function render() {
     //console.log (Date.now() - now);
     lasttime = now;
     //console.log (spaceObjects.earth.speedy);
+}
 }
 
  return universe;
