@@ -61,7 +61,7 @@ function init(data){
 
     buildGalaxy();
     buildPlanets(data);
-    //placeRocket();
+    placeRocket();
     
 /*              var pointLightTest = new THREE.PointLight( 0xff0000, 100, 0);
               //pointLightTest.castShadow = true;
@@ -228,14 +228,14 @@ function buildPlanets(data){
             function placeRocket(){
             var loader = new THREE.ColladaLoader();
             loader.options.convertUpAxis = true;
-            loader.load( "models/launchpad.dae", function ( collada ) {
+            loader.load( "models/saturnV.dae", function ( collada ) {
             
     
                 dae = collada.scene;
                 //var skin = collada.skins[ 0 ];
         
-                dae.position.set(spaceObjects.earth.group.position.x+spaceObjects.earth.radius, spaceObjects.earth.group.position.y, spaceObjects.earth.group.position.z);//x,z,y- if you think in blender dimensions ;)
-                dae.scale.set(695508e3,695508e3,695508e3);
+                dae.position.set(spaceObjects.earth.group.position.x+spaceObjects.earth.radius+dae.size, spaceObjects.earth.group.position.y + spaceObjects.earth.radius, spaceObjects.earth.group.position.z + spaceObjects.earth.radius);//x,z,y- if you think in blender dimensions ;)
+                dae.scale.set(995508e3,995508e3,995508e3);
                 //dae.color="rgb(153, 190, 153)";
                 scene.add(dae);
                 console.log("rocket function is called");
