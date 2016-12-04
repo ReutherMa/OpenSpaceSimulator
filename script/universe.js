@@ -35,7 +35,7 @@ function init(data){
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(60 , window.innerWidth/window.innerHeight , 0.01, 1e27);
     camera.position.set( 0, 0, 695508e3 + 10e10 ); 
-    //camera.position.set( data["earth"].x, data["earth"].y, data["earth"].z +6371.00e3 ); EARTH
+    //camera.position.set( data.earth.x, data.earth.y, data.earth.z +6371.00e3 ); //EARTH
 
     buildSkybox();
 
@@ -55,7 +55,30 @@ function init(data){
 
     buildGalaxy();
     buildPlanets(data);
-    //placeRocket();
+    //placeRocket(); 
+    
+    
+/*    document.addEventListener('mousedown', onMouseDown, false);
+
+    function onMouseDown(e) {
+        var vectorMouse = new THREE.Vector3( //vector from camera to mouse
+            -(window.innerWidth/2-e.clientX)*2/window.innerWidth,
+            (window.innerHeight/2-e.clientY)*2/window.innerHeight,
+            -1/Math.tan(22.5*Math.PI/180)); //22.5 is half of camera frustum angle 45 degree
+        vectorMouse.applyQuaternion(camera.quaternion);
+        vectorMouse.normalize();        
+    
+        var vectorObject = new THREE.Vector3(); //vector from camera to object
+        vectorObject.set(object.x - camera.position.x,
+                         object.y - camera.position.y,
+                         object.z - camera.position.z);
+        vectorObject.normalize();
+        if (vectorMouse.angleTo(vectorObject)*180/Math.PI < 1) {
+            //mouse's position is near object's position
+        }
+    }*/
+    
+    
     
 /*              var pointLightTest = new THREE.PointLight( 0xff0000, 100, 0);
               //pointLightTest.castShadow = true;
@@ -279,7 +302,6 @@ function SpaceObject(name, mass, radius, color, group, speedx, speedy, speedz){
               material.bumpScale = 4.0;
               
               if (name == "earth"){
-                  console.log("Earth Cloud-Texture");
                   material.specularMap    = loader.load(path_tex+"_mapspec.jpg");
                   material.specular  = new THREE.Color(0x111111); 
                   var geometry_cloud   = new THREE.SphereGeometry(radius*1.02, segments, segments);  
@@ -293,7 +315,6 @@ function SpaceObject(name, mass, radius, color, group, speedx, speedy, speedz){
                   var cloudMesh = new THREE.Mesh(geometry_cloud, material_cloud);
                   group.add( cloudMesh );
               }
-              
               mesh = new THREE.Mesh(geometry,  material);
               mesh.castShadow = true;
               mesh.receiveShadow = true;
