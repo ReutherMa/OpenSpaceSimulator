@@ -1,7 +1,7 @@
-/* ---------------- COLOURS, FONTS ETC ---------------- */
+/* ----------- GENERAL STUFF ----------- */
 
 body {
-    font-family: Arial;
+  font-family: Arial;
     color: #ffffff;
 }
 
@@ -13,15 +13,15 @@ h1 {
     font-size:20px;
 }
 
-.fa {
-    font: normal normal normal 14px/1 FontAwesome !important;
+form {
+    margin-bottom: 0px;
 }
 
-.btn {
-    padding-bottom: 5px !important;
+.ui-heading {
+    font-weight: bold;
 }
- 
-/* ---------------- BOX POSITIONING ---------------- */  
+
+/* ----------- BOX POSITIONING ----------- */
 
 #headerbox {
     position: absolute;
@@ -34,24 +34,31 @@ h1 {
     text-align:center;
 }
 
-.menubox {
+#contentbox {
     position: absolute; 
     visibility: visible; 
-    left: 20px;
-    top: 20%;
-    z-index: 200;
-    background-color: rgba(255, 255, 255, 0.05);
+    /* right: 0px; */
+    left: 20px; 
+    top: 0;
+    /* z-index: 200; */
+    background-color: rgba(255, 255, 255, 0.10);
     padding: 20px;
 }
 
 #footerbox {
     position: absolute;
     visibility: visible;
-    left:20px;
+    right:20px;
     bottom: 2%;
 }
 
-/* ---------------- KNOB STYLING ---------------- */
+.throttleBox , .fuelBox , .stepBox , .massBox , .engineBox , .planetBox , .timeBox {
+    background-color: rgba(255, 255, 255, 0.10);
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+/* ----------- KNOB STYLING ----------- */
 
 .fuelknob {
     position: absolute;
@@ -60,34 +67,25 @@ h1 {
     left: 0;
     right: 0;
     z-index: 200;
-    background-color: rgba(255, 255, 255, 0.20);
-    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.10);
+    padding: 20px;
     margin: auto;
-    width:500px;
-    height: 130px;
-    border-radius: 6px;
-    border: 2px solid rgb(255, 140, 0);
+    width:40%;
 }
 
 .fuelknob canvas {
     width: 65px;
-    height: 130px;
+    height: 18%;
     float: left; 
-    margin: 10px 10px 0px 10px;
+    margin: 20px;
 }
 
 .fuelknob .dial {
     font-size: 25px !important;
-    margin-top: 50px !important;
-    margin-left: -70 !important;
+    margin-top: 67px !important;
+    margin-left: -80 !important;
 }
 
-.miniMapFrame {
-    border: #ffffff 1px solid;
-    position: absolute;
-    visibility: visible;
-    bottom:10px;
-    right:10px;
+.fa-play {
+  font-family: FontAwesome, Arial, sans-serif;
 }
-
-/* ---------------- ICON STYLING ---------------- */
