@@ -1,8 +1,11 @@
 /* ----------- GENERAL STUFF ----------- */
 
 body {
-  font-family: Arial;
+  
+    font-family: Arial;
+    font-size: 10;
     color: #ffffff;
+    
 }
 
 h1, label, p {

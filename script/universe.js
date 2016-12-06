@@ -27,10 +27,8 @@ function switchCamera( planet ){
     }
 }
 
-function buildUniverse(){
 
-//constants
-const BLOW = 1000;
+function buildUniverse(){
     
 //loaders
 var loader = new THREE.TextureLoader();
@@ -223,6 +221,9 @@ function buildGalaxy(){
 function buildPlanets(data){
     
     for (var planet in data){
+        
+        var LocalBlow = globalInterfaceValues.planetSize;
+        console.log(LocalBlow);
         //if planet has a base for example: earth and earth moon
         var base = data[planet].base;
         //console.log(base);
@@ -241,7 +242,8 @@ function buildPlanets(data){
             var group_name = new THREE.Group();
             scene.add(group_name);
             //console.log(data[planet].color);
-            var planet_object = new SpaceObject(planet, data[planet].mass, data[planet].radius*BLOW, data[planet].color, group_name, data[planet].speedx, data[planet].speedy, data[planet].speedz);
+            
+            var planet_object = new SpaceObject(planet, data[planet].mass, data[planet].radius*localBlow, data[planet].color, group_name, data[planet].speedx, data[planet].speedy, data[planet].speedz);
             planet_object.buildBody();
             planet_object.setLabel();
             
@@ -395,6 +397,14 @@ function SpaceObject(name, mass, radius, color, group, speedx, speedy, speedz){
 //this renders the scene
 function render() {
     
+    var LocalBlow = globalInterfaceValues.planetSize;
+    var ObjRadius = spaceObjects["mercury"].group.children[0].geometry.boundingSphere.radius;
+    //ObjRadius = 100;
+    console.log(spaceObjects["mercury"].radius);
+    //ObjRadius *= LocalBlow;
+    //console.log(spaceObjects["mercury"].group.children[1].geometry.boundingSphere.radius);
+    //console.log(spaceObjects["mercury"].group.children[1].geometry.boundingSphere.radius);
+    
     requestAnimationFrame( render );
     //setTimeout (render, 1000/60);
 
@@ -442,6 +452,7 @@ function render() {
     lasttime = now;
     //console.log (spaceObjects.earth.speedy);
 }
+
 
  return universe;
 }
