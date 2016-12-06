@@ -1,0 +1,131 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    <script src="https://use.fontawesome.com/06e679ac1f.js"></script>
+    <link rel="shortcut icon" href="/Rakete.ico" type="x-icon">
+    <link rel="icon" href="/Rakete.ico" type="image/x-icon">
+    
+    <title>Open Space Simulator</title>
+    <style>
+        body { margin: 0; }
+        canvas { width: 100%; height: 100% }
+    </style>
+    <link rel="stylesheet" href="UserInterface/EntwicklerInterfaceCSS.css">
+    <link rel="stylesheet" href="UserInterface/jquery-ui-1.12.1.custom/jquery-ui.min.css">
+
+</head>
+<body>
+    <div id="container"></div>
+    
+    <!-- Imports -->
+    <script src="script/jquery-3.1.1.min.js"></script>
+    <script src="three.js/build/three.js"></script>
+    <script src="three.js/examples/Detector.js"></script>
+    <script src="three.js/examples/js/libs/stats.min.js"></script>
+    <script src="three.js/examples/js/libs/dat.gui.min.js"></script>
+    <script src="three.js/examples/js/controls/OrbitControls.js"></script>
+    <script src="loader/ColladaLoader.js"></script>
+    <script src="script/universe.js"></script>
+    <script src="script/data.js"></script>
+    <script src="script/physics.js"></script>
+    <script src="UserInterface/jQuery-Knob-1.2.13/js/jquery.knob.js"></script>
+    <script src="UserInterface/variablesJQueryNames.js"></script>
+    <script src="jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
+    
+    <!-- Vertex Shader -->
+    <script type="x-shader/x-vertex" id="vertexshader">
+        void main(){
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+    </script>
+   
+    <!-- Fragment Shader -->
+    <script type="x-shader/x-fragment" id="fragmentshader">
+        void main(){
+            gl_FragColor = vec4(1.0,0.5,0.0,1.0);
+        }
+    </script>
+    
+    <script>
+        //Here the three.js functions
+        var universe = buildUniverse();
+        loadData("data/datas.json", universe);
+    </script>
+    
+     <div id="mainBox">
+            <div id="headerBox">
+                <div class="logoBox">
+                    <img class="logoImg" src="logo.jpg" alt="Logo"/>
+                </div>
+                <div class="titleBox">
+                    <h1>OpenSpaceSimulator</h1>
+                </div>
+            </div>
+            <div id="contentBox">
+                <div class="menuBox">
+                    <div class="quitButtonBox">
+                        <input type="button" name="play" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf04b;"> <br>
+                        <input type="button" name="pause" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf04c;"> <br>
+                        <input type="button" name="timeFaster" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf017; &#xf04e;"> <br>
+                        <input type="button" name="timeSlower" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf017; &#xf04a;"> <br>
+                        <input type="button" name="speed" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf135; &#xf04e;"> <br>
+                        <input type="button" name="brake" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf135; &#xf04a;"> <br>
+                        <input type="button" name="xRotation" class="btn fa ui-button ui-widget ui-corner-all" value="Rotation in X"> <br>
+                        <input type="button" name="yRotation" class="btn fa ui-button ui-widget ui-corner-all" value="Rotation in Y"> <br>
+                        <input type="button" name="zRotation" class="btn fa ui-button ui-widget ui-corner-all" value="Rotation in Z"> <br>
+                        <input type="button" name="quit" class="btn fa ui-button ui-widget ui-corner-all" value="Quit"/> &nbsp;
+                        <input type="button" name="startNew" class="btn fa ui-button ui-widget ui-corner-all" value="Start New Game"/>
+                        <!--<input type="button" name="play" class="btn fa" value="&#xf04b;"> <br>
+                        <input type="button" name="pause" class="btn fa" value="&#xf04c;"> <br>
+                        <input type="button" name="timeFaster" class="btn fa" value="&#xf017; &#xf04e;"> <br>
+                        <input type="button" name="timeSlower" class="btn fa" value="&#xf017; &#xf04a;"> <br>
+                        <input type="button" name="speed" class="btn fa" value="&#xf135; &#xf04e;"> <br>
+                        <input type="button" name="brake" class="btn fa" value="&#xf135; &#xf04a;"> <br>
+                        <input type="button" name="xRotation" value="Rotation in X"> <br>
+                        <input type="button" name="yRotation" value="Rotation in Y"> <br>
+                        <input type="button" name="zRotation" value="Rotation in Z"> <br>
+                        <input type="button" name="quit" value="Quit"/> &nbsp;
+                        <input type="button" name="startNew" value="Start New Game"/> <br> -->
+                    </div>
+                </div>
+                <div class="gameBox">
+                    <div class="fuelknob">
+                    <input type="text" value="5 Speed" class="dial" data-fgColor="rgb(255, 140, 0)"
+                           data-angleOffset=-125
+                           data-angleArc=250
+                           data-width="100"
+                           data-thickness=".5"
+                           data-rotation=clockwise>
+                    <input type="text" value="100" class="dial" data-fgColor="rgb(255, 140, 0)"
+                           data-angleOffset=-125
+                           data-angleArc=250
+                           data-width="100"
+                           data-thickness=".5"
+                           data-rotation=clockwise>
+                        <input type="text" value="45" class="dial" data-fgColor="rgb(255, 140, 0)"
+                           data-angleOffset=-125
+                           data-angleArc=250
+                           data-width="100"
+                           data-thickness=".5"
+                           data-rotation=clockwise>
+                        <script>
+                            $(function() {
+                            $(".dial").knob();
+                            });
+                        </script>
+                    </div>
+                    <div class="map">
+                    <iframe class="miniMapFrame" height="140px" width="200"></iframe>
+                    </div>
+                </div>
+            </div>
+            <div id="footerBox">
+                <div class="impressumBox">
+                     <a href="impressum.jsp">Impressum</a>
+                </div>
+            </div>
+        </div>
+    
+</body>    
+</html>
