@@ -65,7 +65,6 @@ $(document).ready(function(){
                 globalControlValues.keyBreak = false;
                 break;     
         }
-        alert(globalControlValues.keyGas)
     });
     
     
