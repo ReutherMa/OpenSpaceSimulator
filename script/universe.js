@@ -147,7 +147,7 @@ function init(data){
     renderer.setSize( window.innerWidth, window.innerHeight );
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.BasicShadowMap;
-    console.log(renderer.shadowMap);
+    //console.log(renderer.shadowMap);
     //renderer.setDepthTest(true);
     container = document.getElementById( 'container' );
     container.appendChild( renderer.domElement );
@@ -223,7 +223,7 @@ function buildPlanets(data){
     for (var planet in data){
         
         var LocalBlow = globalInterfaceValues.planetSize;
-        console.log(LocalBlow);
+        //console.log(LocalBlow);
         //if planet has a base for example: earth and earth moon
         var base = data[planet].base;
         //console.log(base);
@@ -243,7 +243,7 @@ function buildPlanets(data){
             scene.add(group_name);
             //console.log(data[planet].color);
             
-            var planet_object = new SpaceObject(planet, data[planet].mass, data[planet].radius*localBlow, data[planet].color, group_name, data[planet].speedx, data[planet].speedy, data[planet].speedz);
+            var planet_object = new SpaceObject(planet, data[planet].mass, data[planet].radius * LocalBlow, data[planet].color, group_name, data[planet].speedx, data[planet].speedy, data[planet].speedz);
             planet_object.buildBody();
             planet_object.setLabel();
             
@@ -393,17 +393,18 @@ function SpaceObject(name, mass, radius, color, group, speedx, speedy, speedz){
         group.add( mesh_name );
     }
 }
-
+    
+function UIChanges(){
+    var localBlow = globalInterfaceValues.planetSize/1000;
+    var localPlanet = globalInterfaceValues.planetName;
+    spaceObjects[localPlanet].group.children[0].scale.set(localBlow,localBlow,localBlow);
+    
+}
+    
 //this renders the scene
 function render() {
     
-    var LocalBlow = globalInterfaceValues.planetSize;
-    var ObjRadius = spaceObjects["mercury"].group.children[0].geometry.boundingSphere.radius;
-    //ObjRadius = 100;
-    console.log(spaceObjects["mercury"].radius);
-    //ObjRadius *= LocalBlow;
-    //console.log(spaceObjects["mercury"].group.children[1].geometry.boundingSphere.radius);
-    //console.log(spaceObjects["mercury"].group.children[1].geometry.boundingSphere.radius);
+    UIChanges();
     
     requestAnimationFrame( render );
     //setTimeout (render, 1000/60);

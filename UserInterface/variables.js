@@ -1,4 +1,4 @@
-var globalInterfaceValues = {throttle:0, oxigen:0, kerosene:0, step:1, emptyMass:0, fuelMass:0, totalMass:0, planetName:"Earth", planetSize:1000, engine:"Engine1", timeFactor:0};
+var globalInterfaceValues = {throttle:0, oxigen:0, kerosene:0, step:1, emptyMass:0, fuelMass:0, totalMass:0, planetName:"earth", planetSize:1000, engine:"Engine1", timeFactor:0};
 
 $(function(){
 
@@ -20,9 +20,9 @@ function inputChange(){
     globalInterfaceValues.totalMass = globalInterfaceValues.emptyMass + globalInterfaceValues.fuelMass;
     $("#totalMass").text(globalInterfaceValues.totalMass);
     globalInterfaceValues.planetSize = + $('input[name=planetSizeRange]').val();
-    globalInterfaceValues.planetName = $('input[name=planetSelect]').val();
-    globalInterfaceValues.engine = $('input[name=engineRange]').val();
+    globalInterfaceValues.planetName = $('select[name=planetSelect]').val();
+    globalInterfaceValues.engine = $('select[name=engineRange]').val();
     globalInterfaceValues.timeFactor = $('input[name=timeFactorRange]').val();
     //console.log(typeof(globalInterfaceValues.engine));
-    //console.log(globalInterfaceValues.planetSize);
+    console.log(globalInterfaceValues.planetName);
 }
