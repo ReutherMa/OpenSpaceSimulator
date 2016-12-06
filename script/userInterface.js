@@ -1,3 +1,7 @@
+if(globalInterfaceValues.keyStartPause){
+    pause();
+}
+
 function throttle(){
     throttleInPercent+=1;
     move(throttleInPercent);

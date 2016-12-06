@@ -406,6 +406,9 @@ function render() {
     
     UIChanges();
     
+    
+    if(!globalInterfaceValues.keyStartPause){
+        
     requestAnimationFrame( render );
     //setTimeout (render, 1000/60);
 
@@ -452,6 +455,7 @@ function render() {
     //console.log (Date.now() - now);
     lasttime = now;
     //console.log (spaceObjects.earth.speedy);
+    }
 }
 
 
