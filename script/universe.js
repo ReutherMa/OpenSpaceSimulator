@@ -1,6 +1,31 @@
 // fill global with key-values, datatype: boolean
 var global = {};
 var dae;
+var spaceObjects = {};
+var camera, controls;
+var changed = false;
+
+//change camera to planet
+function switchCamera( planet ){
+    changed = true;
+    for (e in spaceObjects){
+        if (e == planet){
+            var objPos = spaceObjects[e].group.position;
+            camera.lookAt(objPos);
+            controls.target.set(objPos.x, objPos.y, objPos.z);
+            //console.log(camera);
+            //camera.position.set(0,0,0);
+            /*camera.position.x = spaceObjects[e].group.position.x;
+            camera.position.y = spaceObjects[e].group.position.y;
+            camera.position.z = spaceObjects[e].group.position.z + 3*spaceObjects[e].radius;*/
+            //camera.lookAt(spaceObjects[e].group.position.x,spaceObjects[e].group.position.y,spaceObjects[e].group.position.z );
+            //camera.updateProjectionMatrix();
+            //controls.update();
+            //camera.updateMatrixWorld();
+            //console.log(spaceObjects[e].group.position);
+        }
+    }
+}
 
 function buildUniverse(){
 
@@ -13,14 +38,13 @@ var loader = new THREE.TextureLoader();
 //Instant Variables
 var universe = {};
 var container, stats;
-var camera, controls, scene, renderer, raycaster;
+var scene, renderer, raycaster;
 var bulbLight, bulbMat;
 var segments = 64;
 var group_galaxy, group1_sun, group2_mercury, group3_venus, group4_earth, group41_moon, group5_mars, group6_jupiter,
     group7_saturn, group8_uranus, group9_neptune;
 
 var sun, earth, moon, mercury, venus, mars, jupiter, saturn, uranus, neptune;
-var spaceObjects = {};
 var mouse = new THREE.Vector2(), INTERSECTED;
 
     
@@ -56,7 +80,6 @@ function init(data){
     buildGalaxy();
     buildPlanets(data);
     //placeRocket(); 
-    
     
 /*    document.addEventListener('mousedown', onMouseDown, false);
 
@@ -111,11 +134,6 @@ function init(data){
             sphere_mercury.position.set(695508e3 * 6,0,0);
             scene.add( sphere_mercury );*/
     
-    
-
-    //controls
-    controls = new THREE.OrbitControls( camera );
-    //controls.addEventListener( 'change', render );
 
     //axisHelper
     var axisHelper = new THREE.AxisHelper( 1e26 );
@@ -139,10 +157,14 @@ function init(data){
     container.appendChild( stats.dom );
     window.addEventListener( 'resize', onWindowResize, false );
     //window.addEventListener( 'click', onMouseClick, false );
+    
+    //controls
+    controls = new THREE.OrbitControls( camera, renderer.domElement );
+    //controls.addEventListener( 'change', render );
 
     lasttime = Date.now();
 }
-
+    
 //skybox
 function buildSkybox(){
     var imagePrefix = "textures/stars_for_skybox1/";

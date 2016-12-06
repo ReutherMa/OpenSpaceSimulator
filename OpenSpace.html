@@ -8,10 +8,37 @@
     <title>Open Space Simulator</title>
     <style>
         body { margin: 0; }
-        canvas { width: 100%; height: 100% }
+        canvas { width: 100%; height: 100%;}
+        #container { z-index: -1}
+        div#testUI {
+            width: 100%;
+            height: 10%;
+            z-index: 1;
+            position: absolute;
+            //color: white;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
+    
+    
+        
+    <div id="testUI">
+            <select onchange="switchCamera(this.value)">
+                <option value="sun" selected="true">Sun</option>
+                <option value="mercury">Mercury</option>
+                <option value="venus">Venus</option>
+                <option value="earth">Earth</option>
+                <option value="earth_moon">Moon</option>
+                <option value="mars">Mars</option>
+                <option value="jupiter">Jupiter</option>
+                <option value="saturn">Saturn</option>
+                <option value="uranus">Uranus</option>
+                <option value="neptune">Neptune</option>
+            </select>
+        </div>
+    
     <div id="container"></div>
     
     <!-- Imports -->
@@ -24,8 +51,7 @@
     <script src="loader/ColladaLoader.js"></script>
     <script src="script/universe.js"></script>
     <script src="script/data.js"></script>
-    <script src="script/physics.js"></script>
-    
+    <script src="script/physics.js"></script>      
     
     
     <!-- Vertex Shader -->
@@ -47,5 +73,6 @@
         var universe = buildUniverse();
         loadData("data/datas.json", universe);
     </script>
+    
 </body>    
 </html>
