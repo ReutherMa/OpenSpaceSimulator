@@ -397,7 +397,15 @@ function SpaceObject(name, mass, radius, color, group, speedx, speedy, speedz){
 function UIChanges(){
     var localBlow = globalInterfaceValues.planetSize/1000;
     var localPlanet = globalInterfaceValues.planetName;
-    spaceObjects[localPlanet].group.children[0].scale.set(localBlow,localBlow,localBlow);
+    
+    for (mesh in spaceObjects[localPlanet].group.children){
+        spaceObjects[localPlanet].group.children[mesh].scale.set(localBlow, localBlow, localBlow );
+/*      
+        if (mesh.type == "Mesh"){
+            //spaceObjects[localPlanet].group.children[mesh].scale.set(localBlow, localBlow, localBlow );
+        }
+*/
+    }
     
 }
     
