@@ -1,54 +1,44 @@
-$(function(){
+var throttle = document.getElementsByName("throttleRange")[0].value;
+var oxigen = document.getElementsByName("oxigenRange")[0].value;
+var kerosene = document.getElementsByName("keroseneRange")[0].value;
+var step = document.getElementsByName("stepRange")[0].value;
+var emptyMass = document.getElementsByName("emptyMassRange")[0].value;
+var fuelMass = document.getElementsByName("fuelMassRange")[0].value;
+var engine = document.getElementsByName("engineSelect")[0].value;
 
-    $('input').change(inputChange);
-    inputChange();
-    
-}); 
+alert(throttle);
 
-function inputChange(){
-    
-    var throttle = + $('input[name=throttleRange]').val();
-    var oxigen = + $('input[name=oxigenRange]').val();
-    var kerosene = + $('input[name=keroseneRange]').val();
-    var step = + $('input[name=stepRange]').val();
-    var emptyMass = + $('input[name=emptyMassRange]').val();
-    var fuelMass = + $('input[name=fuelMassRange]').val();
-    var totalMass = emptyMass + fuelMass;
-    $("#totalMass").text(totalMass);
-    var engine = + $('input[name=engineRange]').val();
-}
-
-{"saturn5":{
-"stages":{
-"stage1":{
+/**"saturn5":
+"stages":
+"stage1":
 "mass_empty":"31000",
 "mass_fuel":"1869000",
 "fuel_type":"kerosin",
 "oxidizer":"oxygen",
-"thrust":"34000000"},
+"thrust":"34000000",
 
-"stage2":{
+"stage2":
 "mass_empty":"36000",
 "mass_fuel":"444000",
 "fuel_type":"hydrogen",
 "oxidizer":"oxygen",
-"thrust":"4900000"},
+"thrust":"4900000",
 
-"stage3":{
+"stage3":
 "mass_empty":"10000",
 "mass_fuel":"109000",
 "fuel_type":"hydrogen",
 "oxidizer":"oxygen",
-},
-},
+,
+,
 "height":"111",
 "diameter":"10",
 "mass_total":"2800000",
 "thrust_launch":"34500000",
 
 "
-}
-}
+
+
  //kg, m, N
 // Speichern in anderer Seite bsp. universe.input 
 // Events für Range z.b. MouseMove

@@ -1,4 +1,4 @@
-var global = {keyUp:false, keyDown:false, keyLeft:false, keyRight:false, keyRollLeft:false, keyRollRight:false, keyGas:false, keyBreak:false, keyStartPause:false};
+var globalControlValues = {keyUp:false, keyDown:false, keyLeft:false, keyRight:false, keyRollLeft:false, keyRollRight:false, keyGas:false, keyBreak:false, keyStartPause:false};
 
 var keyCode = {w:87, s:83, a:65, d:68, q:81, e:69, space:32, b:66, enter:13};
 
@@ -6,34 +6,34 @@ $(document).ready(function(){
     $(document).keydown(function(e){
         switch(e.keyCode){
             case keyCode.w: 
-                global.keyUp = true;
+                globalControlValues.keyUp = true;
                 break;
             case keyCode.s:
-                global.keyDown = true;
+                globalControlValues.keyDown = true;
                 break;
             case keyCode.a:
-                global.keyLeft = true;
+                globalControlValues.keyLeft = true;
                 break;
             case keyCode.d:
-                global.keyRight = true;
+                globalControlValues.keyRight = true;
                 break;
             case keyCode.q:
-                global.keyRollLeft = true;
+                globalControlValues.keyRollLeft = true;
                 break;
             case keyCode.e:
-                global.keyRollRight = true;
+                globalControlValues.keyRollRight = true;
                 break;
             case keyCode.space:
-                global.keyGas = true;
+                globalControlValues.keyGas = true;
                 break;
             case keyCode.b:
-                global.keyBreak = true;
+                globalControlValues.keyBreak = true;
                 break;
             case keyCode.enter:
-                if(global.keyStartPause == false){
-                    global.keyStartPause = true;
+                if(globalControlValues.keyStartPause == false){
+                    globalControlValues.keyStartPause = true;
                 }else{
-                    global.keyStartPause = false;
+                    globalControlValues.keyStartPause = false;
                 }
         }
     });
@@ -41,31 +41,31 @@ $(document).ready(function(){
     $(document).keyup(function(e){
         switch(e.keyCode){
             case keyCode.w: 
-                global.keyUp = false;
+                globalControlValues.keyUp = false;
                 break;
             case keyCode.s:
-                global.keyDown = false;
+                globalControlValues.keyDown = false;
                 break;
             case keyCode.a:
-                global.keyLeft = false;
+                globalControlValues.keyLeft = false;
                 break;
             case keyCode.d:
-                global.keyRight = false;
+                globalControlValues.keyRight = false;
                 break;
             case keyCode.q:
-                global.keyRollLeft = false;
+                globalControlValues.keyRollLeft = false;
                 break;
             case keyCode.e:
-                global.keyRollRight = false;
+                globalControlValues.keyRollRight = false;
                 break;
             case keyCode.space:
-                global.keyGas = false;
+                globalControlValues.keyGas = false;
                 break;
             case keyCode.b:
-                global.keyBreak = false;
+                globalControlValues.keyBreak = false;
                 break;     
         }
-        alert(global.keyGas)
+        alert(globalControlValues.keyGas)
     });
     
     
