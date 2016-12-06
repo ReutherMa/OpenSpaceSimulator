@@ -1,4 +1,5 @@
-if(globalInterfaceValues.keyStartPause){
+function checkUserActions(){
+    if(globalInterfaceValues.keyStartPause){
     pause();
 }
 
@@ -31,8 +32,10 @@ function speedTime(){
 
 function pause(){
     paused=true;
+    console.log("paused");
 }
 
 function resume(){
     paused=false;
+}
 }

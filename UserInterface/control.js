@@ -32,8 +32,10 @@ $(document).ready(function(){
             case keyCode.enter:
                 if(globalControlValues.keyStartPause == false){
                     globalControlValues.keyStartPause = true;
+                    console.log("paused");
                 }else{
                     globalControlValues.keyStartPause = false;
+                    console.log("resumed");
                 }
         }
     });

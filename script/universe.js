@@ -405,9 +405,9 @@ function UIChanges(){
 function render() {
     
     UIChanges();
+    console.log(globalControlValues.keyStartPause);
     
     
-    if(!globalInterfaceValues.keyStartPause){
         
     requestAnimationFrame( render );
     //setTimeout (render, 1000/60);
@@ -418,8 +418,9 @@ function render() {
     
     difftime *= 1e2;
     
+    if(!globalControlValues.keyStartPause){
     calculatePhysics(difftime, spaceObjects);
-    
+    }
 
     //rotation mercury
     //sphere_mercury.position.x += 1;
@@ -456,8 +457,9 @@ function render() {
     lasttime = now;
     //console.log (spaceObjects.earth.speedy);
     }
-}
 
+
+    
 
  return universe;
 }
