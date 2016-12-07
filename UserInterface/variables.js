@@ -5,13 +5,12 @@ $(function(){
     $('input').change(inputChange);
     $('select').change(inputChange);
     inputChange();
-   
     
 }); 
 
 function inputChange(){
     
- // "+" means parseInt   
+    // "+" means parseInt   
     globalInterfaceValues.throttle = + $('input[name=throttleRange]').val();
     globalInterfaceValues.oxigen = + $('input[name=oxigenRange]').val();
     globalInterfaceValues.step = + $('input[name=stepRange]').val();
@@ -23,6 +22,7 @@ function inputChange(){
     globalInterfaceValues.planetName = $('select[name=planetSelect]').val();
     globalInterfaceValues.engine = $('select[name=engineRange]').val();
     globalInterfaceValues.timeFactor = $('input[name=timeFactorRange]').val();
+    globalInterfaceValues.planetCamera = $('select[name=planetCamera]').val();
     //console.log(typeof(globalInterfaceValues.engine));
-    console.log(globalInterfaceValues.planetName);
+    //console.log(globalInterfaceValues.planetCamera);
 }

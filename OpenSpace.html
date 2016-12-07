@@ -1,15 +1,23 @@
 <html>
+
 <head>
     <meta charset="utf-8">
-    
+
     <link rel="shortcut icon" href="/rocket.ico" type="x-icon">
     <link rel="icon" href="/rocket.ico" type="image/x-icon">
-    
+
     <title>Open Space Simulator</title>
     <style>
-        body { margin: 0; }
-        canvas { width: 100%; height: 100%;}
-        #container { z-index: -1}
+        body {
+            margin: 0;
+        }
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+        #container {
+            z-index: -1
+        }
         div#testUI {
             width: 100%;
             height: 10%;
@@ -21,25 +29,11 @@
     </style>
     <link rel="stylesheet" href="UserInterface/EntwicklerInterfaceCSS.css">
 </head>
+
 <body>
-        
-    <!--<div id="testUI">
-            <select onchange="switchCamera(this.value)">
-                <option value="sun" selected="true">Sun</option>
-                <option value="mercury">Mercury</option>
-                <option value="venus">Venus</option>
-                <option value="earth">Earth</option>
-                <option value="earth_moon">Moon</option>
-                <option value="mars">Mars</option>
-                <option value="jupiter">Jupiter</option>
-                <option value="saturn">Saturn</option>
-                <option value="uranus">Uranus</option>
-                <option value="neptune">Neptune</option>
-            </select>
-        </div>-->
-    
+
     <div id="container"></div>
-    
+
     <!-- Imports -->
     <script src="script/jquery-3.1.1.min.js"></script>
     <script src="three.js/build/three.js"></script>
@@ -49,44 +43,49 @@
     <script src="three.js/examples/js/controls/OrbitControls.js"></script>
     <script src="loader/ColladaLoader.js"></script>
     <script src="UserInterface/variables.js"></script>
-    <script src="UserInterface/control.js"></script> 
+    <script src="UserInterface/control.js"></script>
     <script src="script/userInterface.js"></script>
     <script src="script/universe.js"></script>
     <script src="script/data.js"></script>
-    <script src="script/physics.js"></script>  
-    
-    
+    <script src="script/physics.js"></script>
+
+
     <!-- User Interface -->
-     <div id="mainBox">
-            <div id="headerBox">
-                <div class="titleBox">
-                    <h1>OpenSpaceSimulator</h1>
+    <div id="mainBox">
+
+        <!-- Header -->
+        <div id="headerBox">
+            <div class="titleBox">
+                <h1>OpenSpaceSimulator</h1>
+            </div>
+        </div>
+
+        <!-- Content Box -->
+        <div id="contentBox">
+
+            <div class="menuBox">
+                <div class="quitButtonBox">
+                    <input type="button" name="quit" value="Quit" />
                 </div>
             </div>
-            <div id="contentBox">
-                <div class="menuBox">
-                    <div class="quitButtonBox">
-                        <input type="button" name="quit" value="Quit"/>
-                    </div>
-                </div>
-                <div class="gameBox">
-                    <div class="controlBox">
-                        <div class="throttleBox">
-                           <!-- <div class="speedSelect">
+            <div class="gameBox">
+                <div class="controlBox">
+                    <div class="throttleBox">
+                        <!-- <div class="speedSelect">
                                 <select name="speedSelect">
                                     <option>low</option>
                                     <option>medium</option>
                                     <option>high</option>
                                 </select>
                             </div> -->
-                            <div class="throttleRangeBox">
-                                <form oninput="throttleNumber.value=throttleRange.value">
-                                    <input type="range" name="throttleRange" min="0" max="10" value="5" >
-                                    <output name="throttleNumber">5</output>
-                                </form>
-                                <label>Throttle</label>
-                            </div>
-                            <!-- <div class="throttleLabelBox">
+                        <div class="throttleRangeBox">
+                            <form oninput="throttleNumber.value=throttleRange.value">
+                                <input type="range" name="throttleRange" min="0" max="10" value="5">
+                                <output name="throttleNumber">5</output>
+                            </form>
+                            <label>Throttle</label>
+                        </div>
+                        <!-- <div class="throttleLabelBox">
                                 <label>Throttle</label>
                                 Label zum klicken:
                                 <label> Input: <input type="text" name="theinput"></label>
@@ -94,180 +93,199 @@
                                 <input type="text" name="theinput">
                                 
                             </div> -->
-                        </div>
-                        <div class="fuelBox">
-                           <!-- <div class="fuelSelect>">
+                    </div>
+                    <div class="fuelBox">
+                        <!-- <div class="fuelSelect>">
                                 <select name="fuelSelect">
                                 <option>low</option>
                                 <option>medium</option>
                                 <option>high</option>
                                 </select>
                                 </div> -->
-                            <div class="fuelLabelBox">
-                                <label class="ui-heading">Fuel</label>
-                            </div>
-                            <div class="oxigenRangeBox">
-                                <form oninput="oxigenNumber.value=oxigenRange.value">
-                                    <input class="oxigenRange" type="range" name="oxigenRange" min="0" max="10" value="5">
-                                    <output name="oxigenNumber">5</output>
-                                </form>
-                            </div>
-                            <div class="oxigenLabelBox">
-                                <label>Oxigen</label>
-                            </div>
-                            <div class="keroseneRangeBox">
-                                <form oninput="keroseneNumber.value=keroseneRange.value">
-                                    <input type="range" name="keroseneRange" min="0" max="10" value="5">
-                                    <output name="keroseneNumber">5</output>
-                                </form>
-                            </div>
-                            <div class="keroseneLabelBox">
-                                <label>Kerosene</label>
-                            </div>
+                        <div class="fuelLabelBox">
+                            <label class="ui-heading">Fuel</label>
                         </div>
-                        <div class="stepBox">
-                          <!-- <div class="stepSelect">
+                        <div class="oxigenRangeBox">
+                            <form oninput="oxigenNumber.value=oxigenRange.value">
+                                <input class="oxigenRange" type="range" name="oxigenRange" min="0" max="10" value="5">
+                                <output name="oxigenNumber">5</output>
+                            </form>
+                        </div>
+                        <div class="oxigenLabelBox">
+                            <label>Oxigen</label>
+                        </div>
+                        <div class="keroseneRangeBox">
+                            <form oninput="keroseneNumber.value=keroseneRange.value">
+                                <input type="range" name="keroseneRange" min="0" max="10" value="5">
+                                <output name="keroseneNumber">5</output>
+                            </form>
+                        </div>
+                        <div class="keroseneLabelBox">
+                            <label>Kerosene</label>
+                        </div>
+                    </div>
+                    <div class="stepBox">
+                        <!-- <div class="stepSelect">
                                 <select name="stepSelect">
                                 <option>one</option>
                                 <option>two</option>
                                 <option>three</option>
                                 </select>
                                 </div> -->
-                            <div class="stepRangeBox">
-                                <form oninput="stepNumber.value=stepRange.value">
-                                    <input type="range" name="stepRange" min="1" max="4" value="1">
-                                    <output name="stepNumber">1</output>
-                                </form>
-                            </div>
-                            <div class="stepLabelBox">
-                                <label>Steps</label>
-                            </div>
+                        <div class="stepRangeBox">
+                            <form oninput="stepNumber.value=stepRange.value">
+                                <input type="range" name="stepRange" min="1" max="4" value="1">
+                                <output name="stepNumber">1</output>
+                            </form>
                         </div>
-                        <div class="massBox">
-                            <div class="massLabelBox">
-                                <label class="ui-heading">Mass</label>
-                            </div>
-                            <div class="emptyMassRangeBox">
-                                <form oninput="emptyMassNumber.value=emptyMassRange.value">
-                                    <input type="range" name="emptyMassRange" min="1" max="3" value="2">
-                                    <output name="emptyMassNumber">2</output>
-                                </form>
-                            </div>
-                            <div class="emptyMassLabelBox">
-                                <label>Empty Mass</label>
-                            </div>
-                            <div class="fuelMassRangeBox">
-                                <form oninput="fuelMassNumber.value=fuelMassRange.value">
-                                    <input class="fuelMassRange" type="range" name="fuelMassRange" min="1" max="3" value="2">
-                                    <output name="fuelMassNumber">2</output>
-                                </form>
-                            </div>
-                            <div class="fuelMassLabelBox">
-                                <label class="fuelMassLabel">Fuel Mass</label>
-                             </div>
-                            <div class="totalMassLabelBox">
-                                <label>Total Mass: <span id=totalMass></span></label>
-                            </div>
+                        <div class="stepLabelBox">
+                            <label>Steps</label>
                         </div>
-                         <div class="engineBox">
-                            <div class="engineSelectBox">
-                                <select name="engineSelect">
-                                    <option>Engine1</option>
-                                    <option>Engine2</option>
-                                    <option>Engine3</option>
-                                </select>
-                            </div>
-                            <div class="engineLabelBox">
-                                <label class="engineLabel">Engine</label>
-                            </div>
+                    </div>
+                    <div class="massBox">
+                        <div class="massLabelBox">
+                            <label class="ui-heading">Mass</label>
                         </div>
-                        <div class="planetBox">
+                        <div class="emptyMassRangeBox">
+                            <form oninput="emptyMassNumber.value=emptyMassRange.value">
+                                <input type="range" name="emptyMassRange" min="1" max="3" value="2">
+                                <output name="emptyMassNumber">2</output>
+                            </form>
+                        </div>
+                        <div class="emptyMassLabelBox">
+                            <label>Empty Mass</label>
+                        </div>
+                        <div class="fuelMassRangeBox">
+                            <form oninput="fuelMassNumber.value=fuelMassRange.value">
+                                <input class="fuelMassRange" type="range" name="fuelMassRange" min="1" max="3" value="2">
+                                <output name="fuelMassNumber">2</output>
+                            </form>
+                        </div>
+                        <div class="fuelMassLabelBox">
+                            <label class="fuelMassLabel">Fuel Mass</label>
+                        </div>
+                        <div class="totalMassLabelBox">
+                            <label>Total Mass: <span id=totalMass></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="engineBox">
+                        <div class="engineSelectBox">
+                            <select name="engineSelect">
+                                <option>Engine1</option>
+                                <option>Engine2</option>
+                                <option>Engine3</option>
+                            </select>
+                        </div>
+                        <div class="engineLabelBox">
+                            <label class="engineLabel">Engine</label>
+                        </div>
+                    </div>
+                    <div class="planetBox">
                         <div class="planetSizeBox">
-                                <form oninput="planetNumber.value=planetSizeRange.value">
-                                    <input type="range" name="planetSizeRange" min="1" max="1000" value="1000">
-                                    <output name="planetNumber">1000</output>
-                                </form>
+                            <form oninput="planetNumber.value=planetSizeRange.value">
+                                <input type="range" name="planetSizeRange" min="1" max="1000" value="1000">
+                                <output name="planetNumber">1000</output>
+                            </form>
                             <div class="planetLabelBox">
                                 <label>Planet Size</label>
                             </div>
                         </div>
                         <div class="planetSelectBox">
-                                <select name="planetSelect">
-                                    <option value="sun">Sun</option>
-                                    <option value="mercury">Mercury</option>
-                                    <option value="venus">Venus</option>
-                                    <option value="earth" selected="true">Earth</option>
-                                    <option value="earth_moon">Moon</option>
-                                    <option value="mars">Mars</option>
-                                    <option value="jupiter">Jupiter</option>
-                                    <option value="saturn">Saturn</option>
-                                    <option value="uranus">Uranus</option>
-                                    <option value="neptune">Neptune</option>
-                                </select>
-                            </div>
-                            <div class="planetLabelBox">
-                                <label class="planetLabel">Planet</label>
-                            </div>
+                            <select name="planetSelect">
+                                <option value="sun">Sun</option>
+                                <option value="mercury">Mercury</option>
+                                <option value="venus">Venus</option>
+                                <option value="earth" selected="true">Earth</option>
+                                <option value="earth_moon">Moon</option>
+                                <option value="mars">Mars</option>
+                                <option value="jupiter">Jupiter</option>
+                                <option value="saturn">Saturn</option>
+                                <option value="uranus">Uranus</option>
+                                <option value="neptune">Neptune</option>
+                            </select>
                         </div>
-                        <div class="timeBox">
-                                <form oninput="timeNumber.value=timeFactorRange.value">
-                                    <input type="range" name="timeFactorRange" min="1" max="10000" value="50">
-                                    <output name="timeNumber">50</output>
-                                </form>
-                            <div class="timeLabelBox">
-                                <label>Time Factor</label>
-                            </div>
-                        </div>
-                        <div class="resetBox">
-                            <!-- TODO: Reset -->
-                            <input  type="reset" name="reset" value="Reset"/>
+                        <div class="planetLabelBox">
+                            <label class="planetLabel">Planet</label>
                         </div>
                     </div>
-                    <div class="simulationBox">
-                        <div class="displayBox">
-                            <div class="timeDisplayBox">
-                                <!-- TODO: Timestamp -->
-                                Time
-                            </div>
-                            <div class="speedDisplayBox">
-                                Speed
-                            </div>
-                            <div class="resourcesDisplayBox">
-                                Resources
-                            </div>
+                    <div class="timeBox">
+                        <form oninput="timeNumber.value=timeFactorRange.value">
+                            <input type="range" name="timeFactorRange" min="1" max="10000" value="50">
+                            <output name="timeNumber">50</output>
+                        </form>
+                        <div class="timeLabelBox">
+                            <label>Time Factor</label>
+                        </div>
+                    </div>
+                    <div class="resetBox">
+                        <!-- TODO: Reset -->
+                        <input type="reset" name="reset" value="Reset" />
+                    </div>
+                </div>
+                <div class="simulationBox">
+                    <div class="displayBox">
+                        <div class="timeDisplayBox">
+                            <!-- TODO: Timestamp -->
+                            Time
+                        </div>
+                        <div class="speedDisplayBox">
+                            Speed
+                        </div>
+                        <div class="resourcesDisplayBox">
+                            Resources
+                        </div>
+                        <div id="cameraBox">
+                            <!--<select onchange="switchCamera(this.value)">-->
+                            <select name="planetCamera">
+                                <option value="sun" selected="true">Sun</option>
+                                <option value="mercury">Mercury</option>
+                                <option value="venus">Venus</option>
+                                <option value="earth">Earth</option>
+                                <option value="earth_moon">Moon</option>
+                                <option value="mars">Mars</option>
+                                <option value="jupiter">Jupiter</option>
+                                <option value="saturn">Saturn</option>
+                                <option value="uranus">Uranus</option>
+                                <option value="neptune">Neptune</option>
+                            </select>
                         </div>
                     </div>
                 </div>
             </div>
-            <div id="footerBox">
-                <div class="impressumBox">
-                     <a href="impressum.jsp">Impressum</a>
-                </div>
-         </div>
+        </div>
+
+        <!-- Footer Box -->
+        <div id="footerBox">
+            <div class="impressumBox">
+                <a href="impressum.jsp">Impressum</a>
+            </div>
+        </div>
     </div>
-    
-    
-    
-    
+
+
+
+
     <!-- Vertex Shader -->
     <script type="x-shader/x-vertex" id="vertexshader">
-        void main(){
+        void main() {
             gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
         }
     </script>
-   
+
     <!-- Fragment Shader -->
     <script type="x-shader/x-fragment" id="fragmentshader">
-        void main(){
-            gl_FragColor = vec4(1.0,0.5,0.0,1.0);
+        void main() {
+            gl_FragColor = vec4(1.0, 0.5, 0.0, 1.0);
         }
     </script>
-    
+
     <script>
         //Here the three.js functions
         var universe = buildUniverse();
         loadData("data/datas.json", universe);
     </script>
-    
-</body>    
+
+</body>
+
 </html>

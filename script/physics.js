@@ -20,71 +20,71 @@ var accelOY;
 var accelOZ;*/
 
 // calculate gravitational forces
-    /** 
+/** 
         iterates through all space objects and calculates influence on current object and object's speed and direction
         r: distance between objects in x, y, z dimensions
         dist: absolute distance
         accel: acceleration of current object
         
     **/
-function calculateGravitation (difftime, spaceObjects, spaceObject) {
-    
+function calculateGravitation(difftime, spaceObjects, spaceObject) {
+
     //do objects have a mass || is it a star
-    if (spaceObject.mass === undefined || spaceObject.name === "sun"){
-        return;   
+    if (spaceObject.mass === undefined || spaceObject.name === "sun") {
+        return;
     }
- 
+
     for (var o in spaceObjects) {
-        
+
         if (spaceObjects[o].name != "sun")
             continue;
         //same objects do not have influence on themselfe
-        if (spaceObject.name === spaceObjects[o].name){
-            continue;   
+        if (spaceObject.name === spaceObjects[o].name) {
+            continue;
         }
         //console.log(spaceObject.group.position.x);
         //console.log(spaceObject.name);
-            
-        var rx      = spaceObjects[o].group.position.x - spaceObject.group.position.x;
-        var ry      = spaceObjects[o].group.position.y - spaceObject.group.position.y;
-        var rz      = spaceObjects[o].group.position.z - spaceObject.group.position.z;
-        var dist2   = rx * rx + ry * ry + rz * rz;
-        
-        var mindist2= spaceObjects[o].radius + spaceObject.radius;
+
+        var rx = spaceObjects[o].group.position.x - spaceObject.group.position.x;
+        var ry = spaceObjects[o].group.position.y - spaceObject.group.position.y;
+        var rz = spaceObjects[o].group.position.z - spaceObject.group.position.z;
+        var dist2 = rx * rx + ry * ry + rz * rz;
+
+        var mindist2 = spaceObjects[o].radius + spaceObject.radius;
         mindist2 *= mindist2;
-        
+
         //if dist is > mindist
-        if (dist2 > mindist2){
-            
+        if (dist2 > mindist2) {
+
             var accelX = 0;
             accelX = gravConst * spaceObjects[o].mass / dist2;
-            
-            var dist    = Math.sqrt ( dist2 );
+
+            var dist = Math.sqrt(dist2);
 
             dist = 1 / dist;
-            
-            difftime=1000;
+
+            difftime = 1000;
 
             spaceObject.speedx += accelX * rx * dist * difftime;
             spaceObject.speedy += accelX * ry * dist * difftime;
             spaceObject.speedz += accelX * rz * dist * difftime;
-            
+
             spaceObject.group.position.x += spaceObject.speedx * difftime;
             spaceObject.group.position.y += spaceObject.speedy * difftime;
             spaceObject.group.position.z += spaceObject.speedz * difftime;
-            
-            
+
+
         }
-        
+
         //rocket position before launch
         //if(launched){}
         //update rocket position
-        
-        
-    }  
+
+
+    }
 }
 
-    
+
 
 /**
 Rocket Science
@@ -119,67 +119,67 @@ part 2: orientation
 input: keyPressed(WASDQE) and position(as vec3)
 **/
 
-function rotateRocket(keyPressed, position){
+function rotateRocket(keyPressed, position) {
     var quaternion = new THREE.Quaternion();
-    
-    switch(keyPressed){
+
+    switch (keyPressed) {
         case w:
-            accelOX=accelOX+Math.PI/20;
-            angleX=angleX+accelOX*difftime*difftime;
-            angle=angleX;
-            accel=accelOX;
-            quaternion.setFromAxisAngle( new THREE.Vector3( 1, 0, 0 ), angleX);
+            accelOX = accelOX + Math.PI / 20;
+            angleX = angleX + accelOX * difftime * difftime;
+            angle = angleX;
+            accel = accelOX;
+            quaternion.setFromAxisAngle(new THREE.Vector3(1, 0, 0), angleX);
             break;
-            
+
         case s:
-            accelOX=accelOX-Math.PI/20;
-            angleX=angleX+accelOX*difftime*difftime;
-            quaternion.setFromAxisAngle( new THREE.Vector3( 1, 0, 0 ), angleX);
-            break; 
-            
+            accelOX = accelOX - Math.PI / 20;
+            angleX = angleX + accelOX * difftime * difftime;
+            quaternion.setFromAxisAngle(new THREE.Vector3(1, 0, 0), angleX);
+            break;
+
         case q:
-            accelOY=accelOY+Math.PI/20;
-            angleY=angleY+accelOY*difftime*difftime;
-            quaternion.setFromAxisAngle( new THREE.Vector3( 0, 1, 0 ), angleY);
+            accelOY = accelOY + Math.PI / 20;
+            angleY = angleY + accelOY * difftime * difftime;
+            quaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0), angleY);
             break;
-            
+
         case e:
-            accelOY=accelOY-Math.PI/20;
-            angleY=angleY+accelOY*difftime*difftime;
-            quaternion.setFromAxisAngle( new THREE.Vector3( 0, 1, 0 ), angleY);
+            accelOY = accelOY - Math.PI / 20;
+            angleY = angleY + accelOY * difftime * difftime;
+            quaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0), angleY);
             break;
-            
+
         case a:
-            accelOZ=accelOZ+Math.PI/20;
-            angleZ=angleZ+accelOZ*difftime*difftime;
-            quaternion.setFromAxisAngle( new THREE.Vector3( 0, 0, 1 ), angleZ);
+            accelOZ = accelOZ + Math.PI / 20;
+            angleZ = angleZ + accelOZ * difftime * difftime;
+            quaternion.setFromAxisAngle(new THREE.Vector3(0, 0, 1), angleZ);
             break;
-            
+
         case d:
-            accelOZ=accelOZ-Math.PI/20;
-            angleZ=angleZ+accelOZ*difftime*difftime;
-            quaternion.setFromAxisAngle( new THREE.Vector3( 0, 0, 1 ), angleZ);
+            accelOZ = accelOZ - Math.PI / 20;
+            angleZ = angleZ + accelOZ * difftime * difftime;
+            quaternion.setFromAxisAngle(new THREE.Vector3(0, 0, 1), angleZ);
             break;
     }
     position.applyQuaternion(quaternion);
-    
+
 }
 
 
 //called during every rendering
-function calculatePhysics(difftime, spaceObjects){
+function calculatePhysics(difftime, spaceObjects) {
     //get values from UI:buttons pressed
-    
+
     //calculates current speed for each space Object(Planets, Rocket)
     for (var i in spaceObjects) {
         //console.log(i);
         var spaceObject = spaceObjects[i];
         calculateGravitation(difftime, spaceObjects, spaceObject);
     }
-    if(dae){
-    dae.position.x = spaceObjects.earth.group.position.x;
-    dae.position.y = spaceObjects.earth.group.position.y;
-    dae.position.z = spaceObjects.earth.group.position.z;
+    if (dae) {
+        dae.position.x = spaceObjects.earth.group.position.x;
+        dae.position.y = spaceObjects.earth.group.position.y;
+        dae.position.z = spaceObjects.earth.group.position.z;
     }
     //move(getThrottleOnPercent);
     //roateRocket(getKeyPressed, position_rocket);
@@ -187,7 +187,7 @@ function calculatePhysics(difftime, spaceObjects){
 
 //next stage: UI-Event, initiated by user
 //for stage 1/2
-function nextStage(){
+function nextStage() {
     //wie kann man das generischer machen?
-    mass=mass-rocket.stage1.mass_empty-rocket.stage1.mass_fuel;
+    mass = mass - rocket.stage1.mass_empty - rocket.stage1.mass_fuel;
 }
