@@ -59,7 +59,7 @@ function buildUniverse() {
         //building the Galaxy, Planets and Rocket
         buildGalaxy();
         buildPlanets(data);
-        //placeRocket(); 
+        placeRocket(); 
         /* 
         document.addEventListener('mousedown', onMouseDown, false);
         function onMouseDown(e) {
@@ -189,19 +189,20 @@ function buildUniverse() {
 
     /* Places the Rocket into the Universe */
     function placeRocket() {
+        var earthPos = spaceObjects.earth.group.position;
         var loader = new THREE.ColladaLoader(); 
         loader.options.convertUpAxis = true; 
         loader.load("models/launchpad.dae", function(collada) {   
             dae = collada.scene;   //var skin = collada.skins[ 0 ];
-
-            dae.position.set(spaceObjects.earth.group.position.x + spaceObjects.earth.radius, spaceObjects.earth.group.position.y, spaceObjects.earth.group.position.z); //x,z,y- if you think in blender dimensions ;)
-            dae.scale.set(695508e3, 695508e3, 695508e3);
-            //dae.color="rgb(153, 190, 153)";
+            dae.scale.set(695508e4, 695508e4, 695508e4);
+            //dae.position.x = spaceObjects.earth.radius * globalInterfaceValues.planetSize;
+            dae.position.set(0,0,1000000);
+            //spaceObjects.earth.group.add(dae);
             scene.add(dae);
-            console.log("rocket function is called");
-            console.log(spaceObjects.earth.group.position.x);
-
         });
+        //dae.color="rgb(153, 190, 153)";
+        //console.log("rocket function is called");
+        //console.log(spaceObjects.earth.group.position.x);
     }
 
     /* create a planet with mesh, position and orbit */
@@ -346,9 +347,9 @@ function buildUniverse() {
             if (e == plnt) {
                 var objPos = spaceObjects[e].group.position;
                 spaceObjects[e].group.add(camera);
+                //camera.lookAt(objPos);
                 //console.log(camera.position.z);
                 //camera.position.z = 695508e3 + 10e10;
-                //camera.lookAt(objPos);
                 //controls.target.set(objPos.x, objPos.y, objPos.z);
                 //camera.position.x = spaceObjects[e].group.position.x;
                 //camera.position.y = spaceObjects[e].group.position.y;
@@ -359,6 +360,10 @@ function buildUniverse() {
                 //camera.updateMatrixWorld();
                 //console.log(spaceObjects[e].group.position);
             }
+        }
+        if (plnt == "rocketStation"){
+            console.log(dae.position);
+            //dae.add(camera);
         }
     }
 
