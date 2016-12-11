@@ -1,6 +1,9 @@
 //fill global with key-values, datatype: boolean
-var global = {};
+var global = {
+    started:false
+};
 var dae;
+var dae2;
 var spaceObjects = {};
 var camera, controls;
 
@@ -60,6 +63,7 @@ function buildUniverse() {
         buildGalaxy();
         buildPlanets(data);
         placeRocket(); 
+        placeLaunchpad();
         /* 
         document.addEventListener('mousedown', onMouseDown, false);
         function onMouseDown(e) {
@@ -192,9 +196,9 @@ function buildUniverse() {
         var earthPos = spaceObjects.earth.group.position;
         var loader = new THREE.ColladaLoader(); 
         loader.options.convertUpAxis = true; 
-        loader.load("models/launchpad.dae", function(collada) {   
+        loader.load("models/saturnV.dae", function(collada) {   
             dae = collada.scene;   //var skin = collada.skins[ 0 ];
-            dae.scale.set(695508e4, 695508e4, 695508e4);
+            dae.scale.set(695508e3, 695508e3, 695508e3);
             //dae.position.x = spaceObjects.earth.radius * globalInterfaceValues.planetSize;
             dae.position.set(0,0,1000000);
             //spaceObjects.earth.group.add(dae);
@@ -203,6 +207,22 @@ function buildUniverse() {
         //dae.color="rgb(153, 190, 153)";
         //console.log("rocket function is called");
         //console.log(spaceObjects.earth.group.position.x);
+    }
+    
+    /* Places Launchpad */
+        function placeLaunchpad() {
+        var earthPos = spaceObjects.earth.group.position;
+        var loader = new THREE.ColladaLoader(); 
+        loader.options.convertUpAxis = true; 
+        loader.load("models/launchpad.dae", function(collada) {   
+            dae2 = collada.scene;   //var skin = collada.skins[ 0 ];
+            dae2.scale.set(695508e4, 695508e4, 695508e4);
+            //dae.position.x = spaceObjects.earth.radius * globalInterfaceValues.planetSize;
+            dae2.position.set(0,0,1000000);
+            //spaceObjects.earth.group.add(dae);
+            scene.add(dae2);
+        });
+
     }
 
     /* create a planet with mesh, position and orbit */

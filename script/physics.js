@@ -35,9 +35,14 @@ function calculateGravitation(difftime, spaceObjects, spaceObject) {
     }
 
     for (var o in spaceObjects) {
-
-        if (spaceObjects[o].name != "sun")
-            continue;
+        
+        
+            if (spaceObjects[o].name != "sun"){
+                if(spaceObject.group != "group41_moon"){
+                    if(spaceObjects[o].name != "earth"){
+                continue;}
+            }}
+        
         //same objects do not have influence on themselfe
         if (spaceObject.name === spaceObjects[o].name) {
             continue;
@@ -92,75 +97,78 @@ part 1: acceleration of direction and new position
 
 **/
 
-/*
-function move(throttleInPercent){
+
+/*function move(direction){
     
 //calculates fuel-mass that will be lost in difftime
-mass_lost=difftime/saturnV.stage1.burningtime*throttleInPercent*rocket.stage1.mass_fuel;
+mass_lost=difftime/saturnV.stage1.burningtime*globalInterfaceValues.throttle*rocket.stage1.mass_fuel;
 //checks if enough fuel
 if((fuel_mass-mass_lost)>=0){
-//a=F/m(now mass WITH fuel to lose)
-accel=saturnV.stage1.thrust/(mass);
-//new mass without lost fuel
-mass=mass-mass_lost;
-//current fuel mass for UI
-fuel_mass=fuel_mass-mass_lost;
+    //a=F/m(now mass WITH fuel to lose)
+    accel=saturnV.stage1.thrust/(mass);
+    //new mass without lost fuel
+    mass=mass-mass_lost;
+    //current fuel mass for UI
+    fuel_mass=fuel_mass-mass_lost;
 }
 else{
 //error: not enough fuel
 }
-    //new rocket position; orientation is probably a matrix 
-    vec3 position_rocket=vec3((position_rocket+(accel*difftime))*orientation); 
-}
-*/
+//new rocket position; orientation is probably a matrix 
+
+vec3 position_rocket=vec3((position_rocket+(accel*difftime))*orientation*direction); 
+}*/
+
 /**
 Rocket Science
 part 2: orientation
 input: keyPressed(WASDQE) and position(as vec3)
 **/
 
-function rotateRocket(keyPressed, position) {
+function rotateRocket(position) {
     var quaternion = new THREE.Quaternion();
 
-    switch (keyPressed) {
-        case w:
+    
+        if(globalControlValues.keyUp){
             accelOX = accelOX + Math.PI / 20;
             angleX = angleX + accelOX * difftime * difftime;
             angle = angleX;
             accel = accelOX;
             quaternion.setFromAxisAngle(new THREE.Vector3(1, 0, 0), angleX);
             break;
+        }
 
-        case s:
+        if(globalControlValues.keyDown){
             accelOX = accelOX - Math.PI / 20;
             angleX = angleX + accelOX * difftime * difftime;
             quaternion.setFromAxisAngle(new THREE.Vector3(1, 0, 0), angleX);
             break;
-
-        case q:
+        }
+        if(globalControlValues.keyRollLeft){
             accelOY = accelOY + Math.PI / 20;
             angleY = angleY + accelOY * difftime * difftime;
             quaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0), angleY);
             break;
-
-        case e:
+        }
+        if(globalControlValues.keyRollRight){
             accelOY = accelOY - Math.PI / 20;
             angleY = angleY + accelOY * difftime * difftime;
             quaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0), angleY);
             break;
-
-        case a:
+        }
+        if(globalControlValues.keyLeft){
             accelOZ = accelOZ + Math.PI / 20;
             angleZ = angleZ + accelOZ * difftime * difftime;
             quaternion.setFromAxisAngle(new THREE.Vector3(0, 0, 1), angleZ);
             break;
-
-        case d:
+        }
+        if(globalControlValues.keyRight){
             accelOZ = accelOZ - Math.PI / 20;
             angleZ = angleZ + accelOZ * difftime * difftime;
             quaternion.setFromAxisAngle(new THREE.Vector3(0, 0, 1), angleZ);
             break;
-    }
+        }
+    
     position.applyQuaternion(quaternion);
 
 }
@@ -181,8 +189,22 @@ function calculatePhysics(difftime, spaceObjects) {
         dae.position.y = spaceObjects.earth.group.position.y;
         dae.position.z = spaceObjects.earth.group.position.z;
     }
-    //move(getThrottleOnPercent);
-    //roateRocket(getKeyPressed, position_rocket);
+    if (dae2) {
+        dae2.position.x = spaceObjects.earth.group.position.x;
+        dae2.position.y = spaceObjects.earth.group.position.y;
+        dae2.position.z = spaceObjects.earth.group.position.z;
+    }
+    if(global.started){
+        if(globalControlValues.keyGas){move(1);}
+        if(globalControlValues.keyBrake){move(-1);}
+    }
+    else if(globalControlValues.keyGas){
+        if(globalInterfaceValues.throttle==100){
+            global.started=true;
+        }
+    }
+    
+    //roateRocket(position_rocket);
 }
 
 //next stage: UI-Event, initiated by user
