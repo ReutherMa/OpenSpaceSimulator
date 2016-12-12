@@ -1,11 +1,33 @@
-var globalControlValues = {keyUp:false, keyDown:false, keyLeft:false, keyRight:false, keyRollLeft:false, keyRollRight:false, keyGas:false, keyBreak:false, keyStartPause:false};
+var globalControlValues = {
+    keyUp: false,
+    keyDown: false,
+    keyLeft: false,
+    keyRight: false,
+    keyRollLeft: false,
+    keyRollRight: false,
+    keyGas: false,
+    keyBreak: false,
+    keyStartPause: false,
+    keyReset: false
+};
 
-var keyCode = {w:87, s:83, a:65, d:68, q:81, e:69, space:32, b:66, enter:13};
+var keyCode = {
+    w: 87,
+    s: 83,
+    a: 65,
+    d: 68,
+    q: 81,
+    e: 69,
+    space: 32,
+    b: 66,
+    enter: 13,
+    r: 82
+};
 
-$(document).ready(function(){
-    $(document).keydown(function(e){
-        switch(e.keyCode){
-            case keyCode.w: 
+$(document).ready(function() {
+    $(document).keydown(function(e) {
+        switch (e.keyCode) {
+            case keyCode.w:
                 globalControlValues.keyUp = true;
                 break;
             case keyCode.s:
@@ -30,19 +52,27 @@ $(document).ready(function(){
                 globalControlValues.keyBreak = true;
                 break;
             case keyCode.enter:
-                if(globalControlValues.keyStartPause == false){
+                if (globalControlValues.keyStartPause == false) {
                     globalControlValues.keyStartPause = true;
                     console.log("paused");
-                }else{
+                } else {
                     globalControlValues.keyStartPause = false;
                     console.log("resumed");
                 }
+                break;
+            case keyCode.r:
+                if (globalControlValues.keyReset == false) {
+                    globalControlValues.keyReset = true;
+                } else {
+                    globalControlValues.keyReset = false;
+                }
+                break;
         }
     });
 
-    $(document).keyup(function(e){
-        switch(e.keyCode){
-            case keyCode.w: 
+    $(document).keyup(function(e) {
+        switch (e.keyCode) {
+            case keyCode.w:
                 globalControlValues.keyUp = false;
                 break;
             case keyCode.s:
@@ -65,9 +95,9 @@ $(document).ready(function(){
                 break;
             case keyCode.b:
                 globalControlValues.keyBreak = false;
-                break;     
+                break;
         }
     });
-    
-    
+
+
 });

@@ -184,7 +184,7 @@ function calculatePhysics(difftime, spaceObjects) {
         var spaceObject = spaceObjects[i];
         calculateGravitation(difftime, spaceObjects, spaceObject);
     }
-    if (dae) {
+    /*if (dae) {
         dae.position.x = spaceObjects.earth.group.position.x;
         dae.position.y = spaceObjects.earth.group.position.y;
         dae.position.z = spaceObjects.earth.group.position.z;
@@ -193,7 +193,7 @@ function calculatePhysics(difftime, spaceObjects) {
         dae2.position.x = spaceObjects.earth.group.position.x;
         dae2.position.y = spaceObjects.earth.group.position.y;
         dae2.position.z = spaceObjects.earth.group.position.z;
-    }
+    }*/
     if(global.started){
         if(globalControlValues.keyGas){move(1);}
         if(globalControlValues.keyBrake){move(-1);}

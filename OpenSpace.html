@@ -184,8 +184,8 @@
                     <div class="planetBox">
                         <div class="planetSizeBox">
                             <form oninput="planetNumber.value=planetSizeRange.value">
-                                <input type="range" name="planetSizeRange" min="1" max="1000" value="1000">
-                                <output name="planetNumber">1000</output>
+                                <input type="range" name="planetSizeRange" min="1" max="1000" value="1">
+                                <output name="planetNumber">1</output>
                             </form>
                             <div class="planetLabelBox">
                                 <label>Planet Size</label>
@@ -237,18 +237,20 @@
                         </div>
                         <div id="cameraBox">
                             <!--<select onchange="switchCamera(this.value)">-->
+                            Camera:<br>
                             <select name="planetCamera">
-                                <option value="sun" selected="true">Sun</option>
+                                <option value="sun">Sun</option>
                                 <option value="mercury">Mercury</option>
                                 <option value="venus">Venus</option>
-                                <option value="earth">Earth</option>
+                                <option value="earth" selected="true">Earth</option>
                                 <option value="earth_moon">Moon</option>
                                 <option value="mars">Mars</option>
                                 <option value="jupiter">Jupiter</option>
                                 <option value="saturn">Saturn</option>
                                 <option value="uranus">Uranus</option>
                                 <option value="neptune">Neptune</option>
-                                <option value="rocketStation">Rocket Station</option>
+                                <option value="launchpad">Launchpad</option>
+                                <option value="rocket">Rocket</option>
                             </select>
                         </div>
                     </div>

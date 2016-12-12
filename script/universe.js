@@ -1,11 +1,15 @@
 //fill global with key-values, datatype: boolean
 var global = {
-    started:false
+    started: false
 };
-var dae;
-var dae2;
+var rocket;
+var rocketGroup;
+var launchpad;
+var launchpadGroup;
 var spaceObjects = {};
 var camera, controls;
+
+var changed = true;
 
 
 /* Builds the whole Galaxy */
@@ -26,7 +30,7 @@ function buildUniverse() {
     //variables for physics
     var now, difftime;
     var lasttime;
-    
+
     //universe functions
     universe.init = init;
     universe.render = render;
@@ -38,7 +42,7 @@ function buildUniverse() {
         camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.01, 1e27);
         camera.position.set(0, 0, 695508e3 + 10e10);
         //camera.position.set( data.earth.x, data.earth.y, data.earth.z +6371.00e3 ); //EARTH
-        
+
         //building the skybox
         buildSkybox();
 
@@ -46,7 +50,7 @@ function buildUniverse() {
         var helper = new THREE.GridHelper( 10000, 20, 0xffffff, 0xffffff );
         scene.add( helper ); 
         */
-        
+
         //creating an ambient light
         var ambLight = new THREE.AmbientLight(0x3e3e3e3e); //0x3e3e3e3e
         scene.add(ambLight);
@@ -58,12 +62,14 @@ function buildUniverse() {
             vertexShader: vShader.textContent,
             fragmentShader: fShader.textContent
         });
-        
+
         //building the Galaxy, Planets and Rocket
         buildGalaxy();
         buildPlanets(data);
-        placeRocket(); 
-        placeLaunchpad();
+        //placeRocket();
+        //placeLaunchpad();
+        
+        
         /* 
         document.addEventListener('mousedown', onMouseDown, false);
         function onMouseDown(e) {
@@ -89,7 +95,10 @@ function buildUniverse() {
         scene.add(axisHelper);
 
         //renderer
-        renderer = new THREE.WebGLRenderer({ antialias: true, logarithmicDepthBuffer: true });
+        renderer = new THREE.WebGLRenderer({
+            antialias: true,
+            logarithmicDepthBuffer: true
+        });
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.shadowMap.enabled = true;
@@ -164,7 +173,7 @@ function buildUniverse() {
                 spaceObjects[planet] = planet_object;
                 planet_object.setLabel();
 
-            //normal planets    
+                //normal planets    
             } else {
                 var group_name = new THREE.Group();
                 scene.add(group_name);
@@ -193,36 +202,31 @@ function buildUniverse() {
 
     /* Places the Rocket into the Universe */
     function placeRocket() {
-        var earthPos = spaceObjects.earth.group.position;
+        var earthGroup = spaceObjects.earth.group;
         var loader = new THREE.ColladaLoader(); 
         loader.options.convertUpAxis = true; 
         loader.load("models/saturnV.dae", function(collada) {   
-            dae = collada.scene;   //var skin = collada.skins[ 0 ];
-            dae.scale.set(695508e3, 695508e3, 695508e3);
-            //dae.position.x = spaceObjects.earth.radius * globalInterfaceValues.planetSize;
-            dae.position.set(0,0,1000000);
-            //spaceObjects.earth.group.add(dae);
-            scene.add(dae);
+            rocketGroup = new THREE.Group();
+            rocket = collada.scene;   //var skin = collada.skins[ 0 ];
+            //rocket.scale.set(695508e3, 695508e3, 695508e3);
+            rocketGroup.add(rocket);
+            rocketGroup.position.set(0,20000000000,0);
+            earthGroup.add(rocketGroup);
         });
-        //dae.color="rgb(153, 190, 153)";
-        //console.log("rocket function is called");
-        //console.log(spaceObjects.earth.group.position.x);
     }
-    
+
     /* Places Launchpad */
-        function placeLaunchpad() {
-        var earthPos = spaceObjects.earth.group.position;
+    function placeLaunchpad() {
+        var earthGroup = spaceObjects.earth.group;
         var loader = new THREE.ColladaLoader(); 
         loader.options.convertUpAxis = true; 
-        loader.load("models/launchpad.dae", function(collada) {   
-            dae2 = collada.scene;   //var skin = collada.skins[ 0 ];
-            dae2.scale.set(695508e4, 695508e4, 695508e4);
-            //dae.position.x = spaceObjects.earth.radius * globalInterfaceValues.planetSize;
-            dae2.position.set(0,0,1000000);
-            //spaceObjects.earth.group.add(dae);
-            scene.add(dae2);
+        loader.load("models/launchpad.dae", function(collada) {
+            launchpadGroup = new THREE.Group();
+            launchpad = collada.scene;   //var skin = collada.skins[ 0 ];
+            //launchpad.scale.set(695508e4, 695508e4, 695508e4);
+            launchpadGroup.add(launchpad);
+            earthGroup.add(launchpadGroup);
         });
-
     }
 
     /* create a planet with mesh, position and orbit */
@@ -348,9 +352,9 @@ function buildUniverse() {
 
     /* This is called when UI is changed */
     function UIChanges() {
-        
+
         //scale planets
-        var localBlow = globalInterfaceValues.planetSize / 1000;
+        var localBlow = globalInterfaceValues.planetSize;
         var localPlanet = globalInterfaceValues.planetName;
         for (mesh in spaceObjects[localPlanet].group.children) {
             spaceObjects[localPlanet].group.children[mesh].scale.set(localBlow, localBlow, localBlow);
@@ -360,20 +364,23 @@ function buildUniverse() {
                 }
             */
         }
-        
+
         //change camera position
-        var plnt = globalInterfaceValues.planetCamera;
+        var element = globalInterfaceValues.planetCamera;
         for (e in spaceObjects) {
-            if (e == plnt) {
+            if (e == element) {
                 var objPos = spaceObjects[e].group.position;
                 spaceObjects[e].group.add(camera);
+                controls.update();
+                //controls.target.set(0,0,0);
+                //camera.position.x = objPos.x;
+                //camera.position.y = objPos.y;
+                //camera.position.z = objPos.z + 3*spaceObjects[e].radius;
+                //camera.updateProjectionMatrix();
                 //camera.lookAt(objPos);
                 //console.log(camera.position.z);
                 //camera.position.z = 695508e3 + 10e10;
                 //controls.target.set(objPos.x, objPos.y, objPos.z);
-                //camera.position.x = spaceObjects[e].group.position.x;
-                //camera.position.y = spaceObjects[e].group.position.y;
-                //camera.position.z = spaceObjects[e].group.position.z + 3*spaceObjects[e].radius;
                 //camera.lookAt(spaceObjects[e].group.position.x,spaceObjects[e].group.position.y,spaceObjects[e].group.position.z );
                 //camera.updateProjectionMatrix();
                 //controls.update();
@@ -381,17 +388,35 @@ function buildUniverse() {
                 //console.log(spaceObjects[e].group.position);
             }
         }
-        if (plnt == "rocketStation"){
-            console.log(dae.position);
-            //dae.add(camera);
+        if (element == "launchpad") {
+            //launchpadGroup.add(camera);
         }
+        if (element == "rocket") {
+            //rocketGroup.add(camera);
+        }
+        
+        
+        //reset
+        /*if (globalControlValues.keyReset){
+            if (a == true){
+                a = false;
+                console.log(a);
+            } else {
+                a = true;
+                console.log(a);
+            }
+        }*/
+        
+        
     }
 
     /* This renders the scene */
     function render() {
 
         /* changes of User Interface */
-        UIChanges();
+        if (changed){
+            UIChanges();
+        }
 
         requestAnimationFrame(render);
         //setTimeout (render, 1000/60);
