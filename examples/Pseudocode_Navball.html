@@ -1,0 +1,33 @@
+<html></html>
+<script>
+//Pseudocode Navball
+
+//Navball initialisieren
+var geo_navball = new THREE.SphereGeometry(10, 10, 10);
+//Texture
+//textures/test_navball.png
+var material_nb = new THREE.MeshPhongMaterial( { map: THREE.ImageUtils.loadTexture('textures/test_navball.png') } );
+var navball = new THREE.Mesh(geo_navball, material_nb);
+    
+scene.add(navball);
+
+
+//Rotation um die Z-Achse
+if (key.pressed == 'a'){
+        navball.rotation.z += rotation_speed_roket.z;
+} else if (key.presses == 'd'){
+        navball.rotation.z -= rotation_speed_roket.z;
+//Rotation um die X-Achse
+} else if (key.pressed )== 'w' {
+        navball.rotation.x += rotation_speed_roket.x;
+} else if (key.pressed) == 's'){
+        navball.rotation.x -= rotation_speed_roket.x;
+}
+    
+//Oder direkt in Raketen-Rotation mit einbauen?
+    
+//User Inerface: Hide Navball
+//Anzeige: Geschwindigkeit, Winkel, Throttle, Force
+
+</script>
+        
