@@ -9,15 +9,15 @@ var globalInterfaceValues = {
     planetName: "earth",
     planetSize: 1,
     engine: "Engine1",
-    timeFactor: 0
+    timeFactor: 0,
+    changed: false
 };
 
 $(function() {
 
     $('input').change(inputChange);
     $('select').change(inputChange);
-    inputChange();
-
+    
 });
 
 function inputChange() {
@@ -36,7 +36,7 @@ function inputChange() {
     globalInterfaceValues.timeFactor = $('input[name=timeFactorRange]').val();
     globalInterfaceValues.planetCamera = $('select[name=planetCamera]').val();
     globalInterfaceValues.reset = $('input[name=reset]').val();
-
+    globalInterfaceValues.change = true;
     //console.log(typeof(globalInterfaceValues.engine));
     //console.log(globalInterfaceValues.planetCamera);
 }
