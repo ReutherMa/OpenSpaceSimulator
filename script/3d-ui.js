@@ -4,7 +4,7 @@ function build3D_UI() {
     var loader = new THREE.TextureLoader();
     
     //
-    var ui_camera, ui_renderer, ui_container;
+    var scene_ui, ui_camera, ui_renderer, ui_container;
     
     init();
     render();
@@ -12,6 +12,7 @@ function build3D_UI() {
     /* The initial State */
     function init() {
         //creating a scene, camera
+        scene_ui = new THREE.Scene();
         ui_camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.01, 1000);
         ui_camera.position.set(0, 0, 50);
         
@@ -62,7 +63,7 @@ function build3D_UI() {
 //        vec.applyQuaternion( camera.quaternion );
 //        sphere_nav.position.copy( vec );
     
-        scene.add( sphere_nav );
+        scene_ui.add( sphere_nav );
         
     }
     
@@ -75,7 +76,7 @@ function build3D_UI() {
 
         //Rendering
         if (ui_renderer !== undefined) {
-            ui_renderer.render(scene, ui_camera);
+            ui_renderer.render(scene_ui, ui_camera);
         }
 
     }
