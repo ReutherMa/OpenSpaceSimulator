@@ -53,7 +53,6 @@ function build3D_UI() {
     function buildNavBall(){
         //Nav-Ball
         //2. Kamrea, die direkt vor uns ist und nav ball sehr klein, keliner Abstand. Eingabe: Contols in three.js, in diesem Bereich sind wir selbst zuständig, 2. Orbitcontrolls...
-        console.log("Build nav");
         var nav_geometry = new THREE.SphereGeometry( 10, 64, 64 );
         var nav_material = new THREE.MeshBasicMaterial( {color: 0xffffff} );
         nav_material.map = loader.load("textures/navball.png");
