@@ -1,21 +1,23 @@
 var gravConst = 6.673e-11;
 var ctr = 0;
-var rocket = loadRocketData("rockets.json");
+var rockets = loadRocketData("data/rockets.json");
+console.log(rockets);
+var rocket = rockets.saturn5;
+console.log(rocket);
 
-
-var saturnV = 5; /* {
-    fuel_total: rocket.stage1.mass_fuel+saturnV.stage2.mass_fuel+saturnV.stage3.mass_fuel,
-    /**stage1 = {
+var saturnV =  {
+    fuel_total: rocket.stage1.mass_fuel+rocket.stage2.mass_fuel+rocket.stage3.mass_fuel,
+    stage1 : {
         mass_empty: rocket.stage1.mass_empty,
         mass_fuel: rocket.stage1.mass_fuel,
         burningtime: rocket.stage1.burningtime
     },
-    stage2 = {
+    stage2 : {
         mass_empty: rocket.stage2.mass_empty,
         mass_fuel: rocket.stage2.mass_fuel,
         burningtime: rocket.stage2.burningtime
     },
-    stage3 = {
+    stage3 : {
         mass_empty: rocket.stage3.mass_empty,
         mass_fuel: rocket.stage3.mass_fuel,
         burningtime: rocket.stage3.burningtime
@@ -23,7 +25,7 @@ var saturnV = 5; /* {
     height: rocket.height,
     mass_total: rocket.mass_total,
     thrust_launch: rocket.thrust_launch
-}; */
+}; 
    
 
 
