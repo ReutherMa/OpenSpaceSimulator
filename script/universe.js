@@ -66,8 +66,8 @@ function buildUniverse() {
         buildPlanets(data);
         //placeRocket();
         //placeLaunchpad();
-        
-        
+
+
         /* 
         document.addEventListener('mousedown', onMouseDown, false);
         function onMouseDown(e) {
@@ -208,7 +208,7 @@ function buildUniverse() {
             rocket = collada.scene;   //var skin = collada.skins[ 0 ];
             //rocket.scale.set(695508e3, 695508e3, 695508e3);
             rocketGroup.add(rocket);
-            rocketGroup.position.set(0,20000000000,0);
+            rocketGroup.position.set(0, 20000000000, 0);
             earthGroup.add(rocketGroup);
         });
     }
@@ -370,18 +370,23 @@ function buildUniverse() {
                 console.log(camera);
                 var objPos = spaceObjects[e].group.position;
                 spaceObjects[e].group.add(camera);
+<<<<<<< HEAD
                 camera.position.x = camera.position.y = 0;
                 camera.position.z = spaceObjects[e].radius*3;
                 controls.update();
+=======
+                globalInterfaceValues.changed = false;
+>>>>>>> origin/master
                 //controls.target.set(0,0,0);
-                //camera.position.x = objPos.x;
-                //camera.position.y = objPos.y;
-                //camera.position.z = objPos.z + 3*spaceObjects[e].radius;
-                //camera.updateProjectionMatrix();
-                //camera.lookAt(objPos);
+                /*camera.position.x = objPos.x;
+                camera.position.y = objPos.y;
+                camera.position.z = objPos.z + 3*spaceObjects[e].radius;
+                camera.updateProjectionMatrix();
+                camera.lookAt(objPos);
+                controls.target.set(objPos.x, objPos.y, objPos.z);
+                controls.update();*/
                 //console.log(camera.position.z);
                 //camera.position.z = 695508e3 + 10e10;
-                //controls.target.set(objPos.x, objPos.y, objPos.z);
                 //camera.lookAt(spaceObjects[e].group.position.x,spaceObjects[e].group.position.y,spaceObjects[e].group.position.z );
                 //camera.updateProjectionMatrix();
                 //controls.update();
@@ -395,8 +400,8 @@ function buildUniverse() {
         if (element == "rocket") {
             //rocketGroup.add(camera);
         }
-        
-        
+
+
         //reset
         /*if (globalControlValues.keyReset){
             if (a == true){
@@ -407,19 +412,31 @@ function buildUniverse() {
                 console.log(a);
             }
         }*/
+<<<<<<< HEAD
         
         
                 globalInterfaceValues.changed = false;
+=======
+
+
+>>>>>>> origin/master
     }
 
     /* This renders the scene */
     function render() {
 
         /* changes of User Interface */
+<<<<<<< HEAD
         if (globalInterfaceValues.changed){
             console.log(globalInterfaceValues.changed);
+=======
+        if (globalInterfaceValues.changed) {
+            console.log(globalInterfaceValues.changed);
+
+>>>>>>> origin/master
             UIChanges();
         }
+        console.log(globalInterfaceValues.changed);
 
         requestAnimationFrame(render);
         //setTimeout (render, 1000/60);
