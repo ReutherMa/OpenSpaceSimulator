@@ -36,7 +36,7 @@ function inputChange() {
     globalInterfaceValues.timeFactor = $('input[name=timeFactorRange]').val();
     globalInterfaceValues.planetCamera = $('select[name=planetCamera]').val();
     globalInterfaceValues.reset = $('input[name=reset]').val();
-    globalInterfaceValues.change = true;
+    globalInterfaceValues.changed = true;
     //console.log(typeof(globalInterfaceValues.engine));
     //console.log(globalInterfaceValues.planetCamera);
 }

@@ -9,8 +9,6 @@ var launchpadGroup;
 var spaceObjects = {};
 var camera, controls;
 
-var changed = true;
-
 
 /* Builds the whole Galaxy */
 function buildUniverse() {
@@ -369,8 +367,11 @@ function buildUniverse() {
         var element = globalInterfaceValues.planetCamera;
         for (e in spaceObjects) {
             if (e == element) {
+                console.log(camera);
                 var objPos = spaceObjects[e].group.position;
                 spaceObjects[e].group.add(camera);
+                camera.position.x = camera.position.y = 0;
+                camera.position.z = spaceObjects[e].radius*3;
                 controls.update();
                 //controls.target.set(0,0,0);
                 //camera.position.x = objPos.x;
@@ -408,13 +409,15 @@ function buildUniverse() {
         }*/
         
         
+                globalInterfaceValues.changed = false;
     }
 
     /* This renders the scene */
     function render() {
 
         /* changes of User Interface */
-        if (changed){
+        if (globalInterfaceValues.changed){
+            console.log(globalInterfaceValues.changed);
             UIChanges();
         }
 

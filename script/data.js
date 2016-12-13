@@ -27,3 +27,16 @@ function loadData(url_var, universe){
     
 
 }
+
+function loadRocketData(url_var){
+    var data = {};
+    
+    $.ajax({
+        url: url_var,
+        async: false,
+        dataType: 'json',
+        success: function(output) {
+            return output;
+        }
+    });
+}
