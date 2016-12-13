@@ -1,9 +1,32 @@
 var gravConst = 6.673e-11;
 var ctr = 0;
-/*//initial values on game start
-var rocket = saturnV;
-//var rocket_mass = rocket.mass
-var fuel_mass = rocket.stage1.mass_fuel;
+var rocket = loadRocketData("rockets.json");
+
+
+var saturnV = 5; /* {
+    fuel_total: rocket.stage1.mass_fuel+saturnV.stage2.mass_fuel+saturnV.stage3.mass_fuel,
+    /**stage1 = {
+        mass_empty: rocket.stage1.mass_empty,
+        mass_fuel: rocket.stage1.mass_fuel,
+        burningtime: rocket.stage1.burningtime
+    },
+    stage2 = {
+        mass_empty: rocket.stage2.mass_empty,
+        mass_fuel: rocket.stage2.mass_fuel,
+        burningtime: rocket.stage2.burningtime
+    },
+    stage3 = {
+        mass_empty: rocket.stage3.mass_empty,
+        mass_fuel: rocket.stage3.mass_fuel,
+        burningtime: rocket.stage3.burningtime
+    },
+    height: rocket.height,
+    mass_total: rocket.mass_total,
+    thrust_launch: rocket.thrust_launch
+}; */
+   
+
+
 
 var keyPressed; //wasdqe
 var position; //vec3
@@ -17,7 +40,8 @@ var angleZ = 0;
 //int
 var accelOX;
 var accelOY;
-var accelOZ;*/
+var accelOZ;
+
 
 // calculate gravitational forces
 /** 
@@ -27,6 +51,7 @@ var accelOZ;*/
         accel: acceleration of current object
         
     **/
+
 function calculateGravitation(difftime, spaceObjects, spaceObject) {
 
     //do objects have a mass || is it a star
@@ -38,10 +63,9 @@ function calculateGravitation(difftime, spaceObjects, spaceObject) {
         
         
             if (spaceObjects[o].name != "sun"){
-                if(spaceObject.group != "group41_moon"){
-                    if(spaceObjects[o].name != "earth"){
-                continue;}
-            }}
+                continue;
+            }
+            
         
         //same objects do not have influence on themselfe
         if (spaceObject.name === spaceObjects[o].name) {
@@ -202,6 +226,10 @@ function calculatePhysics(difftime, spaceObjects) {
         if(globalInterfaceValues.throttle==100){
             global.started=true;
         }
+    }
+    if(ctr<1){
+        console.log(saturnV);
+        ctr++;
     }
     
     //roateRocket(position_rocket);
