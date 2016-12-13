@@ -367,31 +367,10 @@ function buildUniverse() {
         var element = globalInterfaceValues.planetCamera;
         for (e in spaceObjects) {
             if (e == element) {
-                console.log(camera);
-                var objPos = spaceObjects[e].group.position;
                 spaceObjects[e].group.add(camera);
-<<<<<<< HEAD
                 camera.position.x = camera.position.y = 0;
                 camera.position.z = spaceObjects[e].radius*3;
                 controls.update();
-=======
-                globalInterfaceValues.changed = false;
->>>>>>> origin/master
-                //controls.target.set(0,0,0);
-                /*camera.position.x = objPos.x;
-                camera.position.y = objPos.y;
-                camera.position.z = objPos.z + 3*spaceObjects[e].radius;
-                camera.updateProjectionMatrix();
-                camera.lookAt(objPos);
-                controls.target.set(objPos.x, objPos.y, objPos.z);
-                controls.update();*/
-                //console.log(camera.position.z);
-                //camera.position.z = 695508e3 + 10e10;
-                //camera.lookAt(spaceObjects[e].group.position.x,spaceObjects[e].group.position.y,spaceObjects[e].group.position.z );
-                //camera.updateProjectionMatrix();
-                //controls.update();
-                //camera.updateMatrixWorld();
-                //console.log(spaceObjects[e].group.position);
             }
         }
         if (element == "launchpad") {
@@ -412,31 +391,17 @@ function buildUniverse() {
                 console.log(a);
             }
         }*/
-<<<<<<< HEAD
-        
-        
-                globalInterfaceValues.changed = false;
-=======
 
-
->>>>>>> origin/master
+        globalInterfaceValues.changed = false;
     }
 
     /* This renders the scene */
     function render() {
 
-        /* changes of User Interface */
-<<<<<<< HEAD
-        if (globalInterfaceValues.changed){
-            console.log(globalInterfaceValues.changed);
-=======
+        /* changes of User Interface */ 
         if (globalInterfaceValues.changed) {
-            console.log(globalInterfaceValues.changed);
-
->>>>>>> origin/master
             UIChanges();
         }
-        console.log(globalInterfaceValues.changed);
 
         requestAnimationFrame(render);
         //setTimeout (render, 1000/60);

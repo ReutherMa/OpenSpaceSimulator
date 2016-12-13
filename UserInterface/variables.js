@@ -50,10 +50,9 @@ function inputChange() {
     globalInterfaceValues.planetCamera = $('select[name=planetCamera]').val();
     globalInterfaceValues.reset = $('input[name=reset]').val();
     globalInterfaceValues.changed = true;
-<<<<<<< HEAD
-=======
+
     console.log("selected" + globalInterfaceValues.planetAllSelected);
->>>>>>> origin/master
+
     //console.log(typeof(globalInterfaceValues.engine));
     //console.log(globalInterfaceValues.planetCamera);
 }
