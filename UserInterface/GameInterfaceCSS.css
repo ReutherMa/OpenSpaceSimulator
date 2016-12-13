@@ -1,0 +1,107 @@
+/* ---------------- COLOURS, FONTS ETC ---------------- */
+
+body {
+    font-family: Arial;
+    color: #ffffff;
+}
+
+h1, label, p {
+    color: #ffffff;
+}
+
+h1 {
+    font-size:20px;
+}
+
+.fa {
+    font: normal normal normal 14px/1 FontAwesome !important;
+}
+
+.btn {
+    padding-bottom: 5px !important;
+}
+ 
+/* ---------------- BOX POSITIONING ---------------- */  
+
+
+#headerbox {
+    position: absolute;
+    visibility: visible;
+    left:0;
+    right:0;
+    top: 0%;
+    margin: auto;
+    width:100%;
+    text-align:center;
+}
+
+.menubox {
+    position: absolute; 
+    visibility: visible; 
+    left: 20px;
+    bottom: 5%;
+    z-index: 200;
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 20px;
+}
+
+#footerbox {
+    position: absolute;
+    visibility: visible;
+    left:20px;
+    bottom: 2%;
+}
+
+.dashboardBox {
+    position: absolute;
+    visibility: visible;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    z-index: 200;
+    background-color: rgba(255, 255, 255, 0.20);
+    padding: 10px;
+    margin: auto;
+    width:500px;
+    height: 130px;
+    border-radius: 6px;
+    border: 2px solid rgb(255, 140, 0);
+}
+
+.steeringBox {
+    width: auto;
+    float:left;
+}
+
+.displayBox {
+    position:absolute;
+    z-index:200;
+    visibility: visible;
+    top:5px;
+    right:2px;
+}
+
+/* ---------------- KNOB STYLING ---------------- */
+
+.fuelknob canvas {
+    width: 65px;
+    height: 130px;
+    float: left; 
+    margin: 10px 10px 0px 10px;
+}
+
+.fuelknob .dial {
+    font-size: 25px !important;
+    margin-top: 50px !important;
+    margin-left: -70 !important;
+}
+
+.miniMapFrame {
+    border: #ffffff 1px solid;
+    position: absolute;
+    visibility: visible;
+    bottom:10px;
+    right:10px;
+}
+
+/* ---------------- ICON STYLING ---------------- */
