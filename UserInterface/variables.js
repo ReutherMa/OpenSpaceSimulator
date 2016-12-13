@@ -8,6 +8,8 @@ var globalInterfaceValues = {
     totalMass: 0,
     planetName: "earth",
     planetSize: 1,
+    planetAllSelected: false,
+    planetCamera: "sun",
     engine: "Engine1",
     timeFactor: 0,
     changed: false
@@ -17,7 +19,9 @@ $(function() {
 
     $('input').change(inputChange);
     $('select').change(inputChange);
-    
+    //calculateTotalMass();
+    //inputChange();
+
 });
 
 function inputChange() {
@@ -32,11 +36,23 @@ function inputChange() {
     $("#totalMass").text(globalInterfaceValues.totalMass);
     globalInterfaceValues.planetSize = +$('input[name=planetSizeRange]').val();
     globalInterfaceValues.planetName = $('select[name=planetSelect]').val();
+    console.log("ist sie gecheckt?" + $("#check").prop("checked"))
+    if ($("#check").prop("checked")) {
+        globalInterfaceValues.planetAllSelected = true;
+        $('select[name=planetSelect]').prop("disabled", true);
+    } else {
+        globalInterfaceValues.planetAllSelected = false;
+        $('select[name=planetSelect]').prop("disabled", false);
+    }
+    globalInterfaceValues.planetSelectAll = $('input[name=planetSizeRange]').val();
     globalInterfaceValues.engine = $('select[name=engineRange]').val();
     globalInterfaceValues.timeFactor = $('input[name=timeFactorRange]').val();
     globalInterfaceValues.planetCamera = $('select[name=planetCamera]').val();
     globalInterfaceValues.reset = $('input[name=reset]').val();
-    globalInterfaceValues.change = true;
+    globalInterfaceValues.changed = true;
+    console.log("selected" + globalInterfaceValues.planetAllSelected);
     //console.log(typeof(globalInterfaceValues.engine));
     //console.log(globalInterfaceValues.planetCamera);
 }
+
+//function calculatTotalMass

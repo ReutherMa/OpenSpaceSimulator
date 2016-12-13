@@ -65,6 +65,13 @@ form {
     margin-bottom: 10px;
 }
 
+.planetSelectLabelBox{
+    float: left;
+}
+
+.planetCheckLabelBox{
+    float: left;
+}
 /*.titleBox {
     position: absolute;
     top: 0px;
