@@ -3,9 +3,10 @@ function build3D_UI() {
     //loaders
     var loader = new THREE.TextureLoader();
     
-    //
+    //vars for build3D_UI
     var scene_ui, ui_camera, ui_renderer, ui_container;
     
+    //initializing, rendering
     init();
     render();
     
@@ -15,9 +16,8 @@ function build3D_UI() {
         scene_ui = new THREE.Scene();
         ui_camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.01, 1000);
         ui_camera.position.set(0, 0, 50);
-        
 
-        //axisHelper
+        //drawing the coordinate-system
         //var axisHelper = new THREE.AxisHelper(100);
         //scene.add(axisHelper);
 
@@ -35,23 +35,23 @@ function build3D_UI() {
 
         window.addEventListener('resize', onWindowResize, false);
 
-        //controls
+        //new orbit controls
         ui_controls = new THREE.OrbitControls(ui_camera, ui_renderer.domElement);
         //controls.addEventListener( 'change', render );
         
+        //creating the navigation-ball
         buildNavBall();
-
     }
     
+    //Scales the window
     function onWindowResize() {
         ui_camera.aspect = window.innerWidth / window.innerHeight;
         ui_camera.updateProjectionMatrix();
         ui_renderer.setSize(window.innerWidth, window.innerHeight);
-        //render(); no double calling
     }
     
+    //Nav-Ball
     function buildNavBall(){
-        //Nav-Ball
         //2. Kamrea, die direkt vor uns ist und nav ball sehr klein, keliner Abstand. Eingabe: Contols in three.js, in diesem Bereich sind wir selbst zuständig, 2. Orbitcontrolls...
         var nav_geometry = new THREE.SphereGeometry( 10, 64, 64 );
         var nav_material = new THREE.MeshBasicMaterial( {color: 0xffffff} );
