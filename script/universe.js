@@ -65,7 +65,7 @@ function buildUniverse() {
         buildGalaxy();
         buildPlanets(data);
         //placeRocket();
-        //placeLaunchpad();
+        placeLaunchpad();
 
 
         /* 
@@ -221,8 +221,12 @@ function buildUniverse() {
         loader.load("models/launchpad.dae", function(collada) {
             launchpadGroup = new THREE.Group();
             launchpad = collada.scene;   //var skin = collada.skins[ 0 ];
-            //launchpad.scale.set(695508e4, 695508e4, 695508e4);
+            launchpad.scale.set(500, 500, 500);
             launchpadGroup.add(launchpad);
+            launchpadGroup.position.x = spaceObjects.earth.radius * 0.1;
+            launchpadGroup.position.y = spaceObjects.earth.radius * 0.5;
+            launchpadGroup.position.z = spaceObjects.earth.radius * 0.9;
+            launchpad.rotateX(Math.PI/180 * 60);
             earthGroup.add(launchpadGroup);
         });
     }
@@ -374,7 +378,10 @@ function buildUniverse() {
             }
         }
         if (element == "launchpad") {
-            //launchpadGroup.add(camera);
+                launchpadGroup.add(camera);
+                camera.position.x = camera.position.y = 0;
+                camera.position.z = 50;
+                controls.update();
         }
         if (element == "rocket") {
             //rocketGroup.add(camera);
