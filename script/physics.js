@@ -5,19 +5,19 @@ console.log(rockets);
 var rocket = rockets.saturn5;
 console.log(rocket);
 
-var saturnV =  {
-    fuel_total: rocket.stage1.mass_fuel+rocket.stage2.mass_fuel+rocket.stage3.mass_fuel,
-    stage1 : {
+var saturnV = {
+    fuel_total: rocket.stage1.mass_fuel + rocket.stage2.mass_fuel + rocket.stage3.mass_fuel,
+    stage1: {
         mass_empty: rocket.stage1.mass_empty,
         mass_fuel: rocket.stage1.mass_fuel,
         burningtime: rocket.stage1.burningtime
     },
-    stage2 : {
+    stage2: {
         mass_empty: rocket.stage2.mass_empty,
         mass_fuel: rocket.stage2.mass_fuel,
         burningtime: rocket.stage2.burningtime
     },
-    stage3 : {
+    stage3: {
         mass_empty: rocket.stage3.mass_empty,
         mass_fuel: rocket.stage3.mass_fuel,
         burningtime: rocket.stage3.burningtime
@@ -25,8 +25,8 @@ var saturnV =  {
     height: rocket.height,
     mass_total: rocket.mass_total,
     thrust_launch: rocket.thrust_launch
-}; 
-   
+};
+
 
 
 
@@ -43,6 +43,9 @@ var angleZ = 0;
 var accelOX;
 var accelOY;
 var accelOZ;
+
+var fuel_mass = saturnV.stage1.mass_fuel;
+var mass = saturnV.mass_total;
 
 
 // calculate gravitational forces
@@ -62,13 +65,13 @@ function calculateGravitation(difftime, spaceObjects, spaceObject) {
     }
 
     for (var o in spaceObjects) {
-        
-        
-            if (spaceObjects[o].name != "sun"){
-                continue;
-            }
-            
-        
+
+
+        if (spaceObjects[o].name != "sun") {
+            continue;
+        }
+
+
         //same objects do not have influence on themselfe
         if (spaceObject.name === spaceObjects[o].name) {
             continue;
@@ -124,26 +127,26 @@ part 1: acceleration of direction and new position
 **/
 
 
-/*function move(direction){
-    
-//calculates fuel-mass that will be lost in difftime
-mass_lost=difftime/saturnV.stage1.burningtime*globalInterfaceValues.throttle*rocket.stage1.mass_fuel;
-//checks if enough fuel
-if((fuel_mass-mass_lost)>=0){
-    //a=F/m(now mass WITH fuel to lose)
-    accel=saturnV.stage1.thrust/(mass);
-    //new mass without lost fuel
-    mass=mass-mass_lost;
-    //current fuel mass for UI
-    fuel_mass=fuel_mass-mass_lost;
-}
-else{
-//error: not enough fuel
-}
-//new rocket position; orientation is probably a matrix 
+function move(direction) {
 
-vec3 position_rocket=vec3((position_rocket+(accel*difftime))*orientation*direction); 
-}*/
+    //calculates fuel-mass that will be lost in difftime
+    var mass_lost = difftime / saturnV.stage1.burningtime * globalInterfaceValues.throttle * rocket.stage1.mass_fuel;
+    //checks if enough fuel
+    if ((fuel_mass - mass_lost) >= 0) {
+        //a=F/m(now mass WITH fuel to lose)
+        var accel = saturnV.stage1.thrust / (mass);
+        //new mass without lost fuel
+        mass = mass - mass_lost;
+        //current fuel mass for UI
+        fuel_mass = fuel_mass - mass_lost;
+    } else {
+        //UI-prompt-method with variable String (needs to be implemented);
+        prompt("There is not enough fuel in this stage!");
+    }
+    //new rocket position; orientation is probably a matrix 
+
+    vec3 position_rocket = vec3((position_rocket + (accel * difftime)) * orientation * direction);
+}
 
 /**
 Rocket Science
@@ -154,48 +157,49 @@ input: keyPressed(WASDQE) and position(as vec3)
 function rotateRocket(position) {
     var quaternion = new THREE.Quaternion();
 
-    
-        if(globalControlValues.keyUp){
-            accelOX = accelOX + Math.PI / 20;
-            angleX = angleX + accelOX * difftime * difftime;
-            angle = angleX;
-            accel = accelOX;
-            quaternion.setFromAxisAngle(new THREE.Vector3(1, 0, 0), angleX);
-            break;
-        }
 
-        if(globalControlValues.keyDown){
-            accelOX = accelOX - Math.PI / 20;
-            angleX = angleX + accelOX * difftime * difftime;
-            quaternion.setFromAxisAngle(new THREE.Vector3(1, 0, 0), angleX);
-            break;
-        }
-        if(globalControlValues.keyRollLeft){
-            accelOY = accelOY + Math.PI / 20;
-            angleY = angleY + accelOY * difftime * difftime;
-            quaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0), angleY);
-            break;
-        }
-        if(globalControlValues.keyRollRight){
-            accelOY = accelOY - Math.PI / 20;
-            angleY = angleY + accelOY * difftime * difftime;
-            quaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0), angleY);
-            break;
-        }
-        if(globalControlValues.keyLeft){
-            accelOZ = accelOZ + Math.PI / 20;
-            angleZ = angleZ + accelOZ * difftime * difftime;
-            quaternion.setFromAxisAngle(new THREE.Vector3(0, 0, 1), angleZ);
-            break;
-        }
-        if(globalControlValues.keyRight){
-            accelOZ = accelOZ - Math.PI / 20;
-            angleZ = angleZ + accelOZ * difftime * difftime;
-            quaternion.setFromAxisAngle(new THREE.Vector3(0, 0, 1), angleZ);
-            break;
-        }
-    
-    position.applyQuaternion(quaternion);
+    if (globalControlValues.keyUp) {
+        accelOX = accelOX + Math.PI / 20;
+        angleX = angleX + accelOX * difftime * difftime;
+        angle = angleX;
+        accel = accelOX;
+        quaternion.setFromAxisAngle(new THREE.Vector3(1, 0, 0), angleX);
+        break;
+    }
+
+    if (globalControlValues.keyDown) {
+        accelOX = accelOX - Math.PI / 20;
+        angleX = angleX + accelOX * difftime * difftime;
+        quaternion.setFromAxisAngle(new THREE.Vector3(1, 0, 0), angleX);
+        break;
+    }
+    if (globalControlValues.keyRollLeft) {
+        accelOY = accelOY + Math.PI / 20;
+        angleY = angleY + accelOY * difftime * difftime;
+        quaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0), angleY);
+        break;
+    }
+    if (globalControlValues.keyRollRight) {
+        accelOY = accelOY - Math.PI / 20;
+        angleY = angleY + accelOY * difftime * difftime;
+        quaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0), angleY);
+        break;
+    }
+    if (globalControlValues.keyLeft) {
+        accelOZ = accelOZ + Math.PI / 20;
+        angleZ = angleZ + accelOZ * difftime * difftime;
+        quaternion.setFromAxisAngle(new THREE.Vector3(0, 0, 1), angleZ);
+        break;
+    }
+    if (globalControlValues.keyRight) {
+        accelOZ = accelOZ - Math.PI / 20;
+        angleZ = angleZ + accelOZ * difftime * difftime;
+        quaternion.setFromAxisAngle(new THREE.Vector3(0, 0, 1), angleZ);
+        break;
+    }
+
+    saturnV.applyQuaternion(quaternion);
+    saturnV.quaternion.normalize();
 
 }
 
@@ -220,20 +224,27 @@ function calculatePhysics(difftime, spaceObjects) {
         dae2.position.y = spaceObjects.earth.group.position.y;
         dae2.position.z = spaceObjects.earth.group.position.z;
     }*/
-    if(global.started){
-        if(globalControlValues.keyGas){move(1);}
-        if(globalControlValues.keyBrake){move(-1);}
-    }
-    else if(globalControlValues.keyGas){
-        if(globalInterfaceValues.throttle==100){
-            global.started=true;
+    if (global.started) {
+        if (globalControlValues.keyGas) {
+            move(1);
+        }
+        if (globalControlValues.keyBrake) {
+            move(-1);
+        }
+    } else if (globalControlValues.keyGas) {
+        if (globalInterfaceValues.throttle == 100) {
+            global.started = true;
         }
     }
-    if(ctr<1){
+    if (ctr < 1) {
         console.log(saturnV);
         ctr++;
     }
-    
+
+    if (keyNextStage) {
+        nexStage();
+    }
+
     //roateRocket(position_rocket);
 }
 
@@ -241,5 +252,14 @@ function calculatePhysics(difftime, spaceObjects) {
 //for stage 1/2
 function nextStage() {
     //wie kann man das generischer machen?
-    mass = mass - rocket.stage1.mass_empty - rocket.stage1.mass_fuel;
+
+    if (stage == 1) {
+        fuel_mass = saturnV.stage2.mass_fuel;
+        mass = mass - rocket.stage1.mass_empty - rocket.stage1.mass_fuel;
+        stage = 2;
+    } else if (stage == 2) {
+        fuel_mass = saturnV.stage3.mass_fuel;
+        mass = mass - rocket.stage2.mass_empty - rocket.stage2.mass_fuel;
+        stage = 3;
+    }
 }
