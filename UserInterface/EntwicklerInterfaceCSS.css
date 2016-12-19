@@ -44,12 +44,15 @@ form {
     visibility: visible; 
     /* right: 0px; */
     /* left: 20px; */
-    top: 30px;
+    top: 0px;
     bottom: 0px;
     /* z-index: 200; */
     background-color: rgba(0, 0, 0, 0.9);
     padding: 5px;
-    /*height: 90%;*/
+    min-height: 100%;
+    height:auto !important; /* moderne Browser */
+    height:100%; /* IE */
+    overflow:auto;
 }
 
 #footerbox {
@@ -69,9 +72,6 @@ form {
     float: left;
 }
 
-.planetCheckLabelBox{
-    float: left;
-}
 /*.titleBox {
     position: absolute;
     top: 0px;
