@@ -37,7 +37,7 @@ function buildUniverse() {
     function init(data) {
         //creating a scene, camera
         scene = new THREE.Scene();
-        camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.01, 1e15); //1e27
+        camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1e27); //1e27
         camera.position.set(0, 0, 695508e3 + 10e10);
         //camera.position.set( data.earth.x, data.earth.y, data.earth.z +6371.00e3 ); //EARTH
 
@@ -51,7 +51,7 @@ function buildUniverse() {
 
         //creating an ambient light
         var ambLight = new THREE.AmbientLight(0x3e3e3e3e); //0x3e3e3e3e
-        scene.add(ambLight);
+        //scene.add(ambLight);
 
         //light_shader
         var fShader = document.getElementById("fragmentshader");
@@ -66,6 +66,7 @@ function buildUniverse() {
         buildPlanets(data);
         //placeRocket();
         placeLaunchpad();
+        //buildNavBall();
 
 
         /* 
@@ -90,7 +91,7 @@ function buildUniverse() {
 
         //axisHelper
         var axisHelper = new THREE.AxisHelper(1e15); //
-        scene.add(axisHelper);
+        //scene.add(axisHelper);
 
         //renderer
         renderer = new THREE.WebGLRenderer({
@@ -110,6 +111,7 @@ function buildUniverse() {
 
         //controls
         controls = new THREE.OrbitControls(camera, renderer.domElement);
+        //controls = new THREE.TrackballControls(camera, renderer.domElement);
         //controls.addEventListener( 'change', render );
 
         lasttime = Date.now();
@@ -259,7 +261,7 @@ function buildUniverse() {
             var material;
             //texture
             if (name == "sun") { //if it is the sun
-                var pointLight = new THREE.PointLight(0xffffe0, 2, 0);
+                var pointLight = new THREE.PointLight(0xffffe0, 1.2, 0);
                 //pointLight.castShadow = true;
                 scene.add(pointLight);
                 
@@ -301,6 +303,7 @@ function buildUniverse() {
                 mesh.castShadow = true;
                 mesh.receiveShadow = true;
             }
+            group.rotateX(Math.PI/180 * 120);
             group.add(mesh);
             
                 //Testing for rings of saturn
@@ -372,6 +375,18 @@ function buildUniverse() {
             mesh_name.position.x = radius * 2;
             group.add(mesh_name);
         }
+    }
+    
+    //Nav-Ball
+    function buildNavBall(){
+        //2. Kamrea, die direkt vor uns ist und nav ball sehr klein, keliner Abstand. Eingabe: Contols in three.js, in diesem Bereich sind wir selbst zuständig, 2. Orbitcontrolls...
+        var nav_geometry = new THREE.SphereGeometry( 10, 64, 64 );
+        var nav_material = new THREE.MeshBasicMaterial( {color: 0xffffff} );
+        nav_material.map = loader.load("textures/navball.png");
+        var sphere_nav = new THREE.Mesh( nav_geometry, nav_material );
+        sphere_nav.position.z = -40;
+        scene.add(camera);
+        camera.add(sphere_nav);
     }
 
     /* This is called when UI is changed */
@@ -469,7 +484,7 @@ function buildUniverse() {
         /* The Rendering */
         if (stats !== undefined) {
             stats.update();
-            //controls.update();
+            controls.update();
         }
         if (renderer !== undefined) {
             renderer.render(scene, camera);
