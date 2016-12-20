@@ -37,7 +37,7 @@ function buildUniverse() {
     function init(data) {
         //creating a scene, camera
         scene = new THREE.Scene();
-        camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.01, 1e27);
+        camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.01, 1e15); //1e27
         camera.position.set(0, 0, 695508e3 + 10e10);
         //camera.position.set( data.earth.x, data.earth.y, data.earth.z +6371.00e3 ); //EARTH
 
@@ -89,7 +89,7 @@ function buildUniverse() {
         }*/
 
         //axisHelper
-        var axisHelper = new THREE.AxisHelper(1e26);
+        var axisHelper = new THREE.AxisHelper(1e15); //
         scene.add(axisHelper);
 
         //renderer
@@ -128,7 +128,7 @@ function buildUniverse() {
                 side: THREE.BackSide
             }));
 
-        var skyGeometry = new THREE.CubeGeometry(1e26, 1e26, 1e26);
+        var skyGeometry = new THREE.CubeGeometry(1e15, 1e15, 1e15); //26
         var skyMaterial = new THREE.MeshFaceMaterial(materialArray);
         var skyBox = new THREE.Mesh(skyGeometry, skyMaterial);
         scene.add(skyBox);
@@ -221,13 +221,15 @@ function buildUniverse() {
         loader.load("models/launchpad.dae", function(collada) {
             launchpadGroup = new THREE.Group();
             launchpad = collada.scene;   //var skin = collada.skins[ 0 ];
-            launchpad.scale.set(500, 500, 500);
+            launchpad.scale.set(10, 10, 10);
             launchpadGroup.add(launchpad);
-            launchpadGroup.position.x = spaceObjects.earth.radius * 0.1;
+            /*launchpadGroup.position.x = spaceObjects.earth.radius; //0.1
             launchpadGroup.position.y = spaceObjects.earth.radius * 0.5;
-            launchpadGroup.position.z = spaceObjects.earth.radius * 0.9;
-            launchpad.rotateX(Math.PI/180 * 60);
-            earthGroup.add(launchpadGroup);
+            launchpadGroup.position.z = spaceObjects.earth.radius * 0.9;*/
+            //launchpad.rotateX(Math.PI/180 * 60);
+            //spaceObjects.sun.group.add(launchpadGroup);
+            launchpadGroup.position.set(695508e3*5,0,0);
+            scene.add(launchpadGroup);
         });
     }
 
@@ -426,7 +428,7 @@ function buildUniverse() {
 
         /* Movement for groups */
         //console.log(spaceObjects.sun.group.children[0]); MESH
-        spaceObjects.sun.group.children[0].rotateY(0.5);
+        //spaceObjects.sun.group.children[0].rotateY(0.5);
 
         /* Earth cloudmap moving */
         spaceObjects.earth.group.children[0].rotateY(0.0001);
