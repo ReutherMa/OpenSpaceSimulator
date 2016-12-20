@@ -177,19 +177,25 @@ function buildUniverse() {
                 scene.add(group_name);
                 //console.log(data[planet].color);
 
-                var planet_object = new SpaceObject(planet, data[planet].mass, data[planet].radius * LocalBlow, data[planet].color, group_name, data[planet].speedx, data[planet].speedy, data[planet].speedz);
-                planet_object.buildBody();
-                planet_object.setLabel();
-
                 //for base objects around other planets
                 var posx = data[planet].x;
                 var posy = data[planet].y;
                 var posz = data[planet].z;
+                var speedx = data[planet].speedx;
+                var speedy = data[planet].speedy;
+                var speedz = data[planet].speedz;
                 if (base) {
-                    posx += data[base].x;
-                    posy += data[base].y;
-                    posz += data[base].z;
+                    posx   += data[base].x;
+                    posy   += data[base].y;
+                    posz   += data[base].z;
+                    speedx += data[base].speedx;
+                    speedy += data[base].speedy;
+                    speedz += data[base].speedz;
                 }
+                var planet_object = new SpaceObject(planet, data[planet].mass, data[planet].radius * LocalBlow, data[planet].color, group_name, speedx, speedy, speedz);
+                planet_object.buildBody();
+                planet_object.setLabel();
+
                 planet_object.setPosition(posx, posy, posz, 0);
                 spaceObjects[planet] = planet_object;
                 planet_object.createEllipse(0, 0, data[planet].aphelia, data[planet].perihelion, group_galaxy);

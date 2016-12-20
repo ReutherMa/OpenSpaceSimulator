@@ -67,9 +67,9 @@ function calculateGravitation(difftime, spaceObjects, spaceObject) {
     for (var o in spaceObjects) {
 
 
-        if (spaceObjects[o].name != "sun") {
-            continue;
-        }
+        //if (spaceObjects[o].name != "sun") {
+        //    continue;
+        //}
 
 
         //same objects do not have influence on themselfe
@@ -102,20 +102,16 @@ function calculateGravitation(difftime, spaceObjects, spaceObject) {
             spaceObject.speedx += accelX * rx * dist * difftime;
             spaceObject.speedy += accelX * ry * dist * difftime;
             spaceObject.speedz += accelX * rz * dist * difftime;
-
-            spaceObject.group.position.x += spaceObject.speedx * difftime;
-            spaceObject.group.position.y += spaceObject.speedy * difftime;
-            spaceObject.group.position.z += spaceObject.speedz * difftime;
-
-
         }
 
         //rocket position before launch
         //if(launched){}
         //update rocket position
-
-
     }
+
+    spaceObject.group.position.x += spaceObject.speedx * difftime;
+    spaceObject.group.position.y += spaceObject.speedy * difftime;
+    spaceObject.group.position.z += spaceObject.speedz * difftime;
 }
 
 
