@@ -151,9 +151,9 @@
                 depthWrite: true,
             });
             cloudMesh = new THREE.Mesh(geometry_cloud, material_cloud);
-            //mesh_earth.add(cloudMesh);
+            mesh_earth.add(cloudMesh);
             cloudMesh.position.x = 23500;
-            //scene.add(cloudMesh);       
+            scene.add(cloudMesh);       
 
             mesh_earth = new THREE.Mesh(geometry_earth, material_earth);
             mesh_earth.position.x = 23500;

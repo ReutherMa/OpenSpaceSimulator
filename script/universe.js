@@ -256,12 +256,13 @@ function buildUniverse() {
                 var pointLight = new THREE.PointLight(0xffffe0, 2, 0);
                 //pointLight.castShadow = true;
                 scene.add(pointLight);
-
+                
                 geometry = new THREE.SphereGeometry(radius, segments, segments);
                 material = new THREE.MeshPhongMaterial(color);
 
                 mesh = new THREE.Mesh(geometry, material);
                 pointLight.add(mesh);
+                
             } else { //other plants
                 var path = "textures/" + name + ".png";
                 geometry = new THREE.SphereGeometry(radius, segments, segments);
@@ -288,11 +289,24 @@ function buildUniverse() {
                     var cloudMesh = new THREE.Mesh(geometry_cloud, material_cloud);
                     group.add(cloudMesh);
                 }
+                
+                
                 mesh = new THREE.Mesh(geometry, material);
                 mesh.castShadow = true;
                 mesh.receiveShadow = true;
             }
             group.add(mesh);
+            
+                //Testing for rings of saturn
+            if (name == "saturn"){
+                var geometry_ring = new THREE.BoxGeometry( radius*4+1e7, 1e2, radius*4+1e7);
+                var material_ring = new THREE.MeshPhongMaterial( { color: 0xffffff, transparent:true } );
+                material_ring.map = loader.load(path_tex + "_ring.png");
+                var ring = new THREE.Mesh( geometry_ring, material_ring );
+                ring.castShadow = true;
+                ring.receiveShadow = true;
+                group.add(ring);
+            }
 
             //point level of detail (LOD) with texture
             var dot_path = "textures/" + name + ".png";
