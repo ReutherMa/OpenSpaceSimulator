@@ -23,12 +23,14 @@ function build3D_UI() {
 
         //renderer
         ui_renderer = new THREE.WebGLRenderer({
+            alpha: true,    //Background transparent
             antialias: true,
             logarithmicDepthBuffer: true
         });
         
         ui_renderer.setPixelRatio(window.devicePixelRatio);
         ui_renderer.setSize(window.innerWidth, window.innerHeight);
+        ui_renderer.setClearColor(0x000000, 0); //Background transparent
 
         ui_container = document.getElementById('ui_container');
         ui_container.appendChild(ui_renderer.domElement);
