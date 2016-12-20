@@ -19,6 +19,7 @@ $(function() {
 
     $('input').change(inputChange);
     $('select').change(inputChange);
+    checkRessources();
     //calculateTotalMass();
     //inputChange();
 
@@ -55,6 +56,10 @@ function inputChange() {
 
     //console.log(typeof(globalInterfaceValues.engine));
     //console.log(globalInterfaceValues.planetCamera);
+}
+
+function prompt(){
+    
 }
 
 //function calculatTotalMass

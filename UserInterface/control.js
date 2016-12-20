@@ -1,14 +1,15 @@
 var globalControlValues = {
-    keyUp: false,
-    keyDown: false,
-    keyLeft: false,
-    keyRight: false,
-    keyRollLeft: false,
-    keyRollRight: false,
-    keyGas: false,
-    keyBreak: false,
-    keyStartPause: false,
-    keyReset: false
+    up: false,
+    down: false,
+    left: false,
+    right: false,
+    rollLeft: false,
+    rollRight: false,
+    throttle: false,
+    brake: false,
+    startPause: false,
+    reset: false,
+    quit: false
 };
 
 var keyCode = {
@@ -24,47 +25,46 @@ var keyCode = {
     r: 82
 };
 
+//TODO: Quit setzen
 $(document).ready(function() {
     $(document).keydown(function(e) {
         switch (e.keyCode) {
             case keyCode.w:
-                globalControlValues.keyUp = true;
+                globalControlValues.up = true;
                 break;
             case keyCode.s:
-                globalControlValues.keyDown = true;
+                globalControlValues.down = true;
                 break;
             case keyCode.a:
-                globalControlValues.keyLeft = true;
+                globalControlValues.left = true;
                 break;
             case keyCode.d:
-                globalControlValues.keyRight = true;
+                globalControlValues.right = true;
                 break;
             case keyCode.q:
-                globalControlValues.keyRollLeft = true;
+                globalControlValues.rollLeft = true;
                 break;
             case keyCode.e:
                 globalControlValues.keyRollRight = true;
                 break;
             case keyCode.space:
-                globalControlValues.keyGas = true;
+                globalControlValues.throttle = true;
                 break;
             case keyCode.b:
-                globalControlValues.keyBreak = true;
+                globalControlValues.brake = true;
                 break;
             case keyCode.enter:
-                if (globalControlValues.keyStartPause == false) {
-                    globalControlValues.keyStartPause = true;
-                    console.log("paused");
+                if (globalControlValues.startPause == false) {
+                    globalControlValues.startPause = true;
                 } else {
-                    globalControlValues.keyStartPause = false;
-                    console.log("resumed");
+                    globalControlValues.startPause = false;
                 }
                 break;
             case keyCode.r:
-                if (globalControlValues.keyReset == false) {
-                    globalControlValues.keyReset = true;
+                if (globalControlValues.reset == false) {
+                    globalControlValues.reset = true;
                 } else {
-                    globalControlValues.keyReset = false;
+                    globalControlValues.reset = false;
                 }
                 break;
         }
@@ -73,31 +73,105 @@ $(document).ready(function() {
     $(document).keyup(function(e) {
         switch (e.keyCode) {
             case keyCode.w:
-                globalControlValues.keyUp = false;
+                globalControlValues.up = false;
                 break;
             case keyCode.s:
-                globalControlValues.keyDown = false;
+                globalControlValues.down = false;
                 break;
             case keyCode.a:
-                globalControlValues.keyLeft = false;
+                globalControlValues.left = false;
                 break;
             case keyCode.d:
-                globalControlValues.keyRight = false;
+                globalControlValues.right = false;
                 break;
             case keyCode.q:
-                globalControlValues.keyRollLeft = false;
+                globalControlValues.rollLeft = false;
                 break;
             case keyCode.e:
-                globalControlValues.keyRollRight = false;
+                globalControlValues.rollRight = false;
                 break;
             case keyCode.space:
-                globalControlValues.keyGas = false;
+                globalControlValues.throttle = false;
                 break;
             case keyCode.b:
-                globalControlValues.keyBreak = false;
+                globalControlValues.brake = false;
                 break;
         }
     });
 
+    $(".gameBox .ui-button").mousedown(function(e) {
+        switch (this.name) {
+            case "up":
+                globalControlValues.up = true;
+                break;
+            case "down":
+                globalControlValues.down = true;
+                break;
+            case "left":
+                globalControlValues.left = true;
+                break;
+            case "right":
+                globalControlValues.right = true;
+                break;
+            case "rollLeft":
+                globalControlValues.rollLeft = true;
+                break;
+            case "rollRight":
+                globalControlValues.keyRollRight = true;
+                break;
+            case "speed":
+                globalControlValues.throttle = true;
+                console.log("speed");
+                break;
+            case "brake":
+                globalControlValues.brake = true;
+                break;
+            case "startPause":
+                   if (globalControlValues.startPause == false) {
+                    globalControlValues.startPause = true;
+                } else {
+                    globalControlValues.startPause = false;
+                }
+                break;
+            case "reset":
+                    if (globalControlValues.reset == false) {
+                    globalControlValues.reset = true;
+                } else {
+                    globalControlValues.reset = false;
+                }
+                break;  
+        }
+    });
+    
+    $(".gameBox .ui-button").mouseup(function(e) {
+        switch (this.name) {
+               case "up":
+                globalControlValues.up = false;
+                console.log("up released");
+                break;
+            case "down":
+                globalControlValues.down = false;
+                break;
+            case "left":
+                globalControlValues.left = false;
+                break;
+            case "right":
+                globalControlValues.right = false;
+                break;
+            case "rollLeft":
+                globalControlValues.rollLeft = false;
+                break;
+            case "rollRight":
+                globalControlValues.keyRollRight = false;
+                break;
+            case "speed":
+                globalControlValues.throttle = false;
+                console.log("speed");
+                break;
+            case "brake":
+                globalControlValues.brake = false;
+                break;
+        }
+    });
 
 });
