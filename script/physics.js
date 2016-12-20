@@ -1,6 +1,6 @@
 var gravConst = 6.673e-11;
 var ctr = 0;
-var rockets = loadRocketData("data/rockets.json");
+/*var rockets = loadRocketData("data/rockets.json");
 console.log(rockets);
 var rocket = rockets.saturn5;
 console.log(rocket);
@@ -25,7 +25,7 @@ var saturnV = {
     height: rocket.height,
     mass_total: rocket.mass_total,
     thrust_launch: rocket.thrust_launch
-};
+};*/
 
 
 
@@ -44,8 +44,8 @@ var accelOX;
 var accelOY;
 var accelOZ;
 
-var fuel_mass = saturnV.stage1.mass_fuel;
-var mass = saturnV.mass_total;
+/*var fuel_mass = saturnV.stage1.mass_fuel;
+var mass = saturnV.mass_total;*/
 
 
 // calculate gravitational forces
@@ -127,7 +127,7 @@ part 1: acceleration of direction and new position
 **/
 
 
-function move(direction) {
+/*function move(direction) {
 
     //calculates fuel-mass that will be lost in difftime
     var mass_lost = difftime / saturnV.stage1.burningtime * globalInterfaceValues.throttle * rocket.stage1.mass_fuel;
@@ -146,7 +146,7 @@ function move(direction) {
     //new rocket position; orientation is probably a matrix 
 
     vec3 position_rocket = vec3((position_rocket + (accel * difftime)) * orientation * direction);
-}
+}*/
 
 /**
 Rocket Science
@@ -154,7 +154,7 @@ part 2: orientation
 input: keyPressed(WASDQE) and position(as vec3)
 **/
 
-function rotateRocket(position) {
+/*function rotateRocket(position) {
     var quaternion = new THREE.Quaternion();
 
 
@@ -201,7 +201,7 @@ function rotateRocket(position) {
     saturnV.applyQuaternion(quaternion);
     saturnV.quaternion.normalize();
 
-}
+}*/
 
 
 //called during every rendering
@@ -224,7 +224,7 @@ function calculatePhysics(difftime, spaceObjects) {
         dae2.position.y = spaceObjects.earth.group.position.y;
         dae2.position.z = spaceObjects.earth.group.position.z;
     }*/
-    if (global.started) {
+    /*if (global.started) {
         if (globalControlValues.keyGas) {
             move(1);
         }
@@ -244,13 +244,13 @@ function calculatePhysics(difftime, spaceObjects) {
     if (keyNextStage) {
         nexStage();
     }
-
+*/
     //roateRocket(position_rocket);
 }
 
 //next stage: UI-Event, initiated by user
 //for stage 1/2
-function nextStage() {
+/*function nextStage() {
     //wie kann man das generischer machen?
 
     if (stage == 1) {
@@ -262,4 +262,4 @@ function nextStage() {
         mass = mass - rocket.stage2.mass_empty - rocket.stage2.mass_fuel;
         stage = 3;
     }
-}
+}*/
