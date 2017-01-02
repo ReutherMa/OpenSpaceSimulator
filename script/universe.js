@@ -44,7 +44,10 @@ function buildUniverse() {
         //building the skybox
         buildSkybox();
 
-        /* 
+        /* Helpers 
+        //axisHelper
+        var axisHelper = new THREE.AxisHelper(1e15); //
+        //scene.add(axisHelper);
         var helper = new THREE.GridHelper( 10000, 20, 0xffffff, 0xffffff );
         scene.add( helper ); 
         */
@@ -68,31 +71,6 @@ function buildUniverse() {
         placeLaunchpad();
         //buildNavBall();
 
-
-        /* 
-        document.addEventListener('mousedown', onMouseDown, false);
-        function onMouseDown(e) {
-            var vectorMouse = new THREE.Vector3( //vector from camera to mouse
-                -(window.innerWidth/2-e.clientX)*2/window.innerWidth,
-                (window.innerHeight/2-e.clientY)*2/window.innerHeight,
-                -1/Math.tan(22.5*Math.PI/180)); //22.5 is half of camera frustum angle 45 degree
-            vectorMouse.applyQuaternion(camera.quaternion);
-            vectorMouse.normalize();        
-
-            var vectorObject = new THREE.Vector3(); //vector from camera to object
-            vectorObject.set(object.x - camera.position.x,
-                             object.y - camera.position.y,
-                             object.z - camera.position.z);
-            vectorObject.normalize();
-            if (vectorMouse.angleTo(vectorObject)*180/Math.PI < 1) {
-                //mouse's position is near object's position
-            }
-        }*/
-
-        //axisHelper
-        var axisHelper = new THREE.AxisHelper(1e15); //
-        //scene.add(axisHelper);
-
         //renderer
         renderer = new THREE.WebGLRenderer({
             antialias: true,
@@ -103,10 +81,12 @@ function buildUniverse() {
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.BasicShadowMap;
         //renderer.setDepthTest(true);
+        
         container = document.getElementById('container');
         container.appendChild(renderer.domElement);
         stats = new Stats();
         container.appendChild(stats.dom);
+        
         window.addEventListener('resize', onWindowResize, false);
 
         //controls
@@ -157,14 +137,15 @@ function buildUniverse() {
         for (var planet in data) {
             var LocalBlow = globalInterfaceValues.planetSize;
             //if planet has a base for example: earth and earth_moon
-            var base = data[planet].base;
+            var data_plan = data[planet];
+            var base = data_plan.base;
             //console.log(base);
 
             //if "planet" is a star -> different object
-            if (data[planet].star === true) {
+            if (data_plan.star === true) {
                 var group_name = new THREE.Group();
                 scene.add(group_name);
-                var planet_object = new SpaceObject(planet, data[planet].mass, data[planet].radius, {
+                var planet_object = new SpaceObject(planet, data_plan.mass, data_plan.radius, {
                     emissive: 0xffff80,
                     color: 0x000000,
                     specular: 0
@@ -180,12 +161,12 @@ function buildUniverse() {
                 //console.log(data[planet].color);
 
                 //for base objects around other planets
-                var posx = data[planet].x;
-                var posy = data[planet].y;
-                var posz = data[planet].z;
-                var speedx = data[planet].speedx;
-                var speedy = data[planet].speedy;
-                var speedz = data[planet].speedz;
+                var posx = data_plan.x;
+                var posy = data_plan.y;
+                var posz = data_plan.z;
+                var speedx = data_plan.speedx;
+                var speedy = data_plan.speedy;
+                var speedz = data_plan.speedz;
                 if (base) {
                     posx   += data[base].x;
                     posy   += data[base].y;
@@ -194,13 +175,13 @@ function buildUniverse() {
                     speedy += data[base].speedy;
                     speedz += data[base].speedz;
                 }
-                var planet_object = new SpaceObject(planet, data[planet].mass, data[planet].radius * LocalBlow, data[planet].color, group_name, speedx, speedy, speedz);
+                var planet_object = new SpaceObject(planet, data_plan.mass, data_plan.radius * LocalBlow, data_plan.color, group_name, speedx, speedy, speedz);
                 planet_object.buildBody();
                 planet_object.setLabel();
 
                 planet_object.setPosition(posx, posy, posz, 0);
                 spaceObjects[planet] = planet_object;
-                planet_object.createEllipse(0, 0, data[planet].aphelia, data[planet].perihelion, group_galaxy);
+                planet_object.createEllipse(0, 0, data_plan.aphelia, data_plan.perihelion, group_galaxy);
                 planet_object.setLabel();
             }
         }
@@ -354,7 +335,7 @@ function buildUniverse() {
             var path_material = new THREE.LineBasicMaterial(color);
 
             var ellipse = new THREE.Line(path_geometry, path_material);
-            //ellipse.rotation.x = Math.PI*.5;
+            //ellipse.rotation.x = Math.Pi * ellipse_rotation_angle;
             center.add(ellipse);
         }
 
