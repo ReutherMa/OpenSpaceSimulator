@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 	<head>
-		<title>three.js webgl - materials - earth night/day</title>
+		<title>Earth (textures): Day / Night</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<style>
@@ -34,14 +34,19 @@
 	<body>
 
 		<div id="container"></div>
-		<div id="info"><a href="http://github.com/mrdoob/three.js" target="_blank">three.js</a> - shader material demo. Earth night/day</a></div>
+		<div id="info"><a href="http://github.com/mrdoob/three.js" target="_blank">three.js</a> Earth (textures): Day / Night</a></div>
 
-		<script src="../three.js/build/rev_49_three.js"></script>
+        <script src="../three.js/build/rev_49_three.js"></script>
+      
 
 		<script src="../three.js/examples/Detector.js"></script>
 		<script src="../three.js/examples/js/libs/Stats.js"></script>
 
 		<script id="fragmentShader" type="x-shader/x-fragment">
+
+            //attribute -> per vertex properties (vertex shader only)
+            //varying -> parse variables from vs to fs
+            //uniform -> change / update something outside the shader, parsing values inside vs / fs
 
 			uniform sampler2D dayTexture;
             uniform sampler2D nightTexture;
@@ -69,6 +74,7 @@
 
                 gl_FragColor = vec4( color, 1.0 );
 				//gl_FragColor = vec4( mixAmount, mixAmount, mixAmount, 1.0 );
+                //gl_FragColor = vec4( 1.0, 1.0, 0.0, 1.0 );
 			}
 		</script>
 
@@ -158,10 +164,10 @@
 
                 meshes.push( mesh );
                 
-//        var geometry_sun = new THREE.SphereGeometry( 15, 90, 90 );
-//        var material_sun = new THREE.MeshBasicMaterial( {color: 0xff0000} );
-//        var sphere_sun = new THREE.Mesh( geometry_sun, material_sun );
-//        scene.add( sphere_sun );
+        var geo_mesh2 = new THREE.SphereGeometry( size*1.05, 32, 32 );
+        var mat_mesh2 = new THREE.MeshBasicMaterial( {color: 0xff0000} );
+        var mesh_2 = new THREE.Mesh( geo_mesh2, mat_mesh2 );
+        //scene.add( mesh_2 );
 
 
 
