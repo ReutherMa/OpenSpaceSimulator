@@ -40,7 +40,7 @@
       
 
 		<script src="../three.js/examples/Detector.js"></script>
-		<script src="../three.js/examples/js/libs/Stats.js"></script>
+		<script src="../three.js/examples/js/libs/stats.min.js"></script>
 
 		<script id="fragmentShader" type="x-shader/x-fragment">
 
@@ -190,6 +190,7 @@
 			function onWindowResize( event ) {
 
 				renderer.setSize( window.innerWidth, window.innerHeight );
+                camera.updateProjectionMatrix();
 
 			}
 
