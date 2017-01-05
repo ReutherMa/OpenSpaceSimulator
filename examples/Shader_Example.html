@@ -40,6 +40,7 @@
 
 		<script src="../three.js/examples/Detector.js"></script>
 		<script src="../three.js/examples/js/libs/stats.min.js"></script>
+        <script src="../three.js/examples/js/controls/OrbitControls.js"></script>
 
 <script id="fragment_shader1" type="x-shader/x-fragment">
 
@@ -99,6 +100,8 @@
 			var uniforms1, uniforms2;
 
 			var clock = new THREE.Clock();
+            
+            var mesh_earth;
 
 			init();
 			animate();
@@ -108,10 +111,39 @@
 				container = document.getElementById( 'container' );
 
 				camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 3000 );
-				camera.position.z = 4;
+				camera.position.z = 30;
 
 				scene = new THREE.Scene();
+                
+                var controls = new THREE.OrbitControls(camera, renderer);
+                
+                var ambLight = new THREE.AmbientLight(0x3e3e3e3e); //0x3e3e3e3e
+                scene.add(ambLight);
+                
+                
+                //sun
+                var pointLight = new THREE.PointLight(0xffffe0, 1.2, 0);
+                //pointLight.castShadow = true;
+                scene.add(pointLight);
+                
+                geo_sun = new THREE.SphereGeometry(1, 32, 32);
+                mat_sun = new THREE.MeshPhongMaterial();
 
+                mesh_sun = new THREE.Mesh(geo_sun, mat_sun);
+                pointLight.add(mesh_sun);
+                
+                
+                //
+                geo_test = new THREE.SphereGeometry(1, 32, 32);
+                mat_test = new THREE.MeshPhongMaterial(0xffff00);
+
+                var mesh_test = new THREE.Mesh(geo_test, mat_test);
+                mesh_test.position.set( -6, 0, 0 );
+                mesh_test.castShadow = true;
+                mesh_test.receiveShadow = true;
+                scene.add(mesh_test);
+                
+                //earth
 				var geometry = new THREE.SphereGeometry( 0.75, 32, 32 );
                 
                 uniforms1 = {
@@ -127,8 +159,11 @@
 						fragmentShader: document.getElementById( 'fragment_shader1' ).textContent
 						} );
 
-					var mesh = new THREE.Mesh( geometry, material );
-					scene.add( mesh );
+				mesh_earth = new THREE.Mesh( geometry, material );
+                mesh_earth.position.set( 6, 0, 0 );
+                mesh_earth.castShadow = true;
+                mesh_earth.receiveShadow = true;
+				scene.add( mesh_earth );
 
 
 				renderer = new THREE.WebGLRenderer();
@@ -149,6 +184,9 @@
 				camera.aspect = window.innerWidth / window.innerHeight;
 				camera.updateProjectionMatrix();
 
+                renderer.shadowMap.enabled = true;
+                renderer.shadowMap.type = THREE.BasicShadowMap;
+                
 				renderer.setSize( window.innerWidth, window.innerHeight );
 
 			}
@@ -168,9 +206,13 @@
 
 				var delta = clock.getDelta();
                 
-                var object = scene.children[ 0 ];
-				object.rotation.y += delta * 0.05;
-				object.rotation.x += delta * 0.05;
+                //Set the sunlight direction
+                uniforms1.sunDirection.value.x = 1;
+
+            
+				mesh_earth.rotation.y += delta * 0.5;
+				mesh_earth.rotation.x += delta * 0.5;
+                
 
 
 				renderer.render( scene, camera );
