@@ -120,11 +120,6 @@
                     nightTexture: { value: new THREE.TextureLoader().load( "textures/earth/earthlights_2.jpg" ) }
                 };
 
-				var params = [
-					[ 'fragment_shader1', uniforms1 ]
-					//[ 'fragment_shader2', uniforms2 ],
-				];
-
 
 				var material = new THREE.ShaderMaterial( {
 						uniforms: uniforms1,
@@ -172,12 +167,11 @@
 			function render() {
 
 				var delta = clock.getDelta();
+                
+                var object = scene.children[ 0 ];
+				object.rotation.y += delta * 0.05;
+				object.rotation.x += delta * 0.05;
 
-/*				for ( var i = 0; i < scene.children.length; i ++ ) {
-					var object = scene.children[ i ];
-					object.rotation.y += delta * 0.5 * ( i % 2 ? 1 : -1 );
-					object.rotation.x += delta * 0.5 * ( i % 2 ? -1 : 1 );
-				}*/
 
 				renderer.render( scene, camera );
 
