@@ -34,7 +34,7 @@
 	<body>
 
 		<div id="container"></div>
-		<div id="info"><a href="http://threejs.org" target="_blank">three.js</a> - shader material demo. featuring <a href="http://www.pouet.net/prod.php?which=52761" target="_blank">Monjori by Mic</a></div>
+		<div id="info"><a href="http://threejs.org" target="_blank">three.js</a> - shader material demo. </div>
 
 		<script src="../three.js/build/three.js"></script>
 
@@ -118,7 +118,7 @@
                 var controls = new THREE.OrbitControls(camera, renderer);
                 
                 var ambLight = new THREE.AmbientLight(0x3e3e3e3e); //0x3e3e3e3e
-                scene.add(ambLight);
+                //scene.add(ambLight);
                 
                 
                 //sun
@@ -127,7 +127,7 @@
                 scene.add(pointLight);
                 
                 geo_sun = new THREE.SphereGeometry(1, 32, 32);
-                mat_sun = new THREE.MeshPhongMaterial();
+                mat_sun = new THREE.MeshPhongMaterial({emissive: 0xffa500});
 
                 mesh_sun = new THREE.Mesh(geo_sun, mat_sun);
                 pointLight.add(mesh_sun);
@@ -135,7 +135,7 @@
                 
                 //
                 geo_test = new THREE.SphereGeometry(1, 32, 32);
-                mat_test = new THREE.MeshPhongMaterial(0xffff00);
+                mat_test = new THREE.MeshPhongMaterial({color: 0xffffee});
 
                 var mesh_test = new THREE.Mesh(geo_test, mat_test);
                 mesh_test.position.set( -6, 0, 0 );
@@ -211,7 +211,7 @@
 
             
 				mesh_earth.rotation.y += delta * 0.5;
-				mesh_earth.rotation.x += delta * 0.5;
+				//mesh_earth.rotation.x += delta * 0.5;
                 
 
 
