@@ -7,7 +7,7 @@ var rocketGroup;
 var launchpad;
 var launchpadGroup;
 var spaceObjects = {};
-var camera, controls;
+var camera, ui_camera, controls;
 
 
 /* Builds the whole Galaxy */
@@ -19,7 +19,7 @@ function buildUniverse() {
     //Instant Variables
     var universe = {};
     var container, stats;
-    var scene, renderer;
+    var scene, ui_scene,renderer;
     var segments = 64;
     var group_galaxy, group1_sun, group2_mercury, group3_venus, group4_earth, group41_moon, group5_mars, group6_jupiter,
         group7_saturn, group8_uranus, group9_neptune;
@@ -39,6 +39,12 @@ function buildUniverse() {
         scene = new THREE.Scene();
         camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1e27); //1e27
         camera.position.set(0, 0, 695508e3 + 10e10);
+        
+        //second Scene + Camera for UI
+        ui_scene = new THREE.Scene();
+        ui_camera = new THREE.OrthographicCamera(-window.innerWidth/6, window.innerWidth/6,window.innerHeight/6,-window.innerHeight/6, 0, 1e27); //1e27
+        ui_camera.position.set(0, 0,10);
+        
         //camera.position.set( data.earth.x, data.earth.y, data.earth.z +6371.00e3 ); //EARTH
 
         //building the skybox
@@ -69,7 +75,7 @@ function buildUniverse() {
         buildPlanets(data);
         //placeRocket();
         placeLaunchpad();
-        //buildNavBall();
+        buildNavBall();
 
         //renderer
         renderer = new THREE.WebGLRenderer({
@@ -81,6 +87,7 @@ function buildUniverse() {
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.BasicShadowMap;
         //renderer.setDepthTest(true);
+        renderer.autoClear = false;
         
         container = document.getElementById('container');
         container.appendChild(renderer.domElement);
@@ -358,16 +365,14 @@ function buildUniverse() {
         }
     }
     
-    //Nav-Ball
+    //Nav-Ball 
     function buildNavBall(){
-        //2. Kamrea, die direkt vor uns ist und nav ball sehr klein, keliner Abstand. Eingabe: Contols in three.js, in diesem Bereich sind wir selbst zuständig, 2. Orbitcontrolls...
-        var nav_geometry = new THREE.SphereGeometry( 10, 64, 64 );
+        var nav_geometry = new THREE.SphereGeometry( 30, 64, 64 );
         var nav_material = new THREE.MeshBasicMaterial( {color: 0xffffff} );
         nav_material.map = loader.load("textures/navball.png");
         var sphere_nav = new THREE.Mesh( nav_geometry, nav_material );
-        sphere_nav.position.z = -40;
-        scene.add(camera);
-        camera.add(sphere_nav);
+        sphere_nav.position.y = -75;
+        ui_scene.add(sphere_nav);
     }
 
     /* This is called when UI is changed */
@@ -468,7 +473,11 @@ function buildUniverse() {
             controls.update();
         }
         if (renderer !== undefined) {
+            renderer.clear();
             renderer.render(scene, camera);
+            //render second Scene 
+            renderer.clearDepth();
+            renderer.render(ui_scene, ui_camera);
         }
 
         //console.log (Date.now() - now);
