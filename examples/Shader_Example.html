@@ -42,7 +42,7 @@
 		<script src="../three.js/examples/js/libs/stats.min.js"></script>
         <script src="../three.js/examples/js/controls/OrbitControls.js"></script>
 
-<script id="fragment_shader1" type="x-shader/x-fragment">
+        <script id="fragment_shader1" type="x-shader/x-fragment">
 
 			uniform sampler2D dayTexture;
             uniform sampler2D nightTexture;
@@ -191,8 +191,6 @@
 
 			}
 
-			//
-
 			function animate() {
 
 				requestAnimationFrame( animate );
@@ -208,12 +206,10 @@
                 
                 //Set the sunlight direction
                 uniforms1.sunDirection.value.x = 1;
-
             
 				mesh_earth.rotation.y += delta * 0.5;
 				//mesh_earth.rotation.x += delta * 0.5;
                 
-
 
 				renderer.render( scene, camera );
 
