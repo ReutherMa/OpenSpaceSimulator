@@ -19,7 +19,7 @@ $(function() {
 
     $('input').change(inputChange);
     $('select').change(inputChange);
-    checkRessources();
+    //checkRessources();
     //calculateTotalMass();
     //inputChange();
 
@@ -37,7 +37,7 @@ function inputChange() {
     $("#totalMass").text(globalInterfaceValues.totalMass);
     globalInterfaceValues.planetSize = +$('input[name=planetSizeRange]').val();
     globalInterfaceValues.planetName = $('select[name=planetSelect]').val();
-    console.log("ist sie gecheckt?" + $("#check").prop("checked"))
+    //console.log("ist sie gecheckt?" + $("#check").prop("checked"))
     if ($("#check").prop("checked")) {
         globalInterfaceValues.planetAllSelected = true;
         $('select[name=planetSelect]').prop("disabled", true);
@@ -52,7 +52,7 @@ function inputChange() {
     globalInterfaceValues.reset = $('input[name=reset]').val();
     globalInterfaceValues.changed = true;
 
-    console.log("selected" + globalInterfaceValues.planetAllSelected);
+    //console.log("selected" + globalInterfaceValues.planetAllSelected);
 
     //console.log(typeof(globalInterfaceValues.engine));
     //console.log(globalInterfaceValues.planetCamera);

@@ -21,9 +21,11 @@ function buildUniverse() {
     var container, stats;
     var scene, renderer;
     var segments = 64;
-    var group_galaxy, group1_sun, group2_mercury, group3_venus, group4_earth, group41_moon, group5_mars, group6_jupiter,
-        group7_saturn, group8_uranus, group9_neptune;
+    var group_galaxy;
     var sun, earth, moon, mercury, venus, mars, jupiter, saturn, uranus, neptune;
+    
+    var uniforms1;
+    var mesh_sun;
 
     //variables for physics
     var now, difftime;
@@ -32,6 +34,14 @@ function buildUniverse() {
     //universe functions
     universe.init = init;
     universe.render = render;
+    
+    //uniforms
+    uniforms1 = {
+        sunPosition:     { value: new THREE.Vector4(0.0,0.0,0.0,1.0) },
+        dayTexture:      { value: loader.load( "../textures/earth_map.jpg" ) },
+        nightTexture:    { value: loader.load( "../textures/earth_map_lights.jpg" )},
+        specularTexture: { value: loader.load( "../textures/earth_mapspec.jpg" ) }
+    };
 
     /* The initial State */
     function init(data) {
@@ -39,6 +49,7 @@ function buildUniverse() {
         scene = new THREE.Scene();
         camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1e27); //1e27
         camera.position.set(0, 0, 695508e3 + 10e10);
+        //camera.lookAt (scene.position);
         //camera.position.set( data.earth.x, data.earth.y, data.earth.z +6371.00e3 ); //EARTH
 
         //building the skybox
@@ -57,7 +68,7 @@ function buildUniverse() {
         //scene.add(ambLight);
 
         //light_shader
-        var fShader = document.getElementById("fragmentshader");
+        var fShader = document.getElementById("fragmentshader1");
         var vShader = document.getElementById("vertexshader");
         var shaderMaterial = new THREE.ShaderMaterial({
             vertexShader: vShader.textContent,
@@ -70,6 +81,41 @@ function buildUniverse() {
         //placeRocket();
         placeLaunchpad();
         //buildNavBall();
+        
+        
+////////////////////////////
+        
+/*                    var geo_earth = new THREE.SphereGeometry(1000*6.371e6, segments, segments);
+                    var mat_earth = new THREE.ShaderMaterial( {
+						uniforms: uniforms1,
+						vertexShader: document.getElementById( 'vertexshader' ).textContent,
+						fragmentShader: document.getElementById( 'fragmentshader1' ).textContent
+				    } );
+                    
+                    
+                    mat_earth.bumpMap = loader.load("../textures/earth_bumpmap.jpg");
+                    mat_earth.bumpScale = 4.0;
+                    
+                    var geometry_cloud = new THREE.SphereGeometry(radius * 1.02, segments, segments);
+                    var material_cloud = new THREE.MeshPhongMaterial({
+                        map: loader.load(path_tex + "_mapcloud.png"),
+                        side: THREE.DoubleSide,
+                        opacity: 0.8,
+                        transparent: true,
+                        depthWrite: true,
+                    });
+                    var cloudMesh = new THREE.Mesh(geometry_cloud, material_cloud);
+                    group.add(cloudMesh);
+                    
+                    mesh_earth = new THREE.Mesh(geo_earth, mat_earth);
+                    //mesh_earth.castShadow = true;
+                    //mesh_earth.receiveShadow = true;
+                    mesh_earth.position.set(4*695508e3, 0, 0);
+                        
+                    scene.add(mesh_earth);*/
+        
+        
+///////////////////////////
 
         //renderer
         renderer = new THREE.WebGLRenderer({
@@ -249,24 +295,31 @@ function buildUniverse() {
                 geometry = new THREE.SphereGeometry(radius, segments, segments);
                 material = new THREE.MeshPhongMaterial(color);
 
-                mesh = new THREE.Mesh(geometry, material);
-                pointLight.add(mesh);
+                mesh_sun = new THREE.Mesh(geometry, material);
+                pointLight.add(mesh_sun);
+                group.rotateX(Math.PI/180 * 120);
+                
+                pointLight.add(mesh_sun);
+                
+                //group.add(mesh_sun);
                 
             } else { //other plants
                 var path = "textures/" + name + ".png";
-                geometry = new THREE.SphereGeometry(radius, segments, segments);
-                material = new THREE.MeshPhongMaterial({
-                    color: 0xffffff
-                });
-
                 var path_tex = "textures/" + name;
-                material.map = loader.load(path_tex + "_map.jpg");
-                material.bumpMap = loader.load(path_tex + "_bumpmap.jpg");
-                material.bumpScale = 4.0;
-
-                if (name == "earth") { //if it is the earth
-                    material.specularMap = loader.load(path_tex + "_mapspec.jpg");
-                    material.specular = new THREE.Color(0x111111);
+                geometry = new THREE.SphereGeometry(radius, segments, segments);
+                
+                if (name == "earth"){
+                    
+                    material = new THREE.ShaderMaterial( {
+						uniforms: uniforms1,
+						vertexShader: document.getElementById( 'vertexshader' ).textContent,
+						fragmentShader: document.getElementById( 'fragmentshader1' ).textContent
+				    } );
+                    
+                    
+                    material.bumpMap = loader.load(path_tex + "_bumpmap.jpg");
+                    material.bumpScale = 4.0;
+                    
                     var geometry_cloud = new THREE.SphereGeometry(radius * 1.02, segments, segments);
                     var material_cloud = new THREE.MeshPhongMaterial({
                         map: loader.load(path_tex + "_mapcloud.png"),
@@ -277,15 +330,26 @@ function buildUniverse() {
                     });
                     var cloudMesh = new THREE.Mesh(geometry_cloud, material_cloud);
                     group.add(cloudMesh);
+                    
                 }
+                else {
+                    material = new THREE.MeshPhongMaterial({
+                        color: 0xffffff
+                    });
+
+                    material.map = loader.load(path_tex + "_map.jpg");
+                    material.bumpMap = loader.load(path_tex + "_bumpmap.jpg");
+                    material.bumpScale = 4.0;
+                }
+                    
+            mesh = new THREE.Mesh(geometry, material);
+            mesh.castShadow = true;
+            mesh.receiveShadow = true;
                 
-                
-                mesh = new THREE.Mesh(geometry, material);
-                mesh.castShadow = true;
-                mesh.receiveShadow = true;
-            }
             group.rotateX(Math.PI/180 * 120);
             group.add(mesh);
+            }
+            
             
                 //Testing for rings of saturn
             if (name == "saturn"){
@@ -316,7 +380,7 @@ function buildUniverse() {
         /* Set Position of the Planet */
         this.setPosition = function(x, y, z, equatorial_inclination) {
             group.position.set(x, y, z);
-            mesh.rotation.z = equatorial_inclination * Math.PI / 180;
+            //mesh.rotation.z = equatorial_inclination * Math.PI / 180;
         }
 
         /* Ellipse around planet */
@@ -463,12 +527,22 @@ function buildUniverse() {
         */
 
         /* The Rendering */
+
+                mesh_sun.updateMatrixWorld();
+                uniforms1.sunPosition.value.set (0, 0, 0, 1);
+                uniforms1.sunPosition.value.applyMatrix4 (mesh_sun.matrixWorld);
+                uniforms1.sunPosition.value.applyMatrix4 (camera.matrixWorldInverse);
+        
         if (stats !== undefined) {
             stats.update();
             controls.update();
         }
         if (renderer !== undefined) {
             renderer.render(scene, camera);
+            
+            
+            
+
         }
 
         //console.log (Date.now() - now);
