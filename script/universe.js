@@ -7,7 +7,7 @@ var rocketGroup;
 var launchpad;
 var launchpadGroup;
 var spaceObjects = {};
-var camera, controls;
+var camera, controls, ui_camera;
 
 
 /* Builds the whole Galaxy */
@@ -19,7 +19,7 @@ function buildUniverse() {
     //Instant Variables
     var universe = {};
     var container, stats;
-    var scene, renderer;
+    var scene, ui_scene, renderer;
     var segments = 64;
     var group_galaxy;
     var sun, earth, moon, mercury, venus, mars, jupiter, saturn, uranus, neptune;
@@ -52,6 +52,12 @@ function buildUniverse() {
         //camera.lookAt (scene.position);
         //camera.position.set( data.earth.x, data.earth.y, data.earth.z +6371.00e3 ); //EARTH
 
+        //second scene + camera for UI
+        ui_scene = new THREE.Scene();
+        ui_camera = new THREE.OrthographicCamera( -window.innerWidth/6, window.innerWidth/6,window.innerHeight/6, -window.innerHeight/6, 0, 1e27);
+        ui_camera.position.set(0, 0, 10);
+        
+        
         //building the skybox
         buildSkybox();
 
@@ -80,7 +86,7 @@ function buildUniverse() {
         buildPlanets(data);
         //placeRocket();
         placeLaunchpad();
-        //buildNavBall();
+        buildNavBall();
         
         
 ////////////////////////////
@@ -127,6 +133,7 @@ function buildUniverse() {
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.BasicShadowMap;
         //renderer.setDepthTest(true);
+        renderer.autoClear = false;
         
         container = document.getElementById('container');
         container.appendChild(renderer.domElement);
@@ -425,13 +432,12 @@ function buildUniverse() {
     //Nav-Ball
     function buildNavBall(){
         //2. Kamrea, die direkt vor uns ist und nav ball sehr klein, keliner Abstand. Eingabe: Contols in three.js, in diesem Bereich sind wir selbst zuständig, 2. Orbitcontrolls...
-        var nav_geometry = new THREE.SphereGeometry( 10, 64, 64 );
+        var nav_geometry = new THREE.SphereGeometry( 30, 64, 64 );
         var nav_material = new THREE.MeshBasicMaterial( {color: 0xffffff} );
         nav_material.map = loader.load("textures/navball.png");
         var sphere_nav = new THREE.Mesh( nav_geometry, nav_material );
-        sphere_nav.position.z = -40;
-        scene.add(camera);
-        camera.add(sphere_nav);
+        sphere_nav.position.y = -75;
+        ui_scene.add(sphere_nav);
     }
 
     /* This is called when UI is changed */
@@ -538,8 +544,11 @@ function buildUniverse() {
             controls.update();
         }
         if (renderer !== undefined) {
+            renderer.clear();
             renderer.render(scene, camera);
-            
+            //render second Scene
+            renderer.clearDepth();
+            renderer.render(ui_scene, ui_camera);
             
             
 
