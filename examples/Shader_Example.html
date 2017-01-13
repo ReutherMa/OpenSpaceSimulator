@@ -180,6 +180,8 @@
 						vertexShader: document.getElementById( 'vertexShader' ).textContent,
 						fragmentShader: document.getElementById( 'fragment_shader1' ).textContent
 						} );
+                material.bumpMap = new THREE.TextureLoader().load ("textures/earth/earthbump1k.jpg");
+                material.bumpScale = 4.0;
 
 				mesh_earth = new THREE.Mesh( geometry, material );
                 mesh_earth.position.set( 6, 0, 0 );
@@ -228,6 +230,9 @@
                 
                 //Set the sunlight direction
 //                uniforms1.sunDirection.value.x = 1;
+                
+        console.log(mesh_sun);
+        console.log(uniforms1);
                 mesh_sun.updateMatrixWorld();
                 uniforms1.sunPosition.value.set (0, 0, 0, 1);
                 uniforms1.sunPosition.value.applyMatrix4 (mesh_sun.matrixWorld);
