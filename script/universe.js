@@ -39,9 +39,9 @@ function buildUniverse() {
     //uniforms
     uniforms1 = {
         sunPosition:     { value: new THREE.Vector4(0.0,0.0,0.0,1.0) },
-        dayTexture:      { value: loader.load( "../textures/earth_map.jpg" ) },
-        nightTexture:    { value: loader.load( "../textures/earth_map_lights.jpg" )},
-        specularTexture: { value: loader.load( "../textures/earth_mapspec.jpg" ) }
+        dayTexture:      { value: loader.load( "textures/earth_map.jpg" ) },
+        nightTexture:    { value: loader.load( "textures/earth_map_lights.jpg" )},
+        specularTexture: { value: loader.load( "textures/earth_mapspec.jpg" ) }
     };
 
     /* The initial State */
@@ -81,12 +81,12 @@ function buildUniverse() {
         //scene.add(ambLight);
 
         //light_shader
-        var fShader = document.getElementById("fragmentshader1");
+/*        var fShader = document.getElementById("fragmentshader1");
         var vShader = document.getElementById("vertexshader");
         var shaderMaterial = new THREE.ShaderMaterial({
             vertexShader: vShader.textContent,
             fragmentShader: fShader.textContent
-        });
+        });*/
 
         //building the Galaxy, Planets and Rocket
         buildGalaxy();
@@ -235,6 +235,7 @@ function buildUniverse() {
                 var speedx = data_plan.speedx;
                 var speedy = data_plan.speedy;
                 var speedz = data_plan.speedz;
+                
                 if (base) {
                     posx   += data[base].x;
                     posy   += data[base].y;
@@ -243,6 +244,7 @@ function buildUniverse() {
                     speedy += data[base].speedy;
                     speedz += data[base].speedz;
                 }
+                
                 var planet_object = new SpaceObject(planet, data_plan.mass, data_plan.radius * LocalBlow, data_plan.color, group_name, speedx, speedy, speedz);
                 planet_object.buildBody();
                 planet_object.setLabel();
@@ -308,39 +310,37 @@ function buildUniverse() {
 
             var geometry;
             var material;
-            //texture
-            if (name == "sun") { //if it is the sun
+
+            if (name == "sun") { 
                 var pointLight = new THREE.PointLight(0xffffe0, 1.2, 0);
-                //pointLight.castShadow = true;
                 scene.add(pointLight);
                 
                 geometry = new THREE.SphereGeometry(radius, segments, segments);
                 material = new THREE.MeshPhongMaterial(color);
 
                 mesh_sun = new THREE.Mesh(geometry, material);
-                pointLight.add(mesh_sun);
                 group.rotateX(Math.PI/180 * 120);
                 
                 pointLight.add(mesh_sun);
-                
-                //group.add(mesh_sun);
+                group.add(mesh_sun);
                 
             } else { //other plants
                 var path = "textures/" + name + ".png";
                 var path_tex = "textures/" + name;
+                
                 geometry = new THREE.SphereGeometry(radius, segments, segments);
                 
                 if (name == "earth"){
-                    
                     material = new THREE.ShaderMaterial( {
 						uniforms: uniforms1,
-						vertexShader: document.getElementById( 'vertexshader' ).textContent,
-						fragmentShader: document.getElementById( 'fragmentshader1' ).textContent
+						vertexShader: document.getElementById( 'vertexShader' ).textContent,
+						fragmentShader: document.getElementById( 'fragmentShader_1' ).textContent
 				    } );
                     
                     
                     material.bumpMap = loader.load(path_tex + "_bumpmap.jpg");
                     material.bumpScale = 4.0;
+                    //material.depthTest = false;
                     
                     var geometry_cloud = new THREE.SphereGeometry(radius * 1.02, segments, segments);
                     var material_cloud = new THREE.MeshPhongMaterial({
@@ -348,7 +348,7 @@ function buildUniverse() {
                         side: THREE.DoubleSide,
                         opacity: 0.8,
                         transparent: true,
-                        depthWrite: true,
+                        depthWrite: true
                     });
                     var cloudMesh = new THREE.Mesh(geometry_cloud, material_cloud);
                     group.add(cloudMesh);
@@ -358,7 +358,6 @@ function buildUniverse() {
                     material = new THREE.MeshPhongMaterial({
                         color: 0xffffff
                     });
-
                     material.map = loader.load(path_tex + "_map.jpg");
                     material.bumpMap = loader.load(path_tex + "_bumpmap.jpg");
                     material.bumpScale = 4.0;
@@ -373,7 +372,7 @@ function buildUniverse() {
             }
             
             
-                //Testing for rings of saturn
+            //Rings of saturn
             if (name == "saturn"){
                 var geometry_ring = new THREE.BoxGeometry( radius*4+1e7, 1e2, radius*4+1e7);
                 var material_ring = new THREE.MeshPhongMaterial( { color: 0xffffff, transparent:true } );
@@ -527,32 +526,17 @@ function buildUniverse() {
             calculatePhysics(difftime, spaceObjects);
         }
 
-        /* Movement for groups */
-        //console.log(spaceObjects.sun.group.children[0]); MESH
-        //spaceObjects.sun.group.children[0].rotateY(0.5);
 
         /* Earth cloudmap moving */
         spaceObjects.earth.group.children[0].rotateY(0.0001);
 
-        /* Rotate every Group */
-        /*
-            group2_earth.rotateY(0.01);
-            group_mercury_rotate.rotateY(0.04);
-            group_earth_rotate.rotateY(0.001);
-            group_venus_rotate.rotateY(0.05);
-            group_mars_rotate.rotateY(0.003);
-            group_jupiter_rotate.rotateY(0.09);
-            group_saturn_rotate.rotateY(0.08);
-            group_uranus_rotate.rotateY(0.07);
-            group_neptune_rotate.rotateY(0.04);
-        */
-
         /* The Rendering */
-
-                mesh_sun.updateMatrixWorld();
-                uniforms1.sunPosition.value.set (0, 0, 0, 1);
-                uniforms1.sunPosition.value.applyMatrix4 (mesh_sun.matrixWorld);
-                uniforms1.sunPosition.value.applyMatrix4 (camera.matrixWorldInverse);
+        
+        //Rendering the earth shader
+        mesh_sun.updateMatrixWorld();   //mesh_sun -> spaceObjects.sun.group.children[0]
+        uniforms1.sunPosition.value.set (0, 0, 0, 1);
+        uniforms1.sunPosition.value.applyMatrix4 (mesh_sun.matrixWorld);
+        uniforms1.sunPosition.value.applyMatrix4 (camera.matrixWorldInverse);
         
         if (stats !== undefined) {
             stats.update();
