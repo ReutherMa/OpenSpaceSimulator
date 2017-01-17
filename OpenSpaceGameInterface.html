@@ -4,8 +4,6 @@
     <meta charset="utf-8">
 
     <script src="https://use.fontawesome.com/06e679ac1f.js"></script>
-    <link rel="shortcut icon" href="/rocket.ico" type="x-icon">
-    <link rel="icon" href="/rocket.ico" type="image/x-icon">
 
     <title>Open Space Simulator</title>
     <style>
@@ -53,11 +51,6 @@
     <script src="script/physics.js"></script>
     <script src="UserInterface/jQuery-Knob-1.2.13/js/jquery.knob.js"></script>
 
-    <script src="UserInterface/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="UserInterface/jquery.flightboard.package-2.0.0/jquery.plugin.js"></script>
-    <script type="text/javascript" src="UserInterface/jquery.flightboard.package-2.0.0/jquery.flightboard.js"></script>
-
-
     <!-- User Interface -->
     <div id="mainBox">
         <div id="headerBox">
@@ -70,20 +63,6 @@
         </div>
         <div id="contentBox">
             <div class="displayBox">
-                <div id="basicBoard"></div>
-                <script type="text/javascript">
-                    $(function() {
-                        $('#basicBoard').flightboard({
-                            messages: ['0000001', '0000002', '0000010'],
-                            lettersImage: 'UserInterface/jquery.flightboard.package-2.0.0/flightBoardLarge.png',
-                            shadingImages: ['UserInterface/jquery.flightboard.package-2.0.0/flightBoardHigh.png', 'flightBoardShad.png'],
-                            flips: [1, 1],
-                            lettersSize: [25, 34],
-                            pause: 0,
-                            maxLength: 7
-                        });
-                    });
-                </script>
             </div>
             <div class="gameBox">
                    <div class="menuBox">
@@ -98,17 +77,6 @@
                     <br>
                     <input type="button" name="quit" class="btn fa ui-button ui-widget ui-corner-all" value="Quit" />&nbsp;
                     <input type="button" name="reset" class="btn fa ui-button ui-widget ui-corner-all" value="Start New Game" />
-                    <!--<input type="button" name="play" class="btn fa" value="&#xf04b;"> <br>
-                        <input type="button" name="pause" class="btn fa" value="&#xf04c;"> <br>
-                        <input type="button" name="timeFaster" class="btn fa" value="&#xf017; &#xf04e;"> <br>
-                        <input type="button" name="timeSlower" class="btn fa" value="&#xf017; &#xf04a;"> <br>
-                        <input type="button" name="speed" class="btn fa" value="&#xf135; &#xf04e;"> <br>
-                        <input type="button" name="brake" class="btn fa" value="&#xf135; &#xf04a;"> <br>
-                        <input type="button" name="xRotation" value="Rotation in X"> <br>
-                        <input type="button" name="yRotation" value="Rotation in Y"> <br>
-                        <input type="button" name="zRotation" value="Rotation in Z"> <br>
-                        <input type="button" name="quit" value="Quit"/> &nbsp;
-                        <input type="button" name="startNew" value="Start New Game"/> <br> -->
             </div>
                 <div class="dashboardBox">
                     <div class="steeringBox">

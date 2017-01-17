@@ -3,9 +3,6 @@
 <head>
     <meta charset="utf-8">
 
-    <link rel="shortcut icon" href="/rocket.ico" type="x-icon">
-    <link rel="icon" href="/rocket.ico" type="image/x-icon">
-
     <title>Open Space Simulator</title>
     <style>
         body {
@@ -36,6 +33,7 @@
         
     </style>
     <link rel="stylesheet" href="UserInterface/EntwicklerInterfaceCSS.css">
+    <link rel="stylesheet" href="UserInterface/jquery-ui-1.12.1.custom/jquery-ui.min.css">
 </head>
 
 <body>
@@ -57,7 +55,13 @@
     <script src="script/universe.js"></script>
     <script src="script/data.js"></script>
     <script src="script/physics.js"></script>
+    <script src="UserInterface/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
 
+    <script>
+        $(function() {
+            $("#slider").slider();
+        });
+    </script>
 
     <!-- User Interface -->
     <div id="mainBox">
@@ -230,9 +234,10 @@
                     </div>
                     <div class="timeBox">
                         <form oninput="timeNumber.value=timeFactorRange.value">
-                            <input type="range" name="timeFactorRange" min="1" max="10000" value="50">
+                            <input type="range" name="timeFactorRange" min="1" max="100" value="50" step="1" onchange="updateSlider(this)">
                             <output name="timeNumber">50</output>
                         </form>
+                        <div id="slider"></div>
                         <div class="timeLabelBox">
                             <label>Time Factor</label>
                         </div>
