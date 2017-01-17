@@ -57,10 +57,18 @@
     <script src="script/physics.js"></script>
     <script src="UserInterface/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
 
-    <script>
-        $(function() {
-            $("#slider").slider();
-        });
+    <script>  
+   $(function() {
+     var valMap = [0.1, 0.2,0.5,10,100,1000,10000,100000];
+     $("#slider").slider({
+        // min: 0,
+         max: valMap.length - 1,
+         slide: function(event, ui) {
+           $("#val").text(ui.value);
+           $("#nlVal").text(valMap[ui.value]);
+         }
+     });
+    });
     </script>
 
     <!-- User Interface -->
@@ -233,13 +241,17 @@
                         </div>
                     </div>
                     <div class="timeBox">
-                        <form oninput="timeNumber.value=timeFactorRange.value">
+                        <!--<form oninput="timeNumber.value=timeFactorRange.value">
                             <input type="range" name="timeFactorRange" min="1" max="100" value="50" step="1" onchange="updateSlider(this)">
                             <output name="timeNumber">50</output>
-                        </form>
+                        </form>-->
                         <div id="slider"></div>
+                        <!--<p>
+                            Slider Value: <span id="val"></span><br/>
+                            Time Factor: <span id="nlVal"></span><br/>
+                        </p>-->
                         <div class="timeLabelBox">
-                            <label>Time Factor</label>
+                            <label>Time Factor: </label><span id="nlVal"></span>
                         </div>
                     </div>
                     <div class="resetBox">
