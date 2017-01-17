@@ -159,9 +159,9 @@ input: keyPressed(WASDQE) and position(as vec3)
         angleX = angleX + accelOX * difftime * difftime;
         angle = angleX;
         accel = accelOX;
-        quaternion.setFromAxisAngle(new THREE.Vector3(1, 0, 0), angleX);
+        
         break;
-    }
+    } else 
 
     if (globalControlValues.keyDown) {
         accelOX = accelOX - Math.PI / 20;
@@ -193,6 +193,14 @@ input: keyPressed(WASDQE) and position(as vec3)
         quaternion.setFromAxisAngle(new THREE.Vector3(0, 0, 1), angleZ);
         break;
     }
+    
+    
+    var r = makeRotationFromEuler(THREE.Euler(angleX, angleY, angleZ));
+    var m = makeRotationFromQuaternion(satrunV.quaternion);
+    mutiplayMatrices(m,r);
+    
+    //quaternion.setFromAxisAngle(new THREE.Vector3(1, 0, 0), angleX);
+    quaternion.setFromRotationMatrix(r);
 
     saturnV.applyQuaternion(quaternion);
     saturnV.quaternion.normalize();
