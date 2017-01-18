@@ -31,6 +31,8 @@ function buildUniverse() {
     //variables for physics
     var now, difftime;
     var lasttime;
+    
+    var counter = 1;
 
     //universe functions
     universe.init = init;
@@ -41,7 +43,10 @@ function buildUniverse() {
         sunPosition:     { value: new THREE.Vector4(0.0,0.0,0.0,1.0) },
         dayTexture:      { value: loader.load( "textures/earth_map.jpg" ) },
         nightTexture:    { value: loader.load( "textures/earth_map_lights.jpg" )},
-        specularTexture: { value: loader.load( "textures/earth_mapspec.jpg" ) }
+        specularTexture: { value: loader.load( "textures/earth_mapspec_2.png" ) },
+        scale: { type: "f", value: 1e4 },
+        displacement: { type: "f", value: 1e-2},
+        time: { type: "f", value: 0}
     };
 
     /* The initial State */
@@ -63,8 +68,7 @@ function buildUniverse() {
         ui_camera.position.set(0, 0, 10);
         
         console.log(ui_camera);
-        
-        
+
         //building the skybox
         buildSkybox();
 
@@ -343,7 +347,7 @@ function buildUniverse() {
                     //material.depthTest = false;
                     
                     var geometry_cloud = new THREE.SphereGeometry(radius * 1.02, segments, segments);
-                    var material_cloud = new THREE.MeshPhongMaterial({
+                    var material_cloud = new THREE.MeshLambertMaterial({
                         map: loader.load(path_tex + "_mapcloud.png"),
                         side: THREE.DoubleSide,
                         opacity: 0.8,
@@ -504,6 +508,7 @@ function buildUniverse() {
         globalInterfaceValues.changed = false;
     }
 
+var clock = new THREE.Clock();
     /* This renders the scene */
     function render() {
 
@@ -528,7 +533,7 @@ function buildUniverse() {
 
 
         /* Earth cloudmap moving */
-        spaceObjects.earth.group.children[0].rotateY(0.0001);
+        spaceObjects.earth.group.children[0].rotateY(0.001);
 
         /* The Rendering */
         
@@ -537,6 +542,9 @@ function buildUniverse() {
         uniforms1.sunPosition.value.set (0, 0, 0, 1);
         uniforms1.sunPosition.value.applyMatrix4 (mesh_sun.matrixWorld);
         uniforms1.sunPosition.value.applyMatrix4 (camera.matrixWorldInverse);
+        
+        uniforms1.time.value = counter / 1e6;
+        counter ++;
         
         if (stats !== undefined) {
             stats.update();
@@ -548,8 +556,6 @@ function buildUniverse() {
             //render second Scene
             renderer.clearDepth();
             renderer.render(ui_scene, ui_camera);
-            
-            
 
         }
 
