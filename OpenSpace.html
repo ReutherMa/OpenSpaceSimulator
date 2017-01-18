@@ -299,14 +299,21 @@
     <script type="x-shader/x-vertex" id="vertexShader">
         uniform vec4 sunPosition;
 
-<<<<<<< HEAD
-          void main(){
-		  	   vUv = uv;
-		  	   mvPosition = modelViewMatrix * vec4( position, 1.0 );
-               sunDirection = sunPosition.xyz - mvPosition.xyz;
-               vNormal = normalMatrix * normal;
-		  	   gl_Position = projectionMatrix * mvPosition;
-               
+        varying vec2 vUv;
+        varying vec3 vNormal;
+        varying vec3 sunDirection;
+        varying vec4 mvPosition;
+
+#include <common>
+#include <logdepthbuf_pars_vertex>
+
+        void main() {
+                vUv = uv;
+                mvPosition = modelViewMatrix * vec4(position, 1.0);
+                sunDirection = sunPosition.xyz - mvPosition.xyz;
+                vNormal = normalMatrix * normal;
+                gl_Position = projectionMatrix * mvPosition;
+                
 #ifdef USE_LOGDEPTHBUF
                gl_Position.z = log2(max( EPSILON, gl_Position.w + 1.0 )) * logDepthBufFC;
   #ifdef USE_LOGDEPTHBUF_EXT
@@ -315,32 +322,8 @@
                gl_Position.z = (gl_Position.z - 1.0) * gl_Position.w;
   #endif
 #endif
-		   }
-    
-=======
-        varying vec2 vUv;
-        varying vec3 vNormal;
-        varying vec3 sunDirection;
-        varying vec4 mvPosition;
-
-        #
-        include < common > #include < logdepthbuf_pars_vertex >
-
-        void main() {
-            vUv = uv;
-            mvPosition = modelViewMatrix * vec4(position, 1.0);
-            sunDirection = sunPosition.xyz - mvPosition.xyz;
-            vNormal = normalMatrix * normal;
-            gl_Position = projectionMatrix * mvPosition;#
-            ifdef USE_LOGDEPTHBUF
-            gl_Position.z = log2(max(EPSILON, gl_Position.w + 1.0)) * logDepthBufFC;#
-            ifdef USE_LOGDEPTHBUF_EXT
-            vFragDepth = 1.0 + gl_Position.w;#
-            else
-                gl_Position.z = (gl_Position.z - 1.0) * gl_Position.w;#
-            endif# endif
         }
->>>>>>> origin/master
+
     </script>
 
     <!-- Fragment Shader -->
@@ -353,20 +336,10 @@
         varying vec3 sunDirection;
         varying vec2 vUv;
         varying vec3 vNormal;
-
-<<<<<<< HEAD
-			uniform sampler2D dayTexture;
-            uniform sampler2D nightTexture;
-            uniform sampler2D specularTexture;
             
-            uniform float scale;
-            uniform float displacement;
-            uniform float time;
-
-            varying vec4 mvPosition;
-            varying vec3 sunDirection;
-			varying vec2 vUv;
-            varying vec3 vNormal;
+        uniform float scale;
+        uniform float displacement;
+        uniform float time;
             
         
         //varying float vNoise;
@@ -478,26 +451,13 @@
         float n_xyz = mix(n_yz.x, n_yz.y, fade_xyz.x); 
         return 2.2 * n_xyz;
         }
-=======
-        #
-        include < logdepthbuf_pars_fragment >
+        
 
-        void main(void) {#
-            if defined(USE_LOGDEPTHBUF) && defined(USE_LOGDEPTHBUF_EXT)
-            gl_FragDepthEXT = log2(vFragDepth) * logDepthBufFC * 0.5;#
-            endif
-            vec3 dayColor = texture2D(dayTexture, vUv).rgb;
-            vec3 nightColor = texture2D(nightTexture, vUv).rgb;
-            vec3 specColor = texture2D(specularTexture, vUv).rgb;
->>>>>>> origin/master
+#include <logdepthbuf_pars_fragment>
 
-            vec3 n = normalize(vNormal);
-            vec3 sun = normalize(sunDirection);
-
-<<<<<<< HEAD
 			void main( void ) {
 #if defined(USE_LOGDEPTHBUF) && defined(USE_LOGDEPTHBUF_EXT)
-                gl_FragDepthEXT = log2(vFragDepth) * logDepthBufFC * 0.5;
+        gl_FragDepthEXT = log2(vFragDepth) * logDepthBufFC * 0.5;
 #endif
 				vec3 dayColor   = texture2D( dayTexture, vUv ).rgb;
                 vec3 nightColor = texture2D( nightTexture, vUv ).rgb;
@@ -507,40 +467,30 @@
                 //+ .1*vec3(sin(dot(vec2(375765.0,232473.0),vUv)),sin(dot(vec2(586785.0,934634.0),vUv)),0.0));
                 vec3 sun = normalize (sunDirection);
                 
-    float vNoise = cnoise(vec3(vUv, time) * scale);
-    vNoise *= 2.0; 
+                float vNoise = cnoise(vec3(vUv, time) * scale);
+                vNoise *= 2.0; 
                 vec3 pos = vNoise * vec3(displacement);
                 vec3 water = vec3(  specColor.x * pos.x * time*0.93,
                                 specColor.y * pos.y * time*0.64,
                                 specColor.z * pos.z * time*1.61  );
-    vec3 n_water = normalize (water);
+                vec3 n_water = normalize (water);
                 vec3 n = normalize (vNormal);
                 
                 vec3 halfway     = normalize (sun + normalize (-mvPosition.xyz));
-=======
 
-            vec3 halfway = normalize(sun + normalize(-mvPosition.xyz));
+                float dotSun = max(dot(n, sun), 0.0);
+                float dotHalfway = max(dot(n, halfway), 0.0);
 
-            float dotSun = max(dot(n, sun), 0.0);
-            float dotHalfway = max(dot(n, halfway), 0.0);
->>>>>>> origin/master
-
-            vec3 diffuse = dayColor * dotSun + nightColor * pow(1.0 - dotSun, 5.0);
-            vec3 specular = 0.6 * specColor * pow(dotHalfway, 100.0);
-
-<<<<<<< HEAD
                 vec3 diffuse = dayColor * dotSun  +  nightColor * pow (1.0 - dotSun, 5.0);
                 vec3 specular= 0.6 * specColor * pow (dotHalfway, 100.0);
                 
-    gl_FragColor = vec4(specular + diffuse + clamp( n_water, 0.0, 0.04), 1.0 );
+                gl_FragColor = vec4(specular + diffuse + clamp( n_water, 0.0, 0.04), 1.0 );
                 //gl_FragColor = vec4( diffuse + specular, 1.0 );
                 //gl_FragColor.r = 1.0;
-            }
-=======
-            gl_FragColor = vec4(diffuse + specular, 1.0);
-            //gl_FragColor.r = 1.0;
+            
+
         }
->>>>>>> origin/master
+
     </script>
 
     <script>
