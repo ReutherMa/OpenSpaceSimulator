@@ -15,22 +15,20 @@
         #container {
             z-index: -3;
         }
-              }
-        #ui_container {
-            z-index: -2;
-            position: absolute;
-            bottom: 0px;
-        }
-        
-        div#testUI {
-            width: 100%;
-            height: 10%;
-            z-index: 1;
-            position: absolute;
-            //color: white;
-            text-align: center;
-        }  
-        
+    }
+    #ui_container {
+        z-index: -2;
+        position: absolute;
+        bottom: 0px;
+    }
+    div#testUI {
+        width: 100%;
+        height: 10%;
+        z-index: 1;
+        position: absolute;
+        //color: white;
+        text-align: center;
+    }
     </style>
     <link rel="stylesheet" href="UserInterface/EntwicklerInterfaceCSS.css">
     <link rel="stylesheet" href="UserInterface/jquery-ui-1.12.1.custom/jquery-ui.min.css">
@@ -43,6 +41,7 @@
 
     <!-- Imports -->
     <script src="script/jquery-3.1.1.min.js"></script>
+    <script src="UserInterface/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
     <script src="three.js/build/three_64.js"></script>
     <script src="three.js/examples/Detector.js"></script>
     <script src="three.js/examples/js/libs/stats.min.js"></script>
@@ -55,11 +54,19 @@
     <script src="script/universe.js"></script>
     <script src="script/data.js"></script>
     <script src="script/physics.js"></script>
-    <script src="UserInterface/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
+    
 
     <script>
         $(function() {
-            $("#slider").slider();
+            var valMap = [0.1, 0.2, 0.5, 10, 100, 1000, 10000, 100000];
+            $("#slider").slider({
+                // min: 0,
+                max: valMap.length - 1,
+                slide: function(event, ui) {
+                    $("#val").text(ui.value);
+                    $("#nlVal").text(valMap[ui.value]);
+                }
+            });
         });
     </script>
 
@@ -75,7 +82,7 @@
 
         <!-- Content Box -->
         <div id="contentBox">
-
+            <div id="dialog"></div>
             <div class="menuBox">
                 <div class="quitButtonBox">
                     <input type="button" name="quit" value="Quit" />
@@ -233,13 +240,17 @@
                         </div>
                     </div>
                     <div class="timeBox">
-                        <form oninput="timeNumber.value=timeFactorRange.value">
+                        <!--<form oninput="timeNumber.value=timeFactorRange.value">
                             <input type="range" name="timeFactorRange" min="1" max="100" value="50" step="1" onchange="updateSlider(this)">
                             <output name="timeNumber">50</output>
-                        </form>
+                        </form>-->
                         <div id="slider"></div>
+                        <!--<p>
+                            Slider Value: <span id="val"></span><br/>
+                            Time Factor: <span id="nlVal"></span><br/>
+                        </p>-->
                         <div class="timeLabelBox">
-                            <label>Time Factor</label>
+                            <label>Time Factor:</label><span id="nlVal"></span>
                         </div>
                     </div>
                     <div class="resetBox">
@@ -286,17 +297,9 @@
 
     <!-- Vertex  -->
     <script type="x-shader/x-vertex" id="vertexShader">
-    
-          uniform vec4 sunPosition;
-          
-		  varying vec2 vUv;
-          varying vec3 vNormal;
-          varying vec3 sunDirection;
-          varying vec4 mvPosition;   
-               
-#include <common>
-#include <logdepthbuf_pars_vertex>
+        uniform vec4 sunPosition;
 
+<<<<<<< HEAD
           void main(){
 		  	   vUv = uv;
 		  	   mvPosition = modelViewMatrix * vec4( position, 1.0 );
@@ -314,11 +317,44 @@
 #endif
 		   }
     
+=======
+        varying vec2 vUv;
+        varying vec3 vNormal;
+        varying vec3 sunDirection;
+        varying vec4 mvPosition;
+
+        #
+        include < common > #include < logdepthbuf_pars_vertex >
+
+        void main() {
+            vUv = uv;
+            mvPosition = modelViewMatrix * vec4(position, 1.0);
+            sunDirection = sunPosition.xyz - mvPosition.xyz;
+            vNormal = normalMatrix * normal;
+            gl_Position = projectionMatrix * mvPosition;#
+            ifdef USE_LOGDEPTHBUF
+            gl_Position.z = log2(max(EPSILON, gl_Position.w + 1.0)) * logDepthBufFC;#
+            ifdef USE_LOGDEPTHBUF_EXT
+            vFragDepth = 1.0 + gl_Position.w;#
+            else
+                gl_Position.z = (gl_Position.z - 1.0) * gl_Position.w;#
+            endif# endif
+        }
+>>>>>>> origin/master
     </script>
 
     <!-- Fragment Shader -->
     <script type="x-shader/x-fragment" id="fragmentShader_1">
+        uniform sampler2D dayTexture;
+        uniform sampler2D nightTexture;
+        uniform sampler2D specularTexture;
 
+        varying vec4 mvPosition;
+        varying vec3 sunDirection;
+        varying vec2 vUv;
+        varying vec3 vNormal;
+
+<<<<<<< HEAD
 			uniform sampler2D dayTexture;
             uniform sampler2D nightTexture;
             uniform sampler2D specularTexture;
@@ -442,9 +478,23 @@
         float n_xyz = mix(n_yz.x, n_yz.y, fade_xyz.x); 
         return 2.2 * n_xyz;
         }
+=======
+        #
+        include < logdepthbuf_pars_fragment >
 
-#include <logdepthbuf_pars_fragment>
+        void main(void) {#
+            if defined(USE_LOGDEPTHBUF) && defined(USE_LOGDEPTHBUF_EXT)
+            gl_FragDepthEXT = log2(vFragDepth) * logDepthBufFC * 0.5;#
+            endif
+            vec3 dayColor = texture2D(dayTexture, vUv).rgb;
+            vec3 nightColor = texture2D(nightTexture, vUv).rgb;
+            vec3 specColor = texture2D(specularTexture, vUv).rgb;
+>>>>>>> origin/master
 
+            vec3 n = normalize(vNormal);
+            vec3 sun = normalize(sunDirection);
+
+<<<<<<< HEAD
 			void main( void ) {
 #if defined(USE_LOGDEPTHBUF) && defined(USE_LOGDEPTHBUF_EXT)
                 gl_FragDepthEXT = log2(vFragDepth) * logDepthBufFC * 0.5;
@@ -467,10 +517,18 @@
                 vec3 n = normalize (vNormal);
                 
                 vec3 halfway     = normalize (sun + normalize (-mvPosition.xyz));
+=======
 
-                float dotSun     = max (dot (n, sun), 0.0);
-                float dotHalfway = max (dot (n, halfway), 0.0);
+            vec3 halfway = normalize(sun + normalize(-mvPosition.xyz));
 
+            float dotSun = max(dot(n, sun), 0.0);
+            float dotHalfway = max(dot(n, halfway), 0.0);
+>>>>>>> origin/master
+
+            vec3 diffuse = dayColor * dotSun + nightColor * pow(1.0 - dotSun, 5.0);
+            vec3 specular = 0.6 * specColor * pow(dotHalfway, 100.0);
+
+<<<<<<< HEAD
                 vec3 diffuse = dayColor * dotSun  +  nightColor * pow (1.0 - dotSun, 5.0);
                 vec3 specular= 0.6 * specColor * pow (dotHalfway, 100.0);
                 
@@ -478,13 +536,18 @@
                 //gl_FragColor = vec4( diffuse + specular, 1.0 );
                 //gl_FragColor.r = 1.0;
             }
+=======
+            gl_FragColor = vec4(diffuse + specular, 1.0);
+            //gl_FragColor.r = 1.0;
+        }
+>>>>>>> origin/master
     </script>
 
     <script>
         //Here the three.js functions
         var universe = buildUniverse();
         loadData("data/datas.json", universe);
-        //var dim_ui = build3D_UI();
+         //var dim_ui = build3D_UI();
     </script>
 
 </body>
