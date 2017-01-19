@@ -1,5 +1,7 @@
 var gravConst = 6.673e-11;
 var ctr = 0;
+
+//var planetPosition = [ [],[] ];
 /*var rockets = loadRocketData("data/rockets.json");
 console.log(rockets);
 var rocket = rockets.saturn5;
@@ -43,6 +45,8 @@ var angleZ = 0;
 var accelOX;
 var accelOY;
 var accelOZ;
+
+var count = 0;
 
 /*var fuel_mass = saturnV.stage1.mass_fuel;
 var mass = saturnV.mass_total;*/
@@ -109,9 +113,20 @@ function calculateGravitation(difftime, spaceObjects, spaceObject) {
         //update rocket position
     }
 
-    spaceObject.group.position.x += spaceObject.speedx * difftime;
-    spaceObject.group.position.y += spaceObject.speedy * difftime;
-    spaceObject.group.position.z += spaceObject.speedz * difftime;
+    positionX = spaceObject.group.position.x += spaceObject.speedx * difftime;
+    positionY = spaceObject.group.position.y += spaceObject.speedy * difftime;
+    positionZ = spaceObject.group.position.z += spaceObject.speedz * difftime;
+    
+    //planetPosition.push ( [spaceObject.name],[positionX, positionY, positionZ] );
+    
+    
+    //Calculate planet position for drawing ellipse
+/*    if (count % 30 == 0){*/
+        spaceObject.addTrailPoint( positionX, positionY, positionZ );
+/*    }
+    count ++;*/
+    
+    //console.log(planetPosition);
 }
 
 

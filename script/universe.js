@@ -10,6 +10,7 @@ var spaceObjects = {};
 var camera, controls, ui_camera;
 var camFactor = 6;
 
+var line_count = 0;
 
 /* Builds the whole Galaxy */
 function buildUniverse() {
@@ -67,7 +68,7 @@ function buildUniverse() {
                                                     0, 1e27);
         ui_camera.position.set(0, 0, 10);
         
-        console.log(ui_camera);
+        //console.log(ui_camera);
 
         //building the skybox
         buildSkybox();
@@ -255,7 +256,7 @@ function buildUniverse() {
 
                 planet_object.setPosition(posx, posy, posz, 0);
                 spaceObjects[planet] = planet_object;
-                planet_object.createEllipse(0, 0, data_plan.aphelia, data_plan.perihelion, group_galaxy);
+                //planet_object.createEllipse(0, 0, data_plan.aphelia, data_plan.perihelion, group_galaxy);
                 planet_object.setLabel();
             }
         }
@@ -400,6 +401,43 @@ function buildUniverse() {
             material_point.transparent = true;
             var mesh_point = new THREE.Points(dotGeometry, material_point);
             group.add(mesh_point);
+            
+            
+            //Initializing trails
+            var geo_buf = new THREE.BufferGeometry();
+            
+            const MAX_POINTS = 1000;
+            
+            // attributes
+            var positions = new Float32Array( MAX_POINTS * 3 ); // 3 vertices per point
+            geo_buf.addAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
+            // draw range
+            var drawCount = 0; // draw the first 2 points, only
+            geo_buf.setDrawRange( 0, drawCount );
+            
+            var mat_geo = new THREE.LineBasicMaterial( { color: 0xffffff, linewidth: 20 } );
+        
+            // line
+            var geo_line = new THREE.Line( geo_buf,  mat_geo );
+            
+            this.addTrailPoint = function( x, y, z){
+                
+                if (drawCount > MAX_POINTS - 3) {
+                    // sliding buffer wäre besser (2x MAX_POINTS Größe)
+                    positions.copyWithin (0, 3);
+                    drawCount--;
+                }
+                    
+                positions[drawCount*3] = x;
+                positions[drawCount*3+1] = y;
+                positions[drawCount*3+2] = z;
+
+                drawCount ++;
+                geo_buf.attributes.position.needsUpdate = true;
+                geo_buf.setDrawRange( 0, drawCount );
+            };
+            this.trailLine = geo_line;
+            scene.add( geo_line );
         }
 
         /* Set Position of the Planet */
@@ -409,7 +447,7 @@ function buildUniverse() {
         }
 
         /* Ellipse around planet */
-        this.createEllipse = function(aX, aY, aphelion, perihelion, center) {
+/*        this.createEllipse = function(aX, aY, aphelion, perihelion, center) {
             var segments = 1000;
             var curve = new THREE.EllipseCurve(
                 aX, aY, // aX, aY
@@ -426,7 +464,8 @@ function buildUniverse() {
             var ellipse = new THREE.Line(path_geometry, path_material);
             //ellipse.rotation.x = Math.Pi * ellipse_rotation_angle;
             center.add(ellipse);
-        }
+        }*/
+        
 
         /* Label above planet */
         this.setLabel = function() {
@@ -507,6 +546,7 @@ function buildUniverse() {
 
         globalInterfaceValues.changed = false;
     }
+    
 
 var clock = new THREE.Clock();
     /* This renders the scene */
@@ -529,6 +569,9 @@ var clock = new THREE.Clock();
         /* Pause the Game */
         if (!globalControlValues.keyStartPause) {
             calculatePhysics(difftime, spaceObjects);
+            //besser: neuer Knoten für renderer, der OrbitLines Knoten im Szenengraphen zeichnet
+            //drawOrbit();
+            //console.log(spaceObjects.earth);
         }
 
 
