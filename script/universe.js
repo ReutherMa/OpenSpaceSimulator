@@ -420,6 +420,13 @@ function buildUniverse() {
             // line
             var geo_line = new THREE.Line( geo_buf,  mat_geo );
             
+            
+            var oldX = 1;
+            var oldY = 1;
+            var oldZ = 1;
+            var oldVec = new THREE.Vector3( oldX, oldY, oldZ);
+            
+            
             this.addTrailPoint = function( x, y, z){
                 
                 if (drawCount > MAX_POINTS - 3) {
@@ -427,12 +434,18 @@ function buildUniverse() {
                     positions.copyWithin (0, 3);
                     drawCount--;
                 }
-                    
-                positions[drawCount*3] = x;
-                positions[drawCount*3+1] = y;
-                positions[drawCount*3+2] = z;
-
-                drawCount ++;
+                
+                var currentVec = new THREE.Vector3( x, y, z);
+                //if ( Math.abs(x - oldX) >= 1e9 || Math.abs(y - oldY >= 1e11) ||  Math.abs(z - oldZ >= 1e7)){
+                //if ( Math.abs(currentVec.dot(oldVec) >= 1.2e5) ){
+                //console.log('Drawing');
+                    oldX = positions[drawCount*3]   = x;
+                    oldY = positions[drawCount*3+1] = y;
+                    oldZ = positions[drawCount*3+2] = z;  
+                    oldVec = new THREE.Vector3(oldX, oldY, oldZ);
+                    drawCount ++;
+                //}
+                
                 geo_buf.attributes.position.needsUpdate = true;
                 geo_buf.setDrawRange( 0, drawCount );
             };
@@ -576,7 +589,10 @@ var clock = new THREE.Clock();
 
 
         /* Earth cloudmap moving */
-        spaceObjects.earth.group.children[0].rotateY(0.001);
+        spaceObjects.earth.group.children[0].rotateY(0.003);
+        
+        /* Earth cloudmap moving */
+        //spaceObjects.earth.rotateY(0.001);
 
         /* The Rendering */
         
