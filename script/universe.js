@@ -406,7 +406,7 @@ function buildUniverse() {
             //Initializing trails
             var geo_buf = new THREE.BufferGeometry();
             
-            const MAX_POINTS = 1000;
+            const MAX_POINTS = 5000;
             
             // attributes
             var positions = new Float32Array( MAX_POINTS * 3 ); // 3 vertices per point
@@ -415,7 +415,7 @@ function buildUniverse() {
             var drawCount = 0; // draw the first 2 points, only
             geo_buf.setDrawRange( 0, drawCount );
             
-            var mat_geo = new THREE.LineBasicMaterial( { color: 0xffffff, linewidth: 20 } );
+            var mat_geo = new THREE.LineBasicMaterial( { color: 0xffffff, linewidth: 1 } );
         
             // line
             var geo_line = new THREE.Line( geo_buf,  mat_geo );
