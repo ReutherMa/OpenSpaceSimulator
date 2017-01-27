@@ -67,8 +67,6 @@ function buildUniverse() {
                                                     -window.innerHeight/camFactor, 
                                                     0, 1e27);
         ui_camera.position.set(0, 0, 10);
-        
-        //console.log(ui_camera);
 
         //building the skybox
         buildSkybox();
@@ -183,15 +181,14 @@ function buildUniverse() {
 
     /* When user changes size of window */
     function onWindowResize() {
-        if(camera.inPerspectiveMode){
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
-        } else {
-        ui_camera.left = -window.innerWidth / camFactor;
-        ui_camera.right = window.innerWidth / camFactor;
-        ui_camera.top = window.innerHeight / camFactor;
-        ui_camera.bottom = -window.innerHeight / camFactor;
-        ui_camera.updateProjectionMarix();
+        if (ui_camera.isOrthographicCamera) {
+            ui_camera.left = -window.innerWidth / camFactor;
+            ui_camera.right = window.innerWidth / camFactor;
+            ui_camera.top = window.innerHeight / camFactor;
+            ui_camera.bottom = -window.innerHeight / camFactor;
+            ui_camera.updateProjectionMatrix();
         }
         renderer.setSize(window.innerWidth, window.innerHeight);
         //render(); no double calling
