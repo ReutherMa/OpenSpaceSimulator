@@ -173,7 +173,7 @@ function buildUniverse() {
                 side: THREE.BackSide
             }));
 
-        var skyGeometry = new THREE.CubeGeometry(1e15, 1e15, 1e15); //26
+        var skyGeometry = new THREE.CubeGeometry(1e17, 1e17, 1e17); //26
         var skyMaterial = new THREE.MeshFaceMaterial(materialArray);
         var skyBox = new THREE.Mesh(skyGeometry, skyMaterial);
         scene.add(skyBox);
