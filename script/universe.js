@@ -25,6 +25,7 @@ function buildUniverse() {
     var segments = 64;
     var group_galaxy;
     var sun, earth, moon, mercury, venus, mars, jupiter, saturn, uranus, neptune;
+    var camElement;
     
     var uniforms1;
     var mesh_sun;
@@ -523,24 +524,29 @@ function buildUniverse() {
         }
 
         //change camera position
-        var element = globalInterfaceValues.planetCamera;
-        for (e in spaceObjects) {
-            if (e == element) {
-                spaceObjects[e].group.add(camera);
-                camera.position.x = camera.position.y = 0;
-                camera.position.z = spaceObjects[e].radius*3;
-                controls.update();
+        var newElement = globalInterfaceValues.planetCamera;
+        console.log(newElement);
+        if (newElement != camElement) {
+            for (e in spaceObjects) {
+                if (e == newElement) {
+                    spaceObjects[e].group.add(camera);
+                    camera.position.x = camera.position.y = 0;
+                    camera.position.z = spaceObjects[e].radius*3;
+                    controls.update();
+                }
             }
+            if (newElement == "launchpad") {
+                    launchpadGroup.add(camera);
+                    camera.position.x = camera.position.y = 0;
+                    camera.position.z = 50;
+                    controls.update();
+            }
+            if (newElement == "rocket") {
+                //rocketGroup.add(camera);
+            } 
+            camElement = newElement;
         }
-        if (element == "launchpad") {
-                launchpadGroup.add(camera);
-                camera.position.x = camera.position.y = 0;
-                camera.position.z = 50;
-                controls.update();
-        }
-        if (element == "rocket") {
-            //rocketGroup.add(camera);
-        }
+        
 
 
         //reset
