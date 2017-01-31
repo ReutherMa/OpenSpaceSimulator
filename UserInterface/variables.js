@@ -1,6 +1,6 @@
 var globalInterfaceValues = {
     throttle: 0,
-    oxigen: 0,
+    oxygen: 0,
     kerosene: 0,
     step: 1,
     emptyMass: 0,
@@ -27,6 +27,8 @@ $(function() {
         },
         change: inputChange
     });
+    slide("throttle", 1, 10, 1, 5);
+    slide("oxygen", 1, 10, 1, 5);
     $('input').change(inputChange);
     $('select').change(inputChange);
 
@@ -40,8 +42,8 @@ $(function() {
 function inputChange() {
 
     // "+" means parseInt   
-    globalInterfaceValues.throttle = +$('input[name=throttleRange]').val();
-    globalInterfaceValues.oxigen = +$('input[name=oxigenRange]').val();
+    globalInterfaceValues.throttle = +$("#throttle").text();
+    globalInterfaceValues.oxigen = +$("#oxigen").text();
     globalInterfaceValues.step = +$('input[name=stepRange]').val();
     globalInterfaceValues.emptyMass = +$('input[name=emptyMassRange]').val();
     globalInterfaceValues.fuelMass = +$('input[name=fuelMassRange]').val();
@@ -59,12 +61,14 @@ function inputChange() {
     }
     globalInterfaceValues.planetSelectAll = $('input[name=planetSizeRange]').val();
     globalInterfaceValues.engine = $('select[name=engineRange]').val();
-    globalInterfaceValues.timeFactor = $("#timeFactor").val();
+    globalInterfaceValues.timeFactor = $("#timeFactor").text();
     globalInterfaceValues.planetCamera = $('select[name=planetCamera]').val();
     globalInterfaceValues.reset = $('input[name=reset]').val();
     globalInterfaceValues.changed = true;
     console.log("ja");
-    console.log(valMap[ui.value]);
+    console.log(globalInterfaceValues.throttle);
+    console.log(globalInterfaceValues.oxygen);
+    console.log(globalInterfaceValues.timeFactor);
 
     //console.log("selected" + globalInterfaceValues.planetAllSelected);
 
@@ -72,6 +76,16 @@ function inputChange() {
     //console.log(globalInterfaceValues.planetCamera);
 }
 
-function slide() {}
+function slide(name, min, max, step, val) {
+     $("#"+name).slider({
+        min: min,
+        max: max,
+        step: step,
+        slide: function(event, ui) {
+            $("#"+name+"Label").text(ui.value);
+        },
+        change: inputChange
+    });
+}
 
 //function calculatTotalMass
