@@ -18,12 +18,12 @@ var globalInterfaceValues = {
 $(function() {
 
     var valMap = [0.1, 0.2, 0.5, 1, 10, 100, 1000, 10000, 100000];
-    $("#slider").slider({
+    $("#timeFactor").slider({
         // min: 0,
         max: valMap.length - 1,
         slide: function(event, ui) {
             $("#val").text(ui.value);
-            $("#timeFactor").text(valMap[ui.value]);
+            $("#timeFactorLabel").text(valMap[ui.value]);
         },
         change: inputChange
     });
@@ -42,8 +42,8 @@ $(function() {
 function inputChange() {
 
     // "+" means parseInt   
-    globalInterfaceValues.throttle = +$("#throttle").text();
-    globalInterfaceValues.oxigen = +$("#oxigen").text();
+    globalInterfaceValues.throttle = +$("#throttleLabel").text();
+    globalInterfaceValues.oxygen = +$("#oxygenLabel").text();
     globalInterfaceValues.step = +$('input[name=stepRange]').val();
     globalInterfaceValues.emptyMass = +$('input[name=emptyMassRange]').val();
     globalInterfaceValues.fuelMass = +$('input[name=fuelMassRange]').val();
@@ -61,7 +61,7 @@ function inputChange() {
     }
     globalInterfaceValues.planetSelectAll = $('input[name=planetSizeRange]').val();
     globalInterfaceValues.engine = $('select[name=engineRange]').val();
-    globalInterfaceValues.timeFactor = $("#timeFactor").text();
+    globalInterfaceValues.timeFactor = $("#timeFactorLabel").text();
     globalInterfaceValues.planetCamera = $('select[name=planetCamera]').val();
     globalInterfaceValues.reset = $('input[name=reset]').val();
     globalInterfaceValues.changed = true;
