@@ -17,8 +17,20 @@ var globalInterfaceValues = {
 
 $(function() {
 
+    var valMap = [0.1, 0.2, 0.5, 1, 10, 100, 1000, 10000, 100000];
+    $("#slider").slider({
+        // min: 0,
+        max: valMap.length - 1,
+        slide: function(event, ui) {
+            $("#val").text(ui.value);
+            $("#timeFactor").text(valMap[ui.value]);
+        },
+        change: inputChange
+    });
     $('input').change(inputChange);
     $('select').change(inputChange);
+
+
     //checkRessources();
     //calculateTotalMass();
     //inputChange();
@@ -47,10 +59,12 @@ function inputChange() {
     }
     globalInterfaceValues.planetSelectAll = $('input[name=planetSizeRange]').val();
     globalInterfaceValues.engine = $('select[name=engineRange]').val();
-    globalInterfaceValues.timeFactor = $('input[name=timeFactorRange]').val();
+    globalInterfaceValues.timeFactor = $("#timeFactor").val();
     globalInterfaceValues.planetCamera = $('select[name=planetCamera]').val();
     globalInterfaceValues.reset = $('input[name=reset]').val();
     globalInterfaceValues.changed = true;
+    console.log("ja");
+    console.log(valMap[ui.value]);
 
     //console.log("selected" + globalInterfaceValues.planetAllSelected);
 
@@ -58,8 +72,6 @@ function inputChange() {
     //console.log(globalInterfaceValues.planetCamera);
 }
 
-function prompt(){
-    
-}
+function slide() {}
 
 //function calculatTotalMass
