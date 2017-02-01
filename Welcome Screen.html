@@ -1,0 +1,56 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+
+    <title>Open Space Simulator</title>
+    <script src="UserInterface/jquery-3.1.1.min.js"></script>
+    <script src="UserInterface/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
+
+    <link rel="stylesheet" href="UserInterface/WelcomeScreenCSS.css">
+    <link rel="stylesheet" href="UserInterface/jquery-ui-1.12.1.custom/jquery-ui.min.css">
+    <script>
+        $(function() {
+            $("#dialog-confirm").dialog({
+                resizable: false,
+                height: "auto",
+                width: 400,
+                modal: true,
+                buttons: {
+                    "Start New Game": function() {
+                        $(this).dialog("close");
+                    },
+                    Cancel: function() {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <div class="links">
+        <img class="logo" src="logo-mit-text.png" alt="Logo" height=50% width=auto>
+        <!--<h1>Open Space Simulator</h1>-->
+        <div class="smallScreenDisclaimer">
+            Sorry! Your screen is too small to play.
+        </div>
+        <div class="startGameButtonBox">
+            <a href="#" class="btn fa ui-button ui-widget ui-corner-all">Start New Game</a>
+            <br>
+        </div>
+        <a href="http://www.openspacesimulation.wordpress.com" target="_blank" class="btn fa ui-button ui-widget ui-corner-all">View Blog</a>
+        <br>
+        <a href="#" class="btn fa ui-button ui-widget ui-corner-all">Credits</a>
+        <br>
+        <a href="#" class="btn fa ui-button ui-widget ui-corner-all">Media Engineering TH Nürnberg</a>
+        <br>
+    </div>
+    
+    <div id="dialog-confirm" title="Game Over">
+        <p><span class="" style="float:left; margin:12px 12px 20px 0;"></span>Game Over Bitch</p>
+    </div>
+</body>
+
+</html>

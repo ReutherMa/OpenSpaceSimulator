@@ -1,0 +1,48 @@
+body {
+    font-family:Arial;
+    font-size: 26px;
+    color:#ffffff;
+    background-image: url("Welcome-background.jpg");
+    background-size: cover;
+    background-color: #000000;
+}
+
+h1 {
+    color:#ffffff;
+}
+
+.logo {
+    padding-bottom: 10px;
+}
+
+.smallScreenDisclaimer {
+    padding-bottom: 20px;
+}
+
+.links {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align:center;
+}
+
+.btn {
+    margin-bottom: 5px;
+}
+
+.ui-button {
+    font-size:18px !important;
+}
+
+@media(min-width: 1025px) {
+    .smallScreenDisclaimer{
+        display:none;
+    }
+}
+
+@media(max-width: 1024px) {
+    .startGameButtonBox {
+        display:none;
+    }
+}
