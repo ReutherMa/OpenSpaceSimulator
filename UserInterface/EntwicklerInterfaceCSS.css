@@ -20,8 +20,30 @@ form {
     margin-bottom: 0px;
 }
 
+label {
+    font-size: 15px;
+}
+
 .ui-heading {
     font-weight: bold;
+}
+
+legend {
+    font-size:16px;
+    color:rgb(255, 140, 0);
+    font-weight: bold;
+}
+
+fieldset {
+    border-radius: 6px;
+}
+
+.planetFieldset {
+    margin-bottom:10px;
+}
+
+.valueSpan {
+    font-size: 13px;
 }
 
 /* ----------- BOX POSITIONING ----------- */
@@ -34,25 +56,25 @@ form {
     top: 0%;
     margin: auto;
     width:100%;
-    text-align:center;
-    background-color: rgba(0, 0, 0, 0.9);
-    height: 30px;
+    /*text-align:center;*/
+    /*background-color: rgba(0, 0, 0, 0.9);*/
 }
 
 #contentbox {
     position: fixed; 
     visibility: visible; 
     /* right: 0px; */
-    /* left: 20px; */
-    top: 0px;
-    bottom: 0px;
+    left: 20px;
+    top: 150px;
     /* z-index: 200; */
-    background-color: rgba(0, 0, 0, 0.9);
+    /* background-color: rgba(0, 0, 0, 0.9); */
+    background-color: rgba(255, 255, 255, 0.10);
     padding: 5px;
-    min-height: 100%;
+    /* min-height: 100%; */
     height:auto !important; /* moderne Browser */
     height:100%; /* IE */
     overflow:auto;
+    border-radius: 6px;
 }
 
 #footerbox {
@@ -62,10 +84,13 @@ form {
     bottom: 2%;
 }
 
-.throttleBox , .fuelBox , .stepBox , .massBox , .engineBox , .planetBox , .timeBox {
+/*.throttleBox , .fuelBox , .stepBox , .massBox , .engineBox , .planetBox , .timeBox {
     background-color: rgba(255, 255, 255, 0.10);
     padding: 5px;
-    margin-bottom: 10px;
+}*/
+
+.planetSizeBox {
+    padding-bottom:10px;
 }
 
 .planetSelectLabelBox{

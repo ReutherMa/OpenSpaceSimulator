@@ -29,6 +29,23 @@ $(function() {
     });
     slide("throttle", 1, 10, 1, 5);
     slide("oxygen", 1, 10, 1, 5);
+    slide("kerosene", 1, 10, 1, 5);
+    slide("emptyMass", 1, 3, 1, 2);
+    slide("fuelMass", 1, 3, 1, 2);
+    slide("planetSize", 1, 1000, 1, 1);
+    
+    $( "#planetCamera, #engineSelect" ).selectmenu({
+        change:inputChange
+    });
+    $( "#planetSelect" ).selectmenu({
+        change:inputChange
+    });
+    
+    $( "#check" ).checkboxradio({
+  icon: false
+});
+
+    
     $('input').change(inputChange);
     $('select').change(inputChange);
 
@@ -44,12 +61,13 @@ function inputChange() {
     // "+" means parseInt   
     globalInterfaceValues.throttle = +$("#throttleLabel").text();
     globalInterfaceValues.oxygen = +$("#oxygenLabel").text();
+    globalInterfaceValues.kerosene = +$("#keroseneLabel").text();
     globalInterfaceValues.step = +$('input[name=stepRange]').val();
-    globalInterfaceValues.emptyMass = +$('input[name=emptyMassRange]').val();
-    globalInterfaceValues.fuelMass = +$('input[name=fuelMassRange]').val();
+    globalInterfaceValues.emptyMass = +$("#emptyMassLabel").text();
+    globalInterfaceValues.fuelMass = +$("#fuelMassLabel").text();
     globalInterfaceValues.totalMass = globalInterfaceValues.emptyMass + globalInterfaceValues.fuelMass;
     $("#totalMass").text(globalInterfaceValues.totalMass);
-    globalInterfaceValues.planetSize = +$('input[name=planetSizeRange]').val();
+    globalInterfaceValues.planetSize = +$("#planetSizeLabel").text();
     globalInterfaceValues.planetName = $('select[name=planetSelect]').val();
     //console.log("ist sie gecheckt?" + $("#check").prop("checked"))
     if ($("#check").prop("checked")) {
@@ -60,7 +78,7 @@ function inputChange() {
         $('select[name=planetSelect]').prop("disabled", false);
     }
     globalInterfaceValues.planetSelectAll = $('input[name=planetSizeRange]').val();
-    globalInterfaceValues.engine = $('select[name=engineRange]').val();
+    globalInterfaceValues.engine = $('select[name=engineSelect]').val();
     globalInterfaceValues.timeFactor = $("#timeFactorLabel").text();
     globalInterfaceValues.planetCamera = $('select[name=planetCamera]').val();
     globalInterfaceValues.reset = $('input[name=reset]').val();
@@ -68,7 +86,13 @@ function inputChange() {
     console.log("ja");
     console.log(globalInterfaceValues.throttle);
     console.log(globalInterfaceValues.oxygen);
+    console.log(globalInterfaceValues.emptyMass);
+    console.log(globalInterfaceValues.fuelMass);
     console.log(globalInterfaceValues.timeFactor);
+    console.log(globalInterfaceValues.planetCamera);
+    console.log(globalInterfaceValues.planetSize);
+    console.log(globalInterfaceValues.planetName);
+    console.log(globalInterfaceValues.engine);
 
     //console.log("selected" + globalInterfaceValues.planetAllSelected);
 

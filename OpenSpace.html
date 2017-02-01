@@ -64,86 +64,56 @@
 
         <!-- Header -->
         <div id="headerBox">
+            <div class="logoBox">
+                <img src="logo-mit-text-original.png" alt="Logo" height=15% width=auto>
+            </div>
+<!--
             <div class="titleBox">
                 <h1>OpenSpaceSimulator</h1>
             </div>
+-->
         </div>
 
         <!-- Content Box -->
         <div id="contentBox">
             <div id="dialog"></div>
             <div class="menuBox">
+<!--
                 <div class="quitButtonBox">
                     <input type="button" name="quit" value="Quit" />
                 </div>
+-->
             </div>
             <div class="gameBox">
                 <div class="controlBox">
+                    
+<!--
                     <div class="throttleBox">
-                        <!-- <div class="speedSelect">
-                                <select name="speedSelect">
-                                    <option>low</option>
-                                    <option>medium</option>
-                                    <option>high</option>
-                                </select>
-                            </div> -->
                         <div class="throttleRangeBox">
                             <div id="throttle"></div>
-                            <!--
-                            <form oninput="throttleNumber.value=throttleRange.value">
-                                <input type="range" name="throttleRange" min="0" max="10" value="5">
-                                <output name="throttleNumber">5</output>
-                            </form>-->
-                            <label>Throttle:  </label><span id="throttleLabel"></span>
                         </div>
-                        <!-- <div class="throttleLabelBox">
-                                <label>Throttle</label>
-                                Label zum klicken:
-                                <label> Input: <input type="text" name="theinput"></label>
-                                <label for="theinput"> Input: </label> 
-                                <input type="text" name="theinput">
-                                
-                            </div> -->
+                        <div class="throttleLabelBox">
+                            <label>Throttle:  </label><span id="throttleLabel" class="valueSpan"></span>                                
+                        </div>
                     </div>
                     <div class="fuelBox">
-                        <!-- <div class="fuelSelect>">
-                                <select name="fuelSelect">
-                                <option>low</option>
-                                <option>medium</option>
-                                <option>high</option>
-                                </select>
-                                </div> -->
                         <div class="fuelLabelBox">
                             <label class="ui-heading">Fuel</label>
                         </div>
                         <div class="oxygenRangeBox">
-                            <!--<form oninput="oxygenNumber.value=oxigenRange.value">
-                                <input class="oxygenRange" type="range" name="oxygenRange" min="0" max="10" value="5">
-                                <output name="oxygenNumber">5</output>
-                            </form>-->
                             <div id="oxygen"></div>
                         </div>
                         <div class="oxygenLabelBox">
-                            <label>Oxygen:  </label><span id="oxygenLabel"></span>
+                            <label>Oxygen:  </label><span id="oxygenLabel" class="valueSpan"></span>
                         </div>
                         <div class="keroseneRangeBox">
-                            <form oninput="keroseneNumber.value=keroseneRange.value">
-                                <input type="range" name="keroseneRange" min="0" max="10" value="5">
-                                <output name="keroseneNumber">5</output>
-                            </form>
+                            <div id="kerosene"></div>
                         </div>
                         <div class="keroseneLabelBox">
-                            <label>Kerosene</label>
+                            <label>Kerosene:  </label><span id="keroseneLabel" class="valueSpan"></span>
                         </div>
                     </div>
                     <div class="stagesBox">
-                        <!-- <div class="stepSelect">
-                                <select name="stepSelect">
-                                <option>one</option>
-                                <option>two</option>
-                                <option>three</option>
-                                </select>
-                                </div> -->
                         <div class="stagesRangeBox">
                             <form oninput="stagesNumber.value=stagesRange.value">
                                 <input type="range" name="stagesRange" min="1" max="4" value="1">
@@ -159,31 +129,25 @@
                             <label class="ui-heading">Mass</label>
                         </div>
                         <div class="emptyMassRangeBox">
-                            <form oninput="emptyMassNumber.value=emptyMassRange.value">
-                                <input type="range" name="emptyMassRange" min="1" max="3" value="2">
-                                <output name="emptyMassNumber">2</output>
-                            </form>
+                            <div id="emptyMass"></div>
                         </div>
                         <div class="emptyMassLabelBox">
-                            <label>Empty Mass</label>
+                            <label>Empty Mass:  </label><span id="emptyMassLabel" class="valueSpan"></span>
                         </div>
                         <div class="fuelMassRangeBox">
-                            <form oninput="fuelMassNumber.value=fuelMassRange.value">
-                                <input class="fuelMassRange" type="range" name="fuelMassRange" min="1" max="3" value="2">
-                                <output name="fuelMassNumber">2</output>
-                            </form>
+                            <div id="fuelMass"></div>
                         </div>
                         <div class="fuelMassLabelBox">
-                            <label class="fuelMassLabel">Fuel Mass</label>
+                            <label class="fuelMassLabel">Fuel Mass:  </label><span id="fuelMassLabel" class="valueSpan"></span>
                         </div>
                         <div class="totalMassLabelBox">
-                            <label>Total Mass: <span id=totalMass></span>
+                            <label>Total Mass: <span id=totalMass class="valueSpan"></span>
                             </label>
                         </div>
                     </div>
                     <div class="engineBox">
                         <div class="engineSelectBox">
-                            <select name="engineSelect">
+                            <select name="engineSelect" id="engineSelect">
                                 <option>Engine1</option>
                                 <option>Engine2</option>
                                 <option>Engine3</option>
@@ -193,19 +157,26 @@
                             <label class="engineLabel">Engine</label>
                         </div>
                     </div>
+-->
+                    <fieldset class="planetFieldSet">
+                        <legend>Planet</legend>
                     <div class="planetBox">
                         <div class="planetSizeBox">
-                            <form oninput="planetNumber.value=planetSizeRange.value">
+                            <div class="planetLabelBox">
+                                <label>Planet Size:  </label><span id="planetSizeLabel" class="valueSpan"></span>
+                            </div>
+                            <div id="planetSize"></div>
+                            <!--<form oninput="planetNumber.value=planetSizeRange.value">
                                 <input type="range" name="planetSizeRange" min="1" max="1000" value="1">
                                 <output name="planetNumber">1</output>
-                            </form>
-                            <div class="planetLabelBox">
-                                <label>Planet Size</label>
-                            </div>
+                            </form>-->
                         </div>
                         <div class="planetSelectLabelBox">
+                            <div class="planetLabelBox">
+                                <label class="planetLabel">Planet</label>
+                            </div>
                             <div class="planetSelectBox">
-                                <select name="planetSelect">
+                                <select name="planetSelect" id="planetSelect">
                                     <option value="sun">Sun</option>
                                     <option value="mercury">Mercury</option>
                                     <option value="venus">Venus</option>
@@ -218,45 +189,34 @@
                                     <option value="neptune">Neptune</option>
                                 </select>
                             </div>
-                            <div class="planetLabelBox">
-                                <label class="planetLabel">Planet</label>
-                            </div>
                         </div>
                         <div class="planetCheckLabelBox">
                             <div class="planetCheckbox">
                                 <input type="checkbox" id="check" name="check" value="planetCheckbox" />
-                            </div>
-                            <div class="checkLabelBox">
                                 <label class="checkLabel">Select All</label>
                             </div>
                         </div>
                     </div>
+                    </fieldset>
+<!--
                     <div class="timeBox">
-                        <!--<form oninput="timeNumber.value=timeFactorRange.value">
-                            <input type="range" name="timeFactorRange" min="1" max="100" value="50" step="1" onchange="updateSlider(this)">
-                            <output name="timeNumber">50</output>
-                        </form>-->
                         <div id="timeFactor"></div>
-                        <!--<p>
-                            Slider Value: <span id="val"></span><br/>
-                            Time Factor: <span id="nlVal"></span><br/>
-                        </p>-->
                         <div class="timeLabelBox">
                             <label>Time Factor:</label><span id="timeFactorLabel"></span>
                         </div>
                     </div>
-                    <div class="resetBox">
-                        <!-- TODO: Reset -->
+-->
+<!--                    <div class="resetBox"> 
                         <input type="reset" name="reset" value="Reset" />
-                    </div>
+                    </div>-->
                 </div>
                 <div class="simulationBox">
                     <div class="displayBox">
+                        <fieldset>
+                            <legend>Camera</legend>
                         <div id="cameraBox">
                             <!--<select onchange="switchCamera(this.value)">-->
-                            Camera:
-                            <br>
-                            <select name="planetCamera">
+                            <select name="planetCamera" id="planetCamera">
                                 <option value="sun" selected="true">Sun</option>
                                 <option value="mercury">Mercury</option>
                                 <option value="venus">Venus</option>
@@ -271,6 +231,7 @@
                                 <option value="rocket">Rocket</option>
                             </select>
                         </div>
+                            </fieldset>
                     </div>
                 </div>
             </div>
