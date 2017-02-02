@@ -1,6 +1,6 @@
 var gravConst = 6.673e-11;
 var ctr = 0;
-var timefactor=1;
+var timefactor = 1;
 
 //var planetPosition = [ [],[] ];
 var rockets = loadRocketData("data/rockets.json");
@@ -53,9 +53,9 @@ var xAxis;
 var yAxis;
 var zAxis;
 
-var drehmoment = new THREE.Quaternion().set( 0, 0, 0, 1 ).normalize();
-    
-    
+var drehmoment = new THREE.Quaternion().set(0, 0, 0, 1).normalize();
+
+
 
 /*var fuel_mass = saturnV.stage1.mass_fuel;
 var mass = saturnV.mass_total;*/
@@ -110,7 +110,7 @@ function calculateGravitation(difftime, spaceObjects, spaceObject) {
 
             dist = 1 / dist;
 
-            difftime = 1e3;//1e3;
+            difftime = 1e3; //1e3;
 
             spaceObject.speedx += accelX * rx * dist * difftime;
             spaceObject.speedy += accelX * ry * dist * difftime;
@@ -125,16 +125,16 @@ function calculateGravitation(difftime, spaceObjects, spaceObject) {
     positionX = spaceObject.group.position.x += spaceObject.speedx * difftime;
     positionY = spaceObject.group.position.y += spaceObject.speedy * difftime;
     positionZ = spaceObject.group.position.z += spaceObject.speedz * difftime;
-    
+
     //planetPosition.push ( [spaceObject.name],[positionX, positionY, positionZ] );
-    
-    
+
+
     //Calculate planet position for drawing ellipse
-/*    if (count % 30 == 0){*/
-        spaceObject.addTrailPoint( positionX, positionY, positionZ );
-/*    }
+    /*    if (count % 30 == 0){*/
+    spaceObject.addTrailPoint(positionX, positionY, positionZ);
+    /*    }
     count ++;*/
-    
+
     //console.log(planetPosition);
 }
 
@@ -175,15 +175,15 @@ input: keyPressed(WASDQE) and position(as vec3)
 **/
 
 function rotateRocket(position) {
-    
-    saturnV.matrix.extractBasis ( xAxis, yAxis, zAxis );
+
+    saturnV.matrix.extractBasis(xAxis, yAxis, zAxis);
 
     if (globalControlValues.keyUp) {
         accelOX = accelOX + Math.PI / 20;
         angleX = angleX + accelOX * difftime * difftime;
-        drehmoment=drehmoment.setFromAxisAngle(xAxis, angleX)*accelOX;
+        drehmoment = drehmoment.setFromAxisAngle(xAxis, angleX) * accelOX;
         break;
-        
+
     } else if (globalControlValues.keyDown) {
         accelOX = accelOX - Math.PI / 20;
         angleX = angleX + accelOX * difftime * difftime;
@@ -214,27 +214,27 @@ function rotateRocket(position) {
         quaternion.setFromAxisAngle(new THREE.Vector3(0, 0, 1), angleZ);
         break;
     }
-    
-    
-    var quaternion = new THREE.Quaternion().multiplyQuaternions ( saturnV.quaternion, drehmoment );
+
+
+    var quaternion = new THREE.Quaternion().multiplyQuaternions(saturnV.quaternion, drehmoment);
     saturnV.applyQuaternion(quaternion.normalize());
-    
-    
-        
+
+
+
 }
 
 
 //called during every rendering
 function calculatePhysics(difftime, spaceObjects) {
     //get values from UI:buttons pressed
-    var factoredTime=difftime*timefactor;
+    var factoredTime = difftime * timefactor;
     //calculates current speed for each space Object(Planets, Rocket)
     for (var i in spaceObjects) {
         //console.log(i);
         var spaceObject = spaceObjects[i];
         calculateGravitation(factoredTime, spaceObjects, spaceObject);
     }
-    timefactor=globalInterfaceValues.timeFactor;
+    timefactor = globalInterfaceValues.timeFactor;
     /*if (dae) {
         dae.position.x = spaceObjects.earth.group.position.x;
         dae.position.y = spaceObjects.earth.group.position.y;
