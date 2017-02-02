@@ -41,9 +41,7 @@ $(function() {
         change:inputChange
     });
     
-    $( "#check" ).checkboxradio({
-  icon: false
-});
+    $( "#check" ).checkboxradio();
 
     
     $('input').change(inputChange);
@@ -59,40 +57,34 @@ $(function() {
 function inputChange() {
 
     // "+" means parseInt   
-    globalInterfaceValues.throttle = +$("#throttleLabel").text();
-    globalInterfaceValues.oxygen = +$("#oxygenLabel").text();
-    globalInterfaceValues.kerosene = +$("#keroseneLabel").text();
-    globalInterfaceValues.step = +$('input[name=stepRange]').val();
-    globalInterfaceValues.emptyMass = +$("#emptyMassLabel").text();
-    globalInterfaceValues.fuelMass = +$("#fuelMassLabel").text();
-    globalInterfaceValues.totalMass = globalInterfaceValues.emptyMass + globalInterfaceValues.fuelMass;
-    $("#totalMass").text(globalInterfaceValues.totalMass);
+    //globalInterfaceValues.throttle = +$("#throttleLabel").text();
+    //globalInterfaceValues.oxygen = +$("#oxygenLabel").text();
+    //globalInterfaceValues.kerosene = +$("#keroseneLabel").text();
+    //globalInterfaceValues.step = +$('input[name=stepRange]').val();
+    //globalInterfaceValues.emptyMass = +$("#emptyMassLabel").text();
+   // globalInterfaceValues.fuelMass = +$("#fuelMassLabel").text();
+    //globalInterfaceValues.totalMass = globalInterfaceValues.emptyMass + globalInterfaceValues.fuelMass;
+    //$("#totalMass").text(globalInterfaceValues.totalMass);
     globalInterfaceValues.planetSize = +$("#planetSizeLabel").text();
     globalInterfaceValues.planetName = $('select[name=planetSelect]').val();
     //console.log("ist sie gecheckt?" + $("#check").prop("checked"))
-    if ($("#check").prop("checked")) {
+    if ($("#check").is(':checked') ) {
         globalInterfaceValues.planetAllSelected = true;
-        $('select[name=planetSelect]').prop("disabled", true);
+        $("#planetSelect").selectmenu("option", "disabled", true);
     } else {
         globalInterfaceValues.planetAllSelected = false;
-        $('select[name=planetSelect]').prop("disabled", false);
+        $("#planetSelect").selectmenu("option", "disabled", false);
     }
-    globalInterfaceValues.planetSelectAll = $('input[name=planetSizeRange]').val();
-    globalInterfaceValues.engine = $('select[name=engineSelect]').val();
+    //globalInterfaceValues.engine = $('select[name=engineSelect]').val();
     globalInterfaceValues.timeFactor = $("#timeFactorLabel").text();
     globalInterfaceValues.planetCamera = $('select[name=planetCamera]').val();
-    globalInterfaceValues.reset = $('input[name=reset]').val();
+    //globalInterfaceValues.reset = $('input[name=reset]').val();
     globalInterfaceValues.changed = true;
     console.log("ja");
-    console.log(globalInterfaceValues.throttle);
-    console.log(globalInterfaceValues.oxygen);
-    console.log(globalInterfaceValues.emptyMass);
-    console.log(globalInterfaceValues.fuelMass);
     console.log(globalInterfaceValues.timeFactor);
     console.log(globalInterfaceValues.planetCamera);
     console.log(globalInterfaceValues.planetSize);
     console.log(globalInterfaceValues.planetName);
-    console.log(globalInterfaceValues.engine);
 
     //console.log("selected" + globalInterfaceValues.planetAllSelected);
 
