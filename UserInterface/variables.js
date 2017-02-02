@@ -9,7 +9,7 @@ var globalInterfaceValues = {
     planetName: "earth",
     planetSize: 1,
     planetAllSelected: false,
-    planetCamera: "sun",
+    planetCamera: "earth",
     engine: "Engine1",
     timeFactor: 0,
     changed: false
@@ -21,6 +21,7 @@ $(function() {
     $("#timeFactor").slider({
         // min: 0,
         max: valMap.length - 1,
+        value: 3,
         slide: function(event, ui) {
             $("#val").text(ui.value);
             $("#timeFactorLabel").text(valMap[ui.value]);
@@ -33,19 +34,20 @@ $(function() {
     slide("emptyMass", 1, 3, 1, 2);
     slide("fuelMass", 1, 3, 1, 2);
     slide("planetSize", 1, 1000, 1, 1);
-    
-    $( "#planetCamera, #engineSelect" ).selectmenu({
-        change:inputChange
-    });
-    $( "#planetSelect" ).selectmenu({
-        change:inputChange
-    });
-    
-    $( "#check" ).checkboxradio();
 
-    
+    $("#planetCamera, #engineSelect").selectmenu({
+        change: inputChange
+    });
+    $("#planetSelect").selectmenu({
+        change: inputChange
+    });
+
+    $("#check").checkboxradio();
+
+
     $('input').change(inputChange);
     $('select').change(inputChange);
+    inputChange();
 
 
     //checkRessources();
@@ -62,13 +64,14 @@ function inputChange() {
     //globalInterfaceValues.kerosene = +$("#keroseneLabel").text();
     //globalInterfaceValues.step = +$('input[name=stepRange]').val();
     //globalInterfaceValues.emptyMass = +$("#emptyMassLabel").text();
-   // globalInterfaceValues.fuelMass = +$("#fuelMassLabel").text();
+    // globalInterfaceValues.fuelMass = +$("#fuelMassLabel").text();
     //globalInterfaceValues.totalMass = globalInterfaceValues.emptyMass + globalInterfaceValues.fuelMass;
     //$("#totalMass").text(globalInterfaceValues.totalMass);
     globalInterfaceValues.planetSize = +$("#planetSizeLabel").text();
+
     globalInterfaceValues.planetName = $('select[name=planetSelect]').val();
     //console.log("ist sie gecheckt?" + $("#check").prop("checked"))
-    if ($("#check").is(':checked') ) {
+    if ($("#check").is(':checked')) {
         globalInterfaceValues.planetAllSelected = true;
         $("#planetSelect").selectmenu("option", "disabled", true);
     } else {
@@ -76,16 +79,16 @@ function inputChange() {
         $("#planetSelect").selectmenu("option", "disabled", false);
     }
     //globalInterfaceValues.engine = $('select[name=engineSelect]').val();
-    globalInterfaceValues.timeFactor = $("#timeFactorLabel").text();
+    globalInterfaceValues.timeFactor = +$("#timeFactorLabel").text();
     globalInterfaceValues.planetCamera = $('select[name=planetCamera]').val();
     //globalInterfaceValues.reset = $('input[name=reset]').val();
     globalInterfaceValues.changed = true;
-    console.log("ja");
+   /* console.log("ja");
     console.log(globalInterfaceValues.timeFactor);
     console.log(globalInterfaceValues.planetCamera);
     console.log(globalInterfaceValues.planetSize);
     console.log(globalInterfaceValues.planetName);
-
+*/
     //console.log("selected" + globalInterfaceValues.planetAllSelected);
 
     //console.log(typeof(globalInterfaceValues.engine));
@@ -93,12 +96,13 @@ function inputChange() {
 }
 
 function slide(name, min, max, step, val) {
-     $("#"+name).slider({
+    $("#" + name).slider({
         min: min,
         max: max,
+        value: val,
         step: step,
         slide: function(event, ui) {
-            $("#"+name+"Label").text(ui.value);
+            $("#" + name + "Label").text(ui.value);
         },
         change: inputChange
     });

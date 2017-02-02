@@ -57,7 +57,7 @@ function buildUniverse() {
         //creating a scene, camera
         scene = new THREE.Scene();
         camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1e27); //1e27
-        camera.position.set(0, 0, 695508e3 + 10e10);
+        //camera.position.set(0, 0, 695508e3 + 10e10);
         //camera.lookAt (scene.position);
         //camera.position.set( data.earth.x, data.earth.y, data.earth.z +6371.00e3 ); //EARTH
 
@@ -86,7 +86,7 @@ function buildUniverse() {
         //scene.add(ambLight);
 
         //light_shader
-/*        var fShader = document.getElementById("fragmentshader1");
+        /* var fShader = document.getElementById("fragmentshader1");
         var vShader = document.getElementById("vertexshader");
         var shaderMaterial = new THREE.ShaderMaterial({
             vertexShader: vShader.textContent,
@@ -96,44 +96,9 @@ function buildUniverse() {
         //building the Galaxy, Planets and Rocket
         buildGalaxy();
         buildPlanets(data);
-        //placeRocket();
+        placeRocket();
         placeLaunchpad();
-        buildNavBall();
-        
-        
-////////////////////////////
-        
-/*                    var geo_earth = new THREE.SphereGeometry(1000*6.371e6, segments, segments);
-                    var mat_earth = new THREE.ShaderMaterial( {
-						uniforms: uniforms1,
-						vertexShader: document.getElementById( 'vertexshader' ).textContent,
-						fragmentShader: document.getElementById( 'fragmentshader1' ).textContent
-				    } );
-                    
-                    
-                    mat_earth.bumpMap = loader.load("../textures/earth_bumpmap.jpg");
-                    mat_earth.bumpScale = 4.0;
-                    
-                    var geometry_cloud = new THREE.SphereGeometry(radius * 1.02, segments, segments);
-                    var material_cloud = new THREE.MeshPhongMaterial({
-                        map: loader.load(path_tex + "_mapcloud.png"),
-                        side: THREE.DoubleSide,
-                        opacity: 0.8,
-                        transparent: true,
-                        depthWrite: true,
-                    });
-                    var cloudMesh = new THREE.Mesh(geometry_cloud, material_cloud);
-                    group.add(cloudMesh);
-                    
-                    mesh_earth = new THREE.Mesh(geo_earth, mat_earth);
-                    //mesh_earth.castShadow = true;
-                    //mesh_earth.receiveShadow = true;
-                    mesh_earth.position.set(4*695508e3, 0, 0);
-                        
-                    scene.add(mesh_earth);*/
-        
-        
-///////////////////////////
+        //buildNavBall();
 
         //renderer
         renderer = new THREE.WebGLRenderer({
@@ -271,7 +236,7 @@ function buildUniverse() {
             rocket = collada.scene;   //var skin = collada.skins[ 0 ];
             //rocket.scale.set(695508e3, 695508e3, 695508e3);
             rocketGroup.add(rocket);
-            rocketGroup.position.set(0, 20000000000, 0);
+            rocketGroup.position.set(0, 0, 0);
             earthGroup.add(rocketGroup);
         });
     }
@@ -291,8 +256,8 @@ function buildUniverse() {
             launchpadGroup.position.z = spaceObjects.earth.radius * 0.9;*/
             //launchpad.rotateX(Math.PI/180 * 60);
             //spaceObjects.sun.group.add(launchpadGroup);
-            launchpadGroup.position.set(695508e3*5,0,0);
-            scene.add(launchpadGroup);
+            launchpadGroup.position.set(0, 0, 0 );
+            earthGroup.add(launchpadGroup);
         });
     }
 
@@ -526,7 +491,7 @@ function buildUniverse() {
 
         //change camera position
         var newElement = globalInterfaceValues.planetCamera;
-        console.log(newElement);
+        //console.log(newElement);
         if (newElement != camElement) {
             for (e in spaceObjects) {
                 if (e == newElement) {
@@ -543,13 +508,14 @@ function buildUniverse() {
                     controls.update();
             }
             if (newElement == "rocket") {
-                //rocketGroup.add(camera);
+                rocketGroup.add(camera);
+                camera.position.x = camera.position.y = 0;
+                camera.position.z = 50;
+                controls.update();
             } 
             camElement = newElement;
         }
         
-
-
         //reset
         /*if (globalControlValues.keyReset){
             if (a == true){

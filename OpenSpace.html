@@ -163,7 +163,7 @@
                     <div class="planetBox">
                         <div class="planetSizeBox">
                             <div class="planetLabelBox">
-                                <label>Planet Size:  </label><span id="planetSizeLabel" class="valueSpan"></span>
+                                <label>Planet Size:  </label><span id="planetSizeLabel" class="valueSpan">1</span>
                             </div>
                             <div id="planetSize"></div>
                             <!--<form oninput="planetNumber.value=planetSizeRange.value">
@@ -202,7 +202,7 @@
                         <legend>Time</legend>
                     <div class="timeBox">
                         <div class="timeLabelBox">
-                            <label>Time Factor:  </label><span id="timeFactorLabel" class="valueSpan"></span>
+                            <label>Time Factor:  </label><span id="timeFactorLabel" class="valueSpan">1</span>
                         </div>
                         <div id="timeFactor"></div>
                     </div>
@@ -218,10 +218,10 @@
                         <div id="cameraBox">
                             <!--<select onchange="switchCamera(this.value)">-->
                             <select name="planetCamera" id="planetCamera">
-                                <option value="sun" selected="true">Sun</option>
+                                <option value="sun">Sun</option>
                                 <option value="mercury">Mercury</option>
                                 <option value="venus">Venus</option>
-                                <option value="earth">Earth</option>
+                                <option value="earth" selected="true">Earth</option>
                                 <option value="earth_moon">Moon</option>
                                 <option value="mars">Mars</option>
                                 <option value="jupiter">Jupiter</option>
