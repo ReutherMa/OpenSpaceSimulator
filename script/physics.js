@@ -4,9 +4,9 @@ var timefactor = 1;
 
 //var planetPosition = [ [],[] ];
 var rockets = loadRocketData("data/rockets.json");
-console.log(rockets);
+//console.log(rockets);
 var rocket = rockets.saturn5;
-console.log(rocket);
+//console.log(rocket);
 
 var saturnV = {
     fuel_total: rocket.stage1.mass_fuel + rocket.stage2.mass_fuel + rocket.stage3.mass_fuel,
@@ -165,7 +165,7 @@ function move(direction) {
     }
     //new rocket position; orientation is probably a matrix 
 
-    vec3 position_rocket = vec3((position_rocket + (accel * difftime)) * orientation * direction);
+    var position_rocket = new THREE.Vector3((position_rocket + (accel * difftime)) * orientation * direction);
 }
 
 /**
@@ -245,27 +245,27 @@ function calculatePhysics(difftime, spaceObjects) {
         dae2.position.y = spaceObjects.earth.group.position.y;
         dae2.position.z = spaceObjects.earth.group.position.z;
     }*/
-    /*if (global.started) {
-        if (globalControlValues.keyGas) {
+    if (global.started) {
+        if (globalControlValues.throttle) {
             move(1);
         }
         if (globalControlValues.keyBrake) {
             move(-1);
         }
-    } else if (globalControlValues.keyGas) {
+    } else if (globalControlValues.throttle) {
         if (globalInterfaceValues.throttle == 100) {
             global.started = true;
         }
     }
     if (ctr < 1) {
-        console.log(saturnV);
+        //console.log(saturnV);
         ctr++;
     }
 
-    if (keyNextStage) {
+    /*if (keyNextStage) {
         nexStage();
-    }
-*/
+    }*/
+
     //roateRocket(position_rocket);
 }
 

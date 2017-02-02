@@ -65,7 +65,7 @@
         <!-- Header -->
         <div id="headerBox">
             <div class="logoBox">
-                <img src="logo-mit-text-original.png" alt="Logo" height=15% width=auto>
+                <img src="logo-mit-text.png" alt="Logo" height=15% width=auto>
             </div>
 <!--
             <div class="titleBox">
@@ -158,12 +158,12 @@
                         </div>
                     </div>
 -->
-                    <fieldset class="planetFieldSet">
+                    <fieldset class="fieldSetPadding">
                         <legend>Planet</legend>
                     <div class="planetBox">
                         <div class="planetSizeBox">
                             <div class="planetLabelBox">
-                                <label>Planet Size:  </label><span id="planetSizeLabel" class="valueSpan"></span>
+                                <label>Planet Size:  </label><span id="planetSizeLabel" class="valueSpan">1</span>
                             </div>
                             <div id="planetSize"></div>
                             <!--<form oninput="planetNumber.value=planetSizeRange.value">
@@ -193,19 +193,20 @@
                         <div class="planetCheckLabelBox">
                             <div class="planetCheckbox">
                                 <input type="checkbox" id="check" name="check" value="planetCheckbox" />
-                                <label class="checkLabel">Select All</label>
+                                <label for="check" class="checkLabel">Select All</label>
                             </div>
                         </div>
                     </div>
                     </fieldset>
-<!--
+                    <fieldset class="fieldSetPadding">
+                        <legend>Time</legend>
                     <div class="timeBox">
-                        <div id="timeFactor"></div>
                         <div class="timeLabelBox">
-                            <label>Time Factor:</label><span id="timeFactorLabel"></span>
+                            <label>Time Factor:  </label><span id="timeFactorLabel" class="valueSpan">1</span>
                         </div>
+                        <div id="timeFactor"></div>
                     </div>
--->
+                    </fieldset>
 <!--                    <div class="resetBox"> 
                         <input type="reset" name="reset" value="Reset" />
                     </div>-->
@@ -217,10 +218,10 @@
                         <div id="cameraBox">
                             <!--<select onchange="switchCamera(this.value)">-->
                             <select name="planetCamera" id="planetCamera">
-                                <option value="sun" selected="true">Sun</option>
+                                <option value="sun">Sun</option>
                                 <option value="mercury">Mercury</option>
                                 <option value="venus">Venus</option>
-                                <option value="earth">Earth</option>
+                                <option value="earth" selected="true">Earth</option>
                                 <option value="earth_moon">Moon</option>
                                 <option value="mars">Mars</option>
                                 <option value="jupiter">Jupiter</option>

@@ -141,6 +141,7 @@ $(document).ready(function() {
                 }
                 break;  
         }
+        
     });
     
     $(".gameBox .ui-button").mouseup(function(e) {

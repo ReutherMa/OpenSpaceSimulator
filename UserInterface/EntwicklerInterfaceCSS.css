@@ -38,7 +38,7 @@ fieldset {
     border-radius: 6px;
 }
 
-.planetFieldset {
+.fieldSetPadding {
     margin-bottom:10px;
 }
 
@@ -51,11 +51,11 @@ fieldset {
 #headerbox {
     position: absolute;
     visibility: visible;
-    left:0;
+    left:20px;
     right:0;
-    top: 0%;
+    top: 10px;
     margin: auto;
-    width:100%;
+   /* width:100%;*/
     /*text-align:center;*/
 }
 
@@ -94,6 +94,10 @@ fieldset {
 
 .planetSelectLabelBox{
     float: left;
+}
+
+.planetCheckbox {
+    padding-top:50px;
 }
 
 /*.titleBox {

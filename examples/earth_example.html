@@ -629,23 +629,43 @@
             var counter = 0;
             
             //var random = 1000.0;
+            var group_earth = new THREE.Group();
+            var group_sun = new THREE.Group();
+            var group = new THREE.Group();
 
 			init();
 			animate();
 
 			function init() {
+                
 
 				container = document.getElementById( 'container' );
 
 				scene = new THREE.Scene();
                 
-				camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 0.01, 3000 );
+				camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 0.01, 1000 );
 				camera.position.z = 15;
                 camera.lookAt (scene.position);
                 
                 var controls = new THREE.OrbitControls(camera, renderer);
                 
-                var ambLight = new THREE.AmbientLight(0x3e3e3e3e); //0x3e3e3e3e
+        var imagePrefix = "../textures/stars_for_skybox1/";
+        var directions = ["xpos", "xneg", "ypos", "yneg", "zpos", "zneg"];
+        var imageSuffix = ".png";
+
+        var materialArray = [];
+        for (var i = 0; i < 6; i++)
+            materialArray.push(new THREE.MeshBasicMaterial({
+                map: new THREE.TextureLoader().load(imagePrefix + directions[i] + imageSuffix),
+                side: THREE.BackSide
+            }));
+
+        var skyGeometry = new THREE.CubeGeometry(1e17, 1e17, 1e17); //26
+        var skyMaterial = new THREE.MeshFaceMaterial(materialArray);
+        var skyBox = new THREE.Mesh(skyGeometry, skyMaterial);
+        scene.add(skyBox);
+                
+                //var ambLight = new THREE.AmbientLight(0x3e3e3e3e); //0x3e3e3e3e
                 //scene.add(ambLight);
                 
                 
@@ -656,7 +676,7 @@
                 
                 var geo_sun = new THREE.SphereGeometry(1, 128, 128);
                 
-                uniforms2 = {
+/*                uniforms2 = {
                     sunTexture: { value: new THREE.TextureLoader().load( "textures/sun/sun_map.jpg" )},
                     scale: { type: "f", value: 20.0 },
                     displacement: { type: "f", value: 0.01},
@@ -667,11 +687,16 @@
 						uniforms: uniforms2,
 						vertexShader: document.getElementById( 'vertexShader_Sun' ).textContent,
 						fragmentShader: document.getElementById( 'fragmentShader_Sun' ).textContent
-						} );
-
+						} );*/
+                
+                var mat_sun = new THREE.MeshPhongMaterial();
                 mesh_sun = new THREE.Mesh(geo_sun, mat_sun);
-                mesh_sun.position.set( -6, 0, 0 );
+                mesh_sun.position.set( -3000, 0, 0 );
                 pointLight.add(mesh_sun);
+                group_sun.add( mesh_sun );
+                //scene.add( group_sun );
+                
+                //group.add( group_sun );
                 
                 
                 
@@ -682,9 +707,9 @@
                 
                 uniforms1 = {
                     sunPosition:     { value: new THREE.Vector4(0,0,0,1) },
-                    dayTexture:      { value: new THREE.TextureLoader().load( "textures/earth/earthmap1k.jpg" ) },
-                    nightTexture:    { value: new THREE.TextureLoader().load( "textures/earth/earthlights_2.jpg" )},
-                    specularTexture: { value: new THREE.TextureLoader().load( "textures/earth/earth_mapspec_2.png" ) },
+                    dayTexture:      { value: new THREE.TextureLoader().load( "../textures/earth_map.jpg" ) },
+                    nightTexture:    { value: new THREE.TextureLoader().load( "../textures/earth_map_lights.jpg" )},
+                    specularTexture: { value: new THREE.TextureLoader().load( "../textures/earth_mapspec_2.png" ) },
                     scale: { type: "f", value: 1e4 }, //600.0
                     displacement: { type: "f", value: 1e-2}, //0.1
                     time: { type: "f", value: 0}
@@ -697,18 +722,42 @@
 						vertexShader: document.getElementById( 'vertexShader_Earth' ).textContent,
 						fragmentShader: document.getElementById( 'fragmentShader_Earth' ).textContent
 						} );
-                material.bumpMap = new THREE.TextureLoader().load ("textures/earth/earthbump1k.jpg");
+                material.bumpMap = new THREE.TextureLoader().load ("../textures/earth_bumpmap.jpg");
                 material.bumpScale = 4.0;
+                    
+                var geometry_cloud = new THREE.SphereGeometry(0.758, 64, 64);
+                var material_cloud = new THREE.MeshLambertMaterial({
+                    map: new THREE.TextureLoader().load("../textures/earth_mapcloud.png"),
+                    color:0xff0000,
+                    side: THREE.DoubleSide,
+                    opacity: 0.8,
+                    transparent: true,
+                    depthWrite: true
+                });
+                var cloudMesh = new THREE.Mesh(geometry_cloud, material_cloud);
+                
+                cloudMesh.castShadow = true;
+                cloudMesh.receiveShadow = true;
+                group_earth.add(cloudMesh);
 
 				mesh_earth = new THREE.Mesh( geometry, material );
                 //mesh_earth.position.set( 0, 0, 0 );
-//                mesh_earth.castShadow = true;
-//                mesh_earth.receiveShadow = true;
-				scene.add( mesh_earth );
+                mesh_earth.castShadow = true;
+                mesh_earth.receiveShadow = true;
+				//scene.add( mesh_earth );
+                group_earth.add( mesh_earth );
+                
+                //scene.add(group_earth);
+                group.add( group_earth );
+                
+                scene.add( group );
 
 
 				renderer = new THREE.WebGLRenderer();
 				renderer.setPixelRatio( window.devicePixelRatio );
+                renderer.shadowMap.enabled = true;
+                renderer.shadowMap.type = THREE.BasicShadowMap;
+                
 				container.appendChild( renderer.domElement );
 
 				stats = new Stats();
@@ -717,6 +766,8 @@
 				onWindowResize();
 
 				window.addEventListener( 'resize', onWindowResize, false );
+                
+                
 
 			}
 
@@ -743,12 +794,17 @@
 
 			function render() {
 
+
+                
 				var delta = clock.getDelta();
                 
                 mesh_sun.updateMatrixWorld();
                 uniforms1.sunPosition.value.set (0, 0, 0, 1);
                 uniforms1.sunPosition.value.applyMatrix4 (mesh_sun.matrixWorld);
                 uniforms1.sunPosition.value.applyMatrix4 (camera.matrixWorldInverse);
+                
+                group_earth.children[0].rotateY(0.002);
+                group.children[0].rotateY(0.003);
                 
                 //uniforms3.u_time.value += 1;
                 
@@ -764,7 +820,7 @@
                 //uniforms2.scale.value = Math.abs( A2 * Math.sin( 0.01* (counter/3) ) );//Math.random() * (scale_max - scale_min) + scale_min;
 
                 counter ++;
-                uniforms2.time.value = counter / 10000.0;
+                //uniforms2.time.value = counter / 10000.0;
                 
                 //uniforms1.time.value = counter / random;  //100000.0
                 
