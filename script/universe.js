@@ -20,7 +20,8 @@ function buildUniverse() {
 
     //Instant Variables
     var universe = {};
-    var container, stats;
+    var container;
+    //, stats
     var scene, ui_scene, renderer;
     var segments = 64;
     var group_galaxy;
@@ -148,8 +149,8 @@ function buildUniverse() {
         
         container = document.getElementById('container');
         container.appendChild(renderer.domElement);
-        stats = new Stats();
-        container.appendChild(stats.dom);
+        //stats = new Stats();
+        //container.appendChild(stats.dom);
         
         window.addEventListener('resize', onWindowResize, false);
 
@@ -608,10 +609,10 @@ var clock = new THREE.Clock();
         uniforms1.time.value = counter / 1e6;
         counter ++;
         
-        if (stats !== undefined) {
+        /**if (stats !== undefined) {
             stats.update();
             controls.update();
-        }
+        }*/
         if (renderer !== undefined) {
             renderer.clear();
             renderer.render(scene, camera);
