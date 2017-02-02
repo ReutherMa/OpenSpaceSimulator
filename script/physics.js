@@ -1,9 +1,8 @@
 var gravConst = 6.673e-11;
 var ctr = 0;
-var timefactor=1;
 
 //var planetPosition = [ [],[] ];
-var rockets = loadRocketData("data/rockets.json");
+/*var rockets = loadRocketData("data/rockets.json");
 console.log(rockets);
 var rocket = rockets.saturn5;
 console.log(rocket);
@@ -28,7 +27,7 @@ var saturnV = {
     height: rocket.height,
     mass_total: rocket.mass_total,
     thrust_launch: rocket.thrust_launch
-};
+};*/
 
 
 
@@ -48,14 +47,6 @@ var accelOY;
 var accelOZ;
 
 var count = 0;
-
-var xAxis;
-var yAxis;
-var zAxis;
-
-var drehmoment = new THREE.Quaternion().set( 0, 0, 0, 1 ).normalize();
-    
-    
 
 /*var fuel_mass = saturnV.stage1.mass_fuel;
 var mass = saturnV.mass_total;*/
@@ -147,7 +138,7 @@ part 1: acceleration of direction and new position
 **/
 
 
-function move(direction) {
+/*function move(direction) {
 
     //calculates fuel-mass that will be lost in difftime
     var mass_lost = difftime / saturnV.stage1.burningtime * globalInterfaceValues.throttle * rocket.stage1.mass_fuel;
@@ -166,7 +157,7 @@ function move(direction) {
     //new rocket position; orientation is probably a matrix 
 
     vec3 position_rocket = vec3((position_rocket + (accel * difftime)) * orientation * direction);
-}
+}*/
 
 /**
 Rocket Science
@@ -174,17 +165,20 @@ part 2: orientation
 input: keyPressed(WASDQE) and position(as vec3)
 **/
 
-function rotateRocket(position) {
-    
-    saturnV.matrix.extractBasis ( xAxis, yAxis, zAxis );
+/*function rotateRocket(position) {
+    var quaternion = new THREE.Quaternion();
+
 
     if (globalControlValues.keyUp) {
         accelOX = accelOX + Math.PI / 20;
         angleX = angleX + accelOX * difftime * difftime;
-        drehmoment=drehmoment.setFromAxisAngle(xAxis, angleX)*accelOX;
-        break;
+        angle = angleX;
+        accel = accelOX;
         
-    } else if (globalControlValues.keyDown) {
+        break;
+    } else 
+
+    if (globalControlValues.keyDown) {
         accelOX = accelOX - Math.PI / 20;
         angleX = angleX + accelOX * difftime * difftime;
         quaternion.setFromAxisAngle(new THREE.Vector3(1, 0, 0), angleX);
@@ -216,25 +210,29 @@ function rotateRocket(position) {
     }
     
     
-    var quaternion = new THREE.Quaternion().multiplyQuaternions ( saturnV.quaternion, drehmoment );
-    saturnV.applyQuaternion(quaternion.normalize());
+    var r = makeRotationFromEuler(THREE.Euler(angleX, angleY, angleZ));
+    var m = makeRotationFromQuaternion(satrunV.quaternion);
+    mutiplayMatrices(m,r);
     
-    
-        
-}
+    //quaternion.setFromAxisAngle(new THREE.Vector3(1, 0, 0), angleX);
+    quaternion.setFromRotationMatrix(r);
+
+    saturnV.applyQuaternion(quaternion);
+    saturnV.quaternion.normalize();
+
+}*/
 
 
 //called during every rendering
 function calculatePhysics(difftime, spaceObjects) {
     //get values from UI:buttons pressed
-    var factoredTime=difftime*timefactor;
+
     //calculates current speed for each space Object(Planets, Rocket)
     for (var i in spaceObjects) {
         //console.log(i);
         var spaceObject = spaceObjects[i];
-        calculateGravitation(factoredTime, spaceObjects, spaceObject);
+        calculateGravitation(difftime, spaceObjects, spaceObject);
     }
-    timefactor=globalInterfaceValues.timeFactor;
     /*if (dae) {
         dae.position.x = spaceObjects.earth.group.position.x;
         dae.position.y = spaceObjects.earth.group.position.y;
