@@ -236,7 +236,14 @@ function buildUniverse() {
             rocket = collada.scene;   //var skin = collada.skins[ 0 ];
             //rocket.scale.set(695508e3, 695508e3, 695508e3);
             rocketGroup.add(rocket);
-            rocketGroup.position.set(0, 0, 0);
+            var r = spaceObjects.earth.radius;
+            var xE = r * Math.sin(Math.PI/180 * 45) * Math.cos(Math.PI/180 * 90);
+            var yE = r * Math.sin(Math.PI/180 * 45) * Math.sin(Math.PI/180 * 90);
+            var zE = r * Math.cos(Math.PI/180 * 45);
+            rocketGroup.position.x = xE + 1;
+            rocketGroup.position.y = yE + 1;
+            rocketGroup.position.z = zE + 1;
+            rocket.rotateX(Math.PI/180 * 45);
             earthGroup.add(rocketGroup);
         });
     }
@@ -251,12 +258,15 @@ function buildUniverse() {
             launchpad = collada.scene;   //var skin = collada.skins[ 0 ];
             launchpad.scale.set(10, 10, 10);
             launchpadGroup.add(launchpad);
-            /*launchpadGroup.position.x = spaceObjects.earth.radius; //0.1
-            launchpadGroup.position.y = spaceObjects.earth.radius * 0.5;
-            launchpadGroup.position.z = spaceObjects.earth.radius * 0.9;*/
-            //launchpad.rotateX(Math.PI/180 * 60);
-            //spaceObjects.sun.group.add(launchpadGroup);
-            launchpadGroup.position.set(0, 0, 0 );
+            var r = spaceObjects.earth.radius;
+            var xE = r * Math.sin(Math.PI/180 * 45) * Math.cos(Math.PI/180 * 90);
+            var yE = r * Math.sin(Math.PI/180 * 45) * Math.sin(Math.PI/180 * 90);
+            var zE = r * Math.cos(Math.PI/180 * 45);
+            launchpadGroup.position.x = xE + 1;
+            launchpadGroup.position.y = yE + 1;
+            launchpadGroup.position.z = zE + 1;
+            launchpad.rotateX(Math.PI/180 * 45);
+            //launchpadGroup.position.set(0, 0, 0 );
             earthGroup.add(launchpadGroup);
         });
     }
