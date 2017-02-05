@@ -110,7 +110,7 @@ function calculateGravitation(difftime, spaceObjects, spaceObject) {
 
             dist = 1 / dist;
 
-            difftime = 1e3; //1e3;
+            //difftime = 1e3; //1e3;
 
             spaceObject.speedx += accelX * rx * dist * difftime;
             spaceObject.speedy += accelX * ry * dist * difftime;
@@ -227,6 +227,7 @@ function rotateRocket(position) {
 //called during every rendering
 function calculatePhysics(difftime, spaceObjects) {
     //get values from UI:buttons pressed
+    timefactor = globalInterfaceValues.timeFactor;
     var factoredTime = difftime * timefactor;
     //calculates current speed for each space Object(Planets, Rocket)
     for (var i in spaceObjects) {
@@ -234,7 +235,7 @@ function calculatePhysics(difftime, spaceObjects) {
         var spaceObject = spaceObjects[i];
         calculateGravitation(factoredTime, spaceObjects, spaceObject);
     }
-    timefactor = globalInterfaceValues.timeFactor;
+    
     /*if (dae) {
         dae.position.x = spaceObjects.earth.group.position.x;
         dae.position.y = spaceObjects.earth.group.position.y;
