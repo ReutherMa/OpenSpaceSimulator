@@ -13,24 +13,28 @@ var saturnV = {
     stage1: {
         mass_empty: rocket.stage1.mass_empty,
         mass_fuel: rocket.stage1.mass_fuel,
-        burningtime: rocket.stage1.burningtime
+        burningtime: rocket.stage1.burningtime,
+        thrust: rocket.stage1.thrust
     },
     stage2: {
         mass_empty: rocket.stage2.mass_empty,
         mass_fuel: rocket.stage2.mass_fuel,
-        burningtime: rocket.stage2.burningtime
+        burningtime: rocket.stage2.burningtime,
+        thrust: rocket.stage2.thrust
     },
     stage3: {
         mass_empty: rocket.stage3.mass_empty,
         mass_fuel: rocket.stage3.mass_fuel,
-        burningtime: rocket.stage3.burningtime
+        burningtime: rocket.stage3.burningtime,
+        thrust: rocket.stage3.thrust
     },
     height: rocket.height,
     mass_total: rocket.mass_total,
     thrust_launch: rocket.thrust_launch
 };
 
-
+var speed=0;
+    
 
 
 var keyPressed; //wasdqe
@@ -57,8 +61,8 @@ var drehmoment = new THREE.Quaternion().set(0, 0, 0, 1).normalize();
 
 
 
-/*var fuel_mass = saturnV.stage1.mass_fuel;
-var mass = saturnV.mass_total;*/
+var fuel_mass = saturnV.stage1.mass_fuel;
+var mass = saturnV.mass_total;
 
 
 // calculate gravitational forces
@@ -147,25 +151,42 @@ part 1: acceleration of direction and new position
 **/
 
 
-function move(direction) {
+function move(difftime, direction) {
 
     //calculates fuel-mass that will be lost in difftime
-    var mass_lost = difftime / saturnV.stage1.burningtime * globalInterfaceValues.throttle * rocket.stage1.mass_fuel;
+    var mass_lost = difftime / saturnV.stage1.burningtime * saturnV.stage1.mass_fuel; //* globalInterfaceValues.throttle
+    //console.log("difftime:"+difftime);
+    //console.log("burningtime:"+saturnV.stage1.burningtime);
+    //console.log("fuelmass:"+saturnV.stage1.mass_fuel);
     //checks if enough fuel
+            var accel=1;
+    if (globalControlValues.throttle) {
+        speed=1;
     if ((fuel_mass - mass_lost) >= 0) {
         //a=F/m(now mass WITH fuel to lose)
-        var accel = saturnV.stage1.thrust / (mass);
+        accel = saturnV.stage1.thrust / (mass);
+        console.log("accel:"+accel);
+        console.log("mass:"+mass);
         //new mass without lost fuel
         mass = mass - mass_lost;
         //current fuel mass for UI
         fuel_mass = fuel_mass - mass_lost;
+        console.log("mass_lost:"+mass_lost);
     } else {
         //UI-prompt-method with variable String (needs to be implemented);
-        prompt("There is not enough fuel in this stage!");
-    }
+        console.log("There is not enough fuel in this stage!");
+        
+    }}
+    
     //new rocket position; orientation is probably a matrix 
 
-    var position_rocket = new THREE.Vector3((position_rocket + (accel * difftime)) * orientation * direction);
+    var position_rocket = new THREE.Vector3((position_rocket + (accel * difftime)) * direction); // * orientation
+    rocketGroup.position.x += (accel * difftime) * direction * speed;
+    rocketGroup.position.y += (accel * difftime) * direction * speed;
+    rocketGroup.position.z += (accel * difftime) * direction * speed;
+    //console.log(rocketGroup.position.x);
+    //console.log(rocketGroup.position.y);
+    //console.log(rocketGroup.position.z);
 }
 
 /**
@@ -174,50 +195,49 @@ part 2: orientation
 input: keyPressed(WASDQE) and position(as vec3)
 **/
 
-function rotateRocket(position) {
+function rotateRocket() {
+    //console.log("saturnV.matrix:"+saturnV.matrix);
+    //saturnV.matrix.extractBasis(xAxis, yAxis, zAxis);
+    
 
-    saturnV.matrix.extractBasis(xAxis, yAxis, zAxis);
-
-    if (globalControlValues.keyUp) {
+    if (globalControlValues.up) {
         accelOX = accelOX + Math.PI / 20;
         angleX = angleX + accelOX * difftime * difftime;
-        drehmoment = drehmoment.setFromAxisAngle(xAxis, angleX) * accelOX;
-        break;
-
-    } else if (globalControlValues.keyDown) {
+        drehmoment = drehmoment.setFromAxisAngle(new THREE.Vector3(1, 0, 0), angleX) * accelOX;
+    }
+    if (globalControlValues.down) {
         accelOX = accelOX - Math.PI / 20;
         angleX = angleX + accelOX * difftime * difftime;
         quaternion.setFromAxisAngle(new THREE.Vector3(1, 0, 0), angleX);
-        break;
     }
-    if (globalControlValues.keyRollLeft) {
+    if (globalControlValues.rollLeft) {
         accelOY = accelOY + Math.PI / 20;
         angleY = angleY + accelOY * difftime * difftime;
         quaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0), angleY);
-        break;
     }
-    if (globalControlValues.keyRollRight) {
+    if (globalControlValues.rollRight) {
         accelOY = accelOY - Math.PI / 20;
         angleY = angleY + accelOY * difftime * difftime;
         quaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0), angleY);
-        break;
     }
-    if (globalControlValues.keyLeft) {
+    if (globalControlValues.left) {
         accelOZ = accelOZ + Math.PI / 20;
         angleZ = angleZ + accelOZ * difftime * difftime;
         quaternion.setFromAxisAngle(new THREE.Vector3(0, 0, 1), angleZ);
-        break;
     }
-    if (globalControlValues.keyRight) {
+    if (globalControlValues.right) {
         accelOZ = accelOZ - Math.PI / 20;
         angleZ = angleZ + accelOZ * difftime * difftime;
         quaternion.setFromAxisAngle(new THREE.Vector3(0, 0, 1), angleZ);
-        break;
     }
 
 
-    var quaternion = new THREE.Quaternion().multiplyQuaternions(saturnV.quaternion, drehmoment);
+    var quaternion = new THREE.Quaternion(1,1,1,1);
+    console.log("quaternion:"+quaternion);
+    quaternion=quaternion.multiplyQuaternions(saturnV.quaternion, drehmoment);
+    console.log("quaternion2:"+quaternion);
     saturnV.applyQuaternion(quaternion.normalize());
+    console.log("saturnV.quaternion:"+quaternion);
 
 
 
@@ -246,6 +266,7 @@ function calculatePhysics(difftime, spaceObjects) {
         dae2.position.y = spaceObjects.earth.group.position.y;
         dae2.position.z = spaceObjects.earth.group.position.z;
     }*/
+    console.log("started:"+global.started);
     if (global.started) {
         if (globalControlValues.throttle) {
             move(1);
@@ -256,13 +277,13 @@ function calculatePhysics(difftime, spaceObjects) {
     } else if (globalControlValues.throttle) {
         if (globalInterfaceValues.throttle == 100) {
             global.started = true;
+            console.log("started 2:"+global.started);
         }
     }
-    if (ctr < 1) {
-        //console.log(saturnV);
-        ctr++;
-    }
-
+    
+    move(factoredTime, 1);
+    //rotateRocket();
+        
     /*if (keyNextStage) {
         nexStage();
     }*/

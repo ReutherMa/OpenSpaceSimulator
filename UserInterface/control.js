@@ -49,6 +49,7 @@ $(document).ready(function() {
                 break;
             case keyCode.space:
                 globalControlValues.throttle = true;
+                console.log("space pressed");
                 break;
             case keyCode.b:
                 globalControlValues.brake = true;
