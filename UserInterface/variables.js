@@ -17,7 +17,8 @@ var globalInterfaceValues = {
 
 $(function() {
 
-    var valMap = [0.1, 0.2, 0.5, 1, 10, 100, 1000, 10000, 100000];
+    //var valMap = [0.1, 0.2, 0.5, 1, 10, 100, 1000, 10000, 100000];
+    var valMap = [0.1, 0.2, 0.5, 1, 10, 100, 1000];
     $("#timeFactor").slider({
         // min: 0,
         max: valMap.length - 1,

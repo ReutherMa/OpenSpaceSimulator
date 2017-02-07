@@ -8,6 +8,7 @@ var rockets = loadRocketData("data/rockets.json");
 var rocket = rockets.saturn5;
 //console.log(rocket);
 
+
 var saturnV = {
     fuel_total: rocket.stage1.mass_fuel + rocket.stage2.mass_fuel + rocket.stage3.mass_fuel,
     stage1: {
@@ -165,16 +166,16 @@ function move(difftime, direction) {
     if ((fuel_mass - mass_lost) >= 0) {
         //a=F/m(now mass WITH fuel to lose)
         accel = saturnV.stage1.thrust / (mass);
-        console.log("accel:"+accel);
-        console.log("mass:"+mass);
+        //console.log("accel:"+accel);
+        //console.log("mass:"+mass);
         //new mass without lost fuel
         mass = mass - mass_lost;
         //current fuel mass for UI
         fuel_mass = fuel_mass - mass_lost;
-        console.log("mass_lost:"+mass_lost);
+        //console.log("mass_lost:"+mass_lost);
     } else {
         //UI-prompt-method with variable String (needs to be implemented);
-        console.log("There is not enough fuel in this stage!");
+        //console.log("There is not enough fuel in this stage!");
         
     }}
     
@@ -233,11 +234,11 @@ function rotateRocket() {
 
 
     var quaternion = new THREE.Quaternion(1,1,1,1);
-    console.log("quaternion:"+quaternion);
+    //console.log("quaternion:"+quaternion);
     quaternion=quaternion.multiplyQuaternions(saturnV.quaternion, drehmoment);
-    console.log("quaternion2:"+quaternion);
+    //console.log("quaternion2:"+quaternion);
     saturnV.applyQuaternion(quaternion.normalize());
-    console.log("saturnV.quaternion:"+quaternion);
+    //console.log("saturnV.quaternion:"+quaternion);
 
 
 
@@ -266,7 +267,7 @@ function calculatePhysics(difftime, spaceObjects) {
         dae2.position.y = spaceObjects.earth.group.position.y;
         dae2.position.z = spaceObjects.earth.group.position.z;
     }*/
-    console.log("started:"+global.started);
+    //console.log("started:"+global.started);
     if (global.started) {
         if (globalControlValues.throttle) {
             move(1);
@@ -281,7 +282,9 @@ function calculatePhysics(difftime, spaceObjects) {
         }
     }
     
+    if(rocketGroup != undefined){
     move(factoredTime, 1);
+    }
     //rotateRocket();
         
     /*if (keyNextStage) {
