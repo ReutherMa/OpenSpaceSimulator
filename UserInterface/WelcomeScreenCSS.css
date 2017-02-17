@@ -12,7 +12,7 @@ h1 {
 }
 
 .logo {
-    padding-bottom: 10px;
+    padding-bottom: 60px;
 }
 
 .smallScreenDisclaimer {
@@ -44,5 +44,17 @@ h1 {
 @media(max-width: 1024px) {
     .startGameButtonBox {
         display:none;
+    }
+    
+    .ui-button {
+    font-size: 28px !important;
+    }
+    
+    .logo {
+        height: 24%;
+    }
+    
+    .smallScreenDisclaimer {
+        font-size: 35px;
     }
 }
