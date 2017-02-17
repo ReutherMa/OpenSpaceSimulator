@@ -98,7 +98,7 @@ function buildUniverse() {
         buildPlanets(data);
         placeRocket();
         placeLaunchpad();
-        //buildNavBall();
+        buildNavBall();
 
         //renderer
         renderer = new THREE.WebGLRenderer({
@@ -482,6 +482,9 @@ function buildUniverse() {
         var sphere_nav = new THREE.Mesh( nav_geometry, nav_material );
         sphere_nav.position.y = -75;
         ui_scene.add(sphere_nav);
+        sphere_nav.rotateX(Math.PI/180 * 90);
+        sphere_nav.rotateY(Math.PI/180 * 90);
+        
     }
 
     /* This is called when UI is changed */
