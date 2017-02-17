@@ -11,24 +11,14 @@ var globalInterfaceValues = {
     planetAllSelected: false,
     planetCamera: "earth",
     engine: "Engine1",
-    timeFactor: 0,
-    changed: false
+    timeFactor: 1,
+    changed: true
 };
 
 $(function() {
 
-    $("#planetCamera, #engineSelect").selectmenu({
-        change: inputChange
-    });
-    $("#planetSelect").selectmenu({
-        change: inputChange
-    });
-
-    //$("#check").checkboxradio();
-
-    $('input').change(inputChange);
-    $('select').change(inputChange);
-    inputChange();
+ 
+   // inputChange();
 
 
     //checkRessources();
@@ -51,7 +41,6 @@ function inputChange() {
     globalInterfaceValues.planetSize = +$("#planetSizeLabel").text();
 
     globalInterfaceValues.planetName = $('select[name=planetSelect]').val();
-    //console.log("ist sie gecheckt?" + $("#check").prop("checked"))
     if ($("#check").is(':checked')) {
         globalInterfaceValues.planetAllSelected = true;
         $("#planetSelect").selectmenu("option", "disabled", true);
@@ -64,6 +53,8 @@ function inputChange() {
     globalInterfaceValues.planetCamera = $('select[name=planetCamera]').val();
     //globalInterfaceValues.reset = $('input[name=reset]').val();
     globalInterfaceValues.changed = true;
+    console.log(globalInterfaceValues.timeFactor);
+    
    /* console.log("ja");
     console.log(globalInterfaceValues.timeFactor);
     console.log(globalInterfaceValues.planetCamera);
