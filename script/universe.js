@@ -475,18 +475,32 @@ function buildUniverse() {
     
     //Nav-Ball
     function buildNavBall(){
-        //2. Kamrea, die direkt vor uns ist und nav ball sehr klein, keliner Abstand. Eingabe: Contols in three.js, in diesem Bereich sind wir selbst zuständig, 2. Orbitcontrolls...
+        //Ring für Anzeigen
+        var nav_ring = new THREE.CircleGeometry(40, 64);
+        var ring_material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+        var nav_circle = new THREE.Mesh( nav_ring, ring_material );
+        nav_circle.position.y = -75;
+        //ui_scene.add(nav_circle);
+        
+        //crosshair
+        var crosshair = new THREE.PlaneGeometry(10, 10, 64);
+        var cross_material = new THREE.MeshBasicMaterial( {transparent: true, color: 0xffff00} );
+        cross_material.map = loader.load("textures/crosshair2.png");
+        var cross_mesh = new THREE.Mesh( crosshair, cross_material);
+        cross_mesh.position.y= -75;
+        ui_scene.add(cross_mesh);
+         
+        //navball
         var nav_geometry = new THREE.SphereGeometry( 30, 64, 64 );
         var nav_material = new THREE.MeshBasicMaterial( {color: 0xffffff} );
         nav_material.map = loader.load("textures/navball.png");
         var sphere_nav = new THREE.Mesh( nav_geometry, nav_material );
         sphere_nav.position.y = -75;
-        ui_scene.add(sphere_nav);
         sphere_nav.rotateX(Math.PI/180 * 90);
         sphere_nav.rotateY(Math.PI/180 * 90);
-        
+        ui_scene.add(sphere_nav);
     }
-
+    
     /* This is called when UI is changed */
     function UIChanges() {
 
@@ -595,7 +609,9 @@ var clock = new THREE.Clock();
         if (renderer !== undefined) {
             renderer.clear();
             renderer.render(scene, camera);
+           
             //render second Scene
+            renderer.sortObjects = false;
             renderer.clearDepth();
             renderer.render(ui_scene, ui_camera);
 
