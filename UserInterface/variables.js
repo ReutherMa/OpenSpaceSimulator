@@ -55,6 +55,12 @@ function inputChange() {
     globalInterfaceValues.changed = true;
     console.log(globalInterfaceValues.timeFactor);
     
+    
+    $(".ui-slider-handle").blur();
+    $("#planetCamera-button").blur();
+    $("#planetSelect-button").blur();
+
+    
    /* console.log("ja");
     console.log(globalInterfaceValues.timeFactor);
     console.log(globalInterfaceValues.planetCamera);
