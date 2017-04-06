@@ -12,6 +12,8 @@ var camFactor = 6;
 
 var line_count = 0;
 
+var sphere_nav;
+
 /* Builds the whole Galaxy */
 function buildUniverse() {
 
@@ -494,7 +496,7 @@ function buildUniverse() {
         var nav_geometry = new THREE.SphereGeometry( 30, 64, 64 );
         var nav_material = new THREE.MeshBasicMaterial( {color: 0xffffff} );
         nav_material.map = loader.load("textures/navball.png");
-        var sphere_nav = new THREE.Mesh( nav_geometry, nav_material );
+        sphere_nav = new THREE.Mesh( nav_geometry, nav_material );
         sphere_nav.position.y = -75;
         sphere_nav.rotateX(Math.PI/180 * 90);
         sphere_nav.rotateY(Math.PI/180 * 90);
