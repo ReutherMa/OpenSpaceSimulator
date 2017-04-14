@@ -61,6 +61,9 @@ var speedx=0;
 var speedy=0;
 var speedz=0;
 
+//is the rocket in earth's atmosphere?
+var inEarthAtmos = true;
+var earthAtmosInM = 32000;
 
 var angle_const = 2 * Math.PI / 20000;
 
@@ -123,16 +126,20 @@ function calculateGravitationRocket(difftime){
         var ry = spaceObjects[o].group.position.y - rocketGroup.position.y;
         var rz = spaceObjects[o].group.position.z - rocketGroup.position.z;
         var dist2 = rx * rx + ry * ry + rz * rz;
+        var dist = Math.sqrt(dist2);
         var mindist = 1e-1;
 
         if (dist2 > mindist) {
             var accel = gravConst * spaceObjects[o].mass / dist2;
             if(ctr==0){accel=0;ctr++;}
-            var dist = Math.sqrt(dist2);
             dist = 1 / dist;
             speedx += accel * difftime;
             speedy += accel * difftime;
             speedz += accel * difftime;
+        }
+            
+        if(dist < mindist){
+            explode();
         }
 
         //rocket position before launch
@@ -194,9 +201,17 @@ function move(difftime, direction) {
     
     var position_rocket = new THREE.Vector3((position_rocket + (accel * difftime)) * direction * upVec); // * orientation
     position_rocket.applyQuaternion(rocketGroup.quaternion);
+    
+    if(inEarthAtmos){
+        rocketGroup.position.x += (accel * difftime + earth.group.speedx) * direction;
+        rocketGroup.position.y += (accel * difftime + earth.group.speedy) * direction;
+        rocketGroup.position.z += (accel * difftime + earth.group.speedz) * direction;
+    }else{
     rocketGroup.position.x += (accel * difftime) * direction;
     rocketGroup.position.y += (accel * difftime) * direction;
     rocketGroup.position.z += (accel * difftime) * direction;
+    }
+    
     
 }
 
@@ -248,13 +263,21 @@ function rotateRocket(difftime) {
     quaternion.normalize();
     
     rocketGroup.quaternion.set(quaternion.x, quaternion.y, quaternion.z, 1);
-    quaternion=quaternion.multiplyQuaternions(sphere_nav, drehmoment);
+    quaternion=quaternion.multiplyQuaternions(sphere_nav.quaternion, drehmoment);
     quaternion.normalize();
     sphere_nav.quaternion.set(quaternion.x, quaternion.y, quaternion.z, 1);
-    
     //schlechte Lösung. Hier Ableitung von Quaternion benutzen und Slerp
     
   
+}
+
+function explode(){
+    //explosionsgrafik
+    gameOver();
+}
+
+function gameOver(){
+    //UI-Funktion Game Over
 }
 
 //next stage: UI-Event, initiated by user
@@ -315,7 +338,8 @@ function calculatePhysics(difftime, spaceObjects) {
     if(rocketGroup&&drehmoment){
     rotateRocket(factoredTime);
     }
-        
+      
+    
     /*if (keyNextStage) {
         nexStage();
     }*/
