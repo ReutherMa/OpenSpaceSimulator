@@ -49,6 +49,7 @@ function buildUniverse() {
         dayTexture:      { value: loader.load( "textures/earth_map.jpg" ) },
         nightTexture:    { value: loader.load( "textures/earth_map_lights.jpg" )},
         specularTexture: { value: loader.load( "textures/earth_mapspec_2.png" ) },
+        bumpTexture:     { value: loader.load( "textures/earth_normalmap_test.png" ) },
         scale: { type: "f", value: 1e4 },
         displacement: { type: "f", value: 1e-2},
         time: { type: "f", value: 0}
@@ -84,7 +85,7 @@ function buildUniverse() {
         */
 
         //creating an ambient light
-        var ambLight = new THREE.AmbientLight(0x3e3e3e3e); //0x3e3e3e3e
+        //var ambLight = new THREE.AmbientLight(0x3e3e3e3e); //0x3e3e3e3e
         //scene.add(ambLight);
 
         //light_shader
@@ -297,8 +298,8 @@ function buildUniverse() {
                 scene.add(pointLight);
                 
                 geometry = new THREE.SphereGeometry(radius, segments, segments);
-                material = new THREE.MeshPhongMaterial(color);
-
+                material = new THREE.MeshBasicMaterial();
+                material.map = loader.load('textures/sun_map_2.jpg');
                 mesh_sun = new THREE.Mesh(geometry, material);
                 group.rotateX(Math.PI/180 * 120);
                 
@@ -317,10 +318,6 @@ function buildUniverse() {
 						vertexShader: document.getElementById( 'vertexShader' ).textContent,
 						fragmentShader: document.getElementById( 'fragmentShader_1' ).textContent
 				    } );
-                    
-                    
-                    material.bumpMap = loader.load(path_tex + "_bumpmap.jpg");
-                    material.bumpScale = 4.0;
                     //material.depthTest = false;
                     
                     var geometry_cloud = new THREE.SphereGeometry(radius * 1.02, segments, segments);
@@ -340,6 +337,7 @@ function buildUniverse() {
                         color: 0xffffff
                     });
                     material.map = loader.load(path_tex + "_map.jpg");
+                    material.normalMap = loader.load(path_tex + "_normalmap.png");
                     material.bumpMap = loader.load(path_tex + "_bumpmap.jpg");
                     material.bumpScale = 4.0;
                 }
@@ -349,6 +347,8 @@ function buildUniverse() {
             mesh.receiveShadow = true;
                 
             group.rotateX(Math.PI/180 * 120);
+            
+            if(name == "earth")group.rotateX(Math.PI/180 * 23.4393);
             group.add(mesh);
             }
             
