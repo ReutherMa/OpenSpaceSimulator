@@ -487,7 +487,7 @@ function buildUniverse() {
         //crosshair
         var crosshair = new THREE.PlaneGeometry(10, 10, 64);
         var cross_material = new THREE.MeshBasicMaterial( {transparent: true, color: 0xffff00} );
-        cross_material.map = loader.load("textures/crosshair2.png");
+        cross_material.map = loader.load("textures/crosshair3.png");
         var cross_mesh = new THREE.Mesh( crosshair, cross_material);
         cross_mesh.position.y= -75;
         ui_scene.add(cross_mesh);
