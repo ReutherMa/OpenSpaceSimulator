@@ -110,8 +110,10 @@ function buildUniverse() {
         });
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(window.innerWidth, window.innerHeight);
+        
+        //shadow
         renderer.shadowMap.enabled = true;
-        renderer.shadowMap.type = THREE.BasicShadowMap;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         //renderer.setDepthTest(true);
         renderer.autoClear = false;
         
@@ -295,7 +297,14 @@ function buildUniverse() {
 
             if (name == "sun") { 
                 var pointLight = new THREE.PointLight(0xffffe0, 1.2, 0);
-                scene.add(pointLight);
+
+                //shadow
+                pointLight.castShadow = true;
+                pointLight.shadow.camera.near = 1;
+                pointLight.shadow.camera.far = 1e32;
+                pointLight.shadowBias = 0.01;
+                
+                //scene.add(pointLight);
                 
                 geometry = new THREE.SphereGeometry(radius, segments, segments);
                 material = new THREE.MeshBasicMaterial();
@@ -303,7 +312,9 @@ function buildUniverse() {
                 mesh_sun = new THREE.Mesh(geometry, material);
                 group.rotateX(Math.PI/180 * 120);
                 
-                pointLight.add(mesh_sun);
+                pointLight.add( mesh_sun );
+                //scene.add( pointLight );
+                //pointLight.add(mesh_sun);
                 group.add(mesh_sun);
                 
             } else { //other plants

@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html>
+	<head>
+        <title>Volume Shadow</title>
+		<meta charset=utf-8>
+        <link rel="shortcut icon" href="Rakete.ico" type="x-icon">
+        <link rel="icon" href="Rakete.ico" type="image/x-icon">
+	</head>
+	<body>
+        <script src="three.js/examples/js/libs/three_2.min.js"></script>
+        <script src="three.js/examples/js/libs/stats.min.js"></script>
+        <script src="three.js/examples/js/controls/OrbitControls_2.js"></script>
+        
+        <script id="vertexShader_shadowVolume" type="x-shader/x-vertex">
+            uniform mat4 extrudeMat;
+            uniform vec3 l;
+        
+            void main()	{
+                vec3 normalVec = normalize(normalMatrix * normal);
+                vec3 vColor = color;
+                
+                if(dot(l, normalVec) < 0.0) {
+                    gl_Position = projectionMatrix * extrudeMat * modelViewMatrix * vec4(position, 1.0);
+                    if(vColor[0] == 0.0) {
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                    }
+                } else {
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                }
+            }
+		</script>
+        
+        <script id="fragmentShader_shadowVolume" type="x-shader/x-fragment">
+			void main()	{
+                gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+			}
+		</script>
+        
+        <script id="vertexShader_diffuse_specular" type="x-shader/x-vertex">
+            varying vec3 normal_;
+            varying vec3 view_;
+        
+			void main()	{
+                normal_ = normalize(normalMatrix * normal);
+                view_ = normalize(-vec3(modelViewMatrix * vec4(position, 1.0)));
+                
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+			}
+		</script>
+        
+        <script id="fragmentShader_diffuse_specular" type="x-shader/x-fragment">
+            uniform vec3 l;
+            varying vec3 normal_;
+            varying vec3 view_;
+            
+			void main()	{
+                vec3 n = normalize(normal_);
+                vec3 v = normalize(view_);
+                vec3 halfway = normalize(v + l);
+                
+                float Id = max(dot(l, n), 0.0);
+                float Is = pow(max(dot(halfway, n), 0.0), 32.0);
+                
+                vec3 col = Id * vec3(0.5, 0.5, 0.5) + Is * vec3(0.3, 0.3, 0.3);
+                gl_FragColor = vec4(col, 1.0);
+			}
+		</script>
+        
+        <script id="vertexShader_ambient" type="x-shader/x-vertex">
+			void main()	{
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+			}
+		</script>
+        
+        <script id="fragmentShader_ambient" type="x-shader/x-fragment">
+			void main()	{
+                gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+			}
+		</script>
+        
+        
+        
+        
+        <script id="sphere_mat_vertexShader" type="x-shader/x-vertex">
+			void main()	{
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+			}
+		</script>
+        
+        <script id="sphere_mat_fragmentShader" type="x-shader/x-fragment">
+        
+            uniform sampler2D meshTexture;
+        
+			void main()	{
+                
+                vec3 texColor   = texture2D( meshTexture, vUv ).rgb;
+            
+                gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+			}
+		</script>
+        
+        
+        
+        
+        
+		<script>
+            var stats, scene, scene_vol, camera, renderer, object, object_vol, ground, ground_vol, material_diffuse_specular, material_volume, material_ambient;
+            
+            
+            
+            var sphere_mesh_vol, sphere_mesh, sphere_mesh_earth_vol, sphere_mesh_earth;
+            
+            var uniforms1;
+            
+            var loader = new THREE.TextureLoader();
+            
+            
+            
+            //uniforms
+            uniforms1 = {
+                meshTexture:      { value: loader.load( "textures/moon/moon_map.jpg" ) },
+            };
+            
+            
+            
+            
+            
+            
+            init();
+			animate();
+            
+            function init() {
+                renderer = new THREE.WebGLRenderer({
+                    logarithmicDepthBuffer: true,
+                    alpha: true,
+                    antialisa: true
+                });
+                
+                renderer.autoClear = false;
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                document.body.appendChild(renderer.domElement);
+                
+                scene = new THREE.Scene();
+                scene_vol = new THREE.Scene();
+                
+                //axisHelper
+                var axisHelper = new THREE.AxisHelper(100); //
+                scene.add(axisHelper);
+                
+                
+                var lightVec = new THREE.Vector3( -1, -1, -1);
+                
+                //var light = new THREE.Vector3().copy(lightDir).negate().normalize();
+                
+                
+                //var lightDir = new THREE.Vector3(lightVec);
+                var light = new THREE.Vector3().copy(lightVec).negate().normalize();
+                
+                
+                //PointLight
+                /*var pointLight = new THREE.PointLight(lightVec);
+                geo_light = new THREE.SphereGeometry(0.5, 64, 64);
+                mat_light = new THREE.MeshBasicMaterial();
+                mesh_light = new THREE.Mesh(geo_light, mat_light);
+                
+                pointLight.add( mesh_light );
+                scene.add( pointLight );*/
+                
+                
+                
+                
+                
+                var object_vol_geometry = new THREE.TorusKnotGeometry(2, 0.5, 100, 16);
+                var object_vol_geometry_faceNum = object_vol_geometry.faces.length;
+                
+                var ground_vol_geometry = new THREE.BoxGeometry(75, 0.1, 75);
+                var ground_vol_geometry_faceNum = ground_vol_geometry.faces.length;
+                
+                
+                
+                
+                
+                
+                var sphere_geo = new THREE.SphereGeometry(1, 64, 64);
+                var sphere_geo_faceNum = sphere_geo.faces.length;
+                
+                var sphere_earth_geo = new THREE.SphereGeometry(3, 64, 64);
+                var sphere_earth_faceNum = sphere_earth_geo.faces.length;
+                
+                
+                
+                
+                
+                
+                var color1 = [new THREE.Color(0x00ffff), new THREE.Color(0xff0000), new THREE.Color(0xff0000)];
+                var color2 = [new THREE.Color(0x00ffff), new THREE.Color(0x00ffff), new THREE.Color(0xff0000)];
+                
+                for (i = 0; i < object_vol_geometry_faceNum; i++) {
+                    object_vol_geometry.faces.push(new THREE.Face3(object_vol_geometry.faces[i].a,
+                                                                   object_vol_geometry.faces[i].b,
+                                                                   object_vol_geometry.faces[i].a,
+                                                                   object_vol_geometry.faces[i].normal,
+                                                                   color2));
+                    
+                    object_vol_geometry.faces.push(new THREE.Face3(object_vol_geometry.faces[i].b,
+                                                                   object_vol_geometry.faces[i].b,
+                                                                   object_vol_geometry.faces[i].a,
+                                                                   object_vol_geometry.faces[i].normal,
+                                                                   color1));
+                    
+                    object_vol_geometry.faces.push(new THREE.Face3(object_vol_geometry.faces[i].b,
+                                                                   object_vol_geometry.faces[i].c,
+                                                                   object_vol_geometry.faces[i].b,
+                                                                   object_vol_geometry.faces[i].normal,
+                                                                   color2));
+                    
+                    object_vol_geometry.faces.push(new THREE.Face3(object_vol_geometry.faces[i].c,
+                                                                   object_vol_geometry.faces[i].c,
+                                                                   object_vol_geometry.faces[i].b,
+                                                                   object_vol_geometry.faces[i].normal,
+                                                                   color1));
+                    
+                    object_vol_geometry.faces.push(new THREE.Face3(object_vol_geometry.faces[i].c,
+                                                                   object_vol_geometry.faces[i].a,
+                                                                   object_vol_geometry.faces[i].c,
+                                                                   object_vol_geometry.faces[i].normal,
+                                                                   color2));
+                    
+                    object_vol_geometry.faces.push(new THREE.Face3(object_vol_geometry.faces[i].a,
+                                                                   object_vol_geometry.faces[i].a,
+                                                                   object_vol_geometry.faces[i].c,
+                                                                   object_vol_geometry.faces[i].normal,
+                                                                   color1));
+                }
+                
+                for (i = 0; i < ground_vol_geometry_faceNum; i++) {
+                    ground_vol_geometry.faces.push(new THREE.Face3(ground_vol_geometry.faces[i].a,
+                                                                   ground_vol_geometry.faces[i].b,
+                                                                   ground_vol_geometry.faces[i].a,
+                                                                   ground_vol_geometry.faces[i].normal,
+                                                                   color2));
+                    
+                    ground_vol_geometry.faces.push(new THREE.Face3(ground_vol_geometry.faces[i].b,
+                                                                   ground_vol_geometry.faces[i].b,
+                                                                   ground_vol_geometry.faces[i].a,
+                                                                   ground_vol_geometry.faces[i].normal,
+                                                                   color1));
+                    
+                    ground_vol_geometry.faces.push(new THREE.Face3(ground_vol_geometry.faces[i].b,
+                                                                   ground_vol_geometry.faces[i].c,
+                                                                   ground_vol_geometry.faces[i].b,
+                                                                   ground_vol_geometry.faces[i].normal,
+                                                                   color2));
+                    
+                    ground_vol_geometry.faces.push(new THREE.Face3(ground_vol_geometry.faces[i].c,
+                                                                   ground_vol_geometry.faces[i].c,
+                                                                   ground_vol_geometry.faces[i].b,
+                                                                   ground_vol_geometry.faces[i].normal,
+                                                                   color1));
+                    
+                    ground_vol_geometry.faces.push(new THREE.Face3(ground_vol_geometry.faces[i].c,
+                                                                   ground_vol_geometry.faces[i].a,
+                                                                   ground_vol_geometry.faces[i].c,
+                                                                   ground_vol_geometry.faces[i].normal,
+                                                                   color2));
+                    
+                    ground_vol_geometry.faces.push(new THREE.Face3(ground_vol_geometry.faces[i].a,
+                                                                   ground_vol_geometry.faces[i].a,
+                                                                   ground_vol_geometry.faces[i].c,
+                                                                   ground_vol_geometry.faces[i].normal,
+                                                                   color1));
+                }
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                for (i = 0; i < sphere_geo_faceNum; i++) {
+                    sphere_geo.faces.push(new THREE.Face3(sphere_geo.faces[i].a,
+                                                                   sphere_geo.faces[i].b,
+                                                                   sphere_geo.faces[i].a,
+                                                                   sphere_geo.faces[i].normal,
+                                                                   color2));
+                    
+                    sphere_geo.faces.push(new THREE.Face3(sphere_geo.faces[i].b,
+                                                                   sphere_geo.faces[i].b,
+                                                                   sphere_geo.faces[i].a,
+                                                                   sphere_geo.faces[i].normal,
+                                                                   color1));
+                    
+                    sphere_geo.faces.push(new THREE.Face3(sphere_geo.faces[i].b,
+                                                                   sphere_geo.faces[i].c,
+                                                                   sphere_geo.faces[i].b,
+                                                                   sphere_geo.faces[i].normal,
+                                                                   color2));
+                    
+                    sphere_geo.faces.push(new THREE.Face3(sphere_geo.faces[i].c,
+                                                                   sphere_geo.faces[i].c,
+                                                                   sphere_geo.faces[i].b,
+                                                                   sphere_geo.faces[i].normal,
+                                                                   color1));
+                    
+                    sphere_geo.faces.push(new THREE.Face3(sphere_geo.faces[i].c,
+                                                                   sphere_geo.faces[i].a,
+                                                                   sphere_geo.faces[i].c,
+                                                                   sphere_geo.faces[i].normal,
+                                                                   color2));
+                    
+                    sphere_geo.faces.push(new THREE.Face3(sphere_geo.faces[i].a,
+                                                                   sphere_geo.faces[i].a,
+                                                                   sphere_geo.faces[i].c,
+                                                                   sphere_geo.faces[i].normal,
+                                                                   color1));
+                }
+                
+                for (i = 0; i < sphere_earth_faceNum; i++) {
+                    sphere_earth_geo.faces.push(new THREE.Face3(sphere_earth_geo.faces[i].a,
+                                                                   sphere_earth_geo.faces[i].b,
+                                                                   sphere_earth_geo.faces[i].a,
+                                                                   sphere_earth_geo.faces[i].normal,
+                                                                   color2));
+                    
+                    sphere_earth_geo.faces.push(new THREE.Face3(sphere_earth_geo.faces[i].b,
+                                                                   sphere_earth_geo.faces[i].b,
+                                                                   sphere_earth_geo.faces[i].a,
+                                                                   sphere_earth_geo.faces[i].normal,
+                                                                   color1));
+                    
+                    sphere_earth_geo.faces.push(new THREE.Face3(sphere_earth_geo.faces[i].b,
+                                                                   sphere_earth_geo.faces[i].c,
+                                                                   sphere_earth_geo.faces[i].b,
+                                                                   sphere_earth_geo.faces[i].normal,
+                                                                   color2));
+                    
+                    sphere_earth_geo.faces.push(new THREE.Face3(sphere_earth_geo.faces[i].c,
+                                                                   sphere_earth_geo.faces[i].c,
+                                                                   sphere_earth_geo.faces[i].b,
+                                                                   sphere_earth_geo.faces[i].normal,
+                                                                   color1));
+                    
+                    sphere_earth_geo.faces.push(new THREE.Face3(sphere_earth_geo.faces[i].c,
+                                                                   sphere_earth_geo.faces[i].a,
+                                                                   sphere_earth_geo.faces[i].c,
+                                                                   sphere_earth_geo.faces[i].normal,
+                                                                   color2));
+                    
+                    sphere_earth_geo.faces.push(new THREE.Face3(sphere_earth_geo.faces[i].a,
+                                                                   sphere_earth_geo.faces[i].a,
+                                                                   sphere_earth_geo.faces[i].c,
+                                                                   sphere_earth_geo.faces[i].normal,
+                                                                   color1));
+                }
+                
+                
+                
+                
+                
+                //MOON 
+                sphere_mesh_vol = new THREE.Mesh(sphere_geo);
+                sphere_mesh_vol.position.set(0, 0, 5);
+                scene_vol.add(sphere_mesh_vol);
+                
+                
+                //sphere_mat = new THREE.MeshBasicMaterial();
+                //sphere_mat.map = loader.load('textures/sun/sun_map.jpg');
+                sphere_mat = new THREE.ShaderMaterial( {
+						uniforms: uniforms1,
+						vertexShader: document.getElementById( 'sphere_mat_vertexShader' ).textContent,
+						fragmentShader: document.getElementById( 'sphere_mat_fragmentShader' ).textContent
+				    } );
+                
+                sphere_mesh = new THREE.Mesh(sphere_geo, sphere_mat);
+                sphere_mesh.position.set(0, 0, 5);
+                scene.add(sphere_mesh);
+                
+                //EARTH
+                sphere_mesh_earth_vol = new THREE.Mesh(sphere_earth_geo);
+                sphere_mesh_earth_vol.position.set(0, 0, 10);
+                scene_vol.add(sphere_mesh_earth_vol);
+                
+                
+                sphere_mat_earth = new THREE.MeshBasicMaterial();
+                
+                sphere_mesh_earth = new THREE.Mesh(sphere_earth_geo, sphere_mat_earth);
+                sphere_mesh_earth.position.set(0, 0, 10);
+                scene.add(sphere_mesh_earth);
+                
+                
+                
+                
+                
+                
+                
+                
+                //TORUS
+                object_vol = new THREE.Mesh(object_vol_geometry);
+                object_vol.position.set(0, 0, -5);
+                scene_vol.add(object_vol);
+                
+                object = new THREE.Mesh(new THREE.TorusKnotGeometry(2, 0.5, 100, 16));
+                object.position.set(0, 0, -5);
+                scene.add(object);
+                
+                
+                //GROUND-PLATE
+                ground_vol = new THREE.Mesh(ground_vol_geometry);
+                ground_vol.position.set(0, -25, 0);
+                scene_vol.add(ground_vol);
+                
+                ground = new THREE.Mesh(new THREE.BoxGeometry(75, 0.1, 75));
+                ground.position.set(0, -25, 0);
+                scene.add(ground);
+                
+                
+                //CAMERA
+                camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 1, 600);
+                camera.position.set(-15, 10, 10);
+                
+                
+                
+                var sceneBoundingBox = new THREE.BoundingBoxHelper(scene);
+                sceneBoundingBox.update();
+                
+                var extrude_size = sceneBoundingBox.box.size().length();
+                var center = sceneBoundingBox.box.center();
+                
+                var extrudeVec = new THREE.Vector3();
+                extrudeVec.copy(light).negate().multiplyScalar(extrude_size);
+                
+                var extrudeMat = new THREE.Matrix4();
+                extrudeMat.makeTranslation(extrudeVec.x, extrudeVec.y, extrudeVec.z);
+
+				material_shadowVolume = new THREE.ShaderMaterial({
+                    uniforms: {extrudeMat: {type: "m4", value: extrudeMat}, l: {type: "v3", value: light}},
+                    vertexShader: document.getElementById('vertexShader_shadowVolume').textContent,
+                    vertexColors: THREE.VertexColors,
+					fragmentShader: document.getElementById('fragmentShader_shadowVolume').textContent
+				});
+                
+                
+                
+                object_vol.material = material_shadowVolume;
+                ground_vol.material = material_shadowVolume;
+                
+                
+                //Shadow
+                sphere_mesh_vol.material = material_shadowVolume;
+                sphere_mesh_earth_vol.material = material_shadowVolume;
+                
+                
+                
+                
+                material_diffuse_specular = new THREE.ShaderMaterial({
+                    uniforms: {l: {type: "v3", value: light}},
+                    vertexShader: document.getElementById('vertexShader_diffuse_specular').textContent,
+					fragmentShader: document.getElementById('fragmentShader_diffuse_specular').textContent
+				});
+                
+                material_ambient = new THREE.ShaderMaterial({
+                    vertexShader: document.getElementById('vertexShader_ambient').textContent,
+					fragmentShader: document.getElementById('fragmentShader_ambient').textContent
+				});
+                
+                var controls = new THREE.OrbitControls(camera);
+                //controls.target.copy(center);
+                //controls.enableZoom = true;
+                //controls.enablePan = false;
+                controls.update();
+                
+                stats = new Stats();
+                stats.setMode(0);
+                stats.domElement.style.position = 'absolute';
+                stats.domElement.style.left = '0px';
+                stats.domElement.style.top = '0px';
+                document.body.appendChild(stats.domElement);
+			}
+            
+            function animate() {
+				requestAnimationFrame(animate);
+                //object.rotation.y += 0.005;
+                //object_vol.rotation.y += 0.005;
+                render();
+                stats.update();
+			}
+
+			function render() {
+                renderer.clear();
+                var gl = renderer.context;
+                
+                object.material = material_ambient;
+                ground.material = material_ambient;
+                
+                
+                //Shadow
+                sphere_mesh.material = material_ambient;
+                sphere_mesh_earth.material = material_ambient;
+                
+                
+                
+                gl.enable(gl.DEPTH_TEST);
+                gl.depthFunc(gl.LESS);
+                renderer.render(scene, camera);
+                
+                gl.colorMask(false, false, false, false);
+                gl.depthMask(false);
+                gl.enable(gl.STENCIL_TEST);
+                gl.disable(gl.CULL_FACE);
+                gl.stencilOpSeparate(gl.FRONT, gl.KEEP, gl.KEEP, gl.INCR_WRAP);
+                gl.stencilOpSeparate(gl.BACK, gl.KEEP, gl.KEEP, gl.DECR_WRAP);
+                gl.stencilFunc(gl.ALWAYS, 0, 0xFF);
+                renderer.render(scene_vol, camera);
+                
+                
+                
+                object.material = material_diffuse_specular;
+                ground.material = material_diffuse_specular;
+                
+            
+                //Shadow
+                sphere_mesh.material = material_diffuse_specular;
+                sphere_mesh_earth.material = material_diffuse_specular;
+                
+                
+                
+                
+                gl.colorMask(true, true, true, true);
+                gl.depthMask(true);
+                gl.enable(gl.CULL_FACE);
+                gl.stencilOpSeparate(gl.FRONT, gl.KEEP, gl.KEEP, gl.KEEP);
+                gl.stencilOpSeparate(gl.BACK, gl.KEEP, gl.KEEP, gl.KEEP);
+                gl.depthFunc(gl.LEQUAL);
+                gl.stencilFunc(gl.EQUAL, 0, 0xFF);
+                renderer.render(scene, camera);
+			}
+		</script>  
+	</body>
+</html>

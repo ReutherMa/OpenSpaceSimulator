@@ -45,6 +45,12 @@
         var sphere_mercury;
         var time = 0;
         
+        var r_sun = 695508e3;
+        var r_earth = 6.371e6;
+        var r_moon = 1.7375e6;
+        
+        var dist_sunToEarth = 2* r_sun;
+        
         var loader = new THREE.TextureLoader();
 
         var mesh_earth, clodMesh, mesh_moon, mesh_sun;
@@ -53,22 +59,7 @@
          // render();
 
         function initSky() {
-            /*
-                // Add Sky Mesh
-				sky = new THREE.Sky();
-				scene.add( sky.mesh );
-
-				// Add Sun Helper
-				sunSphere = new THREE.Mesh(
-					new THREE.SphereBufferGeometry( 20000, 16, 8 ),
-					new THREE.MeshBasicMaterial( { color: 0xffffff } )
-				);
-				sunSphere.position.y = - 700000;
-				sunSphere.visible = false;
-				scene.add( sunSphere );
-                */
-
-            //skybox
+            
             var imagePrefix = "textures/stars_for_skybox3/";
             var directions = ["xpos", "xneg", "ypos", "yneg", "zpos", "zneg"];
             var imageSuffix = ".png";
@@ -90,31 +81,62 @@
         function init() {
             scene = new THREE.Scene();
             //scene.fog = new THREE.FogExp2( 0xcccccc, 0.002 );
-            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.01, 500000);
-            camera.position.set(0, 0, 5);
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.01, 1e27);
+            camera.position.set(416227069.6943584, 315195340.0133045, 79452851.39190361);
+            camera.lookAt(0, 0, dist_sunToEarth);
+            //camera.position.set(0, 0, r_earth*2);
 
             
-            var light = new THREE.DirectionalLight( 0xffffff );
-            light.position.set( 0, 20, 0 );
-            scene.add(light);
+            //var light = new THREE.DirectionalLight( 0xffffff );
+            //light.position.set( 0, 0, 0 );
+            //scene.add(light);
+            
+            
+            var pointLight = new THREE.PointLight(0xffffe0, 1.2, 0);
+            
+            pointLight.castShadow = true;
+			pointLight.shadow.camera.near = 1;
+			pointLight.shadow.camera.far = 1e17;
+            pointLight.shadowBias = 0.01;
+            //pointLight.shadowCameraVisible = true;
+            
+            
+            
+            geometry = new THREE.SphereGeometry(r_sun, 64, 64);
+            material = new THREE.MeshBasicMaterial();
+            material.map = loader.load('textures/sun/sun_map.jpg');
+            mesh_sun = new THREE.Mesh(geometry, material);
+            
+            pointLight.add( mesh_sun );
+            scene.add( pointLight );
+            //scene.add(mesh_sun);
+            
+            //scene.add(pointLight);
+            
+            
+            
+            
+            
+            var pointLight_2 = new THREE.PointLight(0xffffe0, 1.2, 0);
+            
+            pointLight_2.castShadow = true;
+			pointLight_2.shadow.camera.near = 1;
+			pointLight_2.shadow.camera.far = 1e17;
+            pointLight_2.shadowBias = 0.01;
+            pointLight_2.position.x = dist_sunToEarth-2*r_earth-3*r_moon;
+            
+            geoL_2 = new THREE.SphereGeometry(r_moon*0.25, 64, 64);
+            matL_2 = new THREE.MeshBasicMaterial(0xffffff);
+            meshL_2 = new THREE.Mesh(geoL_2, matL_2);
+            
+            pointLight_2.add( meshL_2 );
+            scene.add( pointLight_2 );
+            
+            
             
 
             var ambLight = new THREE.AmbientLight(0x3e3e3e); //0x3e3e3e3e
             scene.add(ambLight);
-
-            
-            //lod
-            var lod = new THREE.LOD();
-            var lodMesh;
-            //Create 5 levels of spheres
-            for (var i = 0; i < 4; i++) {
-                var material = new THREE.MeshPhongMaterial({wireframe: false});
-                var geometry = new THREE.IcosahedronGeometry(1, 4 - i);
-                lodMesh = new THREE.Mesh(geometry, material);
-                lod.addLevel(lodMesh, i);
-            }
-            scene.add(lod);
-            console.log(lod);
 
 
             //light_shader
@@ -125,18 +147,8 @@
                 fragmentShader: fShader.textContent
             });
 
-            //sun
-            var geometry_sun = new THREE.SphereGeometry(10000, 64, 64);
-            var material_sun = new THREE.MeshPhongMaterial();
-            material_sun.map = THREE.ImageUtils.loadTexture('textures/sun/sun_map.jpg');
-            material_sun.bumpMap = THREE.ImageUtils.loadTexture('textures/sun/sun_bump.jpg');
-            material_sun.bumpScale = 4.0;
-            mesh_sun = new THREE.Mesh(geometry_sun, material_sun);
-            //mesh_sun.position.x = -50000;
-            //scene.add(mesh_sun);
-
             //earth
-            var geometry_earth = new THREE.SphereGeometry(2, 64, 64);
+            var geometry_earth = new THREE.SphereGeometry(r_earth, 64, 64);
             var material_earth = new THREE.MeshPhongMaterial();
             material_earth.map = loader.load('textures/earth_new/earth_map.jpg');
             material_earth.normalMap = loader.load('textures/earth_new/NormalMap.png');
@@ -144,35 +156,58 @@
             //material_earth.bumpScale = 3.0;
 
             mesh_earth = new THREE.Mesh(geometry_earth, material_earth);
-            //mesh_earth.position.x = 23500;
+            
+            mesh_earth.castShadow = true;
+            mesh_earth.receiveShadow = true;
+            
+            mesh_earth.position.x = dist_sunToEarth;
             scene.add( mesh_earth );
 
             //moon
-            var geometry_moon = new THREE.SphereGeometry(1, 64, 64);
+            var geometry_moon = new THREE.SphereGeometry(r_moon, 64, 64);
             var material_moon = new THREE.MeshPhongMaterial();
             material_moon.map = loader.load('textures/moon_new/earth_moon_map.jpg');
             material_moon.normalMap= loader.load('textures/moon_new/earth_moon_normalmap.png');
             material_moon.bumpMap = loader.load('textures/moon_new/earth_moon_bumpmap.jpg');
             material_moon.bumpScale = 2.0;
             mesh_moon = new THREE.Mesh(geometry_moon, material_moon);
-            mesh_moon.position.x = 7;
+            
+            mesh_moon.castShadow = true;
+            mesh_moon.receiveShadow = true;
+            
+            mesh_moon.position.x = dist_sunToEarth-2*r_earth;
             scene.add( mesh_moon );    
 
             //controls
             controls = new THREE.OrbitControls(camera);
+ 
             //controls.addEventListener( 'change', render );
 
             //axisHelper
-            var axisHelper = new THREE.AxisHelper(500000);
+            var axisHelper = new THREE.AxisHelper(1e17);
             scene.add(axisHelper);
 
             //skybox
             initSky();
 
             //renderer
-            renderer = new THREE.WebGLRenderer();
+            renderer = new THREE.WebGLRenderer({
+                logarithmicDepthBuffer: true,
+                alpha: true,
+                antialisa: true
+            });
             renderer.setPixelRatio(window.devicePixelRatio);
             renderer.setSize(window.innerWidth, window.innerHeight);
+            
+            
+            //shadow
+            renderer.shadowMap.enabled = true;
+			renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            
+            //renderer.setDepthTest(true);
+            renderer.autoClear = false;
+            
+            
             //renderer.setDepthTest(true);
             container = document.getElementById('container');
             container.appendChild(renderer.domElement);
@@ -192,6 +227,7 @@
 
         function render() {
             requestAnimationFrame(render);
+            //console.log("Camera( " + camera.position.x + ", " + camera.position.y + ", " + camera.position.z + " )");
 
             //rotation mercury
             //sphere_mercury.position.x += 1;
