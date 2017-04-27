@@ -22,4 +22,8 @@ div#testUI {
     //color: white;
     text-align: center;
 }
+
+.ui-widget , .ui-slider-handle {
+    outline: none;
+}
 </style>
