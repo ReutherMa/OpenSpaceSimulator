@@ -251,6 +251,20 @@
                                                                    object_vol_geometry.faces[i].c,
                                                                    object_vol_geometry.faces[i].normal,
                                                                    color1));
+                    
+                    
+                    object_vol_geometry.faceVertexUvs.push( new THREE.Vector2(  object_vol_geometry.faceVertexUvs[i] = new THREE.Vector2(0,1),
+                                                                                object_vol_geometry.faceVertexUvs[i] = new THREE.Vector2(1,1),
+                                                                                object_vol_geometry.faceVertexUvs[i] = new THREE.Vector2(1,0),
+                                                                                object_vol_geometry.faceVertexUvs[i] = new THREE.Vector2(0,0)));
+
+                    
+                    
+/*                    object_vol_geometry.faceVertexUvs.push( new THREE.Vector2(0,1));
+                    object_vol_geometry.faceVertexUvs.push( new THREE.Vector2(1,1));
+                    object_vol_geometry.faceVertexUvs.push( new THREE.Vector2(1,0));
+                    object_vol_geometry.faceVertexUvs.push( new THREE.Vector2(0,0));*/
+                    
                 }
                 
                 for (i = 0; i < ground_vol_geometry_faceNum; i++) {
@@ -289,6 +303,12 @@
                                                                    ground_vol_geometry.faces[i].c,
                                                                    ground_vol_geometry.faces[i].normal,
                                                                    color1));
+                    
+                    ground_vol_geometry.faceVertexUvs.push( new THREE.Vector2(  ground_vol_geometry.faceVertexUvs[i] = new THREE.Vector2(0,1),
+                                                                                ground_vol_geometry.faceVertexUvs[i] = new THREE.Vector2(1,1),
+                                                                                ground_vol_geometry.faceVertexUvs[i] = new THREE.Vector2(1,0),
+                                                                                ground_vol_geometry.faceVertexUvs[i] = new THREE.Vector2(0,0)));
+                    
                 }
                 
                 
@@ -337,6 +357,11 @@
                                                             sphere_geo.faces[i].c,
                                                             sphere_geo.faces[i].normal,
                                                             color1));
+                    
+                    sphere_geo.faceVertexUvs.push( new THREE.Vector2(   sphere_geo.faceVertexUvs[i] = new THREE.Vector2(0,1),
+                                                                        sphere_geo.faceVertexUvs[i] = new THREE.Vector2(1,1),
+                                                                        sphere_geo.faceVertexUvs[i] = new THREE.Vector2(1,0),
+                                                                        sphere_geo.faceVertexUvs[i] = new THREE.Vector2(0,0)));
                 }
                 
                 for (i = 0; i < sphere_earth_faceNum; i++) {
@@ -375,6 +400,12 @@
                                                                 sphere_earth_geo.faces[i].c,
                                                                 sphere_earth_geo.faces[i].normal,
                                                                 color1));
+                    
+                    sphere_earth_geo.faceVertexUvs.push( new THREE.Vector2( sphere_earth_geo.faceVertexUvs[i] = new THREE.Vector2(0,1),
+                                                                            sphere_earth_geo.faceVertexUvs[i] = new THREE.Vector2(1,1),
+                                                                            sphere_earth_geo.faceVertexUvs[i] = new THREE.Vector2(1,0),
+                                                                            sphere_earth_geo.faceVertexUvs[i] = new THREE.Vector2(0,0)));
+                    
                 }
                 
                 
@@ -417,7 +448,7 @@
                 
                 
                 
-                
+        
                 
                 
                 //TORUS
