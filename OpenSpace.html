@@ -51,7 +51,9 @@
         <div id="headerBox">
 
             <div class="logoBox">
-                <img src="logo-mit-text.png" alt="Logo" height=15% width=auto>
+                <!--<img src="logo-mit-text.png" alt="Logo" class="logo" height=15% width=auto>-->
+                <img src="logotext.png" alt="Logo" height=20px width=auto>
+                <img src="nurlogo.png" alt="Logo" class="logo" height=5% width=auto>
             </div>
 
             <!--
@@ -64,9 +66,13 @@
         <!-- Content Box -->
         <div id="contentBox">
 
-            <input type="button" id="rocket" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf0ad" title="Rocket Settings" onclick="doToggle(this)">
+            <div id="tabBox">
+                <input type="button" id="rocket" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf0ad" title="Rocket Settings" onclick="doToggle(this)">
+                <input type="button" id="developer" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf013" title="Universe Settings" onclick="doToggle(this)">
+            </div>
             <!-- Rocket Interface-->
-            <div id="rocketInterface">
+            
+            <div id="rocketInterface" class="interfaceTab">
                 <div class="rocketBox">
                     <fieldset>
                         <legend>Rocket</legend>
@@ -139,10 +145,9 @@
             </div>
             <!-- Rocket Interface End -->
 
-            <input type="button" id="developer" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf013" title="Universe Settings" onclick="doToggle(this)">
 
             <!-- Developer Interface-->
-            <div id="developerInterface">
+            <div id="developerInterface" class="interfaceTab">
                 <div id="dialog"></div>
                 <div class="menuBox">
                     <!--

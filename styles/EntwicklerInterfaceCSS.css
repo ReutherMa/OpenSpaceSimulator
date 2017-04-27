@@ -44,7 +44,7 @@ fieldset {
     position: absolute;
     visibility: visible;
     left: 20px;
-    right: 0;
+    right: 20px;
     top: 10px;
     margin: auto;
     /* width:100%;*/
@@ -53,20 +53,21 @@ fieldset {
 #rocketInterface {
     position: absolute;
     left: 3%;
-    top: 23%;
+    top: 6%;
     background-color: rgba(255, 255, 255, 0.10);
     padding: 5px;
     height: auto !important;
     height: 100%;
     overflow: auto;
     border-radius: 6px;
+    display:none;
 }
 #developerInterface {
     position: fixed;
     visibility: visible;
     /* right: 0px; */
     left: 3%;
-    top: 65%;
+    top: 6%;
     /* z-index: 200; */
     /* background-color: rgba(0, 0, 0, 0.9); */
     background-color: rgba(255, 255, 255, 0.10);
@@ -78,17 +79,24 @@ fieldset {
     /* IE */
     overflow: auto;
     border-radius: 6px;
+    display:none;
 }
-#developer {
+/*#developer {
     position: absolute;
     left: 2%;
-    top: 60%;
+    top: 50%;
 }
 
 #rocket {
     position: absolute;
     left: 2%;
-    top: 18%;
+    top: 1%;
+}*/
+
+#tabBox {
+    position: absolute;
+    left: 2%;
+    top: 1%;
 }
 
 #game {
