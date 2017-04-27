@@ -111,9 +111,6 @@ function buildUniverse() {
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(window.innerWidth, window.innerHeight);
         
-        //shadow
-        renderer.shadowMap.enabled = true;
-        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         //renderer.setDepthTest(true);
         renderer.autoClear = false;
         
@@ -297,14 +294,6 @@ function buildUniverse() {
 
             if (name == "sun") { 
                 var pointLight = new THREE.PointLight(0xffffe0, 1.2, 0);
-
-                //shadow
-                pointLight.castShadow = true;
-                pointLight.shadow.camera.near = 1;
-                pointLight.shadow.camera.far = 1e32;
-                pointLight.shadowBias = 0.01;
-                
-                //scene.add(pointLight);
                 
                 geometry = new THREE.SphereGeometry(radius, segments, segments);
                 material = new THREE.MeshBasicMaterial();
@@ -313,8 +302,8 @@ function buildUniverse() {
                 group.rotateX(Math.PI/180 * 120);
                 
                 pointLight.add( mesh_sun );
-                //scene.add( pointLight );
-                //pointLight.add(mesh_sun);
+                scene.add( pointLight );
+                
                 group.add(mesh_sun);
                 
             } else { //other plants
@@ -354,8 +343,6 @@ function buildUniverse() {
                 }
                     
             mesh = new THREE.Mesh(geometry, material);
-            mesh.castShadow = true;
-            mesh.receiveShadow = true;
                 
             group.rotateX(Math.PI/180 * 120);
             
@@ -370,8 +357,6 @@ function buildUniverse() {
                 var material_ring = new THREE.MeshPhongMaterial( { color: 0xffffff, transparent:true } );
                 material_ring.map = loader.load(path_tex + "_ring.png");
                 var ring = new THREE.Mesh( geometry_ring, material_ring );
-                ring.castShadow = true;
-                ring.receiveShadow = true;
                 group.add(ring);
             }
 
