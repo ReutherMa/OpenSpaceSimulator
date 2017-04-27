@@ -1,4 +1,5 @@
 var globalInterfaceValues = {
+    //Einstellungen
     throttle: 0,
     oxygen: 0,
     kerosene: 0,
@@ -12,13 +13,17 @@ var globalInterfaceValues = {
     planetCamera: "earth",
     engine: "Engine1",
     timeFactor: 1,
-    changed: true
+    changed: true,
+
+    //Anzeige
+    speed: 0,
+    fuel: 0
 };
 
 $(function() {
 
- 
-   // inputChange();
+
+    // inputChange();
 
 
     //checkRessources();
@@ -53,22 +58,9 @@ function inputChange() {
     globalInterfaceValues.planetCamera = $('select[name=planetCamera]').val();
     //globalInterfaceValues.reset = $('input[name=reset]').val();
     globalInterfaceValues.changed = true;
-    console.log(globalInterfaceValues.timeFactor);
-    
-    
+
     $(".ui-slider-handle").blur();
     $("#planetCamera-button").blur();
     $("#planetSelect-button").blur();
 
-    
-   /* console.log("ja");
-    console.log(globalInterfaceValues.timeFactor);
-    console.log(globalInterfaceValues.planetCamera);
-    console.log(globalInterfaceValues.planetSize);
-    console.log(globalInterfaceValues.planetName);
-*/
-    //console.log("selected" + globalInterfaceValues.planetAllSelected);
-
-    //console.log(typeof(globalInterfaceValues.engine));
-    //console.log(globalInterfaceValues.planetCamera);
 }

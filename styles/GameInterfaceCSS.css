@@ -1,0 +1,68 @@
+/* ---------------- COLOURS, FONTS ETC ---------------- */
+
+body {
+    font-family: Arial;
+    color: #ffffff;
+}
+h1,
+label,
+p {
+    color: #ffffff;
+}
+h1 {
+    font-size: 20px;
+}
+.fa {
+    font: normal normal normal 14px/1 FontAwesome !important;
+}
+.btn {
+    padding-bottom: 5px !important;
+}
+/* ---------------- BOX POSITIONING ---------------- */
+
+.menubox {
+    position: absolute;
+    visibility: visible;
+    left: 10%;
+    bottom: 5%;
+    z-index: 200;
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 10%;
+    display: none;
+}
+.dashboardBox {
+    position: absolute;
+    visibility: visible;
+    top: 80%;
+    left: 30%;
+    right: 0;
+    z-index: 200;
+    background-color: rgba(255, 255, 255, 0.20);
+    padding: 10px;
+    margin: auto;
+    width: 60%;
+    height: 15%;
+    border-radius: 6px;
+    border: 2px solid rgb(255, 140, 0);
+}
+.displayBox {
+    margin-left: 20%;
+    margin-top: 5%;
+} 
+
+.speedBox {
+    float: left;
+}
+.fuelBox {
+    float: left;
+    margin-top: 3%;
+    margin-left: 2%;
+}
+.steeringBox {
+    width: auto;
+    float: left;
+    position: absolute;
+    z-index: 200;
+    right: 20%;
+}
+/* ---------------- ICON STYLING ---------------- */

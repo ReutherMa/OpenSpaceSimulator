@@ -1,7 +1,7 @@
 $(function() {
     //var valMap = [0.1, 0.2, 0.5, 1, 10, 100, 1000, 10000, 100000];
-    console.log(globalInterfaceValues.planetCamera);
 
+    // Time Factor Slider
     var valMap = [0.1, 0.2, 0.5, 1, 10, 100, 1000];
     $("#timeFactor").slider({
         // min: 0,
@@ -13,20 +13,33 @@ $(function() {
         },
         change: inputChange
     });
-    //   slide("throttle", 1, 10, 1, 5);
-    //    slide("oxygen", 1, 10, 1, 5);
-    //    slide("kerosene", 1, 10, 1, 5);
-    //    slide("emptyMass", 1, 3, 1, 2);
-    //    slide("fuelMass", 1, 3, 1, 2);
+
+    // Sliders
+    slide("throttle", 1, 10, 1, 5);
+    slide("oxygen", 1, 10, 1, 5);
+    slide("kerosene", 1, 10, 1, 5);
+    slide("emptyMass", 1, 3, 1, 2);
+    slide("fuelMass", 1, 3, 1, 2);
     slide("planetSize", 1, 1000, 1, 1);
-    
-    $("#planetCamera, #engineSelect").selectmenu({
+    slide("stages", 1, 3, 1, 2);
+
+    // Selects
+    $("#planetCamera, #engineSelect, #planetSelect, #rocketSelect").selectmenu({
         change: inputChange
     });
-    
-    $("#planetSelect").selectmenu({
-        change: inputChange
-    });
+
+    // Labels
+    $("#speedLabel").text(globalInterfaceValues.speed);
+    $("#fuelLabel").text(globalInterfaceValues.speed);
+
+    // Gauges
+    $('#speed .gauge-arrow').cmGauge();
+    $('#fuel .gauge-arrow').cmGauge();
+
+    $('#speed .gauge-arrow').trigger('updateGauge', globalInterfaceValues.speed);
+    $('#fuel .gauge-arrow').trigger('updateGauge', globalInterfaceValues.fuel);
+
+    //inputChange();
 
     //$("#check").checkboxradio();
 });

@@ -1,169 +1,76 @@
-<!DOCTYPE html><html>
-    <head>
-        <meta charset="utf-8">
-        <title>UserInterface</title>
-        <script src="jquery-3.1.1.min.js"></script>
-        <script src="jQuery-Knob-1.2.13/js/jquery.knob.js"></script>
-        <script src="variables.js"></script>
-    </head>
-    <body>
-        <div id="mainBox">
-            <div id="headerBox">
-                <div class="logoBox">
-                    <img class="logoImg" src="logo.jpg" alt="Logo"/>
-                </div>
-                <div class="titleBox">
-                    <h1>OpenSpaceSimulator</h1>
-                </div>
-            </div>
-            <div id="contentBox">
-                <div class="menuBox">
-                    <div class="quitButtonBox">
-                        <input type="button" name="quit" value="Quit"/>
-                    </div>
-                </div>
-                <div class="gameBox">
-                    <div class="controlBox">
-                        <div class="throttleBox">
-                           <!-- <div class="speedSelect">
-                                <select name="speedSelect">
-                                    <option>low</option>
-                                    <option>medium</option>
-                                    <option>high</option>
-                                </select>
-                            </div> -->
-                            <div class="throttleRangeBox">
-                                <form oninput="throttleNumber.value=throttleRange.value">
-                                    <input type="range" name="throttleRange" min="0" max="10" value="5">
-                                    <output name="throttleNumber">5</output>
-                                </form>
-                            </div>
-                            <div class="throttleLabelBox">
-                                <label>Throttle</label>
-                                <!-- Label zum klicken:
-                                <label> Input: <input type="text" name="theinput"></label>
-                                <label for="theinput"> Input: </label> 
-                                <input type="text" name="theinput">
-                                -->
-                            </div>
-                        </div>
-                        <div class="fuelBox">
-                           <!-- <div class="fuelSelect>">
-                                <select name="fuelSelect">
-                                <option>low</option>
-                                <option>medium</option>
-                                <option>high</option>
-                                </select>
-                                </div> -->
-                            <div class="fuelLabelBox">
-                                <label>Fuel</label>
-                            </div>
-                            <div class="oxigenRangeBox">
-                                <form oninput="oxigenNumber.value=oxigenRange.value">
-                                    <input class="oxigenRange" type="range" name="oxigenRange" min="0" max="10" value="5">
-                                    <output name="oxigenNumber">5</output>
-                                </form>
-                            </div>
-                            <div class="oxigenLabelBox">
-                                <label>Oxigen</label>
-                            </div>
-                            <div class="keroseneRangeBox">
-                                <form oninput="keroseneNumber.value=keroseneRange.value">
-                                    <input type="range" name="keroseneRange" min="0" max="10" value="5">
-                                    <output name="keroseneNumber">5</output>
-                                </form>
-                            </div>
-                            <div class="keroseneLabelBox">
-                                <label>Kerosene</label>
-                            </div>
-                        </div>
-                        <div class="stepBox">
-                          <!-- <div class="stepSelect">
-                                <select name="stepSelect">
-                                <option>one</option>
-                                <option>two</option>
-                                <option>three</option>
-                                </select>
-                                </div> -->
-                            <div class="stepRangeBox">
-                                <form oninput="stepNumber.value=stepRange.value">
-                                    <input type="range" name="stepRange" min="1" max="4" value="1">
-                                    <output name="stepNumber">1</output>
-                                </form>
-                            </div>
-                            <div class="stepLabelBox">
-                                <label>Steps</label>
-                            </div>
-                        </div>
-                        <div class="massBox">
-                            <div class="massLabelBox">
-                                <label>Mass</label>
-                            </div>
-                            <div class="emptyMassRangeBox">
-                                <form oninput="emptyMassNumber.value=emptyMassRange.value">
-                                    <input type="range" name="emptyMassRange" min="1" max="3" value="2">
-                                    <output name="emptyMassNumber">2</output>
-                                </form>
-                            </div>
-                            <div class="emptyMassLabelBox">
-                                <label>Empty Mass</label>
-                            </div>
-                            <div class="fuelMassRangeBox">
-                                <form oninput="fuelMassNumber.value=fuelMassRange.value">
-                                    <input class="fuelMassRange" type="range" name="fuelMassRange" min="1" max="3" value="2">
-                                    <output name="fuelMassNumber">2</output>
-                                </form>
-                            </div>
-                            <div class="fuelMassLabelBox">
-                                <label class="fuelMassLabel">Fuel Mass</label>
-                             </div>
-                            <div class="totalMassLabelBox">
-                                <label>Total Mass: <span id=totalMass></span></label>
-                            </div>
-                        </div>
-                         <div class="engineBox">
-                            <div class="engineSelectBox">
-                                <select name="engineSelect">
-                                    <option>Engine1</option>
-                                    <option>Engine2</option>
-                                    <option>Engine3</option>
-                                </select>
-                            </div>
-                            <div class="engineLabelBox">
-                                <label class="engineLabel">Engine</label>
-                            </div>
-                        </div>
-                        <div class="resetBox">
-                            <!-- TODO: Reset -->
-                            <input  type="reset" name="reset" value="Reset"/>
-                        </div>
-                    </div>
-                    <div class="simulationBox">
-                        <div class="displayBox">
-                            <div class="timeDisplayBox">
-                                <!-- TODO: Timestamp -->
-                                Time
-                            </div>
-                            <div class="speedDisplayBox">
-                                Speed
-                            </div>
-                            <div class="resourcesDisplayBox">
-                                Resources
-                            </div>
-                        </div>
-                        <!-- TODO: iFrame -->
-                        <div class="iframeBox">
-                            <iframe>
-                            </iframe>
-                        </div> 
-                    </div>
-                </div>
-            </div>
-            <div id="footerBox">
-                <div class="impressumBox">
-                     <a href="impressum.jsp">Impressum</a>
-                </div>
-            </div>
-        </div>
-    </body>
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>jQuery cmGauge Demo</title>
+    <link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/cmGauge.css">
+    <style>
+    body { background-color:#333;}
+    .container { margin:150px auto;}
+    h1 { color:#fff; margin-bottom:30px;}
+    </style>
+</head>
+<body>
+<div id="jquery-script-menu">
+<div class="jquery-script-center">
+<ul>
+<li><a href="http://www.jqueryscript.net/chart-graph/Minimal-Gauge-Plugin-With-jQuery-CSS3-cmGauge.html">Download This Plugin</a></li>
+<li><a href="http://www.jqueryscript.net/">Back To jQueryScript.Net</a></li>
+</ul>
+<div class="jquery-script-ads"><script type="text/javascript"><!--
+google_ad_client = "ca-pub-2783044520727903";
+/* jQuery_demo */
+google_ad_slot = "2780937993";
+google_ad_width = 728;
+google_ad_height = 90;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script></div>
+<div class="jquery-script-clear"></div>
+</div>
+</div>
+<div class="container">
+<h1>jQuery cmGauge Demo</h1>
+<div id="gaugeDemo" class="gauge gauge-big gauge-green">
+    <div class="gauge-arrow" data-percentage="40"
+         style="transform: rotate(0deg);"></div>
+</div>
+
+<div style="margin-top: 30px;">
+    <button class="btn btn-primary">Update The Gauge</button>
+</div>
+</div>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="js/cmGauge.js"></script>
+<script type="text/javascript">
+	$(function () {
+		$("button").click(function () {
+			var randomNum = Math.floor((Math.random() * 100));
+			$('#gaugeDemo .gauge-arrow').trigger('updateGauge', randomNum);
+		});
+
+		$('#gaugeDemo .gauge-arrow').cmGauge();
+	});
+</script>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-36251023-1']);
+  _gaq.push(['_setDomainName', 'jqueryscript.net']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</body>
 </html>

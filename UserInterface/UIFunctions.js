@@ -3,3 +3,8 @@ function prompt(errorstring) {
     $("#dialog").text(errorstring);
     $("#dialog").dialog();
 }
+
+
+function doToggle(button) {
+    $("#" + button.id + "Interface").slideToggle();
+}
