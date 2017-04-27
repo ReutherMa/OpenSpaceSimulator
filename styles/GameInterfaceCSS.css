@@ -39,24 +39,29 @@ h1 {
     position: absolute;
     visibility: visible;
     top: 80%;
-    left: 30%;
+    left: 60%;
     right: 0;
     z-index: 200;
-    background-color: rgba(255, 255, 255, 0.20);
+    background-color: rgba(49, 49, 49, 0.7);
     padding: 10px;
     margin: auto;
-    width: 60%;
+    width: 30%;
     height: 15%;
     border-radius: 6px;
     border: 2px solid rgb(255, 140, 0);
 }
 .displayBox {
-    margin-left: 20%;
+    margin-left: 5%;
     margin-top: 5%;
-} 
-
+}
 .speedBox {
     float: left;
+}
+#speedLabel {
+    margin-left: 49%;
+}
+#fuelLabel {
+    margin-left: 49%;
 }
 .fuelBox {
     margin-top: 3%;
@@ -67,6 +72,16 @@ h1 {
     float: left;
     position: absolute;
     z-index: 200;
-    right: 20%;
+    right: 5%;
+    top: 30%;
+}
+.throttleBox {
+    float: left;
+}
+.controlBox {
+    float: left;
+}
+.sasBox {
+    float: left;
 }
 /* ---------------- ICON STYLING ---------------- */

@@ -253,17 +253,23 @@
 
                     <div class="dashboardBox">
                         <div class="steeringBox">
-                            <input type="button" name="rollLeft" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf0e2;">
-                            <input type="button" name="up" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf062;">
-                            <input type="button" name="rollRight" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf01e;">
-                            <br>
-                            <input type="button" name="left" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf060;">
-                            <input type="button" name="down" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf063;">
-                            <input type="button" name="right" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf061;">
-                            <br>
-                            <input type="button" name="throttle" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf135; &#xf04e;" title="Throttle">
-                            <br>
-                            <input type="button" name="brake" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf135; &#xf04a;" title="Brake">
+                            <div class="throttleBox">
+                                <input type="button" name="throttle" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf0d8; &#xf06d;" title="More Throttle">
+                                <br>
+                                <input type="button" name="brake" class="btn fa ui-button ui-widget ui-corner-all fa-flip-vertical" value="&#xf0d8; &#xf06d;" title="Less Throttle">
+                            </div>
+                            <div class="controlBox">
+                                  <input type="button" name="rollLeft" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf0e2;">
+                                <input type="button" name="up" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf062;">
+                                <input type="button" name="rollRight" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf01e;">
+                                <br>
+                                <input type="button" name="left" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf060;">
+                                <input type="button" name="down" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf063;">
+                                <input type="button" name="right" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf061;">
+                            </div>
+                            <div class="sasBox">
+                                <input type="button" name="sas" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf0cc;" title="SAS Stabilisation">
+                            </div>
                         </div>
                         <div class="displayBox">
                             <!-- Speed -->
@@ -271,6 +277,7 @@
                                 <div id="speed" class="gauge gauge-big gauge-orange">
                                     <div class="gauge-arrow" data-percentage="40" style="transform: rotate(0deg);"></div>
                                 </div>
+                                <br>
                                 <label>
                                     <span id="speedLabel">
                                             0 
@@ -283,6 +290,7 @@
                                 <div id="fuel" class="gauge gauge-small gauge-orange">
                                     <div class="gauge-arrow" data-percentage="40" style="transform: rotate(0deg);"></div>
                                 </div>
+                                <br>
                                 <label>
                                     <span id="fuelLabel">
                                             0 
