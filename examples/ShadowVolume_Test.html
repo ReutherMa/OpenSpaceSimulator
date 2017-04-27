@@ -130,7 +130,7 @@
             function init() {
                 renderer = new THREE.WebGLRenderer({
                     logarithmicDepthBuffer: true,
-                    alpha: true,
+                    //alpha: true,
                     antialisa: true
                 });
                 
@@ -148,7 +148,7 @@
                 
                 
                 
-                var imagePrefix = "textures/stars_for_skybox2/";
+                var imagePrefix = "textures/stars_for_skybox1/";
                 var directions = ["xpos", "xneg", "ypos", "yneg", "zpos", "zneg"];
                 var imageSuffix = ".png";
         
@@ -471,7 +471,7 @@
                 scene.add(ground);
                 
                 
-                camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 1, 600);
+                camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 1.0, 1e16); //1e27
                 camera.position.set(-15, 10, 10);
                 
                 
