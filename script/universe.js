@@ -31,7 +31,7 @@ function buildUniverse() {
     var group_galaxy;
     var sun, earth, moon, mercury, venus, mars, jupiter, saturn, uranus, neptune;
     var camElement;
-    var audioLoader, audioListener;
+    var audioLoader, audioListener, throttleSound;
     
     var uniforms1;
     var mesh_sun;
@@ -90,6 +90,14 @@ function buildUniverse() {
             sound.setLoop(true);
             sound.setVolume(0.5);
             sound.play();
+        });
+        throttleSound = new THREE.PositionalAudio( audioListener );
+            scene.add( throttleSound );
+            audioLoader = new THREE.AudioLoader();
+            audioLoader.load( 'sounds/throttle.ogg', function( buffer ) {
+                throttleSound.setBuffer( buffer );
+                throttleSound.setRefDistance( 200 );
+                throttleSound.setLoop(true);
         });
         
         /* Helpers 
@@ -265,6 +273,7 @@ function buildUniverse() {
             rocketGroup.angularMomentum = new THREE.Quaternion(0,0,0,1);
             rocketGroup.angularAcceleration = new THREE.Quaternion(0,0,0,1);
             earthGroup.add(rocketGroup);
+            rocketGroup.add(throttleSound);
         });
     }
 
@@ -584,14 +593,7 @@ var clock = new THREE.Clock();
         }
         
         if (global.audio){
-            var throttleSound = new THREE.Audio( audioListener );
-            scene.add( throttleSound );
-            audioLoader = new THREE.AudioLoader();
-            audioLoader.load( 'sounds/throttle.ogg', function( buffer ) {
-                throttleSound.setBuffer( buffer );
-                throttleSound.setLoop(true);
-                throttleSound.play();
-            });
+            throttleSound.play();
             global.audio = false;
         }
 
