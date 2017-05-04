@@ -255,7 +255,7 @@ function buildUniverse() {
         var earthGroup = spaceObjects.earth.group;
         var loader = new THREE.ColladaLoader(); 
         loader.options.convertUpAxis = true; 
-        loader.load("models/launchpad.dae", function(collada) {
+        loader.load("models/launchpad_mat.dae", function(collada) {
             launchpadGroup = new THREE.Group();
             launchpad = collada.scene;   //var skin = collada.skins[ 0 ];
             launchpad.scale.set(10, 10, 10);
