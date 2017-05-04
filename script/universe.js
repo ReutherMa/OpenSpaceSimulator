@@ -246,6 +246,8 @@ function buildUniverse() {
             rocketGroup.position.y = yE + 1;
             rocketGroup.position.z = zE + 1;
             rocket.rotateX(Math.PI/180 * 45);
+            rocketGroup.angularMomentum = new THREE.Quaternion(0,0,0,1);
+            rocketGroup.angularAcceleration = new THREE.Quaternion(0,0,0,1);
             earthGroup.add(rocketGroup);
         });
     }
@@ -255,7 +257,7 @@ function buildUniverse() {
         var earthGroup = spaceObjects.earth.group;
         var loader = new THREE.ColladaLoader(); 
         loader.options.convertUpAxis = true; 
-        loader.load("models/launchpad_mat.dae", function(collada) {
+        loader.load("models/launchpad.dae", function(collada) {
             launchpadGroup = new THREE.Group();
             launchpad = collada.scene;   //var skin = collada.skins[ 0 ];
             launchpad.scale.set(10, 10, 10);
