@@ -81,12 +81,14 @@ function calculatePhysics(difftime, spaceObjects) {
     if (global.started) {
         if (throttle>0) {
             move(difftime, 1);
-            
+            //throttleSound.setVolume(globalControlValues.throttle/100);
         }
         if (globalControlValues.keyBrake) {
             move(difftime, -1);
+            //throttleSound.setVolume(globalControlValues.throttle/100);
         }
     } else if (globalControlValues.throttle) {
+        global.audio = true;
         if (throttle == 100) {
             global.started = true;
             console.log("started 2:"+global.started);
@@ -102,9 +104,10 @@ function calculatePhysics(difftime, spaceObjects) {
     
     if(globalControlValues.break&&throttle>=0){
         throttle-=5;
+        console.log("throttle: "+throttle);
     }
     if(rocketGroup&&drehmoment){
-    rotateRocket(factoredTime);
+        rotateRocket(factoredTime);
     }
       
     

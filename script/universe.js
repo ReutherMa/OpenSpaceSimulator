@@ -1,7 +1,9 @@
 //fill global with key-values, datatype: boolean
 var global = {
-    started: false
+    started: false,
+    audio: false
 };
+//var throttleSound;
 var rocket;
 var rocketGroup;
 var launchpad;
@@ -29,6 +31,7 @@ function buildUniverse() {
     var group_galaxy;
     var sun, earth, moon, mercury, venus, mars, jupiter, saturn, uranus, neptune;
     var camElement;
+    var audioLoader, audioListener;
     
     var uniforms1;
     var mesh_sun;
@@ -77,7 +80,7 @@ function buildUniverse() {
         buildSkybox();
 
         //audio
-        var audioListener = new THREE.AudioListener();
+        audioListener = new THREE.AudioListener();
         camera.add( audioListener );
         var sound = new THREE.Audio( audioListener );
         scene.add( sound );
@@ -88,7 +91,6 @@ function buildUniverse() {
             sound.setVolume(0.5);
             sound.play();
         });
-        
         
         /* Helpers 
         //axisHelper
@@ -579,6 +581,18 @@ var clock = new THREE.Clock();
         /* changes of User Interface */ 
         if (globalInterfaceValues.changed) {
             UIChanges();
+        }
+        
+        if (global.audio){
+            var throttleSound = new THREE.Audio( audioListener );
+            scene.add( throttleSound );
+            audioLoader = new THREE.AudioLoader();
+            audioLoader.load( 'sounds/throttle.ogg', function( buffer ) {
+                throttleSound.setBuffer( buffer );
+                throttleSound.setLoop(true);
+                throttleSound.play();
+            });
+            global.audio = false;
         }
 
         requestAnimationFrame(render);
