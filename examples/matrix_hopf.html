@@ -8,22 +8,61 @@ canvas { width: 100%; height: 100% }
 </style>
 </head>
 <body>
-<script src="three.js/build/three.js"></script>
+<script src="three.js/build/three_new.js"></script>
 <script src="three.js/examples/js/controls/OrbitControls.js"></script>
 <script src="../loader/ColladaLoader.js"></script>
+<script src="three.js/BloomBlendPass.js"></script>
+<script src="three.js/EffectComposer.js"></script>
+
 <script>
+//var composer;
+var loader = new THREE.TextureLoader();
+    
 var scene = new THREE.Scene();
-var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1e27 );
 //scene.background = new THREE.Color( 0xffffff );
     
-camera.position.set(0,0,5);
+camera.position.set(0,0,1e10);
 var ambLight = new THREE.AmbientLight(0x3e3e3e3e); //0x3e3e3e3e
 scene.add(ambLight);
 
-var renderer = new THREE.WebGLRenderer();
+var renderer = new THREE.WebGLRenderer({
+    //logarithmicDepthBuffer: true,
+    alpha: true,
+    antialias: true
+});
 var controls = new THREE.OrbitControls( camera, renderer.domElement );
 renderer.setSize( window.innerWidth, window.innerHeight );
+
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.BasicShadowMap;
+//renderer.setDepthTest(true);
+renderer.autoClear = false;
+
 document.body.appendChild( renderer.domElement );
+    
+
+    
+function buildSkybox() {
+        var imagePrefix = "textures/stars_for_skybox/";
+        var directions = ["xpos", "xneg", "ypos", "yneg", "zpos", "zneg"];
+        var imageSuffix = ".png";
+
+        var materialArray = [];
+        for (var i = 0; i < 6; i++)
+            materialArray.push(new THREE.MeshBasicMaterial({
+                map: loader.load(imagePrefix + directions[i] + imageSuffix),
+                side: THREE.BackSide
+            }));
+
+        var skyGeometry = new THREE.CubeGeometry(1e7, 1e7, 1e7); //26
+        var skyMaterial = new THREE.MeshFaceMaterial(materialArray);
+        var skyBox = new THREE.Mesh(skyGeometry, skyMaterial);
+        scene.add(skyBox);
+    }
+    
+buildSkybox();
 
 /*
 var geometry = new THREE.BoxGeometry( 1, 1, 1 );
@@ -50,25 +89,27 @@ var objects = [];
 var group1   = new THREE.Group();
 scene.add( group1 );
 
-var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+var geometry = new THREE.BoxGeometry( 2.4397e9, 2.4397e9, 2.4397e9 );
+//var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+var material = new THREE.MeshPhongMaterial( { color: 0xffffff, specular: 0xffffff, shininess: 50 } );
+material.depthWrite = false; //for lensflare
 var cube1 = new THREE.Mesh( geometry, material );
 group1.add( cube1 );
 
 var group2  = new THREE.Group();
-group2.position.set (5, 0, 0);
+group2.position.set (4.4397e9, 0, 0);
 group1.add( group2 );
 
-var geometry = new THREE.BoxGeometry( 1, 1, 1 );
+var geometry = new THREE.BoxGeometry( 2.4397e9, 2.4397e9, 2.4397e9 );
 var material = new THREE.MeshBasicMaterial( {"color": "rgb(0,0,255)"} );
 var cube2 = new THREE.Mesh( geometry, material );
 group2.add( cube2 );
 
 var group3  = new THREE.Group();
-group3.position.set (2, 0, 0);
+group3.position.set (8.4397e9, 0, 0);
 group2.add( group3 );
 
-var geometry = new THREE.BoxGeometry( 1, 1, 1 );
+var geometry = new THREE.BoxGeometry( 2.4397e9, 2.4397e9, 2.4397e9 );
 var material = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
 var cube3 = new THREE.Mesh( geometry, material );
 group3.add( cube3 );
@@ -79,11 +120,48 @@ var nav_geometry = new THREE.SphereGeometry( .5, 32, 32 );
 var nav_material = new THREE.MeshBasicMaterial( {color: 0xffffff} );
 nav_material.map = loader.load("../textures/navball.png");
 var sphere_nav = new THREE.Mesh( nav_geometry, nav_material );
-scene.add(camera);
-camera.add(sphere_nav);
-sphere_nav.position.set(0,0,-1);
+//scene.add(camera);
+//camera.add(sphere_nav);
+//sphere_nav.position.set(0,0,-1);
     
+    
+//lensflare
+var light = new THREE.PointLight( 0xffffff, 1.5, 0 );
+light.position.set(0,0,0);
+scene.add(light);
+//light.color.setHSL( 0.55, 0.9 , 0.5 );
+//light = light;
 
+var textureLoader = new THREE.TextureLoader();
+
+var textureFlare = textureLoader.load( "../textures/lens.png" );
+
+var flareColor = new THREE.Color( 0xffffff );
+flareColor.setHSL( 0.55, 0.9 , 0.5 + 0.5 );
+
+lensFlare = new THREE.LensFlare( textureFlare, 200, 0.0, THREE.AdditiveBlending, flareColor );
+lensFlare.add ( textureFlare, 100, 0.8, THREE.AdditiveBlending, flareColor )
+lensFlare.add ( textureFlare, 100, 0.6, THREE.AdditiveBlending, flareColor )
+lensFlare.position.copy( light.position );
+//lensFlare.position.set(0,0,0);
+
+scene.add( lensFlare );
+
+//add blooming
+//composer = new THREE.EffectComposer();
+//composer.addPass(new THREE.RenderPass(scene, camera));
+//
+//var bloomPass = new THREE.BloomBlendPass(
+//    2.0, // the amount of blur
+//    1.0, // interpolation(0.0 ~ 1.0) original image and bloomed image
+//    new THREE.Vector2(1024, 1024) // image resolution
+//);
+//bloomPass.renderToScreen = true;
+//composer.addPass(bloomPass);
+//
+//composer.render();
+    
+    
 //placeLaunchpad();
     
 function placeLaunchpad() {
@@ -104,58 +182,9 @@ function placeLaunchpad() {
         });
     }    
     
-    
-//test text
-/*var canvas = document.createElement('canvas');
-canvas.width = 512;
-canvas.height = 512;
-var context = canvas.getContext('2d');
-context.font = "196px Arial";
-context.fillStyle = "rgba(255,0,0,1)";
-context.fillText('Earth!', 0, 256);
-var tex = new THREE.Texture(canvas);
-tex.needsUpdate = true;
-var mate = new THREE.SpriteMaterial( { map: tex, color: 0xffffff } );
-var sprite = new THREE.Sprite( mate );
-sprite.position.set(0,2,0);
-<<<<<<< HEAD
-cube2.add( sprite );
-    
-//Test with texture
-        var path = "textures/earth_label.png";
-        var map = new THREE.TextureLoader().load(path);
-        var material = new THREE.SpriteMaterial( { map: map, color: 0xffffff} );
-        var sprite = new THREE.Sprite( material );
-        //sprite.scale.set(1e11, 1e11, 1e11);
-        sprite.position.set(0,2,0)
-        //group1.add( sprite );
-
-//test with LOD
-    
-        var dotGeometry = new THREE.Geometry();
-        dotGeometry.vertices.push(new THREE.Vector3( 0, 3, 0));
-        var loader = new THREE.TextureLoader();
-        var material_point = new THREE.PointsMaterial({color:0xffffff, size:512, sizeAttenuation:false, map: loader.load("textures/labels/earth_label.png")});
-        material_point.transparent = true;
-        var mesh_point = new THREE.Points(dotGeometry,  material_point);
-        //mesh_point.scale.set(3, 0, 0);
-        
-        group1.add( mesh_point );
-=======
-sprite.scale.set(5,5,5);
-group2.add( sprite );*/
-
-/*var map = new THREE.TextureLoader().load("textures/test/xneg.png");
-var mate = new THREE.SpriteMaterial( { map: map, color: 0xffffff } );
-var sprite = new THREE.Sprite( mate );
-sprite.position.set(0,2,0);
-sprite.scale.set(1e10,1e10,1e10);
-group2.add(sprite);
-
-camera.position.z = 8;
 
 //picking stuff
-var raycaster = new THREE.Raycaster();
+/*var raycaster = new THREE.Raycaster();
 var mouse = new THREE.Vector2();
 document.addEventListener( 'click', onMouseMove, false );
 objects.push(cube1);
