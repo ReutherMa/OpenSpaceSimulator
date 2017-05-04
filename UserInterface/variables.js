@@ -58,6 +58,7 @@ function inputChange() {
     globalInterfaceValues.planetCamera = $('select[name=planetCamera]').val();
     //globalInterfaceValues.reset = $('input[name=reset]').val();
     globalInterfaceValues.changed = true;
+    globalInterfaceValues.speed = +$("#speedLabel").text();
 
     $(".ui-slider-handle").blur();
     $("#planetCamera-button").blur();
