@@ -76,6 +76,20 @@ function buildUniverse() {
         //building the skybox
         buildSkybox();
 
+        //audio
+        var audioListener = new THREE.AudioListener();
+        camera.add( audioListener );
+        var sound = new THREE.Audio( audioListener );
+        scene.add( sound );
+        audioLoader = new THREE.AudioLoader();
+        audioLoader.load( 'sounds/background.ogg', function( buffer ) {
+            sound.setBuffer( buffer );
+            sound.setLoop(true);
+            sound.setVolume(0.5);
+            sound.play();
+        });
+        
+        
         /* Helpers 
         //axisHelper
         var axisHelper = new THREE.AxisHelper(1e15); //
