@@ -22,7 +22,7 @@
 "mass_fuel":109000,
 "fuel_type":"hydrogen",
 "oxidizer":"oxygen",
-"burningtime":420
+"burningtime":500
 },
     
 "height":111,

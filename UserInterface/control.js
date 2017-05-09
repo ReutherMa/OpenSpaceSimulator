@@ -45,7 +45,7 @@ $(document).ready(function() {
                 globalControlValues.rollLeft = true;
                 break;
             case keyCode.e:
-                globalControlValues.keyRollRight = true;
+                globalControlValues.rollRight = true;
                 break;
             case keyCode.space:
                 globalControlValues.throttle = true;
@@ -118,7 +118,7 @@ $(document).ready(function() {
                 globalControlValues.rollLeft = true;
                 break;
             case "rollRight":
-                globalControlValues.keyRollRight = true;
+                globalControlValues.rollRight = true;
                 break;
             case "speed":
                 globalControlValues.throttle = true;
@@ -164,7 +164,7 @@ $(document).ready(function() {
                 globalControlValues.rollLeft = false;
                 break;
             case "rollRight":
-                globalControlValues.keyRollRight = false;
+                globalControlValues.rollRight = false;
                 break;
             case "speed":
                 globalControlValues.throttle = false;
