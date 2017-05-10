@@ -5,7 +5,7 @@ TODO: trail point
 
 var earthRadius = 0;
 var cotr = 0;
-
+var accel = 0;
 
 function calculateGravitationRocket(difftime){
     for (var o in spaceObjects) {
@@ -24,7 +24,7 @@ function calculateGravitationRocket(difftime){
         }
 
         if (dist2 > mindist) {
-            var accel = gravConst * spaceObjects[o].mass / dist2;
+            accel = gravConst * spaceObjects[o].mass / dist2;
             if(ctr==0){accel=0;ctr++;}
             dist = 1 / dist;
             speedx += accel * difftime;
@@ -62,7 +62,8 @@ TODO: prompt
 function move(difftime, direction) {
 
     //calculates fuel-mass that will be lost in difftime
-    var mass_lost = difftime / saturnV.stage1.burningtime * saturnV.stage1.mass_fuel * throttle;
+    var mass_lost = difftime / 1000 / saturnV.stage1.burningtime * saturnV.stage1.mass_fuel * throttle / 100;
+    console.log("mass lost: "+mass_lost);
     
     
     
@@ -70,20 +71,19 @@ function move(difftime, direction) {
     //checks if enough fuel
     if ((fuel_mass - mass_lost) >= 0) {
         //a=F/m(now mass WITH fuel to lose)
-        accel = saturnV.stage1.thrust * throttle / (mass);
+        accel = saturnV.stage1.thrust * throttle/100 / (mass);
+        console.log("accel: "+accel);
         //new mass without lost fuel
         mass = mass - mass_lost;
         //current fuel mass for UI
         fuel_mass = fuel_mass - mass_lost;
-        $('#fuel .gauge-arrow').trigger('updateGauge', fuel_mass / saturnV.fuel_total * 100);
-        console.log("fuel mass: "+fuel_mass);
-        console.log("total mass: "+mass);
-        console.log("mass lost: "+mass_lost);
-        
-    $("#fuelLabel").text(parseInt(globalInterfaceValues.speed));
+        console.log("fuelmass: "+fuel_mass);
+        $('#fuel .gauge-arrow').trigger('updateGauge', fuel_mass / saturnV.fuel_total * 100 );
+        console.log("UI update triggered");
+        $("#fuelLabel").text(parseInt(fuel_mass / saturnV.fuel_total));
     } else {
         //if(noStagesLeft){
-        prompt("No fuel left. No stages left. Do you have a god? It's time to pray to him.");
+        prompt("No fuel left. No stages left. well fuck");
         //}else{
         //pompt("Seems like you have run out of fuel. Discard current rocket stage.")}
         
@@ -95,11 +95,13 @@ function move(difftime, direction) {
     upVec = upVec.applyQuaternion(rocketGroup.quaternion);
     upVec = upVec.normalize();
     var rocketSpeed = accel * difftime;
-    
+    console.log("rocket speed: "+rocketSpeed);
+    console.log("difftime: "+difftime);
+    console.log("accel2: "+accel);
     // a = (F(thrust) - F(Air Resistance)) / m(rocketMass)
-    calculateAirResistance(rocketSpeed);
-    accel = ((accel * mass) - airResistance)/mass;
-    var position_rocket = new THREE.Vector3((position_rocket + (accel * difftime)) * direction * upVec); 
+    //calculateAirResistance(rocketSpeed);
+    //accel = ((accel * mass) - airResistance)/mass;
+    var position_rocket = new THREE.Vector3((position_rocket + (rocketSpeed)) * direction * upVec); 
     position_rocket.applyQuaternion(rocketGroup.quaternion);
     
     //as long as the rocket is in earth's atmosphere, it gets dragged with earth's rotation
@@ -109,16 +111,16 @@ function move(difftime, direction) {
         rocketGroup.position.y += (accel * difftime + spaceObjects.earth.speedy) * direction;
         rocketGroup.position.z += (accel * difftime + spaceObjects.earth.speedz) * direction;
     }else{*/
-    rocketGroup.position.x += (accel * difftime) * direction;
-    rocketGroup.position.y += (accel * difftime) * direction;
-    rocketGroup.position.z += (accel * difftime) * direction;
+    rocketGroup.position.x += (rocketSpeed) * direction;
+    rocketGroup.position.y += (rocketSpeed) * direction;
+    rocketGroup.position.z += (rocketSpeed) * direction;
     //}
     
-    globalInterfaceValues.speed = (accel * difftime) / 4000 * 100;
-    console.log(globalInterfaceValues.speed);
-    console.log("speed:"+accel*difftime);
+    //convert speed/difftime to km/h and then convert to percentual
+    globalInterfaceValues.speed = (rocketSpeed / 1000 * (3600000 / difftime)) / 4000 * 100;
+    console.log("interface speed: "+globalInterfaceValues.speed);
     $('#speed .gauge-arrow').trigger('updateGauge', globalInterfaceValues.speed);
-    $("#speedLabel").text(parseInt(globalInterfaceValues.speed));
+    $("#speedLabel").text(parseInt(rocketSpeed / 1000 * (3600000 / difftime)));
     
 }
 
@@ -146,23 +148,33 @@ function rotateRocket(difftime) {
     if (globalControlValues.up) {
         //accelOX = accelOX + angle_const;
         rocketGroup.angularAcceleration.set (xAxis.x, xAxis.y, xAxis.z, 1000) .normalize ();
+        rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
+    }else{
+        rocketGroup.angularAcceleration.set (xAxis.x, xAxis.y, xAxis.z, 1000) .normalize ();
     }
     if (globalControlValues.down) {
         rocketGroup.angularAcceleration.set (-xAxis.x, -xAxis.y, -xAxis.z, 1000) .normalize ();
+        rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
         //accelOX = accelOX - angle_const;
     }
     if (globalControlValues.rollLeft) {
         rocketGroup.angularAcceleration.set (yAxis.x, yAxis.y, yAxis.z, 1000) .normalize ();
+        rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
     }
     if (globalControlValues.rollRight) {
         rocketGroup.angularAcceleration.set (-yAxis.x, -yAxis.y, -yAxis.z, 1000) .normalize ();
+        rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
     }
     if (globalControlValues.left) {
         rocketGroup.angularAcceleration.set (zAxis.x, zAxis.y, zAxis.z, 1000) .normalize ();
+        rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
     }
     if (globalControlValues.right) {
         rocketGroup.angularAcceleration.set (-zAxis.x, -zAxis.y, -zAxis.z, 1000) .normalize ();
+        rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
     }
+    
+    //if(globalControlValues.)
 
 /*
     var quaternion = new THREE.Quaternion(1,1,1,1);
@@ -211,7 +223,7 @@ function rotateRocket(difftime) {
     qZ = Math.cos(angleZ/2) + (new THREE.Vector3(1,0,0) * Math.sin(angleZ/2)) + (new THREE.Vector3(0,1,0)*Math.sin(angleZ/2)) + (new THREE.Vector3(0,0,1)*Math.sin(angleZ/2));
     quaternion = quaternion.multiplyQuaternions(qX, qY, qZ);*/
 
-    rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
+    
     rocketGroup.quaternion.multiply (rocketGroup.angularMomentum);
     sphere_nav.quaternion.multiply(rocketGroup.angularMomentum);
     
