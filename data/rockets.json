@@ -22,6 +22,7 @@
 "mass_fuel":109000,
 "fuel_type":"hydrogen",
 "oxidizer":"oxygen",
+"thrust":1000000,
 "burningtime":500
 },
     

@@ -6,7 +6,6 @@ TODO: trail point
 var earthRadius = 0;
 var cotr = 0;
 var accel = 0;
-var rotating = false;
 
 function calculateGravitationRocket(difftime){
     for (var o in spaceObjects) {
@@ -60,7 +59,7 @@ Rocket Science
 part 1: acceleration of direction and new position
 TODO: prompt
 **/
-function move(difftime, direction) {
+function move(difftime) {
 
     //calculates fuel-mass that will be lost in difftime
     var mass_lost = difftime / 1000 / saturnV.stage1.burningtime * saturnV.stage1.mass_fuel * throttle / 100;
@@ -72,7 +71,7 @@ function move(difftime, direction) {
     //checks if enough fuel
     if ((fuel_mass - mass_lost) >= 0) {
         //a=F/m(now mass WITH fuel to lose)
-        accel = saturnV.stage1.thrust * throttle/100 / (mass);
+        accel = (saturnV.stage1.thrust * (throttle/100)) / (mass); //rocket werte stimmen, einheiten sind richtig, berechnungsart stimmt
         console.log("accel: "+accel);
         //new mass without lost fuel
         mass = mass - mass_lost;
@@ -95,14 +94,14 @@ function move(difftime, direction) {
     var upVec = new THREE.Vector3(0,1,0);
     upVec = upVec.applyQuaternion(rocketGroup.quaternion);
     upVec = upVec.normalize();
-    var rocketSpeed = accel * difftime;
+    var rocketSpeed = accel * difftime / 1000;
     console.log("rocket speed: "+rocketSpeed);
     console.log("difftime: "+difftime);
     console.log("accel2: "+accel);
     // a = (F(thrust) - F(Air Resistance)) / m(rocketMass)
     //calculateAirResistance(rocketSpeed);
     //accel = ((accel * mass) - airResistance)/mass;
-    var position_rocket = new THREE.Vector3((position_rocket + (rocketSpeed)) * direction * upVec); 
+    var position_rocket = new THREE.Vector3((position_rocket + (rocketSpeed)) * upVec); 
     position_rocket.applyQuaternion(rocketGroup.quaternion);
     
     //as long as the rocket is in earth's atmosphere, it gets dragged with earth's rotation
@@ -112,9 +111,9 @@ function move(difftime, direction) {
         rocketGroup.position.y += (accel * difftime + spaceObjects.earth.speedy) * direction;
         rocketGroup.position.z += (accel * difftime + spaceObjects.earth.speedz) * direction;
     }else{*/
-    rocketGroup.position.x += (rocketSpeed) * direction;
-    rocketGroup.position.y += (rocketSpeed) * direction;
-    rocketGroup.position.z += (rocketSpeed) * direction;
+    rocketGroup.position.x += (rocketSpeed) ;
+    rocketGroup.position.y += (rocketSpeed) ;
+    rocketGroup.position.z += (rocketSpeed) ;
     //}
     
     //convert speed/difftime to km/h and then convert to percentual
@@ -150,37 +149,37 @@ function rotateRocket(difftime) {
         //accelOX = accelOX + angle_const;
         rocketGroup.angularAcceleration.set (xAxis.x, xAxis.y, xAxis.z, 1000) .normalize ();
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
-        rotating = true;
+        
     }
     if (globalControlValues.down) {
         rocketGroup.angularAcceleration.set (-xAxis.x, -xAxis.y, -xAxis.z, 1000) .normalize ();
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
-        rotating = true;
+        
     }
     if (globalControlValues.rollLeft) {
         rocketGroup.angularAcceleration.set (-yAxis.x, -yAxis.y, -yAxis.z, 1000) .normalize ();
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
-        rotating = true;
+        
     }
     if (globalControlValues.rollRight) {
         rocketGroup.angularAcceleration.set (yAxis.x, yAxis.y, yAxis.z, 1000) .normalize ();
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
-        rotating = true;
+        
     }
     if (globalControlValues.left) {
         rocketGroup.angularAcceleration.set (zAxis.x, zAxis.y, zAxis.z, 1000) .normalize ();
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
-        rotating = true;
+        
     }
     if (globalControlValues.right) {
         rocketGroup.angularAcceleration.set (-zAxis.x, -zAxis.y, -zAxis.z, 1000) .normalize ();
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
-        rotating = true;
+        
     }
-    if (globalControlValues.hardSAS&&rotating) {
+    if (globalControlValues.hardSAS) {
         rocketGroup.angularMomentum.set(0,0,0,1);
         console.log("hardSAS");
-        rotating = false;
+        
     }
     if (globalControlValues.softSAS) {
         var uniQuad = new THREE.Quaternion(0,0,0,1);

@@ -80,13 +80,10 @@ function calculatePhysics(difftime, spaceObjects) {
     
     if (global.started) {
         if (throttle>0) {
-            move(factoredTime, 1);
+            move(factoredTime);
             //throttleSound.setVolume(globalControlValues.throttle/100);
         }
-        if (globalControlValues.keyBrake) {
-            move(factoredTime, -1);
-            //throttleSound.setVolume(globalControlValues.throttle/100);
-        }
+        
     } else if (globalControlValues.throttle) {
         global.audio = true;
         if (throttle == 100) {
