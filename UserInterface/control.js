@@ -9,7 +9,9 @@ var globalControlValues = {
     brake: false,
     startPause: false,
     reset: false,
-    quit: false
+    quit: false,
+    softSAS: false,
+    hardSAS: false
 };
 
 var keyCode = {
@@ -22,7 +24,9 @@ var keyCode = {
     space: 32,
     b: 66,
     enter: 13,
-    r: 82
+    r: 82,
+    x: 88,
+    y: 89
 };
 
 //TODO: Quit setzen
@@ -49,10 +53,15 @@ $(document).ready(function() {
                 break;
             case keyCode.space:
                 globalControlValues.throttle = true;
-                console.log("space pressed");
                 break;
             case keyCode.b:
                 globalControlValues.brake = true;
+                break;
+            case keyCode.x:
+                globalControlValues.softSAS = true;
+                break;
+            case keyCode.y:
+                globalControlValues.hardSAS = true;
                 break;
             case keyCode.enter:
                 if (globalControlValues.startPause == false) {
@@ -96,6 +105,12 @@ $(document).ready(function() {
                 break;
             case keyCode.b:
                 globalControlValues.brake = false;
+                break;
+            case keyCode.x:
+                globalControlValues.softSAS = false;
+                break;
+            case keyCode.y:
+                globalControlValues.hardSAS = false;
                 break;
         }
     });
