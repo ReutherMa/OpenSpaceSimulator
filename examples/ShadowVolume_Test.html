@@ -62,6 +62,7 @@
                 float Is = pow(max(dot(halfway, n), 0.0), 32.0);
                 
                 vec3 col = Id * vec3(0.5, 0.5, 0.5) + Is * vec3(0.3, 0.3, 0.3);
+                //gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
                 gl_FragColor = vec4(col, 1.0);
 			}
 		</script>
@@ -95,7 +96,7 @@
                 
                 vec3 texColor   = texture2D( meshTexture, vUv ).rgb;
             
-                gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+                gl_FragColor = vec4(texColor, 1.0);
 			}
 		</script>
         
@@ -108,7 +109,8 @@
             
             
             
-            var sphere_mesh_vol, sphere_mesh, sphere_mesh_earth_vol, sphere_mesh_earth;     
+            var sphere_mesh_vol, sphere_mesh, sphere_mesh_earth_vol, sphere_mesh_earth;
+            var red_mesh;
             var uniforms1;
             var loader = new THREE.TextureLoader();
             
@@ -410,6 +412,81 @@
                 
                 
                 
+                
+                
+                
+                //Red dot
+                
+                var red_geo = new THREE.SphereGeometry(1, 64, 64);
+                var red_faceNum = red_geo.faces.length;
+                
+                                for (i = 0; i < red_faceNum; i++) {
+                    red_geo.faces.push(new THREE.Face3(red_geo.faces[i].a,
+                                                                red_geo.faces[i].b,
+                                                                red_geo.faces[i].a,
+                                                                red_geo.faces[i].normal,
+                                                                color2));
+                    
+                    red_geo.faces.push(new THREE.Face3(red_geo.faces[i].b,
+                                                                red_geo.faces[i].b,
+                                                                red_geo.faces[i].a,
+                                                                red_geo.faces[i].normal,
+                                                                color1));
+                    
+                    red_geo.faces.push(new THREE.Face3(red_geo.faces[i].b,
+                                                                red_geo.faces[i].c,
+                                                                red_geo.faces[i].b,
+                                                                red_geo.faces[i].normal,
+                                                                color2));
+                    
+                    red_geo.faces.push(new THREE.Face3(red_geo.faces[i].c,
+                                                                red_geo.faces[i].c,
+                                                                red_geo.faces[i].b,
+                                                                red_geo.faces[i].normal,
+                                                                color1));
+                    
+                    red_geo.faces.push(new THREE.Face3(red_geo.faces[i].c,
+                                                                red_geo.faces[i].a,
+                                                                red_geo.faces[i].c,
+                                                                red_geo.faces[i].normal,
+                                                                color2));
+                    
+                    red_geo.faces.push(new THREE.Face3(red_geo.faces[i].a,
+                                                                red_geo.faces[i].a,
+                                                                red_geo.faces[i].c,
+                                                                red_geo.faces[i].normal,
+                                                                color1));
+                    
+                    red_geo.faceVertexUvs.push( new THREE.Vector2( red_geo.faceVertexUvs[i] = new THREE.Vector2(0,1),
+                                                                            red_geo.faceVertexUvs[i] = new THREE.Vector2(1,1),
+                                                                            red_geo.faceVertexUvs[i] = new THREE.Vector2(1,0),
+                                                                            red_geo.faceVertexUvs[i] = new THREE.Vector2(0,0)));
+                    
+                }
+                
+                var red_mat = new THREE.MeshBasicMaterial({ color:0xff0000 });
+                //global for render()
+                red_mesh = new THREE.Mesh(red_geo, red_mat);
+                red_mesh.position.set(0, 0, 0);
+                scene.add(red_mesh);
+                
+                red_mesh_vol = new THREE.Mesh(red_geo);
+                red_mesh_vol.position.set(0, 0, 0);
+                scene_vol.add(red_mesh_vol);
+                
+                
+                
+            
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
                 //MOON 
                 sphere_mesh_vol = new THREE.Mesh(sphere_geo);
                 sphere_mesh_vol.position.set(0, 0, 5);
@@ -435,10 +512,10 @@
                 
                 
                 sphere_mat_earth = new THREE.MeshBasicMaterial({
-                    color:0xff0000
+                    color:0x0000ff
                 });
                 
-                sphere_mesh_earth = new THREE.Mesh(sphere_earth_geo, sphere_mat_earth);
+                sphere_mesh_earth = new THREE.Mesh(sphere_earth_geo, sphere_mat); //sphere_mat_earth);
                 sphere_mesh_earth.position.set(0, 0, 10);
                 scene.add(sphere_mesh_earth);
                 
@@ -477,8 +554,8 @@
                 var sceneBoundingBox = new THREE.BoundingBoxHelper(scene);
                 sceneBoundingBox.update();
                 
-                var extrude_size = sceneBoundingBox.box.size().length();
-                var center = sceneBoundingBox.box.center();
+                var extrude_size = sceneBoundingBox.box.getSize().length();
+                var center = sceneBoundingBox.box.getCenter();
                 
                 var extrudeVec = new THREE.Vector3();
                 extrudeVec.copy(light).negate().multiplyScalar(extrude_size);
@@ -502,6 +579,7 @@
                 //Shadow
                 sphere_mesh_vol.material = material_shadowVolume;
                 sphere_mesh_earth_vol.material = material_shadowVolume;
+                red_mesh_vol.material = material_shadowVolume;
                 
                 
                 
@@ -554,6 +632,7 @@
                 //Shadow
                 sphere_mesh.material = material_ambient;
                 sphere_mesh_earth.material = material_ambient;
+                red_mesh.material = material_ambient;
                 
                 
                 
@@ -579,6 +658,7 @@
                 //Shadow
                 sphere_mesh.material = material_diffuse_specular;
                 sphere_mesh_earth.material = material_diffuse_specular;
+                red_mesh.material = material_diffuse_specular;
                 
                 
                 
