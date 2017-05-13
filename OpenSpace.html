@@ -234,9 +234,8 @@
             </div>
             <!-- Developer Interface End -->
 
-
-
             <input type="button" id="game" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf135" title="Flightboard" onclick="doToggle(this)">
+            
             <!-- Game Interface-->
             <div id="gameInterface">
                 <div class="gameBox">
@@ -275,30 +274,34 @@
                             </div>
                         </div>
                         <div class="displayBox">
-                            <!-- Speed -->
-                            <div class="speedBox">
-                                <div id="speed" class="gauge gauge-big gauge-orange">
+                             <!-- Throttle -->
+                           <div class="throttleGaugeBox">
+                                <div id="throttleGauge" class="gauge gauge-big gauge-orange" title="Throttle">
                                     <div class="gauge-arrow" data-percentage="40" style="transform: rotate(0deg);"></div>
                                 </div>
                                 <br>
                                 <label>
-                                    <span id="speedLabel">
-                                            0 
-                                            </span>
-                                    km/h
+                                    <span id="throttleGaugeLabel">0</span> N
+                                </label>
+                            </div>
+                            <!-- Speed -->
+                            <div class="speedBox">
+                                <div id="speed" class="gauge gauge-big gauge-orange" title="Speed">
+                                    <div class="gauge-arrow" data-percentage="40" style="transform: rotate(0deg);"></div>
+                                </div>
+                                <br>
+                                <label>
+                                    <span id="speedLabel">0</span> km/h
                                 </label>
                             </div>
                             <!-- Fuel -->
                             <div class="fuelBox">
-                                <div id="fuel" class="gauge gauge-small gauge-orange">
+                                <div id="fuel" class="gauge gauge-small gauge-orange" title="Fuel">
                                     <div class="gauge-arrow" data-percentage="40" style="transform: rotate(0deg);"></div>
                                 </div>
                                 <br>
                                 <label>
-                                    <span id="fuelLabel">
-                                            0 
-                                            </span>
-                                    t
+                                    <span id="fuelLabel">0</span> t
                                 </label>
                             </div>
                         </div>
