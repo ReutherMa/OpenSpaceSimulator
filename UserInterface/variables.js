@@ -1,6 +1,6 @@
 var globalInterfaceValues = {
     //Einstellungen
-    throttle: 0,
+    
     oxygen: 0,
     kerosene: 0,
     step: 1,
@@ -16,6 +16,7 @@ var globalInterfaceValues = {
     changed: true,
 
     //Anzeige
+    throttle: 0,
     speed: 0,
     fuel: 0
 };
@@ -59,6 +60,7 @@ function inputChange() {
     //globalInterfaceValues.reset = $('input[name=reset]').val();
     globalInterfaceValues.changed = true;
     globalInterfaceValues.speed = +$("#speedLabel").text();
+    globalInterfaceValues.fuel = +$("#fuelLabel").text();
 
     $(".ui-slider-handle").blur();
     $("#planetCamera-button").blur();

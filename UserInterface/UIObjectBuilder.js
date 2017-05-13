@@ -35,9 +35,26 @@ $(function() {
     // Gauges
     $('#speed .gauge-arrow').cmGauge();
     $('#fuel .gauge-arrow').cmGauge();
+    
+    /*if(watchglob(globalInterfaceValues.throttle)){ $("#throttleGaugeLabel").text(globalInterfaceValues.throttle);
+    }*/
+    $('#throttleGauge .gauge-arrow').trigger('updateGauge', globalInterfaceValues.throttle); $("#throttleGaugeLabel").text(globalInterfaceValues.throttle);
+    console.log(globalInterfaceValues.throttle);
 
+    /*if(watchglob(globalInterfaceValues.speed)){
+    $("#speedLabel").text(globalInterfaceValues.speed);
+    }*/
     $('#speed .gauge-arrow').trigger('updateGauge', globalInterfaceValues.speed);
+    $("#speedLabel").text(globalInterfaceValues.speed);
+   
+    /*if(watchglob(globalInterfaceValues.fuel)){
+    $("#fuelLabel").text(globalInterfaceValues.fuel); 
+    }*/
     $('#fuel .gauge-arrow').trigger('updateGauge', globalInterfaceValues.fuel);
+    $("#fuelLabel").text(globalInterfaceValues.fuel);
+    
+    
+    
 
     //inputChange();
 
@@ -55,4 +72,18 @@ function slide(name, min, max, step, val) {
         },
         change: inputChange
     });
+}
+
+function watchglob(glob) {
+    var tmp_glob = glob;
+    setTimeout(function () {
+        if (tmp_glob == glob) {
+            console.log("The value hasn't changed." + glob);
+            return false;
+        } else {
+            console.log("The value has changed" +glob);
+            tmp_glob = glob;
+            return true;
+        }
+    }, 10000);
 }

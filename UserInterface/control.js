@@ -10,8 +10,7 @@ var globalControlValues = {
     startPause: false,
     reset: false,
     quit: false,
-    softSAS: false,
-    hardSAS: false
+    sas: false
 };
 
 var keyCode = {
@@ -24,9 +23,7 @@ var keyCode = {
     space: 32,
     b: 66,
     enter: 13,
-    r: 82,
-    x: 88,
-    y: 89
+    r: 82
 };
 
 //TODO: Quit setzen
@@ -49,19 +46,14 @@ $(document).ready(function() {
                 globalControlValues.rollLeft = true;
                 break;
             case keyCode.e:
-                globalControlValues.rollRight = true;
+                globalControlValues.keyRollRight = true;
                 break;
             case keyCode.space:
                 globalControlValues.throttle = true;
+                console.log("space pressed");
                 break;
             case keyCode.b:
                 globalControlValues.brake = true;
-                break;
-            case keyCode.x:
-                globalControlValues.softSAS = true;
-                break;
-            case keyCode.y:
-                globalControlValues.hardSAS = true;
                 break;
             case keyCode.enter:
                 if (globalControlValues.startPause == false) {
@@ -106,12 +98,6 @@ $(document).ready(function() {
             case keyCode.b:
                 globalControlValues.brake = false;
                 break;
-            case keyCode.x:
-                globalControlValues.softSAS = false;
-                break;
-            case keyCode.y:
-                globalControlValues.hardSAS = false;
-                break;
         }
     });
 
@@ -133,7 +119,7 @@ $(document).ready(function() {
                 globalControlValues.rollLeft = true;
                 break;
             case "rollRight":
-                globalControlValues.rollRight = true;
+                globalControlValues.keyRollRight = true;
                 break;
             case "speed":
                 globalControlValues.throttle = true;
@@ -156,6 +142,9 @@ $(document).ready(function() {
                     globalControlValues.reset = false;
                 }
                 break;  
+            case "sas":
+                globalControlValues.sas = true;
+                break;
         }
         
     });
@@ -179,7 +168,7 @@ $(document).ready(function() {
                 globalControlValues.rollLeft = false;
                 break;
             case "rollRight":
-                globalControlValues.rollRight = false;
+                globalControlValues.keyRollRight = false;
                 break;
             case "speed":
                 globalControlValues.throttle = false;
@@ -187,6 +176,9 @@ $(document).ready(function() {
                 break;
             case "brake":
                 globalControlValues.brake = false;
+                break;
+            case "sas":
+                globalControlValues.sas = false;
                 break;
         }
     });

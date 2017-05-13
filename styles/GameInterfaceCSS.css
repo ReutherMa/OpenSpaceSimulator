@@ -39,35 +39,50 @@ h1 {
     position: absolute;
     visibility: visible;
     top: 80%;
-    left: 60%;
+    left: 55%;
     right: 0;
     z-index: 200;
     background-color: rgba(49, 49, 49, 0.7);
     padding: 10px;
     margin: auto;
-    width: 30%;
+    width: 35%;
     height: 15%;
     border-radius: 6px;
     border: 2px solid rgb(255, 140, 0);
 }
 .displayBox {
-    margin-left: 5%;
+    margin-left: 3%;
     margin-top: 5%;
 }
+.throttleGaugeBox {
+    position: absolute;
+    float: left;
+}
+#throttleGaugeLabel {
+    margin-left: 49%;
+    margin-top: 60%;
+}
 .speedBox {
+    position: absolute;
+    margin-left: 18%;
     float: left;
 }
 #speedLabel {
     margin-left: 49%;
+    margin-top: 60%;
+}
+.fuelBox {
+    position: absolute;
+    float: left;
+    margin-top: 2.5%;
+    margin-left: 36%;
 }
 #fuelLabel {
     margin-left: 49%;
-}
-.fuelBox {
-    margin-top: 3%;
-    margin-left: 2%;
+    margin-top: 60%;
 }
 .steeringBox {
+    position: absolute;
     width: auto;
     float: left;
     position: absolute;

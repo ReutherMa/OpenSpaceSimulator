@@ -1,5 +1,4 @@
 .gauge {
-    position: relative;
     display: inline-block;
     font-size: 33px;
     line-height: 1em;
@@ -13,6 +12,7 @@
     font-size: 50px;
     /*float: left;*/
 }
+
 .gauge.gauge-small {
     font-size: 35px;
     /*float: left;*/
@@ -77,6 +77,9 @@
 .gauge-red.gauge:before {
     border-color: #ff3100;
 }
+.fuelBox .gauge-red.gauge:before {
+    border-color: #9dff00;
+}
 .gauge-orange.gauge:before {
     border-color: #ff8c00;
 }
@@ -85,6 +88,9 @@
 }
 .gauge-green.gauge:before {
     border-color: #9dff00;
+}
+.fuelBox .gauge-green.gauge:before {
+    border-color: #ff3100;
 }
 .gauge-blue.gauge:before {
     border-color: #2bc5ea;
