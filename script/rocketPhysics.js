@@ -41,14 +41,7 @@ function calculateGravitationRocket(difftime){
         //update rocket position
         }
 
-        positionX = rocketGroup.position.x += speedx * difftime;
-        positionY = rocketGroup.position.y += speedy * difftime;
-        positionZ = rocketGroup.position.z += speedz * difftime;
-
-        //planetPosition.push ( [spaceObject.name],[positionX, positionY, positionZ] );
-
-
-        //rocketGroup.addTrailPoint(positionX, positionY, positionZ);
+        
     }
 }
 
@@ -82,10 +75,12 @@ function move(difftime) {
         console.log("UI update triggered");
         $("#fuelLabel").text(parseInt(fuel_mass / saturnV.fuel_total));
     } else {
-        //if(noStagesLeft){
-        prompt("No fuel left. No stages left. well fuck");
-        //}else{
-        //pompt("Seems like you have run out of fuel. Discard current rocket stage.")}
+        if(noStagesLeft){
+            prompt("No fuel left. No stages left. well fuck");
+        }
+        else{
+            pompt("Seems like you have run out of fuel. Discard current rocket stage.");
+        }
         
         
     }
@@ -117,10 +112,20 @@ function move(difftime) {
     //}
     
     //convert speed/difftime to km/h and then convert to percentual
-    globalInterfaceValues.speed = (rocketSpeed / 1000 * (3600000 / difftime)) / 4000 * 100;
+    globalInterfaceValues.speed = (rocketSpeed * (1000 / difftime)) / 8000 * 100;
     console.log("interface speed: "+globalInterfaceValues.speed);
     $('#speed .gauge-arrow').trigger('updateGauge', globalInterfaceValues.speed);
-    $("#speedLabel").text(parseInt(rocketSpeed / 1000 * (3600000 / difftime)));
+    $("#speedLabel").text(parseInt(rocketSpeed * (1000 / difftime)));
+    
+    
+        positionX = rocketGroup.position.x += speedx * difftime;
+        positionY = rocketGroup.position.y += speedy * difftime;
+        positionZ = rocketGroup.position.z += speedz * difftime;
+
+
+    //Calculate planet position for drawing ellipse
+    //rocketGroup.addTrailPoint(positionX, positionY, positionZ);
+        
     
 }
 
@@ -181,7 +186,7 @@ function rotateRocket(difftime) {
         console.log("hardSAS");
         
     }
-    if (globalControlValues.softSAS) {
+    if (globalControlValues.sas) {
         var uniQuad = new THREE.Quaternion(0,0,0,1);
         rocketGroup.angularMomentum.slerp(uniQuad, 0.1);
         console.log("softSAS");
@@ -349,3 +354,5 @@ function calculateAirResistance(speed){
     }
     
 }
+
+var rocketPhysics = true;

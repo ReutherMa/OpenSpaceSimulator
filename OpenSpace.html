@@ -20,8 +20,10 @@
 
 <body>
 
+    <div id="loadingDiv" style="width: 100%; height: 100%; background-color: darkblue; text-align: center; z-index: 1000">Loading...</div>
     <div id="container"></div>
 
+    
 
     <!-- Imports -->
     <script src="script/jquery-3.1.1.min.js"></script>
@@ -559,6 +561,11 @@
         var universe = buildUniverse();
         loadData("data/datas.json", universe);
          //var dim_ui = build3D_UI();
+        
+        
+        function loadingDone(){
+            $("#loadingDiv").remove();
+        }
     </script>
 
 </body>

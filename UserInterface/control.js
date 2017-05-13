@@ -23,7 +23,8 @@ var keyCode = {
     space: 32,
     b: 66,
     enter: 13,
-    r: 82
+    r: 82,
+    x: 88
 };
 
 //TODO: Quit setzen
@@ -69,6 +70,10 @@ $(document).ready(function() {
                     globalControlValues.reset = false;
                 }
                 break;
+            case keyCode.x:
+                globalControlValues.sas = true;
+                console.log("sas");
+                break;
         }
     });
 
@@ -97,6 +102,9 @@ $(document).ready(function() {
                 break;
             case keyCode.b:
                 globalControlValues.brake = false;
+                break;
+            case keyCode.x:
+                globalControlValues.sas = false;
                 break;
         }
     });

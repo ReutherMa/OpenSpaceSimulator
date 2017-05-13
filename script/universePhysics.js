@@ -45,3 +45,5 @@ if (spaceObject.name === spaceObjects[o].name) {
     //Calculate planet position for drawing ellipse
     spaceObject.addTrailPoint(positionX, positionY, positionZ);
 }
+
+var universePhysics = true;

@@ -16,6 +16,20 @@ var line_count = 0;
 
 var sphere_nav;
 
+var readyVars = {
+    physics : false,
+    rocket : false,
+    planets : false,
+    interface : false,
+    navball : false,
+    launchpad : false,
+    skybox: false,
+    earthshader : false,
+    render : false
+}
+
+var renderCounter = 0;
+
 /* Builds the whole Galaxy */
 function buildUniverse() {
 
@@ -170,6 +184,7 @@ function buildUniverse() {
         var skyMaterial = new THREE.MeshFaceMaterial(materialArray);
         var skyBox = new THREE.Mesh(skyGeometry, skyMaterial);
         scene.add(skyBox);
+        readyVars.skybox = true;
     }
 
     /* When user changes size of window */
@@ -250,6 +265,7 @@ function buildUniverse() {
                 planet_object.setLabel();
             }
         }
+        readyVars.planets = true;
     }
 
     /* Places the Rocket into the Universe */
@@ -275,6 +291,9 @@ function buildUniverse() {
             earthGroup.add(rocketGroup);
             rocketGroup.add(throttleSound);
         });
+        var rocketObject = new SpaceObject();
+        readyVars.rocket = true;
+        
     }
 
     /* Places Launchpad */
@@ -298,6 +317,7 @@ function buildUniverse() {
             //launchpadGroup.position.set(0, 0, 0 );
             earthGroup.add(launchpadGroup);
         });
+        readyVars.launchpad = true;
     }
 
     /* create a planet with mesh, position and orbit */
@@ -524,6 +544,8 @@ function buildUniverse() {
         sphere_nav.rotateX(Math.PI/180 * 90);
         sphere_nav.rotateY(Math.PI/180 * 90);
         ui_scene.add(sphere_nav);
+        readyVars.navball = true;
+        
     }
     
     /* This is called when UI is changed */
@@ -632,10 +654,25 @@ var clock = new THREE.Clock();
         uniforms1.time.value = counter / 1e6;
         counter ++;
         
+        readyVars.earthshader = true;
+        
         /**if (stats !== undefined) {
             stats.update();
             controls.update();
         }*/
+        
+        //checks if all resources are loaded, removes loading screen(div)
+        var everythingLoaded = setInterval(function() {
+            if (document.readyState === "complete" && renderCounter == 0) {
+                clearInterval(everythingLoaded);
+                loadingDone();
+                console.log("loading done");
+                renderCounter++;
+            }
+        })
+        
+        
+        
         if (renderer !== undefined) {
             renderer.clear();
             renderer.render(scene, camera);
@@ -644,7 +681,9 @@ var clock = new THREE.Clock();
             renderer.sortObjects = false;
             renderer.clearDepth();
             renderer.render(ui_scene, ui_camera);
+            readyVars.rener = true;
 
+           
         }
 
         //console.log (Date.now() - now);

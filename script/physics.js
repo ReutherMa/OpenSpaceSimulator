@@ -56,6 +56,7 @@ var deltaT = 10;
 
 
 
+
 /*Calculates all physical forces on planets, objects and rocket
 interactions with UI variables
 called during every rendering
@@ -107,9 +108,13 @@ function calculatePhysics(difftime, spaceObjects) {
         rotateRocket(factoredTime);
     }
       
+    /*
+    initialize trail points for rocket:
+    */
     
-    /*if (keyNextStage) {
-        nexStage();
-    }*/
+            
+    if (globalControlValues.brake) {
+        nextStage();
+    }
 
 }
