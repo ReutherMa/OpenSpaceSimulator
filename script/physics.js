@@ -53,7 +53,7 @@ var airResistance;
 
 var deltaT = 10;
 
-
+var noStagesLeft = false;
 
 
 
@@ -113,7 +113,7 @@ function calculatePhysics(difftime, spaceObjects) {
     */
     
             
-    if (globalControlValues.brake) {
+    if (globalControlValues.discardStage) {
         nextStage();
     }
 

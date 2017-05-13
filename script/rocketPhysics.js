@@ -7,6 +7,9 @@ var earthRadius = 0;
 var cotr = 0;
 var accel = 0;
 
+//TO DO: remove:
+var stagesCtr = 0;
+
 function calculateGravitationRocket(difftime){
     for (var o in spaceObjects) {
         if (spaceObjects[o].name == "rocket") {
@@ -56,7 +59,6 @@ function move(difftime) {
 
     //calculates fuel-mass that will be lost in difftime
     var mass_lost = difftime / 1000 / saturnV.stage1.burningtime * saturnV.stage1.mass_fuel * throttle / 100;
-    console.log("mass lost: "+mass_lost);
     
     
     
@@ -65,21 +67,19 @@ function move(difftime) {
     if ((fuel_mass - mass_lost) >= 0) {
         //a=F/m(now mass WITH fuel to lose)
         accel = (saturnV.stage1.thrust * (throttle/100)) / (mass); //rocket werte stimmen, einheiten sind richtig, berechnungsart stimmt
-        console.log("accel: "+accel);
+        
         //new mass without lost fuel
         mass = mass - mass_lost;
         //current fuel mass for UI
         fuel_mass = fuel_mass - mass_lost;
-        console.log("fuelmass: "+fuel_mass);
         $('#fuel .gauge-arrow').trigger('updateGauge', fuel_mass / saturnV.fuel_total * 100 );
-        console.log("UI update triggered");
         $("#fuelLabel").text(parseInt(fuel_mass / saturnV.fuel_total));
     } else {
         if(noStagesLeft){
             prompt("No fuel left. No stages left. well fuck");
         }
         else{
-            pompt("Seems like you have run out of fuel. Discard current rocket stage.");
+            prompt("Seems like you have run out of fuel. Discard current rocket stage.");
         }
         
         
@@ -90,9 +90,6 @@ function move(difftime) {
     upVec = upVec.applyQuaternion(rocketGroup.quaternion);
     upVec = upVec.normalize();
     var rocketSpeed = accel * difftime / 1000;
-    console.log("rocket speed: "+rocketSpeed);
-    console.log("difftime: "+difftime);
-    console.log("accel2: "+accel);
     // a = (F(thrust) - F(Air Resistance)) / m(rocketMass)
     //calculateAirResistance(rocketSpeed);
     //accel = ((accel * mass) - airResistance)/mass;
@@ -113,7 +110,6 @@ function move(difftime) {
     
     //convert speed/difftime to km/h and then convert to percentual
     globalInterfaceValues.speed = (rocketSpeed * (1000 / difftime)) / 8000 * 100;
-    console.log("interface speed: "+globalInterfaceValues.speed);
     $('#speed .gauge-arrow').trigger('updateGauge', globalInterfaceValues.speed);
     $("#speedLabel").text(parseInt(rocketSpeed * (1000 / difftime)));
     
@@ -189,7 +185,6 @@ function rotateRocket(difftime) {
     if (globalControlValues.sas) {
         var uniQuad = new THREE.Quaternion(0,0,0,1);
         rocketGroup.angularMomentum.slerp(uniQuad, 0.1);
-        console.log("softSAS");
     }
    
     
@@ -276,7 +271,30 @@ function gameOver(){
 next stage: UI-Event, initiated by user
 */
 function nextStage() {
-   if (stage == 1) {
+    if(!noStagesLeft&&stagesCtr<1){
+        //generic:
+        var oldStage = "stage"+stage;
+        var newStage = "stage"+(stage+1);
+        console.log(oldStage);
+        console.log(newStage);
+        if(saturnV[newStage]==undefined){
+            noStagesLeft = true;
+        }else{
+            console.log(saturnV[oldStage]["mass_empty"]);
+            console.log(saturnV[newStage]["mass_empty"]);
+            mass = mass - saturnV[oldStage]["mass_empty"] - fuel_mass;
+            fuel_mass = saturnV[newStage]["mass_empty"];
+            stage++;
+            prompt("Discarded Stage "+(stage-1)+". Current Stage: "+stage);
+            
+            //TO DO: remove:
+            stagesCtr++;
+        }
+    }else{
+        //prompt("No more stages left! Sorry!");
+    }
+    
+   /*if (stage == 1) {
         fuel_mass = saturnV.stage2.mass_fuel;
         mass = mass - saturnV.stage1.mass_empty - rocket.stage1.mass_fuel;
         stage = 2;
@@ -284,15 +302,9 @@ function nextStage() {
         fuel_mass = saturnV.stage3.mass_fuel;
         mass = mass - saturnV.stage2.mass_empty - rocket.stage2.mass_fuel;
         stage = 3;
-    } 
+    } */
     
-    //generic:
-    var oldStage = "stage"+stage;
-    var newStage = "stage"+stage+1;
-    mass = mass - rocket[oldStage].mass_empty - fuel_mass;
-    fuel_mass = rocket[newStage].mass_fuel;
-    stage++;
-    prompt("Discarded Stage "+stage-1+". Current Stage: "+stage);
+    
 }
 
 /*
@@ -308,7 +320,7 @@ function calculateAirResistance(speed){
     var x = (rocketGroup.position.x - spaceObjects.earth.group.position.x);
     var y = (rocketGroup.position.y - spaceObjects.earth.group.position.y);
     var z = (rocketGroup.position.z - spaceObjects.earth.group.position.z);
-    console.log("x"+x);
+    
     var height2 = x*x + y*y + z*z;
     var height = Math.sqrt(height2);
     if(cotr == 0){
@@ -316,19 +328,19 @@ function calculateAirResistance(speed){
         cotr++;
     }
     
-    console.log("height1: " +height)
+    
     var earthHeight = 148483220086.37973;
-    console.log(earthRadius);
+    
     height = height - earthRadius;
     height = height / 1000;
-    console.log("height: "+height)
+    
     if(height < 11000){
     //calculation of pressure: https://de.wikipedia.org/wiki/Barometrische_H%C3%B6henformel#Internationale_H.C3.B6henformel
     var pressure = 1013.25 * (Math.pow((1 - ((0.0065*height)/288.15)), 5.255));
-    console.log("pressure: "+pressure)
+    
     //cross sectional area
     var A = Math.PI * Math.pow(5,2);
-    console.log("A: "+A)
+    
     //resistance constant for rocket form
     var cw = 0.06;
     var p = pressure;
@@ -348,11 +360,10 @@ function calculateAirResistance(speed){
     var d = p * M / (R * T);
         
     var cwe = cw * A * d * 0.5;
-    console.log("cwe: "+cwe);
+    
     airResistance = cwe * speed * speed;
-    console.log("airResistance: " +airResistance);
+    
     }
     
 }
 
-var rocketPhysics = true;

@@ -5,6 +5,16 @@
         "C:/Users/Lea/Documents/Studium/B-ME5/Projektarbeit/Projekt/GitHub/OpenSpaceSimulator/three.js/examples/js/controls/OrbitControls.js",
         "C:/Users/Lea/Documents/Studium/B-ME5/Projektarbeit/Projekt/GitHub/OpenSpaceSimulator/three.js/examples/js/controls/TrackballControls.js",
         "C:/Users/Lea/Documents/Studium/B-ME5/Projektarbeit/Projekt/GitHub/OpenSpaceSimulator/script/universe.js",
-        "C:/Users/Lea/Documents/Studium/B-ME5/Projektarbeit/Projekt/GitHub/OpenSpaceSimulator/examples/three.js/examples/js/postprocessing/ShaderPass.js"
+        "C:/Users/Lea/Documents/Studium/B-ME5/Projektarbeit/Projekt/GitHub/OpenSpaceSimulator/examples/three.js/examples/js/postprocessing/ShaderPass.js",
+        "C:/Users/Lea/Documents/Studium/B-ME5/Projektarbeit/Projekt/GitHub/OpenSpaceSimulator/examples/three.js/examples/js/postprocessing/RenderPass.js",
+        "C:/Users/Lea/Documents/Studium/B-ME5/Projektarbeit/Projekt/GitHub/OpenSpaceSimulator/examples/three.js/examples/js/shaders/BlendShader.js",
+        "C:/Users/Lea/Documents/Studium/B-ME5/Projektarbeit/Projekt/GitHub/OpenSpaceSimulator/examples/three.js/examples/js/shaders/BokehShader.js",
+        "C:/Users/Lea/Documents/Studium/B-ME5/Projektarbeit/Projekt/GitHub/OpenSpaceSimulator/script/rocketData.js",
+        "C:/Users/Lea/Documents/Studium/B-ME5/Projektarbeit/Projekt/GitHub/OpenSpaceSimulator/examples/three.js/examples/js/shaders/ColorifyShader.js",
+        "C:/Users/Lea/Documents/Studium/B-ME5/Projektarbeit/Projekt/GitHub/OpenSpaceSimulator/examples/three.js/examples/js/shaders/EdgeShader.js",
+        "C:/Users/Lea/Documents/Studium/B-ME5/Projektarbeit/Projekt/GitHub/OpenSpaceSimulator/examples/three.js/examples/js/shaders/EdgeShader2.js",
+        "C:/Users/Lea/Documents/Studium/B-ME5/Projektarbeit/Projekt/GitHub/OpenSpaceSimulator/examples/three.js/examples/js/shaders/ConvolutionShader.js",
+        "C:/Users/Lea/Documents/Studium/B-ME5/Projektarbeit/Projekt/GitHub/OpenSpaceSimulator/examples/three.js/examples/js/shaders/FocusShader.js",
+        "C:/Users/Lea/Documents/Studium/B-ME5/Projektarbeit/Projekt/GitHub/OpenSpaceSimulator/examples/three.js/examples/js/shaders/CopyShader.js"
     ]
 }

@@ -10,7 +10,8 @@ var globalControlValues = {
     startPause: false,
     reset: false,
     quit: false,
-    sas: false
+    sas: false,
+    discardStage: false
 };
 
 var keyCode = {
@@ -24,7 +25,8 @@ var keyCode = {
     b: 66,
     enter: 13,
     r: 82,
-    x: 88
+    x: 88,
+    c: 67
 };
 
 //TODO: Quit setzen
@@ -72,7 +74,9 @@ $(document).ready(function() {
                 break;
             case keyCode.x:
                 globalControlValues.sas = true;
-                console.log("sas");
+                break;
+            case keyCode.c:
+                globalControlValues.discardStage = true;
                 break;
         }
     });
