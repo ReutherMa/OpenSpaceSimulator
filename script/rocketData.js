@@ -1,5 +1,6 @@
 var rockets = loadRocketData("data/rockets.json");
 var rocket = rockets.saturn5;
+var customRocketUsage = false;
 var saturnV = {
     fuel_total: rocket.stage1.mass_fuel + rocket.stage2.mass_fuel + rocket.stage3.mass_fuel,
     stage1: {
@@ -29,21 +30,25 @@ var saturnV = {
 if(!customRocketUsage){
 var rockets = loadRocketData("data/rockets.json");
 var rocket = rockets.saturn5;
-}
+}*/
 //custom Rocket creation
-/*
+
 if(customRocketUsage){
 var customRocket={};
-customRocket.fuel_total = ...;
-for(s in stages){
-    stages[s].mass_empty = ...;
-    stages[s]mass_fuel = ...;
-    stages[s]burningtime = ...;
-    stages[s]thrust = ...;
+
+for(s in globalInterfaceValues.customRocket.stages){
+    var stage = "stage"+s;
+    customRocket.stages[s].mass_empty = globalInterfaceValues.customRocket[stage].mass_empty;
+    customRocket.stages[s].mass_fuel = globalInterfaceValues.customRocket[stage].mass_fuel;
+    customRocket.stages[s].burningtime = globalInterfaceValues.customRocket[stage].burningtime;
+    customRocket.stages[s].thrust = globalInterfaceValues.customRocket[stage].thrust;
 }
-customRocket.height = ...;
-customRocket.mass_total = ...;
-customRocket.thrust_launch = ...;
+//customRocket.height = globalInterfaceValues.fuel_total;
+customRocket.fuel_total = globalInterfaceValues.customRocket.fuel_total;
+customRocket.mass_total = globalInterfaceValues.customRocket.mass_total;
+customRocket.thrust_launch = 9.81 * customRocket.mass_total;
 }
 
-}*/
+//custom rocket structure:
+
+
