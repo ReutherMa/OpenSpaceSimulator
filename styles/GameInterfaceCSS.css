@@ -50,12 +50,20 @@ h1 {
     border-radius: 6px;
     border: 2px solid rgb(255, 140, 0);
 }
+
+@media (max-width: 1496px) {
+    .dashboardBox {
+        height:auto;
+    }
+}
+    
+    
 .displayBox {
     margin-left: 3%;
     margin-top: 5%;
 }
 .throttleGaugeBox {
-    position: absolute;
+    position: relative;
     float: left;
 }
 #throttleGaugeLabel {
@@ -63,8 +71,8 @@ h1 {
     margin-top: 60%;
 }
 .speedBox {
-    position: absolute;
-    margin-left: 18%;
+    position: relative;
+    /*margin-left: 18%;*/
     float: left;
 }
 #speedLabel {
@@ -72,20 +80,18 @@ h1 {
     margin-top: 60%;
 }
 .fuelBox {
-    position: absolute;
+    position: relative;
     float: left;
     margin-top: 2.5%;
-    margin-left: 36%;
+    /*margin-left: 36%;*/
 }
 #fuelLabel {
     margin-left: 49%;
     margin-top: 60%;
 }
 .steeringBox {
-    position: absolute;
     width: auto;
     float: left;
-    position: absolute;
     z-index: 200;
     right: 5%;
     top: 30%;
