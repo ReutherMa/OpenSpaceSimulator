@@ -113,8 +113,8 @@ $(document).ready(function() {
                 break;
         }
     });
-
-    $(".gameBox .ui-button").mousedown(function(e) {
+    
+    $("#contentBox .ui-button").mousedown(function(e) {
         switch (this.name) {
             case "up":
                 globalControlValues.up = true;

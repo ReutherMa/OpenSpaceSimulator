@@ -45,7 +45,7 @@ function buildUniverse() {
     var group_galaxy;
     var sun, earth, moon, mercury, venus, mars, jupiter, saturn, uranus, neptune;
     var camElement;
-    var audioLoader, audioListener, throttleSound;
+    var audioLoader, audioListener, throttleSound, sound;
     
     var uniforms1;
     var mesh_sun;
@@ -96,7 +96,7 @@ function buildUniverse() {
         //audio
         audioListener = new THREE.AudioListener();
         camera.add( audioListener );
-        var sound = new THREE.Audio( audioListener );
+        sound = new THREE.Audio( audioListener );
         scene.add( sound );
         audioLoader = new THREE.AudioLoader();
         audioLoader.load( 'sounds/background.ogg', function( buffer ) {
@@ -633,9 +633,17 @@ var clock = new THREE.Clock();
             UIChanges();
         }
         
+        /* audio check */
         if (global.audio){
             throttleSound.play();
             global.audio = false;
+        }
+        if (globalControlValues.sound){
+            throttleSound.setVolume(0);
+            sound.setVolume(0);
+        } else {
+            sound.setVolume(1.0);
+            throttleSound.setVolume(1.0);
         }
 
         requestAnimationFrame(render);
