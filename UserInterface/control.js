@@ -10,7 +10,7 @@ var globalControlValues = {
     startPause: false,
     reset: false,
     quit: false,
-    sound: false,
+    sound: false,
     sas: false,
     discardStage: false
 };
@@ -76,9 +76,9 @@ $(document).ready(function() {
             case keyCode.x:
                 globalControlValues.sas = true;
                 break;
-            case keyCode.c:
+            /*case keyCode.c:
                 globalControlValues.discardStage = true;
-                break;
+                break;*/
         }
     });
 
@@ -111,6 +111,15 @@ $(document).ready(function() {
             case keyCode.x:
                 globalControlValues.sas = false;
                 break;
+            case keyCode.c:
+                globalControlValues.discardStage = false;
+                break;
+        }
+    });
+
+    $(document).keypress(function(e) {
+        if(e.keyCode == keyCode.c){
+            globalControlValues.discardStage = true;
         }
     });
     
@@ -142,36 +151,36 @@ $(document).ready(function() {
                 globalControlValues.brake = true;
                 break;
             case "startPause":
-                   if (globalControlValues.startPause == false) {
+                if (globalControlValues.startPause == false) {
                     globalControlValues.startPause = true;
                 } else {
                     globalControlValues.startPause = false;
                 }
                 break;
             case "sound":
-                   if (globalControlValues.sound == false) {
+                if (globalControlValues.sound == false) {
                     globalControlValues.sound = true;
                 } else {
                     globalControlValues.sound = false;
                 }
                 break;
             case "reset":
-                    if (globalControlValues.reset == false) {
+                if (globalControlValues.reset == false) {
                     globalControlValues.reset = true;
                 } else {
                     globalControlValues.reset = false;
                 }
-                break;  
+                break;
             case "sas":
                 globalControlValues.sas = true;
                 break;
         }
-        
+
     });
-    
+
     $(".gameBox .ui-button").mouseup(function(e) {
         switch (this.name) {
-               case "up":
+            case "up":
                 globalControlValues.up = false;
                 console.log("up released");
                 break;

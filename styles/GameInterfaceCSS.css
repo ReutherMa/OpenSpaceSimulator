@@ -19,9 +19,8 @@ h1 {
 .btn {
     padding-bottom: 5px !important;
 }
-
 .logo {
-    float:right;
+    float: right;
 }
 /* ---------------- BOX POSITIONING ---------------- */
 
@@ -38,26 +37,43 @@ h1 {
 .dashboardBox {
     position: absolute;
     visibility: visible;
-    top: 80%;
-    left: 55%;
-    right: 0;
+    top: 70%;
+    right: 15%;
+    z-index: 200;
+    margin: auto;
+    width: 70%;
+    height: 15%;
+}
+.displayBox {
+    position: relative;
+    float: left;
     z-index: 200;
     background-color: rgba(49, 49, 49, 0.7);
     padding: 10px;
-    margin: auto;
-    width: 35%;
-    height: 15%;
+    width: auto;
+    height: 30%;
     border-radius: 6px;
     border: 2px solid rgb(255, 140, 0);
 }
-
+.steeringBox {
+    position: relative;
+    float: left;
+    left: 28%;
+    z-index: 200;
+    background-color: rgba(49, 49, 49, 0.7);
+    padding: 10px;
+    margin-top: 5%;
+    margin-left: 70%;
+    width: auto;
+    height: 30%;
+    border-radius: 6px;
+    border: 2px solid rgb(255, 140, 0);
+}
 @media (max-width: 1496px) {
     .dashboardBox {
-        height:auto;
+        height: auto;
     }
 }
-    
-    
 .displayBox {
     margin-left: 3%;
     margin-top: 5%;

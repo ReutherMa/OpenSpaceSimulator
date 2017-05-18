@@ -94,18 +94,20 @@ fieldset {
     left: 2%;
     top: 1%;
 }*/
-
+fieldset:child{
+    color: white;
+}
 #tabBox {
     position: absolute;
     left: 2%;
     top: 6%;
 }
 
-#game {
+/*#game {
     position: absolute;
     left: 93.5%;
     top: 75%;
-}
+}*/
 
 #footerbox {
     position: absolute;
