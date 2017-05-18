@@ -39,7 +39,9 @@ fieldset {
     font-size: 13px;
 }
 /* ----------- BOX POSITIONING ----------- */
-
+#loadingBox{
+    position: absolute;
+}
 #headerbox {
     position: absolute;
     visibility: visible;

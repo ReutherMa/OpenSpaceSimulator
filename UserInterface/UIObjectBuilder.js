@@ -35,11 +35,11 @@ $(function() {
     // Gauges
     $('#speedGauge .gauge-arrow').cmGauge();
     $('#fuelGauge .gauge-arrow').cmGauge();
+    $('#throttleGauge .gauge-arrow').cmGauge();
     
     /*if(watchglob(globalInterfaceValues.throttle)){ $("#throttleGaugeLabel").text(globalInterfaceValues.throttle);
     }*/
     $('#throttleGauge .gauge-arrow').trigger('updateGauge', globalInterfaceValues.throttle); $("#throttleGaugeLabel").text(globalInterfaceValues.throttle);
-    console.log(globalInterfaceValues.throttle);
 
     /*if(watchglob(globalInterfaceValues.speed)){
     $("#speedLabel").text(globalInterfaceValues.speed);
