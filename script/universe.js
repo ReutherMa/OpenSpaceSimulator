@@ -270,11 +270,30 @@ function buildUniverse() {
 
     /* Places the Rocket into the Universe */
     function placeRocket() {
+        
+        //LOD
+        var loader_2 = new THREE.TextureLoader();
+        
+            var dotGeometry = new THREE.Geometry();
+            dotGeometry.vertices.push(new THREE.Vector3(0, 0, 0));
+            var material_point = new THREE.PointsMaterial({
+                color: 0xffffff,
+                size: 20,
+                sizeAttenuation: false,
+                map: loader_2.load("textures/rocket.png")
+            });
+            material_point.transparent = true;
+            var mp = new THREE.Points(dotGeometry, material_point);
+        
+        
         var earthGroup = spaceObjects.earth.group;
         var loader = new THREE.ColladaLoader(); 
         loader.options.convertUpAxis = true; 
         loader.load("models/saturnV.dae", function(collada) {   
             rocketGroup = new THREE.Group();
+            
+            rocketGroup.add(mp);
+            
             rocket = collada.scene;   //var skin = collada.skins[ 0 ];
             //rocket.scale.set(695508e3, 695508e3, 695508e3);
             rocketGroup.add(rocket);
