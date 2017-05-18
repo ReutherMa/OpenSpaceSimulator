@@ -13,7 +13,7 @@ function doToggle(button) {
         $("#" + button.id + "Interface").show(100);
     }
     //$("#" + button.id + "Interface").slideToggle();
-    
+    $(".btn").blur();
 }
 
 function soundOnOff(button) {
