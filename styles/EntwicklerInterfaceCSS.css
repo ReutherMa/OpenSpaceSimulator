@@ -94,9 +94,7 @@ fieldset {
     left: 2%;
     top: 1%;
 }*/
-fieldset:child{
-    color: white;
-}
+
 #tabBox {
     position: absolute;
     left: 2%;
