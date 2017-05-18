@@ -77,7 +77,7 @@
 .gauge-red.gauge:before {
     border-color: #ff3100;
 }
-.fuelBox .gauge-red.gauge:before {
+.fuelGaugeBox .gauge-red.gauge:before {
     border-color: #9dff00;
 }
 .gauge-orange.gauge:before {
@@ -89,7 +89,7 @@
 .gauge-green.gauge:before {
     border-color: #9dff00;
 }
-.fuelBox .gauge-green.gauge:before {
+.fuelGaugeBox .gauge-green.gauge:before {
     border-color: #ff3100;
 }
 .gauge-blue.gauge:before {

@@ -33,8 +33,8 @@ $(function() {
     $("#fuelLabel").text(globalInterfaceValues.speed);
 
     // Gauges
-    $('#speed .gauge-arrow').cmGauge();
-    $('#fuel .gauge-arrow').cmGauge();
+    $('#speedGauge .gauge-arrow').cmGauge();
+    $('#fuelGauge .gauge-arrow').cmGauge();
     
     /*if(watchglob(globalInterfaceValues.throttle)){ $("#throttleGaugeLabel").text(globalInterfaceValues.throttle);
     }*/
@@ -44,14 +44,14 @@ $(function() {
     /*if(watchglob(globalInterfaceValues.speed)){
     $("#speedLabel").text(globalInterfaceValues.speed);
     }*/
-    $('#speed .gauge-arrow').trigger('updateGauge', globalInterfaceValues.speed);
-    $("#speedLabel").text(globalInterfaceValues.speed);
+    $('#speedGauge .gauge-arrow').trigger('updateGauge', globalInterfaceValues.speed);
+    $("#speedGaugeLabel").text(globalInterfaceValues.speed);
    
     /*if(watchglob(globalInterfaceValues.fuel)){
     $("#fuelLabel").text(globalInterfaceValues.fuel); 
     }*/
-    $('#fuel .gauge-arrow').trigger('updateGauge', globalInterfaceValues.fuel);
-    $("#fuelLabel").text(globalInterfaceValues.fuel);
+    $('#fuelGauge .gauge-arrow').trigger('updateGauge', globalInterfaceValues.fuel);
+    $("#fuelGaugeLabel").text(globalInterfaceValues.fuel);
     
     
     

@@ -37,13 +37,13 @@ function inputChange() {
 
     // "+" means parseInt   
     //globalInterfaceValues.throttle = +$("#throttleLabel").text();
-    //globalInterfaceValues.oxygen = +$("#oxygenLabel").text();
-    //globalInterfaceValues.kerosene = +$("#keroseneLabel").text();
-    //globalInterfaceValues.step = +$('input[name=stepRange]').val();
-    //globalInterfaceValues.emptyMass = +$("#emptyMassLabel").text();
-    // globalInterfaceValues.fuelMass = +$("#fuelMassLabel").text();
-    //globalInterfaceValues.totalMass = globalInterfaceValues.emptyMass + globalInterfaceValues.fuelMass;
-    //$("#totalMass").text(globalInterfaceValues.totalMass);
+    globalInterfaceValues.oxygen = +$("#oxygenLabel").text();
+    globalInterfaceValues.kerosene = +$("#keroseneLabel").text();
+    globalInterfaceValues.step = +$('input[name=stepRange]').val();
+    globalInterfaceValues.emptyMass = +$("#emptyMassLabel").text();
+    globalInterfaceValues.fuelMass = +$("#fuelMassLabel").text();
+    globalInterfaceValues.totalMass = globalInterfaceValues.emptyMass + globalInterfaceValues.fuelMass;
+    $("#totalMass").text(globalInterfaceValues.totalMass);
     globalInterfaceValues.planetSize = +$("#planetSizeLabel").text();
 
     globalInterfaceValues.planetName = $('select[name=planetSelect]').val();
