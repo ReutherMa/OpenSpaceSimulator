@@ -26,4 +26,9 @@ div#testUI {
 .ui-widget , .ui-slider-handle {
     outline: none;
 }
+
+.ui-button {
+    width: 42px;
+} 
+
 </style>

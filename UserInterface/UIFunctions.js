@@ -16,12 +16,20 @@ function doToggle(button) {
     
 }
 
-/*
-$(".question").click(function () {
-                var questionId = this.id;
-                var answerId = "#" + questionId + "tab";
-                $(".answer").hide(100);
-                $(answerId).show(100);
-                
-            });
-*/
+function soundOnOff(button) {
+    /*if ($(button).val() == "&#xf028") {
+        $(button).val("&#xf026");
+    } else if ($(button).val() == "&#xf026") {
+      $(button).val("&#xf028");
+    } 
+    if ($(button).val() == "hi") {
+        $(button).val("bye");
+    } else if ($(button).val() == "bye") {
+      $(button).val("hi");
+    } */
+    if ($(button).hasClass("fa-volume-up")) {
+        $(button).removeClass('fa-volume-up').addClass('fa-volume-off');
+    } else if ($(button).hasClass("fa-volume-off")) {
+      $(button).removeClass("fa-volume-off").addClass("fa-volume-up")
+    }
+} 

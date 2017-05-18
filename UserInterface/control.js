@@ -10,6 +10,7 @@ var globalControlValues = {
     startPause: false,
     reset: false,
     quit: false,
+    sound: false,
     sas: false,
     discardStage: false
 };
@@ -145,6 +146,13 @@ $(document).ready(function() {
                     globalControlValues.startPause = true;
                 } else {
                     globalControlValues.startPause = false;
+                }
+                break;
+            case "sound":
+                   if (globalControlValues.sound == false) {
+                    globalControlValues.sound = true;
+                } else {
+                    globalControlValues.sound = false;
                 }
                 break;
             case "reset":
