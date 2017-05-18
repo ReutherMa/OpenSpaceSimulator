@@ -16,6 +16,11 @@ function doToggle(button) {
     $(".btn").blur();
 }
 
+function doToggleGame(button) {
+    $("#gameInterface").toggle(100);
+    $(".btn").blur();
+}
+
 function soundOnOff(button) {
     /*if ($(button).val() == "&#xf028") {
         $(button).val("&#xf026");
