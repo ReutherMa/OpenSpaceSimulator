@@ -13,7 +13,7 @@
         
         <!-- Shadow Volume Vertex Shader -->
         <script id="vertexShader_shadowVolume" type="x-shader/x-vertex">
-            const vec3 lightpos = vec3 (0.0, 0.0, 0.0);   // in world coords
+            const vec3 lightpos = vec3 (0.0, 7.0, 0.0);   // in world coords
         
             void main()	{
                 
@@ -24,8 +24,9 @@
                 vec3 posvec   = vec3( modelViewMatrix * vec4(position, 1.0) );
                 vec3 extrudeVec_ = normalize( posvec - lightvec );
                 
-                if(dot(extrudeVec_, normalVec) < 0.0 && vColor[0] == 0.0) {
-                    gl_Position = projectionMatrix * (modelViewMatrix * vec4(position, 1.0) + vec4 (extrudeVec_, 0.0)*vec4(1000.0, 1000.0, 1000.0, 0.0));
+                if(dot(extrudeVec_, normalVec) < 0.0 && vColor.x == 1.0) {
+                    gl_Position = projectionMatrix * (modelViewMatrix * vec4(position, 1.0) + 
+                                            vec4 (extrudeVec_, 0.0) * vec4(100.0, 100.0, 100.0, 0.0));
                 }else{
                     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
                 }
@@ -36,7 +37,7 @@
         <script id="fragmentShader_shadowVolume" type="x-shader/x-fragment">
             
 			void main()	{
-                gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+                gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
 			}
 		</script>
         
@@ -109,7 +110,7 @@
                 vUv = uv;
                 normal_ = normalize(normalMatrix * normal);
                 view_ = -vec3(modelViewMatrix * vec4(position, 1.0));
-                light = vec3 (viewMatrix * vec4 (0.0, 0.0, 0.0, 1.0)) + view_;  // licht in weltkoord -> light vector in augenkoord
+                light = vec3 (viewMatrix * vec4 (0.0, 7.0, 0.0, 1.0)) + view_;  // licht in weltkoord -> light vector in augenkoord
                 gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
 			}
 		</script>
@@ -127,8 +128,7 @@
             varying vec3 view_;
             varying vec3 light;
             
-			void main()	{
-            
+			void main()	{      
                 vec3 texCol = texture2D( moon_tex, vUv ).rgb;
             
                 vec3 l = normalize (light);
@@ -166,7 +166,7 @@
                 vUv = uv;
                 normal_ = normalize(normalMatrix * normal);
                 view_ = -vec3(modelViewMatrix * vec4(position, 1.0));
-                light = vec3 (viewMatrix * vec4 (0.0, 0.0, 0.0, 1.0)) + view_;  // licht in weltkoord -> light vector in augenkoord
+                light = vec3 (viewMatrix * vec4 (0.0, 7.0, 0.0, 1.0)) + view_;  // licht in weltkoord -> light vector in augenkoord
                 gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
 			}
 		</script>
@@ -222,7 +222,7 @@
                 vUv = uv;
                 normal_ = normalize(normalMatrix * normal);
                 view_ = -vec3(modelViewMatrix * vec4(position, 1.0));
-                light = vec3 (viewMatrix * vec4 (0.0, 0.0, 0.0, 1.0)) + view_;  // licht in weltkoord -> light vector in augenkoord
+                light = vec3 (viewMatrix * vec4 (0.0, 7.0, 0.0, 1.0)) + view_;  // licht in weltkoord -> light vector in augenkoord
                 gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
 			}
 		</script>
@@ -437,7 +437,7 @@
                 
                 //MOON
                 moon_mesh_vol = new THREE.Mesh(moon_geo_vol);
-                moon_mesh_vol.position.set(0, 0, 5);
+                moon_mesh_vol.position.set(0, 2, 5);
                 scene_vol.add(moon_mesh_vol);
                 
                 
@@ -452,7 +452,7 @@
 				    } );
                 
                 moon_mesh = new THREE.Mesh(moon_geo_vol, moon_mat);
-                moon_mesh.position.set(0, 0, 5);
+                moon_mesh.position.set(0, 2, 5);
                 scene.add(moon_mesh);
                 
                 
@@ -478,7 +478,7 @@
                 
                 //Sun
                 sun_mesh_vol = new THREE.Mesh(sun_geo);
-                sun_mesh_vol.position.set(0, 0, 0);
+                sun_mesh_vol.position.set(0, 7, 0);
                 scene_vol.add(sun_mesh_vol);
                 
                 uniforms3 = {
@@ -492,7 +492,7 @@
 				    } );
                 
                 sun_mesh = new THREE.Mesh(sun_geo, mat_sun);
-                sun_mesh.position.set(0, 0, 0);
+                sun_mesh.position.set(0, 7, 0);
                 scene.add(sun_mesh);
                  
                 
@@ -607,7 +607,6 @@
                 sun_mesh.material = material_ambient;
                 
                 
-                //Ambient
                 gl.enable(gl.DEPTH_TEST);
                 gl.depthFunc(gl.LESS);
                 renderer.render(scene, camera);
@@ -621,8 +620,7 @@
                 gl.stencilFunc(gl.ALWAYS, 0, 0xFF);
                 renderer.render(scene_vol, camera);
                 
-                
-                //Diff-Spec
+                //Render all objects diff/spec material
                 object.material = material_diffuse_specular;
                 ground.material = material_diffuse_specular;
                 moon_mesh.material = moon_mat_Shader;         
