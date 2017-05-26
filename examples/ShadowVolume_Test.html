@@ -13,20 +13,20 @@
         
         <!-- Shadow Volume Vertex Shader -->
         <script id="vertexShader_shadowVolume" type="x-shader/x-vertex">
-            uniform mat4 extrudeMat;
-            uniform vec3 l;
+            const vec3 lightpos = vec3 (0.0, 0.0, 0.0);   // in world coords
         
             void main()	{
                 
                 vec3 normalVec = normalize(normalMatrix * normal);
                 vec3 vColor = color;
                 
-                if(dot(l, normalVec) < 0.0) {
-                    gl_Position = projectionMatrix * extrudeMat * modelViewMatrix * vec4(position, 1.0);
-                    if(vColor[0] == 0.0) {
-                        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-                    }
-                } else {
+                vec3 lightvec = vec3( viewMatrix * vec4(lightpos, 1.0) );
+                vec3 posvec   = vec3( modelViewMatrix * vec4(position, 1.0) );
+                vec3 extrudeVec_ = normalize( posvec - lightvec );
+                
+                if(dot(extrudeVec_, normalVec) < 0.0 && vColor[0] == 0.0) {
+                    gl_Position = projectionMatrix * (modelViewMatrix * vec4(position, 1.0) + vec4 (extrudeVec_, 0.0)*vec4(1000.0, 1000.0, 1000.0, 0.0));
+                }else{
                     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
                 }
             }
@@ -36,7 +36,7 @@
         <script id="fragmentShader_shadowVolume" type="x-shader/x-fragment">
             
 			void main()	{
-                gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+                gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
 			}
 		</script>
         
@@ -57,21 +57,17 @@
         <!-- Diff/Spec Fragment Shader -->  
         <script id="fragmentShader_diffuse_specular" type="x-shader/x-fragment">
             uniform vec3 l;
-            uniform vec3 extrudeVec;
             
             varying vec3 normal_;
             varying vec3 view_;
             
 			void main()	{
             
-                vec3 extrudeVec_ = normalize( extrudeVec );
                 vec3 n = normalize(normal_);
                 vec3 v = normalize(view_);
                 vec3 halfway = normalize(v + l);
-                
-                vec3 newL = l * vec3(-1) * extrudeVec_;
-                                    //l
-                float Id = max(dot( newL, n), 0.0);
+                                    
+                float Id = max(dot( l, n), 0.0);
                 float Is = pow(max(dot(halfway, n), 0.0), 32.0);
                 
                 vec3 col = Id * vec3(0.5, 0.5, 0.5) + Is * vec3(0.3, 0.3, 0.3);
@@ -82,9 +78,7 @@
         
         <!-- Ambient Vertex Shader -->  
         <script id="vertexShader_ambient" type="x-shader/x-vertex">
-        
-			void main()	{
-            
+			void main()	{   
                 gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
 			}
 		</script>
@@ -97,7 +91,10 @@
 		</script>
         
     
+        
         <!-- Own Shaders for coloring the spheres -->
+        
+        
         <!-- Moon Vertex Shader -->
         <script id="moon_mat_vertexShader" type="x-shader/x-vertex">
         
@@ -512,17 +509,17 @@
                 var extrude_size = sceneBoundingBox.box.getSize().length();
                 var center = sceneBoundingBox.box.getCenter();
                 
+                /*
                 var extrudeVec = new THREE.Vector3();
                 extrudeVec.copy(light).negate().multiplyScalar(extrude_size);
                 
                 var extrudeMat = new THREE.Matrix4();
                 extrudeMat.makeTranslation(extrudeVec.x, extrudeVec.y, extrudeVec.z);
-                
+                */
                 
                 /*      ---   Create the shader for the shadow materials for each object   ---     */
                 //Shadow Volume Shader for material
 				material_shadowVolume = new THREE.ShaderMaterial({
-                    uniforms: {extrudeMat: {type: "m4", value: extrudeMat}, l: {type: "v3", value: light}},
                     vertexShader: document.getElementById('vertexShader_shadowVolume').textContent,
                     vertexColors: THREE.VertexColors,
 					fragmentShader: document.getElementById('fragmentShader_shadowVolume').textContent
@@ -561,14 +558,13 @@
                 /*      ---   Create the shaders for lightning   ---     */   
                 //Shadow Volume Shader for diff & spec
                 material_diffuse_specular = new THREE.ShaderMaterial({
-                    uniforms: { l: {type: "v3", value: light}, extrudeVec: { type: "v3", value: extrudeVec } },
+                    uniforms: { l: {type: "v3", value: light} },
                     vertexShader: document.getElementById('vertexShader_diffuse_specular').textContent,
 					fragmentShader: document.getElementById('fragmentShader_diffuse_specular').textContent
 				});
                 
                 //Shadow Volume Shader for ambient
                 material_ambient = new THREE.ShaderMaterial({
-                    uniforms: { extrudeVec: { type: "v3", value: extrudeVec } },
                     vertexShader: document.getElementById('vertexShader_ambient').textContent,
 					fragmentShader: document.getElementById('fragmentShader_ambient').textContent
 				});
@@ -611,7 +607,7 @@
                 sun_mesh.material = material_ambient;
                 
                 
-                
+                //Ambient
                 gl.enable(gl.DEPTH_TEST);
                 gl.depthFunc(gl.LESS);
                 renderer.render(scene, camera);
@@ -626,12 +622,10 @@
                 renderer.render(scene_vol, camera);
                 
                 
-                //Lit
+                //Diff-Spec
                 object.material = material_diffuse_specular;
                 ground.material = material_diffuse_specular;
-                //sphere_mesh.material = material_diffuse_specular;
                 moon_mesh.material = moon_mat_Shader;         
-                //sphere_mesh_earth.material = material_diffuse_specular;
                 sphere_mesh_earth.material = sphere_earth_Shader;         
                 sun_mesh.material = sun_Shader;
                 
