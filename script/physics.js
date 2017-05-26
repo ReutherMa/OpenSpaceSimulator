@@ -55,7 +55,10 @@ var deltaT = 10;
 
 var noStagesLeft = false;
 
+var rocketSpeed = 0;
 
+//up-Vector of Rocket before launch
+var baseYAxis;
 
 /*Calculates all physical forces on planets, objects and rocket
 interactions with UI variables
@@ -66,6 +69,19 @@ global.started: boolean variable that determines whether rocket launched already
 function calculatePhysics(difftime, spaceObjects) {
 
     //loadRocket();
+    //get up-vector of rocket before launch
+    if(!global.started){
+        var xAxis = new THREE.Vector3();
+        baseYAxis = new THREE.Vector3();
+        var zAxis = new THREE.Vector3();
+        var quaternion = rocketGroup.quaternion;
+        var matrix = new THREE.Matrix4();
+        matrix = matrix.makeRotationFromQuaternion ( quaternion );
+        matrix.extractBasis(xAxis, baseYAxis, zAxis);
+    }
+    
+    //difftime from ms in s (SI) 
+    difftime = difftime / 1000;
     timefactor = globalInterfaceValues.timeFactor;
     var factoredTime = difftime * timefactor;
     
@@ -80,10 +96,8 @@ function calculatePhysics(difftime, spaceObjects) {
     }
     
     if (global.started) {
-        if (throttle>0) {
             move(factoredTime);
             //throttleSound.setVolume(globalControlValues.throttle/100);
-        }
         
     } else if (globalControlValues.throttle) {
         global.audio = true;
@@ -92,12 +106,20 @@ function calculatePhysics(difftime, spaceObjects) {
             console.log("started 2:"+global.started);
             //prompt("Rocket successfully launched");
         }
+        
     }
     
     
-    if(globalControlValues.throttle&&throttle<100){
-        throttle+=5;
+    if( globalControlValues.throttle && throttle<100 ){
+        throttle += 5;
         console.log("throttle: "+throttle);
+    }
+    if( !globalControlValues.throttle && throttle>0 ){
+        throttle -= 5;
+        console.log("throttle: "+throttle);
+    }
+    if( throttle<=0 ){
+        global.audio = false;
     }
     
     if(globalControlValues.break&&throttle>=0){
@@ -107,7 +129,8 @@ function calculatePhysics(difftime, spaceObjects) {
     if(rocketGroup&&drehmoment){
         rotateRocket(factoredTime);
     }
-      
+    $('#throttleGauge .gauge-arrow').trigger('updateGauge', throttle);
+    $("#throttleGaugeLabel").text(parseInt(throttle));  
     /*
     initialize trail points for rocket:
     */
