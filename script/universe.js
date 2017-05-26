@@ -304,7 +304,8 @@ function buildUniverse() {
             rocketGroup.position.x = xE + 1;
             rocketGroup.position.y = yE + 1;
             rocketGroup.position.z = zE + 1;
-            rocket.rotateX(Math.PI/180 * 45);
+            rocketGroup.speed = new THREE.Vector3 (0, 0, 0);
+            rocketGroup.rotateX(Math.PI/180 * 45);
             rocketGroup.angularMomentum = new THREE.Quaternion(0,0,0,1);
             rocketGroup.angularAcceleration = new THREE.Quaternion(0,0,0,1);
             earthGroup.add(rocketGroup);
@@ -652,8 +653,11 @@ var clock = new THREE.Clock();
         /* current time in ms since 1.1.1970 -> 00:00:00 UTC Worldtime */
         now = Date.now();
         difftime = (now - lasttime) * 1e-3;
+        if (difftime > .1) {
+            difftime = .1;      // keine zu großen Zeitschritte (debugging, browser hickups)
+        }
 
-        difftime *= 1e2;
+        //difftime *= 1e2;
 
         /* Pause the Game */
         if (!globalControlValues.keyStartPause) {

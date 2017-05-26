@@ -80,8 +80,6 @@ function calculatePhysics(difftime, spaceObjects) {
         matrix.extractBasis(xAxis, baseYAxis, zAxis);
     }
     
-    //difftime from ms in s (SI) 
-    difftime = difftime / 1000;
     timefactor = globalInterfaceValues.timeFactor;
     var factoredTime = difftime * timefactor;
     

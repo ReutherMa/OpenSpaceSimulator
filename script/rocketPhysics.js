@@ -11,8 +11,8 @@ var currentStage = 1;
 //TO DO: remove:
 var stagesCtr = 0;
 
-var speedVec = new THREE.Vector3();
-var rocketSpeed = 0;
+//var speedVec = new THREE.Vector3();
+//var rocketSpeed = 0;
 
 function calculateGravitationRocket(difftime){
     for (var o in spaceObjects) {
@@ -20,9 +20,9 @@ function calculateGravitationRocket(difftime){
             continue;
         }
         if(spaceObjects[o].name == "earth"){
-        var rx = spaceObjects[o].group.position.x - rocketGroup.position.x;
-        var ry = spaceObjects[o].group.position.y - rocketGroup.position.y;
-        var rz = spaceObjects[o].group.position.z - rocketGroup.position.z;
+        var rx = -rocketGroup.position.x;
+        var ry = -rocketGroup.position.y;
+        var rz = -rocketGroup.position.z;
         var dist2 = rx * rx + ry * ry + rz * rz;
         var dist = Math.sqrt(dist2);
         var mindist = 1e-1;
@@ -34,9 +34,9 @@ function calculateGravitationRocket(difftime){
             var gravAccel = gravConst * spaceObjects[o].mass / dist2;
             if(ctr==0){accel=0;ctr++;}
             dist = 1 / dist;
-            rocketGroup.speedx += gravAccel * difftime;
-            rocketGroup.speedy += gravAccel * difftime;
-            rocketGroup.speedz += gravAccel * difftime;
+            rocketGroup.speed.x += gravAccel * rx * dist * difftime;
+            rocketGroup.speed.y += gravAccel * ry * dist * difftime;
+            rocketGroup.speed.z += gravAccel * rz * dist * difftime;
         }
             
         if(dist < mindist){
@@ -53,7 +53,7 @@ function calculateGravitationRocket(difftime){
 }
 
 
-
+var lastRocketHeight = 0;
 /**
 Rocket Science
 part 1: acceleration of direction and new position
@@ -79,7 +79,7 @@ function move(difftime) {
         //a=F/m(now mass WITH fuel to lose)
         accel = (saturnV.stage1.thrust * (throttle/100)) / (mass); //rocket werte stimmen, einheiten sind richtig, berechnungsart stimmt
         // a = (F(thrust) - F(Air Resistance)) / m(rocketMass)
-        calculateAirResistance(rocketSpeed);
+        calculateAirResistance(rocketGroup.speed.length());
         accel = ((accel * mass) - airResistance)/mass;
         console.log("thrust: "+saturnV.stage1.thrust);
         console.log("throttle: "+throttle);
@@ -106,14 +106,19 @@ function move(difftime) {
     
     var ad = accel * difftime;
     console.log("accel: "+accel);
-    rocketSpeed += ad;
     
-    speedVec = (yAxis.multiplyScalar(rocketSpeed));
-    console.log((yAxis.multiplyScalar(ad)));
-    console.log("rocket speed: " + rocketSpeed);
-    rocketGroup.position.addVectors( rocketGroup.position, speedVec.multiplyScalar( difftime * 1000 ));
+    rocketGroup.speed.addScaledVector (yAxis, ad);
+    //rocketGroup.speed.addVectors (rocketGroup.speed, yAxis.multiplyScalar(ad));
+    var rocketSpeed = rocketGroup.speed.length();
+    console.log("rocket speed: " + rocketGroup.speed.x + " / " + rocketGroup.speed.y + " / " + rocketGroup.speed.z);
+    rocketGroup.position.addScaledVector (rocketGroup.speed, difftime);
+    //rocketGroup.position.addVectors( rocketGroup.position, rocketGroup.speed.multiplyScalar( difftime ));
     console.log(rocketGroup.position);
     
+    var rocketHeight = rocketGroup.position.length() - spaceObjects.earth.radius;
+    var rocketHeightSpeed = (rocketHeight - lastRocketHeight) / difftime;
+    lastRocketHeight = rocketHeight;
+    console.log ("Height over Earth: " + rocketHeight + " / Speed: " + rocketHeightSpeed);
     
     //convert speed/difftime to km/h and then convert to percentual
     globalInterfaceValues.speed = rocketSpeed / 8000 * 100;
@@ -151,32 +156,32 @@ function rotateRocket(difftime) {
     //checks which rotation key is pressed and determines angle acceleration
     if (globalControlValues.up) {
         //accelOX = accelOX + angle_const;
-        rocketGroup.angularAcceleration.set (xAxis.x, xAxis.y, xAxis.z, 1000) .normalize ();
+        rocketGroup.angularAcceleration.set (xAxis.x, xAxis.y, xAxis.z, 100) .normalize ();
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
         
     }
     if (globalControlValues.down) {
-        rocketGroup.angularAcceleration.set (-xAxis.x, -xAxis.y, -xAxis.z, 1000) .normalize ();
+        rocketGroup.angularAcceleration.set (-xAxis.x, -xAxis.y, -xAxis.z, 100) .normalize ();
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
         
     }
     if (globalControlValues.rollLeft) {
-        rocketGroup.angularAcceleration.set (-yAxis.x, -yAxis.y, -yAxis.z, 1000) .normalize ();
+        rocketGroup.angularAcceleration.set (-yAxis.x, -yAxis.y, -yAxis.z, 100) .normalize ();
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
         
     }
     if (globalControlValues.rollRight) {
-        rocketGroup.angularAcceleration.set (yAxis.x, yAxis.y, yAxis.z, 1000) .normalize ();
+        rocketGroup.angularAcceleration.set (yAxis.x, yAxis.y, yAxis.z, 100) .normalize ();
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
         
     }
     if (globalControlValues.left) {
-        rocketGroup.angularAcceleration.set (zAxis.x, zAxis.y, zAxis.z, 1000) .normalize ();
+        rocketGroup.angularAcceleration.set (zAxis.x, zAxis.y, zAxis.z, 100) .normalize ();
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
         
     }
     if (globalControlValues.right) {
-        rocketGroup.angularAcceleration.set (-zAxis.x, -zAxis.y, -zAxis.z, 1000) .normalize ();
+        rocketGroup.angularAcceleration.set (-zAxis.x, -zAxis.y, -zAxis.z, 100) .normalize ();
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
         
     }
