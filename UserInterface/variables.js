@@ -1,21 +1,25 @@
 var globalInterfaceValues = {
-    //Einstellungen
-    
-    oxygen: 0,
-    kerosene: 0,
-    step: 1,
+    // User Einstellungen
+
+    // RocketInterface
+    stage: 1,
     emptyMass: 0,
     fuelMass: 0,
     totalMass: 0,
+    thrust: 0,
+    burningTime: 0,
+    
+    // DeveloperInterface
     planetName: "earth",
     planetSize: 1,
     planetAllSelected: false,
     planetCamera: "earth",
-    engine: "Engine1",
     timeFactor: 1,
     changed: true,
 
-    //Anzeige
+    // Anzeige
+    
+    // GameInteface
     throttle: 0,
     speed: 0,
     fuel: 0
@@ -36,16 +40,17 @@ $(function() {
 function inputChange() {
 
     // "+" means parseInt   
-    //globalInterfaceValues.throttle = +$("#throttleLabel").text();
-    globalInterfaceValues.oxygen = +$("#oxygenLabel").text();
-    globalInterfaceValues.kerosene = +$("#keroseneLabel").text();
-    globalInterfaceValues.step = +$('input[name=stepRange]').val();
+    // RocketInterface
+    globalInterfaceValues.stage = +$("#stagesLabel").text();
     globalInterfaceValues.emptyMass = +$("#emptyMassLabel").text();
     globalInterfaceValues.fuelMass = +$("#fuelMassLabel").text();
     globalInterfaceValues.totalMass = globalInterfaceValues.emptyMass + globalInterfaceValues.fuelMass;
     $("#totalMass").text(globalInterfaceValues.totalMass);
+    globalInterfaceValues.burningTime = +$("#burningTimeLabel").text();
+    globalInterfaceValues.thrust = +$("#thrustLabel").text();
+    
+    // DeveloperInterface
     globalInterfaceValues.planetSize = +$("#planetSizeLabel").text();
-
     globalInterfaceValues.planetName = $('select[name=planetSelect]').val();
     if ($("#check").is(':checked')) {
         globalInterfaceValues.planetAllSelected = true;
@@ -59,8 +64,6 @@ function inputChange() {
     globalInterfaceValues.planetCamera = $('select[name=planetCamera]').val();
     //globalInterfaceValues.reset = $('input[name=reset]').val();
     globalInterfaceValues.changed = true;
-    globalInterfaceValues.speed = +$("#speedLabel").text();
-    globalInterfaceValues.fuel = +$("#fuelLabel").text();
 
     $(".ui-slider-handle").blur();
     $("#planetCamera-button").blur();
