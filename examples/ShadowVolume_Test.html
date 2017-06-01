@@ -13,7 +13,7 @@
         
         
         <!-- SHADOW VOLUME Vertex Shader -->
-        <script id="vertexShader_shadowVolume" type="x-shader/x-vertex">
+        <script id="shadowVolume_vs" type="x-shader/x-vertex">
             const vec3 lightpos = vec3 (0.0, 7.0, 0.0);   // in world coords
             
 #include <common>
@@ -48,7 +48,7 @@
         
         
         <!-- SHADOW VOLUME Fragment Shader -->        
-        <script id="fragmentShader_shadowVolume" type="x-shader/x-fragment">
+        <script id="shadowVolume_fs" type="x-shader/x-fragment">
             
 #include <logdepthbuf_pars_fragment>
 
@@ -64,7 +64,8 @@
         
         
         <!-- DIFF/SPEC Space Objects Vertex Shader -->  
-        <script id="spaceObject_vertexShader_diffuse_specular" type="x-shader/x-vertex">
+        <script id="diffSpec_spaceObj_vs" type="x-shader/x-vertex">
+        //spaceObject_vertexShader_diffuse_specular
             varying vec3 normal_;
             varying vec3 view_;
         
@@ -89,7 +90,8 @@
 		</script>
         
         <!-- DIFF/SPEC Space Objects Fragment Shader -->  
-        <script id="spaceObject_fragmentShader_diffuse_specular" type="x-shader/x-fragment">
+        <script id="diffSpec_spaceObj_fs" type="x-shader/x-fragment">
+        //spaceObject_fragmentShader_diffuse_specular
             uniform vec3 l;
             
             varying vec3 normal_;
@@ -119,7 +121,8 @@
         
         
         <!-- AMBIENT Space Objects Vertex Shader -->  
-        <script id="spaceObject_vertexShader_ambient" type="x-shader/x-vertex">
+        <script id="ambient_spaceObj_vs" type="x-shader/x-vertex">
+        //spaceObject_vertexShader_ambient
 
 #include <common>
 #include <logdepthbuf_pars_vertex>
@@ -139,7 +142,8 @@
 		</script>
         
         <!-- AMBIENT Space Objects Fragment Shader -->  
-        <script id="spaceObject_fragmentShader_ambient" type="x-shader/x-fragment">
+        <script id="ambient_spaceObj_fs" type="x-shader/x-fragment">
+        //spaceObject_fragmentShader_ambient
 #include <logdepthbuf_pars_fragment>
 
 			void main( void ) {
@@ -154,7 +158,8 @@
         
         
                 <!-- DIFF/SPEC Space Objects Vertex Shader -->  
-        <script id="earth_vertexShader_diffuse_specular" type="x-shader/x-vertex">
+        <script id="diffSpec_earth_vs" type="x-shader/x-vertex">
+        //earth_vertexShader_diffuse_specular
             varying vec3 normal_;
             varying vec3 view_;
         
@@ -179,7 +184,8 @@
 		</script>
         
         <!-- DIFF/SPEC Space Objects Fragment Shader -->  
-        <script id="earth_fragmentShader_diffuse_specular" type="x-shader/x-fragment">
+        <script id="diffSpec_earth_fs" type="x-shader/x-fragment">
+        //earth_fragmentShader_diffuse_specular
             uniform vec3 l;
             
             varying vec3 normal_;
@@ -207,7 +213,8 @@
         
         
         <!-- AMBIENT Earth Vertex Shader -->  
-        <script id="earth_vertexShader_ambient" type="x-shader/x-vertex">
+        <script id="ambient_earth_vs" type="x-shader/x-vertex">
+        //earth_vertexShader_ambient
 
         varying vec2 vUv;
 #include <common>
@@ -229,7 +236,8 @@
 		</script>
         
         <!-- AMBIENT Earth Fragment Shader -->  
-        <script id="earth_fragmentShader_ambient" type="x-shader/x-fragment">
+        <script id="ambient_earth_fs" type="x-shader/x-fragment">
+        //earth_fragmentShader_ambient
             uniform sampler2D texture;
             varying vec2 vUv;
         
@@ -253,8 +261,8 @@
         
         
         <!-- Space Object Vertex Shader -->
-        <script id="spaceObject_vertexShader" type="x-shader/x-vertex">
-        
+        <script id="spaceObj_vs" type="x-shader/x-vertex">
+        //spaceObject_vertexShader
             varying vec2 vUv;
             varying vec3 normal_;
             varying vec3 view_;
@@ -283,8 +291,8 @@
         
          
         <!-- Space Object Fragment Shader -->        
-        <script id="spaceObject_fragmentShader" type="x-shader/x-fragment">
-        
+        <script id="spaceObj_fs" type="x-shader/x-fragment">
+        //spaceObject_fragmentShader
             uniform sampler2D texture;
             //uniform sampler2D bumpTexture;
             
@@ -327,8 +335,8 @@
 		<script>
             var stats, camera, renderer, material_diffuse_specular, material_volume, material_ambient;
             
-            var scene,     object,     ground,     moon_mesh,     sphere_mesh_earth,     sun_mesh;
-            var scene_vol, object_vol, ground_vol, moon_mesh_vol, sphere_mesh_earth_vol, sun_mesh_vol;
+            var scene,     mesh_torus,    mesh_ground,    mesh_moon,    mesh_earth,    mesh_sun;
+            var sceneVol,  meshVol_torus, meshVol_ground, meshVol_moon, meshVol_earth, meshVol_sun;
             
             var uniforms1, uniforms2;
             var loader = new THREE.TextureLoader();    
@@ -349,7 +357,7 @@
                 document.body.appendChild(renderer.domElement);
                 
                 scene = new THREE.Scene();
-                scene_vol = new THREE.Scene();
+                sceneVol = new THREE.Scene();
                 
                 //axisHelper
                 var axisHelper = new THREE.AxisHelper(100); //
@@ -473,29 +481,29 @@
                 
                 /*      ---   Create the meshes, set the position, add shadow volume and object to the scenes ---     */
                 //TORUS
-                object_vol = new THREE.Mesh(object_vol_geometry);
-                object_vol.position.set(0, 0, -5);
-                scene_vol.add(object_vol);
+                meshVol_torus = new THREE.Mesh(object_vol_geometry);
+                meshVol_torus.position.set(0, 0, -5);
+                sceneVol.add(meshVol_torus);
                 
-                object = new THREE.Mesh(new THREE.TorusKnotGeometry(2, 0.5, 100, 16));
-                object.position.set(0, 0, -5);
-                scene.add(object);
+                mesh_torus = new THREE.Mesh(new THREE.TorusKnotGeometry(2, 0.5, 100, 16));
+                mesh_torus.position.set(0, 0, -5);
+                scene.add(mesh_torus);
                 
                 
                 //GROUND-PLATE
-                ground_vol = new THREE.Mesh(ground_vol_geometry);
-                ground_vol.position.set(0, -25, 0);
-                scene_vol.add(ground_vol);
+                meshVol_ground = new THREE.Mesh(ground_vol_geometry);
+                meshVol_ground.position.set(0, -25, 0);
+                sceneVol.add(meshVol_ground);
                 
-                ground = new THREE.Mesh(new THREE.BoxGeometry(75, 0.1, 75));
-                ground.position.set(0, -25, 0);
-                scene.add(ground);
+                mesh_ground = new THREE.Mesh(new THREE.BoxGeometry(75, 0.1, 75));
+                mesh_ground.position.set(0, -25, 0);
+                scene.add(mesh_ground);
                 
                 
                 //MOON
-                moon_mesh_vol = new THREE.Mesh(moon_geo_vol);
-                moon_mesh_vol.position.set(0, 2, 5);
-                scene_vol.add(moon_mesh_vol);
+                meshVol_moon = new THREE.Mesh(moon_geo_vol);
+                meshVol_moon.position.set(0, 2, 5);
+                sceneVol.add(meshVol_moon);
                 
                 
                 uniforms1 = {
@@ -504,19 +512,19 @@
                 
                 moon_mat = new THREE.ShaderMaterial( {
 						uniforms: uniforms1,
-						vertexShader: document.getElementById( 'spaceObject_vertexShader' ).textContent,
-						fragmentShader: document.getElementById( 'spaceObject_fragmentShader' ).textContent
+						vertexShader: document.getElementById( 'spaceObj_vs' ).textContent,
+						fragmentShader: document.getElementById( 'spaceObj_fs' ).textContent
 				    } );
                 
-                moon_mesh = new THREE.Mesh(moon_geo_vol, moon_mat);
-                moon_mesh.position.set(0, 2, 5);
-                scene.add(moon_mesh);
+                mesh_moon = new THREE.Mesh(moon_geo_vol, moon_mat);
+                mesh_moon.position.set(0, 2, 5);
+                scene.add(mesh_moon);
                 
                 
                 //EARTH
-                sphere_mesh_earth_vol = new THREE.Mesh(sphere_earth_geo_vol);
-                sphere_mesh_earth_vol.position.set(0, 0, 10);
-                scene_vol.add(sphere_mesh_earth_vol);
+                meshVol_earth = new THREE.Mesh(sphere_earth_geo_vol);
+                meshVol_earth.position.set(0, 0, 10);
+                sceneVol.add(meshVol_earth);
                 
                 uniforms2 = {
                     texture: { value: loader.load( "textures/earth/earth_map.jpg" ) }
@@ -524,19 +532,19 @@
                 
                 sphere_mat_earth = new THREE.ShaderMaterial( {
 						uniforms: uniforms2,
-						vertexShader: document.getElementById( 'spaceObject_vertexShader' ).textContent,
-						fragmentShader: document.getElementById( 'spaceObject_fragmentShader' ).textContent
+						vertexShader: document.getElementById( 'spaceObj_vs' ).textContent,
+						fragmentShader: document.getElementById( 'spaceObj_fs' ).textContent
 				    } );
                 
-                sphere_mesh_earth = new THREE.Mesh(sphere_earth_geo_vol, sphere_mat_earth);
-                sphere_mesh_earth.position.set(0, 0, 10);
-                scene.add(sphere_mesh_earth);
+                mesh_earth = new THREE.Mesh(sphere_earth_geo_vol, sphere_mat_earth);
+                mesh_earth.position.set(0, 0, 10);
+                scene.add(mesh_earth);
 
                 
                 //Sun
-                sun_mesh_vol = new THREE.Mesh(sun_geo);
-                sun_mesh_vol.position.set(0, 7, 0);
-                scene_vol.add(sun_mesh_vol);
+                meshVol_sun = new THREE.Mesh(sun_geo);
+                meshVol_sun.position.set(0, 7, 0);
+                sceneVol.add(meshVol_sun);
                 
                 uniforms3 = {
                     texture: { value: loader.load( "textures/sun/sun_map.jpg" ) }
@@ -544,13 +552,13 @@
                 
                 mat_sun = new THREE.ShaderMaterial( {
 						uniforms: uniforms3,
-						vertexShader: document.getElementById( 'spaceObject_vertexShader' ).textContent,
-						fragmentShader: document.getElementById( 'spaceObject_fragmentShader' ).textContent
+						vertexShader: document.getElementById( 'spaceObj_vs' ).textContent,
+						fragmentShader: document.getElementById( 'spaceObj_fs' ).textContent
 				    } );
                 
-                sun_mesh = new THREE.Mesh(sun_geo, mat_sun);
-                sun_mesh.position.set(0, 7, 0);
-                scene.add(sun_mesh);
+                mesh_sun = new THREE.Mesh(sun_geo, mat_sun);
+                mesh_sun.position.set(0, 7, 0);
+                scene.add(mesh_sun);
                  
                 
                 //Camera         
@@ -576,54 +584,57 @@
                 
                 /*      ---   Create the shader for the shadow materials for each object   ---     */
                 //Shadow Volume Shader for material
-				material_shadowVolume = new THREE.ShaderMaterial({
-                    vertexShader: document.getElementById('vertexShader_shadowVolume').textContent,
+                //material_shadowVolume
+				shadowVolume_mat = new THREE.ShaderMaterial({
+                    vertexShader: document.getElementById('shadowVolume_vs').textContent,
                     vertexColors: THREE.VertexColors,
-					fragmentShader: document.getElementById('fragmentShader_shadowVolume').textContent
+					fragmentShader: document.getElementById('shadowVolume_fs').textContent
 				});
                        
-                object_vol.material = material_shadowVolume;                //Torus
-                ground_vol.material = material_shadowVolume;                //Ground Plate
-                moon_mesh_vol.material = material_shadowVolume;             //Moon
-                sphere_mesh_earth_vol.material = material_shadowVolume;     //Earth
-                sun_mesh_vol.material = material_shadowVolume;              //Sun
+                meshVol_torus.material = shadowVolume_mat;      //Torus
+                meshVol_ground.material = shadowVolume_mat;     //Ground Plate
+                meshVol_moon.material = shadowVolume_mat;       //Moon
+                meshVol_earth.material = shadowVolume_mat;      //Earth
+                meshVol_sun.material = shadowVolume_mat;        //Sun
                 
                      
                 /*      ---   Create the shaders for earth and moon   ---     */ 
                 //Moon
                 moon_mat_Shader = new THREE.ShaderMaterial({
                     uniforms: uniforms1,
-                    vertexShader: document.getElementById('spaceObject_vertexShader').textContent,
-					fragmentShader: document.getElementById('spaceObject_fragmentShader').textContent
+                    vertexShader: document.getElementById('spaceObj_vs').textContent,
+					fragmentShader: document.getElementById('spaceObj_fs').textContent
 				});
                  
                 //Earth
                 sphere_earth_Shader = new THREE.ShaderMaterial({
                     uniforms: uniforms2,
-                    vertexShader: document.getElementById('spaceObject_vertexShader').textContent,
-					fragmentShader: document.getElementById('spaceObject_fragmentShader').textContent
+                    vertexShader: document.getElementById('spaceObj_vs').textContent,
+					fragmentShader: document.getElementById('spaceObj_fs').textContent
 				});
                 
                 //Sun
                 sun_Shader = new THREE.ShaderMaterial({
                     uniforms: uniforms3,
-                    vertexShader: document.getElementById('spaceObject_vertexShader').textContent,
-					fragmentShader: document.getElementById('spaceObject_fragmentShader').textContent
+                    vertexShader: document.getElementById('spaceObj_vs').textContent,
+					fragmentShader: document.getElementById('spaceObj_fs').textContent
 				});
         
                 
                 /*      ---   Create the shaders for lightning   ---     */   
                 //DIFF/SPEC Space Objects Shaders
-                material_diffuse_specular = new THREE.ShaderMaterial({
+                //material_diffuse_specular
+                diffSpec_spaceObj_mat = new THREE.ShaderMaterial({
                     uniforms: { l: {type: "v3", value: light} },
-                    vertexShader: document.getElementById('spaceObject_vertexShader_diffuse_specular').textContent,
-					fragmentShader: document.getElementById('spaceObject_fragmentShader_diffuse_specular').textContent
+                    vertexShader: document.getElementById('diffSpec_spaceObj_vs').textContent,
+					fragmentShader: document.getElementById('diffSpec_spaceObj_fs').textContent
 				});
                 
                 //AMBIENT Shadow VolumeE Shaders
-                material_ambient = new THREE.ShaderMaterial({
-                    vertexShader: document.getElementById('spaceObject_vertexShader_ambient').textContent,
-					fragmentShader: document.getElementById('spaceObject_fragmentShader_ambient').textContent
+                //material_ambient
+                ambient_spaceObj_mat = new THREE.ShaderMaterial({
+                    vertexShader: document.getElementById('ambient_spaceObj_vs').textContent,
+					fragmentShader: document.getElementById('ambient_spaceObj_fs').textContent
 				});
     
                 
@@ -635,10 +646,11 @@
                 
                 
                 //AMBIENT EARTH 
-                sphere_mesh_earth_ambient = new THREE.ShaderMaterial({
+                //sphere_mesh_earth_ambient
+                ambient_earth_mat = new THREE.ShaderMaterial({
                     uniforms: uniforms4,
-                    vertexShader: document.getElementById('earth_vertexShader_ambient').textContent,
-					fragmentShader: document.getElementById('earth_fragmentShader_ambient').textContent
+                    vertexShader: document.getElementById('ambient_earth_vs').textContent,
+					fragmentShader: document.getElementById('ambient_earth_fs').textContent
 				});
                 
                 
@@ -659,7 +671,7 @@
             //Animation
             function animate() {
 				requestAnimationFrame(animate);
-                //object.rotation.y += 0.005;
+                //mesh_torus.rotation.y += 0.005;
                 render();
                 stats.update();
 			}
@@ -672,11 +684,11 @@
                 
                 
                 //Render all objects ambient material
-                object.material = material_ambient;
-                ground.material = material_ambient;              
-                moon_mesh.material = material_ambient;
-                sphere_mesh_earth.material = sphere_mesh_earth_ambient;
-                sun_mesh.material = material_ambient;
+                mesh_torus.material = ambient_spaceObj_mat;
+                mesh_ground.material = ambient_spaceObj_mat;              
+                mesh_moon.material = ambient_spaceObj_mat;
+                mesh_earth.material = ambient_earth_mat;
+                mesh_sun.material = ambient_spaceObj_mat;
                 
                 
                 gl.enable(gl.DEPTH_TEST);
@@ -690,14 +702,14 @@
                 gl.stencilOpSeparate(gl.FRONT, gl.KEEP, gl.KEEP, gl.INCR_WRAP);
                 gl.stencilOpSeparate(gl.BACK, gl.KEEP, gl.KEEP, gl.DECR_WRAP);
                 gl.stencilFunc(gl.ALWAYS, 0, 0xFF);
-                renderer.render(scene_vol, camera);
+                renderer.render(sceneVol, camera);
                 
                 //Render all objects diff/spec material
-                object.material = material_diffuse_specular;
-                ground.material = material_diffuse_specular;
-                moon_mesh.material = moon_mat_Shader;         
-                sphere_mesh_earth.material = sphere_earth_Shader;         
-                sun_mesh.material = sun_Shader;
+                mesh_torus.material = diffSpec_spaceObj_mat;
+                mesh_ground.material = diffSpec_spaceObj_mat;
+                mesh_moon.material = moon_mat_Shader;         
+                mesh_earth.material = sphere_earth_Shader;         
+                mesh_sun.material = sun_Shader;
                 
                 
                 gl.colorMask(true, true, true, true);
@@ -709,7 +721,7 @@
                 gl.stencilFunc(gl.EQUAL, 0, 0xFF);
                 renderer.render(scene, camera);
                 
-                sphere_mesh_earth.rotateY(0.0025);
+                mesh_earth.rotateY(0.0025);
                 
 			}
 		</script>  
