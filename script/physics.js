@@ -60,6 +60,8 @@ var rocketSpeed = 0;
 //up-Vector of Rocket before launch
 var baseYAxis;
 
+var gravAccel = new THREE.Vector3();
+
 /*Calculates all physical forces on planets, objects and rocket
 interactions with UI variables
 called during every rendering
@@ -68,6 +70,7 @@ global.started: boolean variable that determines whether rocket launched already
 */
 function calculatePhysics(difftime, spaceObjects) {
 
+    
     //loadRocket();
     //get up-vector of rocket before launch
     if(!global.started){
@@ -86,7 +89,7 @@ function calculatePhysics(difftime, spaceObjects) {
     //calculate all gravitational forces between planets and objects
     for (var i in spaceObjects) {
         var spaceObject = spaceObjects[i];
-        calculateGravitation(factoredTime, spaceObjects, spaceObject);
+        calculateGravitation(factoredTime * 1000, spaceObjects, spaceObject);
     }
 
     if(global.started){
@@ -136,6 +139,12 @@ function calculatePhysics(difftime, spaceObjects) {
             
     if (globalControlValues.discardStage) {
         nextStage();
+    }
+    
+    if(global.started && rocketGroup.position.x <= (spaceObjects.earth.group.position.x + spaceObjects.earth.group.radius) && rocketGroup.position.y == (spaceObjects.earth.group.position.y + spaceObjects.earth.group.radius) && rocketGroup.position.z == (spaceObjects.earth.group.position.z + spaceObjects.earth.group.radius)){
+        console.log("collided");
+        prompt("Whoopsie-daisy...");
+        
     }
 
 }

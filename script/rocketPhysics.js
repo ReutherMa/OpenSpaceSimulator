@@ -91,7 +91,7 @@ function move(difftime) {
         //current fuel mass for UI
         fuel_mass = fuel_mass - mass_lost;
         $('#fuelGauge .gauge-arrow').trigger('updateGauge', fuel_mass / saturnV.fuel_total * 100 );
-        $("#fuelGaugeLabel").text(parseInt(fuel_mass));
+        $("#fuelGaugeLabel").text(parseInt(fuel_mass / 1000));
         console.log(fuel_mass);
     } else {
         if(noStagesLeft){
