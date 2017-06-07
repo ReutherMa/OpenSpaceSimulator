@@ -153,6 +153,7 @@ THREE.GPUParticleSystem = function( options ) {
 		].join( '\n' )
 
 	};
+    
 
 	// preload a million random numbers
 
@@ -172,7 +173,7 @@ THREE.GPUParticleSystem = function( options ) {
 
 	var textureLoader = new THREE.TextureLoader();
 
-	this.particleNoiseTex = this.PARTICLE_NOISE_TEXTURE || textureLoader.load( 'textures/perlin-512.png' );
+	this.particleNoiseTex = this.PARTICLE_NOISE_TEXTURE || textureLoader.load( 'textures/perlin-fire.png' );
 	this.particleNoiseTex.wrapS = this.particleNoiseTex.wrapT = THREE.RepeatWrapping;
 
 	this.particleSpriteTex = this.PARTICLE_SPRITE_TEXTURE || textureLoader.load( 'textures/particle2.png' );
@@ -234,13 +235,9 @@ THREE.GPUParticleSystem = function( options ) {
 	};
 
 	this.update = function( time ) {
-
 		for ( var i = 0; i < this.PARTICLE_CONTAINERS; i ++ ) {
-
 			this.particleContainers[ i ].update( time );
-
 		}
-
 	};
 
 	this.dispose = function() {
@@ -250,15 +247,10 @@ THREE.GPUParticleSystem = function( options ) {
 		this.particleSpriteTex.dispose();
 
 		for ( var i = 0; i < this.PARTICLE_CONTAINERS; i ++ ) {
-
 			this.particleContainers[ i ].dispose();
-
 		}
-
 	};
-
 	this.init();
-
 };
 
 THREE.GPUParticleSystem.prototype = Object.create( THREE.Object3D.prototype );
@@ -323,7 +315,7 @@ THREE.GPUParticleContainer = function( maxParticles, particleSystem ) {
 		var velocityRandomness = options.velocityRandomness !== undefined ? options.velocityRandomness : 0;
 		var colorRandomness = options.colorRandomness !== undefined ? options.colorRandomness : 1;
 		var turbulence = options.turbulence !== undefined ? options.turbulence : 1;
-		var lifetime = options.lifetime !== undefined ? options.lifetime : 5;
+		var lifetime = options.lifetime !== undefined ? options.lifetime : 4;
 		var size = options.size !== undefined ? options.size : 10;
 		var sizeRandomness = options.sizeRandomness !== undefined ? options.sizeRandomness : 0;
 		var smoothPosition = options.smoothPosition !== undefined ? options.smoothPosition : false;
