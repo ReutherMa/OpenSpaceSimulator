@@ -45,7 +45,7 @@ var rocket = rockets.saturn5;
 if(customRocketUsage){
 var customRocket={};
 
-for(s in globalInterfaceValues.customRocket.stages){
+for(s in globalInterfaceValues.stages){
     var stage = "stage"+s;
     customRocket.stages[s].mass_empty = globalInterfaceValues.customRocket[stage].mass_empty;
     customRocket.stages[s].mass_fuel = globalInterfaceValues.customRocket[stage].mass_fuel;
@@ -59,55 +59,69 @@ customRocket.thrust_launch = 9.81 * customRocket.mass_total;
 }
 
 function fuelMassChanged(stage) {
-    globalInterfaceValues.customRocket[stage].burningtime = ( globalInterfaceValues.customRocket[stage].mass_empty + globalInterfaceValues.customRocket[stage].mass_fuel ) / ( globalInterfaceValues.customRocket[stage].thrust / ( specificImpulse * gravity ) );
+    globalInterfaceValues.stages[stage].burningtime = ( globalInterfaceValues.stages[stage].mass_empty + globalInterfaceValues.stages[stage].mass_fuel ) / ( globalInterfaceValues.stages[stage].thrust / ( specificImpulse * gravity ) );
 
     for(s in globalInterfaceValues.customRocket.stages){
         var stage = "stage"+s;
         globalInterfaceValues.customRocket.fuel_total += globalInterfaceValues.customRocket[stage].mass_fuel;
-        globalInterfaceValues.customRocket.mass_total += globalInterfaceValues.customRocket[stage].mass_fuel + globalInterfaceValues.customRocket[stage].mass_empty;
+        globalInterfaceValues.customRocket.mass_total += globalInterfaceValues.customRocket[stage].mass_fuel + globalInterfaceValues.stages[stage].mass_empty;
     }
     customRocket.thrust_launch = globalInterfaceValues.customRocket.mass_total * gravity;
 }
 
 function burningtimeChanged(stage) {
-    globalInterfaceValues.customRocket[stage].mass_fuel = globalInterfaceValues.customRocket[stage].burningtime * ( globalInterfaceValues.customRocket[stage].thrust / ( specificImpulse * gravity ) ) - globalInterfaceValues.customRocket[stage].mass_empty;
+    globalInterfaceValues.stages[stage].mass_fuel = globalInterfaceValues.stages[stage].burningtime * ( globalInterfaceValues.stages[stage].thrust / ( specificImpulse * gravity ) ) - globalInterfaceValues.stages[stage].mass_empty;
     
-    for(s in globalInterfaceValues.customRocket.stages){
+    for(s in globalInterfaceValues.stages){
         var stage = "stage"+s;
-        globalInterfaceValues.customRocket.fuel_total += globalInterfaceValues.customRocket[stage].mass_fuel;
-        globalInterfaceValues.customRocket.mass_total += globalInterfaceValues.customRocket[stage].mass_fuel + globalInterfaceValues.customRocket[stage].mass_empty;
+        globalInterfaceValues.customRocket.fuel_total += globalInterfaceValues.stages[stage].mass_fuel;
+        globalInterfaceValues.customRocket.mass_total += globalInterfaceValues.stages[stage].mass_fuel + globalInterfaceValues.stages[stage].mass_empty;
     }
     customRocket.thrust_launch = globalInterfaceValues.customRocket.mass_total * gravity;
 }
 
 function thrustChanged(stage){
-    globalInterfaceValues.customRocket[stage].mass_empty = globalInterfaceValues.customRocket[stage].thrust * emptyWeightToThrustRatio;
+    globalInterfaceValues.stages[stage].mass_empty = globalInterfaceValues.stages[stage].thrust * emptyWeightToThrustRatio;
     
-    globalInterfaceValues.customRocket[stage].burningtime = ( globalInterfaceValues.customRocket[stage].mass_empty + globalInterfaceValues.customRocket[stage].mass_fuel ) / ( globalInterfaceValues.customRocket[stage].thrust / ( specificImpulse * gravity ) );
+    globalInterfaceValues.stages[stage].burningtime = ( globalInterfaceValues.stages[stage].mass_empty + globalInterfaceValues.stages[stage].mass_fuel ) / ( globalInterfaceValues.stages[stage].thrust / ( specificImpulse * gravity ) );
     
-    for(s in globalInterfaceValues.customRocket.stages){
+    for(s in globalInterfaceValues.stages){
         var stage = "stage"+s;
-        globalInterfaceValues.customRocket.fuel_total += globalInterfaceValues.customRocket[stage].mass_fuel;
-        globalInterfaceValues.customRocket.mass_total += globalInterfaceValues.customRocket[stage].mass_fuel + globalInterfaceValues.customRocket[stage].mass_empty;
+        globalInterfaceValues.customRocket.fuel_total += globalInterfaceValues.stages[stage].mass_fuel;
+        globalInterfaceValues.customRocket.mass_total += globalInterfaceValues.stages[stage].mass_fuel + globalInterfaceValues.stages[stage].mass_empty;
     }
     customRocket.thrust_launch = globalInterfaceValues.customRocket.mass_total * gravity;
 }
 
+/*Formulas:
 
-globalInterfaceValues.customRocket[stage].mass_empty = globalInterfaceValues.customRocket[stage].thrust * emptyWeightToThrustRatio;
+F: thrust
+t: burning time (burn time)
+me: empty mass
+mf: fuel mass
+m: total mass of this stage
+mt: total mass of rocket
+g: gravitational acceleration of earth (9,81m/s)
+ft: total fuel mass
+Flaunch: thrust needed for the rocket to take off
+Isp: specific Impulse of saturn V
+
+F = m / t * Isp * g
+t = m / ( F / ( Isp * g ) )
+me = m - mf = F * 0.006
+mf = m - me 
+m = F / g (minimum needed fuel mass)
+mt = m1 + m2 + m3 +...
+ft = mf1 + mf2 +...
+Flaunch = g * mt
+
+*/
+
+/*globalInterfaceValues.customRocket[stage].mass_empty = globalInterfaceValues.customRocket[stage].thrust * emptyWeightToThrustRatio;
 
 globalInterfaceValues.customRocket[stage].mass_fuel = globalInterfaceValues.customRocket[stage].thrust / gravity - globalInterfaceValues.customRocket[stage].mass_empty;
 
 globalInterfaceValues.customRocket[stage].burningtime = ( globalInterfaceValues.customRocket[stage].mass_empty + globalInterfaceValues.customRocket[stage].mass_fuel ) / ( globalInterfaceValues.customRocket[stage].thrust / ( specificImpulse * gravity ) );
 
 globalInterfaceValues.customRocket[stage].thrust = ( globalInterfaceValues.customRocket[stage].mass_fuel + globalInterfaceValues.customRocket[stage].mass_empty ) / globalInterfaceValues.customRocket[stage].burningtime * specificImpulse * gravity;
-
-for(s in globalInterfaceValues.customRocket.stages){
-     var stage = "stage"+s;
-    globalInterfaceValues.customRocket.fuel_total += globalInterfaceValues.customRocket[stage].mass_fuel;
-    globalInterfaceValues.customRocket.mass_total += globalInterfaceValues.customRocket[stage].mass_fuel + globalInterfaceValues.customRocket[stage].mass_empty;
-}
-customRocket.thrust_launch = globalInterfaceValues.customRocket.mass_total * gravity;
-//custom rocket structure:
-
-
+*/

@@ -3,6 +3,9 @@ var global = {
     started: false,
     audio: false
 };
+
+//do we want to load textures? false for fast (and ugly) debugging mode
+var loadTextures = false;
 //var throttleSound;
 var rocket;
 var rocketGroup;
@@ -15,6 +18,7 @@ var camFactor = 6;
 var line_count = 0;
 
 var sphere_nav;
+var scene;
 
 var readyVars = {
     physics : false,
@@ -40,7 +44,7 @@ function buildUniverse() {
     var universe = {};
     var container;
     //, stats
-    var scene, ui_scene, renderer;
+    var ui_scene, renderer;
     var segments = 64;
     var group_galaxy;
     var sun, earth, moon, mercury, venus, mars, jupiter, saturn, uranus, neptune;
@@ -247,6 +251,7 @@ function buildUniverse() {
                 var speedy = data_plan.speedy;
                 var speedz = data_plan.speedz;
                 
+                
                 if (base) {
                     posx   += data[base].x;
                     posy   += data[base].y;
@@ -298,13 +303,17 @@ function buildUniverse() {
             rocket = collada.scene;   //var skin = collada.skins[ 0 ];
             //rocket.scale.set(695508e3, 695508e3, 695508e3);
             rocketGroup.add(rocket);
+            scene.add(rocketGroup);
             var r = spaceObjects.earth.radius;
             var xE = r * Math.sin(Math.PI/180 * 45) * Math.cos(Math.PI/180 * 90);
             var yE = r * Math.sin(Math.PI/180 * 45) * Math.sin(Math.PI/180 * 90);
             var zE = r * Math.cos(Math.PI/180 * 45);
-            rocketGroup.position.x = xE + 1;
-            rocketGroup.position.y = yE + 1;
-            rocketGroup.position.z = zE + 1;
+            //rocketGroup.position.x = spaceObjects.earth.group.position.x + xE + 1;
+            //rocketGroup.position.y = spaceObjects.earth.group.position.y + yE + 1;
+            //rocketGroup.position.z = spaceObjects.earth.group.position.z + zE + 1;
+            rocketGroup.position.x =  xE + 1;
+            rocketGroup.position.y =  yE + 1;
+            rocketGroup.position.z =  zE + 1;
             rocketGroup.speed = new THREE.Vector3 (0, 0, 0);
             rocketGroup.rotateX(Math.PI/180 * 45);
             rocketGroup.angularMomentum = new THREE.Quaternion(0,0,0,1);
@@ -312,8 +321,11 @@ function buildUniverse() {
             earthGroup.add(rocketGroup);
             rocketGroup.add(throttleSound);
         });
-        var rocketObject = new SpaceObject();
+        if(geo_line_rocket) scene.add( geo_line_rocket );
+        //var rocketObject = new SpaceObject();
         readyVars.rocket = true;
+        //var rocketObject = new SpaceObject("rocket", 0, 0, "0x000000", "rocketGroup", rocketGroup.speed.x, rocketGroup.speed.y, rocketGroup.speed.z);
+        //spaceObjects["rocket"] = planet_object;
         
     }
 
@@ -365,7 +377,9 @@ function buildUniverse() {
                 
                 geometry = new THREE.SphereGeometry(radius, segments, segments);
                 material = new THREE.MeshBasicMaterial();
-                material.map = loader.load('textures/sun_map_2.jpg');
+                if(loadTextures){
+                    material.map = loader.load('textures/sun_map_2.jpg');
+                }
                 mesh_sun = new THREE.Mesh(geometry, material);
                 group.rotateX(Math.PI/180 * 120);
                 
@@ -380,16 +394,23 @@ function buildUniverse() {
                 
                 geometry = new THREE.SphereGeometry(radius, segments, segments);
                 
-                if (name == "earth"){
+                if (name == "earth" ){
+                    if(loadTextures){
                     material = new THREE.ShaderMaterial( {
 						uniforms: uniforms1,
 						vertexShader: document.getElementById( 'vertexShader' ).textContent,
 						fragmentShader: document.getElementById( 'fragmentShader_1' ).textContent
 				    } );
+                    }else{
+                        material = new THREE.MeshPhongMaterial({
+                        color: 0x0000ff
+                    });
+                    }
                     //material.depthTest = false;
                     
                     var geometry_cloud = new THREE.SphereGeometry(radius * 1.02, segments, segments);
-                    var material_cloud = new THREE.MeshLambertMaterial({
+                    if(loadTextures){
+                        var material_cloud = new THREE.MeshLambertMaterial({
                         map: loader.load(path_tex + "_mapcloud.png"),
                         side: THREE.DoubleSide,
                         opacity: 0.8,
@@ -398,16 +419,19 @@ function buildUniverse() {
                     });
                     var cloudMesh = new THREE.Mesh(geometry_cloud, material_cloud);
                     group.add(cloudMesh);
+                    }
                     
                 }
                 else {
                     material = new THREE.MeshPhongMaterial({
                         color: 0xffffff
                     });
+                    if(loadTextures){
                     material.map = loader.load(path_tex + "_map.jpg");
                     material.normalMap = loader.load(path_tex + "_normalmap.png");
                     material.bumpMap = loader.load(path_tex + "_bumpmap.jpg");
                     material.bumpScale = 4.0;
+                    }
                 }
                     
             mesh = new THREE.Mesh(geometry, material);
