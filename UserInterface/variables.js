@@ -2,13 +2,35 @@ var globalInterfaceValues = {
     // User Einstellungen
 
     // RocketInterface
+
+    // TODO: Stages-Array mit Stages-Objekten
     stage: 1,
-    emptyMass: 0,
-    fuelMass: 0,
-    totalMass: 0,
-    thrust: 0,
-    burningTime: 0,
-    
+    stages: [{
+        emptyMass: 0,
+        fuelMass: 0,
+        totalMass: 0,
+        thrust: 0,
+        burningTime: 0
+    }, {
+        emptyMass: 0,
+        fuelMass: 0,
+        totalMass: 0,
+        thrust: 0,
+        burningTime: 0
+    }, {
+        emptyMass: 0,
+        fuelMass: 0,
+        totalMass: 0,
+        thrust: 0,
+        burningTime: 0
+    }, {
+        emptyMass: 0,
+        fuelMass: 0,
+        totalMass: 0,
+        thrust: 0,
+        burningTime: 0
+    }],
+
     // DeveloperInterface
     planetName: "earth",
     planetSize: 1,
@@ -18,7 +40,7 @@ var globalInterfaceValues = {
     changed: true,
 
     // Anzeige
-    
+
     // GameInteface
     throttle: 0,
     speed: 0,
@@ -42,13 +64,33 @@ function inputChange() {
     // "+" means parseInt   
     // RocketInterface
     globalInterfaceValues.stage = +$("#stagesLabel").text();
+    // hide all stages-tabs
+    for (var i = 1; i <= 4; i++) {
+        $("#stage" + i).hide();
+    }
+    // show stages-tabs for selected stages
+    for (var i = 1; i <= globalInterfaceValues.stage; i++) {
+        $("#stage" + i).show();
+    }
+
+    // update stages-array
+    for (var i = 1; i <= globalInterfaceValues.stage; i++) {
+        var currentStage = globalInterfaceValues.stages[i - 1];
+        currentStage = {
+            emptyMass: globalInterfaceValues.emptyMass,
+            fuelMass: globalInterfaceValues.fuelMass,
+            totalMass: globalInterfaceValues.totalMass,
+            thrust: globalInterfaceValues.thrust,
+            burningTime: globalInterfaceValues.burningTime
+        };
+    }
     globalInterfaceValues.emptyMass = +$("#emptyMassLabel").text();
     globalInterfaceValues.fuelMass = +$("#fuelMassLabel").text();
     globalInterfaceValues.totalMass = globalInterfaceValues.emptyMass + globalInterfaceValues.fuelMass;
     $("#totalMass").text(globalInterfaceValues.totalMass);
     globalInterfaceValues.burningTime = +$("#burningTimeLabel").text();
     globalInterfaceValues.thrust = +$("#thrustLabel").text();
-    
+
     // DeveloperInterface
     globalInterfaceValues.planetSize = +$("#planetSizeLabel").text();
     globalInterfaceValues.planetName = $('select[name=planetSelect]').val();

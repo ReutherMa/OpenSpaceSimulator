@@ -1,16 +1,21 @@
 $(function() {
     //var valMap = [0.1, 0.2, 0.5, 1, 10, 100, 1000, 10000, 100000];
 
-    // Sliders
+    // build Sliders
     // RocketInterface
-    slide("emptyMass", 0, 3, 1, globalInterfaceValues.emptyMass);
-    slide("fuelMass", 0, 3, 1, globalInterfaceValues.fuelMass);
     slide("stages", 1, 4, 1, globalInterfaceValues.stage);
-    slide("burningTime", 0, 10, 1, globalInterfaceValues.burningTime);
-    slide("thrust", 0, 10, 1, globalInterfaceValues.thrust);
+    // fill stages-array with stage-objects and create sliders
+    var stages = globalInterfaceValues.stages;
+    for (var i = 1; i <= stages.length; i++) {
+        var currentStage = stages[i - 1];
+        slide("emptyMass" + i, 0, 3, 1, currentStage.emptyMass);
+        slide("fuelMass" + i, 0, 3, 1, currentStage.fuelMass);
+        slide("burningTime" + i, 0, 10, 1, currentStage.burningTime);
+        slide("thrust" + i, 0, 10, 1, currentStage.thrust);
+    }
     // DeveloperInterface
     slide("planetSize", 1, 1000, 1, globalInterfaceValues.planetSize);
-    // Time Factor Slider
+    // build Time Factor Slider
     var valMap = [0.1, 0.2, 0.5, 1, 10, 100, 1000];
     $("#timeFactor").slider({
         // min: 0,
@@ -23,27 +28,32 @@ $(function() {
         change: inputChange
     });
 
-    // Selects
+    // build Selects
     $("#planetCamera, #engineSelect, #planetSelect, #rocketSelect").selectmenu({
         change: inputChange
     });
 
-    // Labels
+    // build Labels
     // RocketInterface
     /*$("#speedLabel").text(globalInterfaceValues.speed);
     $("#fuelLabel").text(globalInterfaceValues.fuel);*/
     $("#stagesLabel").text(globalInterfaceValues.stage);
-    $("#emptyMassLabel").text(globalInterfaceValues.emptyMass);
-    $("#fuelMassLabel").text(globalInterfaceValues.fuelMass);
-    $("#totalMassLabel").text(globalInterfaceValues.totalMass);
-    $("#burningTimeLabel").text(globalInterfaceValues.burningTime);
-    $("#thrustLabel").text(globalInterfaceValues.thrust)
-    //DeveloperInterface 
+    // set labels from stages-array
+    for (var i = 1; i <= stages.length; i++) {
+        var currentStage = stages[i - 1];
+        $("#emptyMass" + i + "Label").text(currentStage.emptyMass);
+        $("#fuelMass" + i + "Label").text(currentStage.fuelMass);
+        $("#totalMass" + i + "Label").text(currentStage.totalMass);
+        $("#burningTime" + i + "Label").text(currentStage.burningTime);
+        $("#thrust" + i + "Label").text(currentStage.thrust);
+    }
+
+    // DeveloperInterface 
     $("#planetSizeLabel").text(globalInterfaceValues.planetSize);
     $("#timeFactorLabel").text(globalInterfaceValues.timeFactor);
 
 
-    // Gauges
+    // build Gauges
     $('#speedGauge .gauge-arrow').cmGauge();
     $('#fuelGauge .gauge-arrow').cmGauge();
     $('#throttleGauge .gauge-arrow').cmGauge();
@@ -64,8 +74,18 @@ $(function() {
     }*/
     $('#fuelGauge .gauge-arrow').trigger('updateGauge', globalInterfaceValues.fuel);
     $("#fuelGaugeLabel").text(globalInterfaceValues.fuel);
+    
+    // build Tabs
+    $("#tabs").tabs();
 
-
+    // hide all stages-tabs
+    for (var i = 1; i <= 4; i++) {
+        $("#stage" + i).hide();
+    }
+    // show stages-tabs for selected stages
+    for (var i = 1; i <= globalInterfaceValues.stage; i++) {
+        $("#stage" + i).show();
+    }
 
     //inputChange();
 

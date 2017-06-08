@@ -31,4 +31,9 @@ div#testUI {
     width: 42px;
 }
 
+.mainHeading{
+    color: rgb(255, 140, 0);
+    /*font-size: 17px;*/
+}
+
 </style>

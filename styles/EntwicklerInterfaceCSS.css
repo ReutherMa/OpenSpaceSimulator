@@ -60,6 +60,7 @@ fieldset {
     padding: 5px;
     height: auto !important;
     height: 100%;
+    width: 24%;
     overflow: auto;
     border-radius: 6px;
     display:none;
