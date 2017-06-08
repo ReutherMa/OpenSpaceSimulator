@@ -8,11 +8,12 @@ $(function() {
     var stages = globalInterfaceValues.stages;
     for (var i = 1; i <= stages.length; i++) {
         var currentStage = stages[i - 1];
-        slide("emptyMass" + i, 0, 3, 1, currentStage.emptyMass);
-        slide("fuelMass" + i, 0, 3, 1, currentStage.fuelMass);
-        slide("burningTime" + i, 0, 10, 1, currentStage.burningTime);
-        slide("thrust" + i, 0, 10, 1, currentStage.thrust);
+        slide("emptyMass" + i, 0, 100000, 100, currentStage.emptyMass);
+        slide("fuelMass" + i, 0, 3000000, 1000, currentStage.fuelMass);
+        slide("burningTime" + i, 0, 6000, 10, currentStage.burningTime);
+        slide("thrust" + i, 0, 50000000, 1000, currentStage.thrust);
     }
+    
     // DeveloperInterface
     slide("planetSize", 1, 1000, 1, globalInterfaceValues.planetSize);
     // build Time Factor Slider
@@ -47,6 +48,7 @@ $(function() {
         $("#burningTime" + i + "Label").text(currentStage.burningTime);
         $("#thrust" + i + "Label").text(currentStage.thrust);
     }
+    $("#rocketTotalMassLabel").text(globalInterfaceValues.rocketTotalMass);
 
     // DeveloperInterface 
     $("#planetSizeLabel").text(globalInterfaceValues.planetSize);
@@ -74,7 +76,7 @@ $(function() {
     }*/
     $('#fuelGauge .gauge-arrow').trigger('updateGauge', globalInterfaceValues.fuel);
     $("#fuelGaugeLabel").text(globalInterfaceValues.fuel);
-    
+
     // build Tabs
     $("#tabs").tabs();
 
@@ -86,6 +88,30 @@ $(function() {
     for (var i = 1; i <= globalInterfaceValues.stage; i++) {
         $("#stage" + i).show();
     }
+
+    // pad height-number with zero and parse to string
+    var height = zeroFill(globalInterfaceValues.height, 9);
+
+    // build Height-Flapper
+    var $heightDisplay = $('#heightDisplay');
+    $heightDisplay.flapper({
+        width: 9,
+        chars_preset: 'num'
+    });
+    $heightDisplay.val(height).change();
+    /*setTimeout(function() {
+        $header_display.val(000000000).change();
+        var toggle = true;
+        setInterval(function() {
+            if (toggle) {
+                $header_display.val(000000000).change();
+            } else {
+                $header_display.val(999999999).change();
+            }
+            toggle = !toggle;
+        }, 5000);
+    }, 1000);*/
+
 
     //inputChange();
 
@@ -117,4 +143,12 @@ function watchglob(glob) {
             return true;
         }
     }, 10000);
+}
+
+function zeroFill(number, width) {
+    width -= number.toString().length;
+    if (width > 0) {
+        return new Array(width + (/\./.test(number) ? 2 : 1)).join('0') + number;
+    }
+    return number + ""; // always return a string
 }

@@ -30,6 +30,8 @@ var globalInterfaceValues = {
         thrust: 0,
         burningTime: 0
     }],
+    height: 0,
+    rocketTotalMass: 0,
 
     // DeveloperInterface
     planetName: "earth",
@@ -74,20 +76,26 @@ function inputChange() {
     }
 
     // update stages-array
+    var rocketTotalMass = globalInterfaceValues.rocketTotalMass;
     for (var i = 1; i <= globalInterfaceValues.stage; i++) {
         var currentStage = globalInterfaceValues.stages[i - 1];
+        var emptyMass = +$("#emptyMass" + i + "Label").text();
+        var fuelMass = +$("#fuelMass" + i + "Label").text();
+        var totalMass = emptyMass + fuelMass;
+        var thrust = +$("#thrust" + i + "Label").text();
+        var burningTime = +$("#burningTime" + i + "Label").text();
         currentStage = {
-            emptyMass: globalInterfaceValues.emptyMass,
-            fuelMass: globalInterfaceValues.fuelMass,
-            totalMass: globalInterfaceValues.totalMass,
-            thrust: globalInterfaceValues.thrust,
-            burningTime: globalInterfaceValues.burningTime
+            emptyMass: emptyMass,
+            fuelMass: fuelMass,
+            totalMass: totalMass,
+            thrust: thrust,
+            burningTime: burningTime
         };
+        $("#totalMass" + i + "Label").text(currentStage.totalMass);
+        rocketTotalMass += currentStage.totalMass;
     }
-    globalInterfaceValues.emptyMass = +$("#emptyMassLabel").text();
-    globalInterfaceValues.fuelMass = +$("#fuelMassLabel").text();
-    globalInterfaceValues.totalMass = globalInterfaceValues.emptyMass + globalInterfaceValues.fuelMass;
-    $("#totalMass").text(globalInterfaceValues.totalMass);
+     $("#rocketTotalMassLabel").text(rocketTotalMass);
+
     globalInterfaceValues.burningTime = +$("#burningTimeLabel").text();
     globalInterfaceValues.thrust = +$("#thrustLabel").text();
 

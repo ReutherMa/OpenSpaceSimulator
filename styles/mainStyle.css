@@ -36,4 +36,8 @@ div#testUI {
     /*font-size: 17px;*/
 }
 
+.metersLabel{
+    float:left;
+}
+
 </style>
