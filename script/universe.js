@@ -86,9 +86,7 @@ function buildUniverse() {
     var lightVec = new THREE.Vector3( -1, -1, -1);         
     var light = new THREE.Vector3().copy(lightVec).negate().normalize();
     
-=======
     var tween;
->>>>>>> origin/master
 
     //universe functions
     universe.init = init;
