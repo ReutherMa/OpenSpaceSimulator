@@ -74,10 +74,13 @@ function calculatePhysics(difftime, spaceObjects) {
         var xAxis = new THREE.Vector3();
         baseYAxis = new THREE.Vector3();
         var zAxis = new THREE.Vector3();
-        var quaternion = rocketGroup.quaternion;
-        var matrix = new THREE.Matrix4();
-        matrix = matrix.makeRotationFromQuaternion ( quaternion );
-        matrix.extractBasis(xAxis, baseYAxis, zAxis);
+        if (rocketGroup) 
+        {
+            var quaternion = rocketGroup.quaternion;
+            var matrix = new THREE.Matrix4();
+            matrix = matrix.makeRotationFromQuaternion ( quaternion );
+            matrix.extractBasis(xAxis, baseYAxis, zAxis);
+        }
     }
     
     timefactor = globalInterfaceValues.timeFactor;

@@ -534,11 +534,268 @@
                 //gl_FragColor = vec4(mix.x * bumpColor.x, mix.y * bumpColor.y, mix.z * bumpColor.z, 1.0 );
                 //gl_FragColor = vec4( diffuse + specular, 1.0 );
                 //gl_FragColor.r = 1.0;
-            
-
         }
 
     </script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <!-- SHADOW VOLUME Vertex Shader -->
+        <script id="shadowVolume_vs" type="x-shader/x-vertex">
+            const vec3 lightpos = vec3 (0.0, 7.0, 0.0);   // in world coords
+            
+#include <common>
+#include <logdepthbuf_pars_vertex>
+
+            void main()	{
+                
+                vec3 normalVec = normalize(normalMatrix * normal);
+                vec3 vColor = color;
+                
+                vec3 lightvec = vec3( viewMatrix * vec4(lightpos, 1.0) );
+                vec3 posvec   = vec3( modelViewMatrix * vec4(position, 1.0) );
+                vec3 extrudeVec_ = normalize( posvec - lightvec );
+                
+                if(dot(extrudeVec_, normalVec) < 0.0 && vColor[0] != 0.0) {
+                    gl_Position = projectionMatrix * (modelViewMatrix * vec4(position, 1.0) + 
+                                            vec4 (extrudeVec_, 0.0) * 1000.0);
+                }else{
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                }
+                
+#ifdef USE_LOGDEPTHBUF
+               gl_Position.z = log2(max( EPSILON, gl_Position.w + 1.0 )) * logDepthBufFC;
+  #ifdef USE_LOGDEPTHBUF_EXT
+               vFragDepth = 1.0 + gl_Position.w;
+  #else
+               gl_Position.z = (gl_Position.z - 1.0) * gl_Position.w;
+  #endif
+#endif
+            }
+		</script>
+        
+        
+        <!-- SHADOW VOLUME Fragment Shader -->        
+        <script id="shadowVolume_fs" type="x-shader/x-fragment">
+            
+#include <logdepthbuf_pars_fragment>
+
+			void main( void ) {
+#if defined(USE_LOGDEPTHBUF) && defined(USE_LOGDEPTHBUF_EXT)
+        gl_FragDepthEXT = log2(vFragDepth) * logDepthBufFC * 0.5;
+#endif
+                gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+			}
+		</script>
+    
+    
+    
+ <!-- DIFF/SPEC Space Objects Vertex Shader -->  
+        <script id="diffSpec_spaceObj_vs" type="x-shader/x-vertex">
+        //spaceObject_vertexShader_diffuse_specular
+            varying vec3 normal_;
+            varying vec3 view_;
+        
+#include <common>
+#include <logdepthbuf_pars_vertex>		
+            void main()	{
+                            
+                normal_ = normalize(normalMatrix * normal);
+                view_ = normalize(-vec3(modelViewMatrix * vec4(position, 1.0)));
+                
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                
+#ifdef USE_LOGDEPTHBUF
+               gl_Position.z = log2(max( EPSILON, gl_Position.w + 1.0 )) * logDepthBufFC;
+  #ifdef USE_LOGDEPTHBUF_EXT
+               vFragDepth = 1.0 + gl_Position.w;
+  #else
+               gl_Position.z = (gl_Position.z - 1.0) * gl_Position.w;
+  #endif
+#endif
+			}
+		</script>
+        
+        <!-- DIFF/SPEC Space Objects Fragment Shader -->  
+        <script id="diffSpec_spaceObj_fs" type="x-shader/x-fragment">
+        //spaceObject_fragmentShader_diffuse_specular
+            uniform vec3 l;
+            
+            varying vec3 normal_;
+            varying vec3 view_;
+            
+#include <logdepthbuf_pars_fragment>
+
+			void main( void ) {
+#if defined(USE_LOGDEPTHBUF) && defined(USE_LOGDEPTHBUF_EXT)
+        gl_FragDepthEXT = log2(vFragDepth) * logDepthBufFC * 0.5;
+#endif
+            
+                vec3 n = normalize(normal_);
+                vec3 v = normalize(view_);
+                vec3 halfway = normalize(v + l);
+                                    
+                float Id = max(dot( l, n), 0.0);
+                float Is = pow(max(dot(halfway, n), 0.0), 32.0);
+                
+                vec3 col = Id * vec3(0.5, 0.5, 0.5) + Is * vec3(0.3, 0.3, 0.3);
+                gl_FragColor = vec4(col, 1.0);
+			    //gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+            }
+		</script>
+        
+    
+    
+    
+    
+    
+    <!-- AMBIENT Space Objects Vertex Shader -->  
+        <script id="ambient_spaceObj_vs" type="x-shader/x-vertex">
+#include <common>
+#include <logdepthbuf_pars_vertex>
+
+			void main()	{ 
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                
+#ifdef USE_LOGDEPTHBUF
+               gl_Position.z = log2(max( EPSILON, gl_Position.w + 1.0 )) * logDepthBufFC;
+  #ifdef USE_LOGDEPTHBUF_EXT
+               vFragDepth = 1.0 + gl_Position.w;
+  #else
+               gl_Position.z = (gl_Position.z - 1.0) * gl_Position.w;
+  #endif
+#endif
+			}
+		</script>
+        
+        <!-- AMBIENT Space Objects Fragment Shader -->  
+        <script id="ambient_spaceObj_fs" type="x-shader/x-fragment">
+#include <logdepthbuf_pars_fragment>
+
+			void main( void ) {
+#if defined(USE_LOGDEPTHBUF) && defined(USE_LOGDEPTHBUF_EXT)
+        gl_FragDepthEXT = log2(vFragDepth) * logDepthBufFC * 0.5;
+#endif          
+                gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+			}
+		</script>
+        
+    
+    
+    
+    
+    <!-- Space Object Vertex Shader -->
+        <script id="spaceObj_vs" type="x-shader/x-vertex">
+        //spaceObject_vertexShader
+            varying vec2 vUv;
+            varying vec3 normal_;
+            varying vec3 view_;
+            varying vec3 light;
+
+#include <common>
+#include <logdepthbuf_pars_vertex>
+
+			void main()	{
+                vUv = uv;
+                normal_ = normalize(normalMatrix * normal);
+                view_ = -vec3(modelViewMatrix * vec4(position, 1.0));
+                light = vec3 (viewMatrix * vec4 (0.0, 7.0, 0.0, 1.0)) + view_;  // licht in weltkoord -> light vector in augenkoord
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                
+#ifdef USE_LOGDEPTHBUF
+               gl_Position.z = log2(max( EPSILON, gl_Position.w + 1.0 )) * logDepthBufFC;
+  #ifdef USE_LOGDEPTHBUF_EXT
+               vFragDepth = 1.0 + gl_Position.w;
+  #else
+               gl_Position.z = (gl_Position.z - 1.0) * gl_Position.w;
+  #endif
+#endif
+			}
+		</script>
+        
+         
+        <!-- Space Object Fragment Shader -->        
+        <script id="spaceObj_fs" type="x-shader/x-fragment">
+        //spaceObject_fragmentShader
+            uniform sampler2D texture;
+            //uniform sampler2D bumpTexture;
+            
+            varying vec2 vUv;
+            //uniform vec3 l;
+            varying vec3 normal_;
+            varying vec3 view_;
+            varying vec3 light;
+            
+#include <logdepthbuf_pars_fragment>
+
+			void main( void ) {
+#if defined(USE_LOGDEPTHBUF) && defined(USE_LOGDEPTHBUF_EXT)
+        gl_FragDepthEXT = log2(vFragDepth) * logDepthBufFC * 0.5;
+#endif     
+                vec3 texCol = texture2D( texture, vUv ).rgb;
+            
+                vec3 l = normalize (light);
+           
+                vec3 n = normalize(normal_);
+                vec3 v = normalize(view_);
+                vec3 halfway = normalize(v + l);
+                
+
+                float Id = max(dot(l, n), 0.0);
+                float Is = pow(max(dot(halfway, n), 0.0), 32.0);
+                
+                vec3 col =  vec3(0.0, 0.0, 0.1) +              //Ia * vec3(texCol) + 
+                            Id * texCol + 
+                            Is * vec3(0.3, 0.3, 0.3);
+        
+                gl_FragColor = vec4(col, 1.0);
+                //gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+			    //gl_FragColor = vec4(100.0*vUv.x+.5, 100.0*vUv.y+.5, 0.0, 1.0);
+            }
+                
+		</script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     <script>
         //Here the three.js functions

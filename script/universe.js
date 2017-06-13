@@ -40,7 +40,7 @@ function buildUniverse() {
     var universe = {};
     var container;
     //, stats
-    var scene, ui_scene, renderer;
+    var scene, sceneVol, ui_scene, renderer;
     var segments = 64;
     var group_galaxy;
     var sun, earth, moon, mercury, venus, mars, jupiter, saturn, uranus, neptune;
@@ -55,6 +55,30 @@ function buildUniverse() {
     var lasttime;
     
     var counter = 1;
+    
+    var height_atmos = 100000;
+    var renderCount = 0;
+    
+    
+    //Variables for shadow
+    //var mesh_torus,    mesh_ground,    mesh_moon,    mesh_earth,    mesh_mars;
+    //var meshVol_torus, meshVol_ground, meshVol_moon, meshVol_earth, meshVol_mars;
+    var arr_geoVol  = [];
+    var arr_faceNum = [];
+    var arr_shader  = [];
+    var arr_meshVol = [];
+    var arr_mesh    = [];
+    
+    var un_test = {
+        texture: { value: loader.load( "textures/earth_moon_map.jpg" ) }
+    };
+    
+    var color1 = [new THREE.Color(0x00ffff), new THREE.Color(0xff0000), new THREE.Color(0xff0000)];
+    var color2 = [new THREE.Color(0x00ffff), new THREE.Color(0x00ffff), new THREE.Color(0xff0000)];
+    
+    var lightVec = new THREE.Vector3( -1, -1, -1);         
+    var light = new THREE.Vector3().copy(lightVec).negate().normalize();
+    
 
     //universe functions
     universe.init = init;
@@ -64,7 +88,7 @@ function buildUniverse() {
     uniforms1 = {
         sunPosition:     { value: new THREE.Vector4(0.0,0.0,0.0,1.0) },
         dayTexture:      { value: loader.load( "textures/earth_map.jpg" ) },
-        nightTexture:    { value: loader.load( "textures/earth_map_lights.jpg" )},
+        nightTexture:    { value: loader.load( "textures/earth_map_lights_2.jpg" )},
         specularTexture: { value: loader.load( "textures/earth_mapspec_2.png" ) },
         bumpTexture:     { value: loader.load( "textures/earth_normalmap_test.png" ) },
         scale: { type: "f", value: 1e4 },
@@ -75,8 +99,9 @@ function buildUniverse() {
     /* The initial State */
     function init(data) {
         //creating a scene, camera
-        scene = new THREE.Scene();
-        camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1e27); //1e27
+        scene    = new THREE.Scene();
+        sceneVol = new THREE.Scene();
+        camera   = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1e27); //1e27
         //camera.position.set(0, 0, 695508e3 + 10e10);
         //camera.lookAt (scene.position);
         //camera.position.set( data.earth.x, data.earth.y, data.earth.z +6371.00e3 ); //EARTH
@@ -126,13 +151,8 @@ function buildUniverse() {
         //var ambLight = new THREE.AmbientLight(0x3e3e3e3e); //0x3e3e3e3e
         //scene.add(ambLight);
 
-        //light_shader
-        /* var fShader = document.getElementById("fragmentshader1");
-        var vShader = document.getElementById("vertexshader");
-        var shaderMaterial = new THREE.ShaderMaterial({
-            vertexShader: vShader.textContent,
-            fragmentShader: fShader.textContent
-        });*/
+
+        
 
         //building the Galaxy, Planets and Rocket
         buildGalaxy();
@@ -140,6 +160,55 @@ function buildUniverse() {
         placeRocket();
         placeLaunchpad();
         buildNavBall();
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        //Shadow
+        shadowVolume_mat = new THREE.ShaderMaterial({
+            vertexShader: document.getElementById('shadowVolume_vs').textContent,
+            vertexColors: THREE.VertexColors,
+            fragmentShader: document.getElementById('shadowVolume_fs').textContent
+        });
+        
+        for ( var i=0; i< arr_meshVol; i++){
+            arr_meshVol[i].material = shadowVolume_mat;
+        }
+        
+        
+        ambient_spaceObj_mat = new THREE.ShaderMaterial({
+            vertexShader: document.getElementById('ambient_spaceObj_vs').textContent,
+			fragmentShader: document.getElementById('ambient_spaceObj_fs').textContent
+		});
+        
+        shaderMat_basic = new THREE.ShaderMaterial({
+            uniforms: { l: {type: "v3", value: light} },
+            vertexShader: document.getElementById('diffSpec_spaceObj_vs').textContent,
+            fragmentShader: document.getElementById('diffSpec_spaceObj_fs').textContent
+        });
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
 
         //renderer
         renderer = new THREE.WebGLRenderer({
@@ -239,9 +308,9 @@ function buildUniverse() {
                 //console.log(data[planet].color);
 
                 //for base objects around other planets
-                var posx = data_plan.x;
-                var posy = data_plan.y;
-                var posz = data_plan.z;
+                var posx   = data_plan.x;
+                var posy   = data_plan.y;
+                var posz   = data_plan.z;
                 var speedx = data_plan.speedx;
                 var speedy = data_plan.speedy;
                 var speedz = data_plan.speedz;
@@ -311,7 +380,6 @@ function buildUniverse() {
             earthGroup.add(rocketGroup);
             rocketGroup.add(throttleSound);
         });
-        var rocketObject = new SpaceObject();
         readyVars.rocket = true;
         
     }
@@ -356,7 +424,7 @@ function buildUniverse() {
         /* This builds the Body */
         this.buildBody = function() {
 
-            var geometry;
+            var geometry, geoVol, geoVol_faceNum;
             var material;
 
             if (name == "sun") { 
@@ -379,30 +447,100 @@ function buildUniverse() {
                 
                 geometry = new THREE.SphereGeometry(radius, segments, segments);
                 
+                //Shadow
+                geoVol   = new THREE.SphereGeometry(radius, segments, segments);
+                geoVol_faceNum = geoVol.faces.length;
+                
+                for (var i = 0; i < geoVol_faceNum; i++) {        
+                        geoVol.faces.push(new THREE.Face3( geoVol.faces[i].a,          //vertex-position
+                                                           geoVol.faces[i].b,          //vertex-position
+                                                           geoVol.faces[i].a,          //vertex-position
+                                                           geoVol.faces[i].normal,     //orientation -> light
+                                                           color2));                   //tagging-attribute for vertices
+                        
+                        geoVol.faces.push(new THREE.Face3( geoVol.faces[i].b,
+                                                           geoVol.faces[i].b,
+                                                           geoVol.faces[i].a,
+                                                           geoVol.faces[i].normal,
+                                                           color1));
+                        
+                        geoVol.faces.push(new THREE.Face3( geoVol.faces[i].b,
+                                                           geoVol.faces[i].c,
+                                                           geoVol.faces[i].b,
+                                                           geoVol.faces[i].normal,
+                                                           color2));
+                        
+                        geoVol.faces.push(new THREE.Face3( geoVol.faces[i].c,
+                                                           geoVol.faces[i].c,
+                                                           geoVol.faces[i].b,
+                                                           geoVol.faces[i].normal,
+                                                           color1));
+                        
+                        geoVol.faces.push(new THREE.Face3( geoVol.faces[i].c,
+                                                           geoVol.faces[i].a,
+                                                           geoVol.faces[i].c,
+                                                           geoVol.faces[i].normal,
+                                                           color2));
+                        
+                        geoVol.faces.push(new THREE.Face3( geoVol.faces[i].a,
+                                                           geoVol.faces[i].a,
+                                                           geoVol.faces[i].c,
+                                                           geoVol.faces[i].normal,
+                                                           color1));
+                        
+                        geoVol.faceVertexUvs[0].push([new THREE.Vector2(), new THREE.Vector2(), new THREE.Vector2()]);
+                        geoVol.faceVertexUvs[0].push([new THREE.Vector2(), new THREE.Vector2(), new THREE.Vector2()]);
+                        geoVol.faceVertexUvs[0].push([new THREE.Vector2(), new THREE.Vector2(), new THREE.Vector2()]);
+                        geoVol.faceVertexUvs[0].push([new THREE.Vector2(), new THREE.Vector2(), new THREE.Vector2()]);
+                        geoVol.faceVertexUvs[0].push([new THREE.Vector2(), new THREE.Vector2(), new THREE.Vector2()]);
+                        geoVol.faceVertexUvs[0].push([new THREE.Vector2(), new THREE.Vector2(), new THREE.Vector2()]);
+                    
+                    }
+                
                 if (name == "earth"){
+                    var axisHelper = new THREE.AxisHelper(1e10); //
+                    group.add(axisHelper);
+                    
+                    var light_earth = new THREE.PointLight( 0xffffff, 1, 1e10, 2 );
+                    
+                    group.add( light_earth );
+                    
                     material = new THREE.ShaderMaterial( {
 						uniforms: uniforms1,
 						vertexShader: document.getElementById( 'vertexShader' ).textContent,
 						fragmentShader: document.getElementById( 'fragmentShader_1' ).textContent
 				    } );
                     //material.depthTest = false;
-                    
-                    var geometry_cloud = new THREE.SphereGeometry(radius * 1.02, segments, segments);
+                                                            
+                    var geometry_cloud = new THREE.SphereGeometry(radius * 1.001587, segments, segments); //clouds 10km above earth
                     var material_cloud = new THREE.MeshLambertMaterial({
-                        map: loader.load(path_tex + "_mapcloud.png"),
+                        map: loader.load(path_tex + "_mapcloud_2.png"),
                         side: THREE.DoubleSide,
                         opacity: 0.8,
                         transparent: true,
-                        depthWrite: true
+                        depthWrite: false
                     });
                     var cloudMesh = new THREE.Mesh(geometry_cloud, material_cloud);
                     group.add(cloudMesh);
                     
+                    height_atmos = radius * 1.01587;
+                    var geo_atmos = new THREE.SphereGeometry(height_atmos, segments, segments); //atmosphere 100km above earth
+                    var mat_atmos = new THREE.MeshLambertMaterial({
+                        color: 0x00bfff,
+                        side: THREE.DoubleSide,
+                        opacity: 0.1,
+                        transparent: true,
+                        depthWrite: false
+                    });
+                    var mesh_atmos = new THREE.Mesh(geo_atmos, mat_atmos);
+                    mesh_atmos.name = "mesh_atmos";
+                    group.add(mesh_atmos);
                 }
                 else {
                     material = new THREE.MeshPhongMaterial({
                         color: 0xffffff
                     });
+                    //speed up loading during development process
                     material.map = loader.load(path_tex + "_map.jpg");
                     material.normalMap = loader.load(path_tex + "_normalmap.png");
                     material.bumpMap = loader.load(path_tex + "_bumpmap.jpg");
@@ -410,10 +548,35 @@ function buildUniverse() {
                 }
                     
             mesh = new THREE.Mesh(geometry, material);
+            arr_mesh.push(mesh);
+            
+            //Shadow
+            meshVol = new THREE.Mesh(geoVol);
+            sceneVol.add(meshVol);
+            
+            arr_meshVol.push(meshVol);
+            
+            shaderName = new THREE.ShaderMaterial({
+                uniforms: un_test,
+                vertexShader: document.getElementById( 'spaceObj_vs' ).textContent,
+				fragmentShader: document.getElementById( 'spaceObj_fs' ).textContent
+            });
+                
+            arr_shader.push(shaderName);
+                
+                
+                
+                
+            
                 
             group.rotateX(Math.PI/180 * 120);
             
-            if(name == "earth")group.rotateX(Math.PI/180 * 23.4393);
+            if(name == "earth"){
+                //group.position.x = Math.cos(0)*23.4393;
+                //group.position.y = Math.sin(0)*23.4393;
+                //group.position.z = Math.cos(0)*23.4393;
+            }
+                
             group.add(mesh);
             }
             
@@ -421,7 +584,7 @@ function buildUniverse() {
             //Rings of saturn
             if (name == "saturn"){
                 var geometry_ring = new THREE.BoxGeometry( radius*4+1e7, 1e2, radius*4+1e7);
-                var material_ring = new THREE.MeshPhongMaterial( { color: 0xffffff, transparent:true } );
+                var material_ring = new THREE.MeshPhongMaterial( { color: 0xffffff, transparent:true, side:THREE.DoubleSide } );
                 material_ring.map = loader.load(path_tex + "_ring.png");
                 var ring = new THREE.Mesh( geometry_ring, material_ring );
                 group.add(ring);
@@ -590,6 +753,7 @@ function buildUniverse() {
             for (e in spaceObjects) {
                 if (e == newElement) {
                     spaceObjects[e].group.add(camera);
+                    //camera.position.add( direction.multiplyScalar(spaceObjects[e].radius*3) );
                     camera.position.x = camera.position.y = 0;
                     camera.position.z = spaceObjects[e].radius*3;
                     controls.update();
@@ -624,10 +788,25 @@ function buildUniverse() {
         globalInterfaceValues.changed = false;
     }
     
+    //calculate opacity fot atmosphere
+    function calcOpacity(){
+        var focusedObj = globalInterfaceValues.planetCamera;
+            if(focusedObj == "rocket" || focusedObj == "launchpad"){
+                var nb = 1 - (rocketGroup.position.length() - spaceObjects.earth.radius) *0.00001;
+                var op = THREE.Math.clamp(nb, 0.1, 0.9);
+                console.log("Opacity: " + spaceObjects.earth.group.children[3].material.opacity);
+            }
+        else {
+            op = 0.1;
+        }
+        return op;
+    }
+    
 
 var clock = new THREE.Clock();
     /* This renders the scene */
     function render() {
+        //renderCount++;
 
         /* changes of User Interface */ 
         if (globalInterfaceValues.changed) {
@@ -669,7 +848,17 @@ var clock = new THREE.Clock();
 
 
         /* Earth cloudmap moving */
-        spaceObjects.earth.group.children[0].rotateY(0.003);
+        spaceObjects.earth.group.children[0].rotateY(0.00015);
+        spaceObjects.earth.group.children[0].rotateX(0.00005);
+        
+        
+        
+        //Atmosphere
+        if(rocketGroup){
+            spaceObjects.earth.group.children[3].material.opacity = calcOpacity();
+        }
+        
+        
         
         /* Earth cloudmap moving */
         //spaceObjects.earth.rotateY(0.001);
@@ -686,6 +875,50 @@ var clock = new THREE.Clock();
         counter ++;
         
         readyVars.earthshader = true;
+        
+        
+        
+        
+        
+        //Shadow
+        renderer.clear();
+        var gl = renderer.context;
+        
+        for (var i = 0; i<arr_mesh; i++){
+            arr_mesh[i].material = ambient_spaceObj_mat;
+        }
+        
+        gl.enable(gl.DEPTH_TEST);
+        gl.depthFunc(gl.LESS);
+        renderer.render(scene, camera);
+        
+        gl.colorMask(false, false, false, false);
+        gl.depthMask(false);
+        gl.enable(gl.STENCIL_TEST);
+        gl.disable(gl.CULL_FACE);
+        gl.stencilOpSeparate(gl.FRONT, gl.KEEP, gl.KEEP, gl.INCR_WRAP);
+        gl.stencilOpSeparate(gl.BACK, gl.KEEP, gl.KEEP, gl.DECR_WRAP);
+        gl.stencilFunc(gl.ALWAYS, 0, 0xFF);
+        renderer.render(sceneVol, camera);
+        
+        
+        for (var i = 0; i<arr_mesh; i++){
+            arr_mesh[i].material = shaderMat_basic;
+        }
+        gl.colorMask(true, true, true, true);
+        gl.depthMask(true);
+        gl.enable(gl.CULL_FACE);
+        gl.stencilOpSeparate(gl.FRONT, gl.KEEP, gl.KEEP, gl.KEEP);
+        gl.stencilOpSeparate(gl.BACK, gl.KEEP, gl.KEEP, gl.KEEP);
+        gl.depthFunc(gl.LEQUAL);
+        gl.stencilFunc(gl.EQUAL, 0, 0xFF);
+        renderer.render(scene, camera);
+        
+        
+        
+        
+        
+        
         
         /**if (stats !== undefined) {
             stats.update();
@@ -719,6 +952,7 @@ var clock = new THREE.Clock();
 
         //console.log (Date.now() - now);
         lasttime = now;
+        renderCount++;
     }
 
     return universe;
