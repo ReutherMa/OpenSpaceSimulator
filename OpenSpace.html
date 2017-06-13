@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="styles/GameInterfaceCSS.css">
     <link rel="stylesheet" href="styles/EntwicklerInterfaceCSS.css">
     <link rel="stylesheet" href="styles/cmGauge.css">
+    <link rel="stylesheet" href="styles/flapper.css" type="text/css" />
 </head>
 
 <body>
@@ -41,13 +42,17 @@
     <script src="script/rocketPhysics.js"></script>
     <script src="script/universePhysics.js"></script>
     <script src="script/physics.js"></script>
+    <script src="three.js/Tween.js"></script>
     
      <!-- UI Imports -->
-    <script src="UserInterface/UIObjectBuilder.js"></script>
-    <script src="UserInterface/variables.js"></script>
-    <script src="UserInterface/control.js"></script>
+    <script src="UserInterface/js/variables.js"></script>
+    <script src="UserInterface/js/UIObjectBuilder.js"></script>
+    <script src="UserInterface/js/control.js"></script>
     <script src="UserInterface/js/cmGauge.js"></script>
-    <script src="UserInterface/UIFunctions.js"></script>
+    <script src="UserInterface/js/jquery.flapper.js"></script>
+    <script src="UserInterface/js/UIFunctions.js"></script>
+    <!--<script src="transform/dist/jquery.transform-0.9.3.min.js"></script>
+    <script src="numberformatter/jquery.numberformatter-1.2.3.min.js"></script>-->
     
     
 <!-- User Interface -->
@@ -92,46 +97,131 @@
             <div id="editBox">
                 <fieldset>
                     <legend>Editor</legend>
-                    <fieldset>
-                        <legend>Stages</legend>
                         <!--<div class="stagesLabelBox">
                         <label class="ui-heading">Stages</label><span id="stagesLabel" class="valueSpan"></span>
                     </div>-->
                         <div class="stagesRangeBox">
-                            <label class="stagesLabel ui-heading">#Stages:</label><span id="stagesLabel" class="valueSpan"></span>
+                            <label class="stagesLabel ui-heading">Stages:&nbsp;</label><span id="stagesLabel" class="valueSpan"></span>
                             <div id="stages"></div>
                         </div>
-                    </fieldset>
-                    <fieldset>
-                        <legend>Stage 1</legend>
-                        <div class="massBox">
-                            <label class="ui-heading">Mass:</label>
-                            <br>
-                            <label class="emptyMassLabel mainLabel">Empty Mass:</label><span id="emptyMassLabel" class="valueSpan"></span>
-                            <br>
-                            <div id="emptyMass"></div>
-                            <br>
-                            <label class="fuelMassLabel mainLabel">Fuel Mass:</label><span id="fuelMassLabel" class="valueSpan"></span>
-                            <br>
-                            <div id="fuelMass"></div>
-                            <br>
-                            <label class="totalMassLabel">Total Mass:</label><span id=totalMassLabel class="valueSpan"></span>
+                        <div id="tabs">
+                            <ul>
+                                <li><a id="stage1" href="#tabs-1">Stage 1</a>
+                                </li>
+                                <li><a id="stage2" href="#tabs-2">Stage 2</a>
+                                </li>
+                                <li><a id="stage3" href="#tabs-3">Stage 3</a>
+                                </li>
+                                <li><a id="stage4" href="#tabs-4">Stage 4</a>
+                                </li>
+                            </ul>
+                            <div id="tabs-1">
+                                <div class="massBox">
+                                    <label class="emptyMassLabel ui-heading mainHeading">Empty Mass:&nbsp;</label><span id="emptyMass1Label" class="valueSpan"></span>&nbsp;kg
+                                    <br>
+                                    <div id="emptyMass1"></div>
+                                    <br>
+                                    <label class="fuelMassLabel ui-heading mainHeading">Fuel Mass:&nbsp;</label><span id="fuelMass1Label" class="valueSpan"></span>&nbsp;kg
+                                    <br>
+                                    <div id="fuelMass1"></div>
+                                    <br>
+                                    <label class="totalMassLabel ui-heading mainHeading">Total Mass:&nbsp;</label><span id="totalMass1Label" class="valueSpan"></span>&nbsp;kg
+                                </div>
+                                <br>
+                                <div class=burningTimeBox>
+                                    <label class="burningTimeLabel ui-heading mainHeading">Burning Time:&nbsp;</label><span id="burningTime1Label" class="valueSpan"></span>&nbsp;s
+                                    <br>
+                                    <div id="burningTime1"></div>
+                                </div>
+                                <br>
+                                <div class=thrustBox>
+                                    <label class="thrustLabel ui-heading mainHeading">Thrust:&nbsp;</label><span id="thrust1Label" class="valueSpan"></span>&nbsp;N
+                                    <br>
+                                    <div id="thrust1"></div>
+                                </div>
+                            </div>
+                            <div id="tabs-2">
+                                <div class="massBox">
+                                    <label class="emptyMassLabel ui-heading mainHeading">Empty Mass:&nbsp;</label><span id="emptyMass2Label" class="valueSpan"></span>&nbsp;kg
+                                    <br>
+                                    <div id="emptyMass2"></div>
+                                    <br>
+                                    <label class="fuelMassLabel ui-heading mainHeading">Fuel Mass:&nbsp;</label><span id="fuelMass2Label" class="valueSpan"></span>&nbsp;kg
+                                    <br>
+                                    <div id="fuelMass2"></div>
+                                    <br>
+                                    <label class="totalMassLabel ui-heading mainHeading">Total Mass:&nbsp;</label><span id="totalMass2Label" class="valueSpan"></span>&nbsp;kg
+                                </div>
+                                <br>
+                                <div class=burningTimeBox>
+                                    <label class="burningTimeLabel ui-heading mainHeading">Burning Time:&nbsp;</label><span id="burningTime2Label" class="valueSpan"></span>&nbsp;s
+                                    <br>
+                                    <div id="burningTime2"></div>
+                                </div>
+                                <br>
+                                <div class=thrustBox>
+                                    <label class="thrustLabel ui-heading mainHeading">Thrust:&nbsp;</label><span id="thrust2Label" class="valueSpan"></span>&nbsp;N
+                                    <br>
+                                    <div id="thrust2"></div>
+                                </div>
+                            </div>
+                            <div id="tabs-3">
+                                <div class="massBox">
+                                    <label class="emptyMassLabel ui-heading mainHeading">Empty Mass:&nbsp;</label><span id="emptyMass3Label" class="valueSpan"></span>&nbsp;kg
+                                    <br>
+                                    <div id="emptyMass3"></div>
+                                    <br>
+                                    <label class="fuelMassLabel ui-heading mainHeading">Fuel Mass:&nbsp;</label><span id="fuelMass3Label" class="valueSpan"></span>&nbsp;kg
+                                    <br>
+                                    <div id="fuelMass3"></div>
+                                    <br>
+                                    <label class="totalMassLabel ui-heading mainHeading">Total Mass:&nbsp;</label><span id="totalMass3Label" class="valueSpan"></span>&nbsp;kg
+                                </div>
+                                <br>
+                                <div class=burningTimeBox>
+                                    <label class="burningTimeLabel ui-heading mainHeading">Burning Time:&nbsp;</label><span id="burningTime3Label" class="valueSpan"></span>&nbsp;s
+                                    <br>
+                                    <div id="burningTime3"></div>
+                                </div>
+                                <br>
+                                <div class=thrustBox>
+                                    <label class="thrustLabel ui-heading mainHeading">Thrust:&nbsp;</label><span id="thrust3Label" class="valueSpan"></span>&nbsp;N
+                                    <br>
+                                    <div id="thrust3"></div>
+                                </div>
+                            </div>
+                            <div id="tabs-4">
+                                <div class="massBox">
+                                    <label class="emptyMassLabel ui-heading mainHeading">Empty Mass:&nbsp;</label><span id="emptyMass4Label" class="valueSpan"></span>&nbsp;kg
+                                    <br>
+                                    <div id="emptyMass4"></div>
+                                    <br>
+                                    <label class="fuelMassLabel ui-heading mainHeading">Fuel Mass:&nbsp;</label><span id="fuelMass4Label" class="valueSpan"></span>&nbsp;kg
+                                    <br>
+                                    <div id="fuelMass4"></div>
+                                    <br>
+                                    <label class="totalMassLabel ui-heading mainHeading">Total Mass:&nbsp;</label><span id="totalMass4Label" class="valueSpan"></span>&nbsp;kg
+                                </div>
+                                <br>
+                                <div class=burningTimeBox>
+                                    <label class="burningTimeLabel ui-heading mainHeading">Burning Time:&nbsp;</label><span id="burningTime4Label" class="valueSpan"></span>&nbsp;s
+                                    <br>
+                                    <div id="burningTime4"></div>
+                                </div>
+                                <br>
+                                <div class=thrustBox>
+                                    <label class="thrustLabel ui-heading mainHeading">Thrust:&nbsp;</label><span id="thrust4Label" class="valueSpan"></span>&nbsp;N
+                                    <br>
+                                    <div id="thrust4"></div>
+                                </div>
+                            </div>
                         </div>
-                        <br>
-                        <div class=burningTimeBox>
-                            <label class="burningTimeLabel ui-heading">Burning Time:</label><span id="burningTimeLabel" class="valueSpan"></span>
-                            <br>
-                            <div id="burningTime"></div>
-                        </div>
-                        <br>
-                        <div class=thrustBox>
-                            <label class="thrustLabel ui-heading">Thrust:</label><span id="thrustLabel" class="valueSpan"></span>
-                            <br>
-                            <div id="thrust"></div>
-                        </div>
-                    </fieldset>
+                    <label class="rocketTotalMassLabel ui-heading mainHeading">Rocket Total Mass:&nbsp;</label><span id="rocketTotalMassLabel" class="valueSpan"></span>&nbsp;kg
                 </fieldset>
+                <br>
                 <input type="button" name="resetEditor" class="btn fa ui-button ui-widget ui-corner-all" value="Reset" title="Reset Editor">
+                <br>
+                
             </div>
         </div>
         <!-- Rocket Interface End -->
@@ -154,7 +244,7 @@
                         <div class="planetBox">
                             <div class="planetSelectLabelBox">
                                 <div class="planetLabelBox">
-                                    <label class="planetLabel">Planet</label>
+                                    <label class="planetLabel ui-heading">Planet:</label>
                                 </div>
                                 <div class="planetSelectBox">
                                     <select name="planetSelect" id="planetSelect">
@@ -173,8 +263,9 @@
                             </div>
                             <div class="planetSizeBox">
                                 <div class="planetLabelBox">
-                                    <label>Planet Size:</label><span id="planetSizeLabel" class="valueSpan"></span>
+                                    <label class="ui-heading">Planet Size:&nbsp;</label><span id="planetSizeLabel" class="valueSpan"></span>
                                 </div>
+                                <br>
                                 <div id="planetSize"></div>
                             </div>
                         </div>
@@ -183,8 +274,9 @@
                         <legend>Time</legend>
                         <div class="timeBox">
                             <div class="timeLabelBox">
-                                <label>Time Factor:</label><span id="timeFactorLabel" class="valueSpan"></span>
+                                <label class="ui-heading">Time Factor:&nbsp;</label><span id="timeFactorLabel" class="valueSpan"></span>
                             </div>
+                            <br>
                             <div id="timeFactor"></div>
                         </div>
                     </fieldset>
@@ -246,7 +338,7 @@
                             </div>
                             <br>
                             <label>
-                                <span id="throttleGaugeLabel">0</span> N
+                                <span id="throttleGaugeLabel"></span> N
                             </label>
                         </div>
                         <!-- Speed -->
@@ -256,7 +348,7 @@
                             </div>
                             <br>
                             <label>
-                                <span id="speedGaugeLabel">0</span> m/s
+                                <span id="speedGaugeLabel"></span> m/s
                             </label>
                         </div>
                         <!-- Fuel -->
@@ -266,8 +358,16 @@
                             </div>
                             <br>
                             <label>
-                                <span id="fuelGaugeLabel">0</span> t
+                                <span id="fuelGaugeLabel"></span> kt
                             </label>
+                        </div>
+                        <!-- Height -->
+                        <br>
+                        <div class="heightBox">
+                            <div class="heightDisplayBox" title="Height">
+                                <input class="XS" id="heightDisplay"/>
+                            </div>
+                            <label id="heightLabel" class="ui-heading metersLabel">&nbsp;m</label>
                         </div>
                     </div>
                     <div class="steeringBox">
@@ -287,6 +387,9 @@
                         </div>
                         <div class="sasBox">
                             <input type="button" name="sas" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf0cc;" title="SAS Stabilisation">
+                        </div>                        
+                        <div class="currentStageDisplayBox" title="Current Stage">
+                            <input class="XS" id="currentStageDisplay"/>
                         </div>
                         <div class="discardStageButtonBox">
                             <input type="button" name="discardStageButton" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf07d;" title="Discard Stage">

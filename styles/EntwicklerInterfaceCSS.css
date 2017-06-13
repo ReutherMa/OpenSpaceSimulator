@@ -24,9 +24,8 @@ label {
     font-weight: bold;
 }
 legend {
-
-    font-size:16px;
-    color:#ff8c00;
+    font-size: 16px;
+    color: #ff8c00;
     font-weight: bold;
 }
 fieldset {
@@ -39,7 +38,8 @@ fieldset {
     font-size: 13px;
 }
 /* ----------- BOX POSITIONING ----------- */
-#loadingBox{
+
+#loadingBox {
     position: absolute;
 }
 #headerbox {
@@ -60,9 +60,10 @@ fieldset {
     padding: 5px;
     height: auto !important;
     height: 100%;
+    width: 24%;
     overflow: auto;
     border-radius: 6px;
-    display:none;
+    display: none;
 }
 #developerInterface {
     position: fixed;
@@ -81,7 +82,7 @@ fieldset {
     /* IE */
     overflow: auto;
     border-radius: 6px;
-    display:none;
+    display: none;
 }
 /*#developer {
     position: absolute;
@@ -100,7 +101,6 @@ fieldset {
     left: 2%;
     top: 6%;
 }
-
 /*#game {
     position: absolute;
     left: 93.5%;
@@ -138,4 +138,10 @@ fieldset {
 .fa-play {
     font-family: FontAwesome, Arial, sans-serif;
 }
+/*.totalMassLabel {
+    margin-left: 30%;
+}
+.rocketTotalMassLabel {
+    margin-left: 25%;
+}*/
 \ No newline at end of file

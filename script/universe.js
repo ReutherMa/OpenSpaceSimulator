@@ -3,6 +3,9 @@ var global = {
     started: false,
     audio: false
 };
+
+//do we want to load textures? false for fast (and ugly) debugging mode
+var loadTextures = false;
 //var throttleSound;
 var rocket;
 var rocketGroup;
@@ -15,6 +18,7 @@ var camFactor = 6;
 var line_count = 0;
 
 var sphere_nav;
+var scene;
 
 var readyVars = {
     physics : false,
@@ -40,7 +44,9 @@ function buildUniverse() {
     var universe = {};
     var container;
     //, stats
+
     var scene, sceneVol, ui_scene, renderer;
+
     var segments = 64;
     var group_galaxy;
     var sun, earth, moon, mercury, venus, mars, jupiter, saturn, uranus, neptune;
@@ -55,6 +61,7 @@ function buildUniverse() {
     var lasttime;
     
     var counter = 1;
+
     
     var height_atmos = 100000;
     var renderCount = 0;
@@ -79,6 +86,9 @@ function buildUniverse() {
     var lightVec = new THREE.Vector3( -1, -1, -1);         
     var light = new THREE.Vector3().copy(lightVec).negate().normalize();
     
+=======
+    var tween;
+>>>>>>> origin/master
 
     //universe functions
     universe.init = init;
@@ -117,7 +127,7 @@ function buildUniverse() {
 
         //building the skybox
         buildSkybox();
-
+        
         //audio
         audioListener = new THREE.AudioListener();
         camera.add( audioListener );
@@ -315,6 +325,7 @@ function buildUniverse() {
                 var speedy = data_plan.speedy;
                 var speedz = data_plan.speedz;
                 
+                
                 if (base) {
                     posx   += data[base].x;
                     posy   += data[base].y;
@@ -366,13 +377,17 @@ function buildUniverse() {
             rocket = collada.scene;   //var skin = collada.skins[ 0 ];
             //rocket.scale.set(695508e3, 695508e3, 695508e3);
             rocketGroup.add(rocket);
+            scene.add(rocketGroup);
             var r = spaceObjects.earth.radius;
             var xE = r * Math.sin(Math.PI/180 * 45) * Math.cos(Math.PI/180 * 90);
             var yE = r * Math.sin(Math.PI/180 * 45) * Math.sin(Math.PI/180 * 90);
             var zE = r * Math.cos(Math.PI/180 * 45);
-            rocketGroup.position.x = xE + 1;
-            rocketGroup.position.y = yE + 1;
-            rocketGroup.position.z = zE + 1;
+            //rocketGroup.position.x = spaceObjects.earth.group.position.x + xE + 1;
+            //rocketGroup.position.y = spaceObjects.earth.group.position.y + yE + 1;
+            //rocketGroup.position.z = spaceObjects.earth.group.position.z + zE + 1;
+            rocketGroup.position.x =  xE + 1;
+            rocketGroup.position.y =  yE + 1;
+            rocketGroup.position.z =  zE + 1;
             rocketGroup.speed = new THREE.Vector3 (0, 0, 0);
             rocketGroup.rotateX(Math.PI/180 * 45);
             rocketGroup.angularMomentum = new THREE.Quaternion(0,0,0,1);
@@ -380,7 +395,12 @@ function buildUniverse() {
             earthGroup.add(rocketGroup);
             rocketGroup.add(throttleSound);
         });
+
+        if(geo_line_rocket) scene.add( geo_line_rocket );
+        //var rocketObject = new SpaceObject();
         readyVars.rocket = true;
+        //var rocketObject = new SpaceObject("rocket", 0, 0, "0x000000", "rocketGroup", rocketGroup.speed.x, rocketGroup.speed.y, rocketGroup.speed.z);
+        //spaceObjects["rocket"] = planet_object;
         
     }
 
@@ -432,7 +452,9 @@ function buildUniverse() {
                 
                 geometry = new THREE.SphereGeometry(radius, segments, segments);
                 material = new THREE.MeshBasicMaterial();
-                material.map = loader.load('textures/sun_map_2.jpg');
+                if(loadTextures){
+                    material.map = loader.load('textures/sun_map_2.jpg');
+                }
                 mesh_sun = new THREE.Mesh(geometry, material);
                 group.rotateX(Math.PI/180 * 120);
                 
@@ -496,25 +518,32 @@ function buildUniverse() {
                         geoVol.faceVertexUvs[0].push([new THREE.Vector2(), new THREE.Vector2(), new THREE.Vector2()]);
                     
                     }
-                
-                if (name == "earth"){
+                    
+                if (name == "earth" ){
                     var axisHelper = new THREE.AxisHelper(1e10); //
                     group.add(axisHelper);
                     
                     var light_earth = new THREE.PointLight( 0xffffff, 1, 1e10, 2 );
                     
                     group.add( light_earth );
-                    
+                    if(loadTextures){
+
                     material = new THREE.ShaderMaterial( {
 						uniforms: uniforms1,
 						vertexShader: document.getElementById( 'vertexShader' ).textContent,
 						fragmentShader: document.getElementById( 'fragmentShader_1' ).textContent
 				    } );
+                    }else{
+                        material = new THREE.MeshPhongMaterial({
+                        color: 0x0000ff
+                    });
+                    }
                     //material.depthTest = false;
-                                                            
-                    var geometry_cloud = new THREE.SphereGeometry(radius * 1.001587, segments, segments); //clouds 10km above earth
-                    var material_cloud = new THREE.MeshLambertMaterial({
-                        map: loader.load(path_tex + "_mapcloud_2.png"),
+                    
+                    var geometry_cloud = new THREE.SphereGeometry(radius * 1.02, segments, segments);
+                    if(loadTextures){
+                        var material_cloud = new THREE.MeshLambertMaterial({
+                        map: loader.load(path_tex + "_mapcloud.png"),
                         side: THREE.DoubleSide,
                         opacity: 0.8,
                         transparent: true,
@@ -522,6 +551,7 @@ function buildUniverse() {
                     });
                     var cloudMesh = new THREE.Mesh(geometry_cloud, material_cloud);
                     group.add(cloudMesh);
+                    }
                     
                     height_atmos = radius * 1.01587;
                     var geo_atmos = new THREE.SphereGeometry(height_atmos, segments, segments); //atmosphere 100km above earth
@@ -535,16 +565,17 @@ function buildUniverse() {
                     var mesh_atmos = new THREE.Mesh(geo_atmos, mat_atmos);
                     mesh_atmos.name = "mesh_atmos";
                     group.add(mesh_atmos);
-                }
-                else {
+                }else {
                     material = new THREE.MeshPhongMaterial({
                         color: 0xffffff
                     });
-                    //speed up loading during development process
-                    material.map = loader.load(path_tex + "_map.jpg");
-                    material.normalMap = loader.load(path_tex + "_normalmap.png");
-                    material.bumpMap = loader.load(path_tex + "_bumpmap.jpg");
-                    material.bumpScale = 4.0;
+                    
+                    if(loadTextures){
+                        material.map = loader.load(path_tex + "_map.jpg");
+                        material.normalMap = loader.load(path_tex + "_normalmap.png");
+                        material.bumpMap = loader.load(path_tex + "_bumpmap.jpg");
+                        material.bumpScale = 4.0;
+                    }
                 }
                     
             mesh = new THREE.Mesh(geometry, material);
@@ -757,6 +788,51 @@ function buildUniverse() {
                     camera.position.x = camera.position.y = 0;
                     camera.position.z = spaceObjects[e].radius*3;
                     controls.update();
+                    
+                    /*
+                    //camera tracking shot
+                    tween = new TWEEN.Tween({x: camera.position.x, y: camera.position.y, z: camera.position.z});
+                    
+                        var toZ = spaceObjects[e].group.position.z + spaceObjects[e].radius*2;
+                        console.log("TOZ = " + toZ);
+                    //var to = {
+                    //    x: -1452276246336.8184,
+                    //    y: 705453284846.8846,
+                    //    z: 3579668441651.1973
+                    //};
+                    var to = {
+                        x: spaceObjects[e].group.position.x,
+                        y: spaceObjects[e].group.position.y,
+                        z: toZ
+                    };
+                    tween.to(to,6000)
+                    .easing(TWEEN.Easing.Linear.None)
+                    .onUpdate(function () {
+                        camera.position.set(this.x, this.y, this.z);
+                        //camera.lookAt(0,0,0);
+                        console.log(this.x, this.y, this.z);
+                    })
+                    .onComplete(function () {
+                        //camera.lookAt(0,0,0);
+                        controls.target.set(to.x, to.y, spaceObjects[e].group.position.z);
+                        camera.position.copy(controls.target).add(new THREE.Vector3(to.x, to.y, to.z));
+                        //controls.target.set(to.x, to.y, to.z);
+                        //spaceObjects[e].group.add(camera);
+                        //camera.position.x = camera.position.y = 0;
+                        //camera.position.z = spaceObjects[e].radius*3;
+                        //controls.update();
+                        console.log("DONE");
+                    })
+                    .start();
+                    controls.update();
+                    //.onUpdate(function () {
+                    //    camera.position.set(this.x, this.y, this.z);
+                    //    camera.lookAt(new THREE.Vector3(0,0,0));
+                    //})
+                    //.onComplete(function () {
+                    //    camera.lookAt(new THREE.Vector3(0,0,0));
+                    //})
+                    */
                 }
             }
             if (newElement == "launchpad") {
@@ -806,8 +882,6 @@ function buildUniverse() {
 var clock = new THREE.Clock();
     /* This renders the scene */
     function render() {
-        //renderCount++;
-
         /* changes of User Interface */ 
         if (globalInterfaceValues.changed) {
             UIChanges();
@@ -827,7 +901,11 @@ var clock = new THREE.Clock();
         }
 
         requestAnimationFrame(render);
-        //setTimeout (render, 1000/60);
+        /* for camera tracking shot */
+        //console.log(camera.position.x, camera.position.y, camera.position.z);
+        TWEEN.update();
+        
+         //setTimeout (render, 1000/60);
 
         /* current time in ms since 1.1.1970 -> 00:00:00 UTC Worldtime */
         now = Date.now();

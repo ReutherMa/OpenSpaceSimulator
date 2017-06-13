@@ -14,6 +14,64 @@ var stagesCtr = 0;
 //var speedVec = new THREE.Vector3();
 //var rocketSpeed = 0;
 
+//Initializing trails
+var geo_buf_rocket = new THREE.BufferGeometry();
+var geo_buf_rocket_future = new THREE.BufferGeometry();
+
+            
+const MAX_POINTS = 5000;
+            
+// attributes
+var positions_rocket = new Float32Array( MAX_POINTS * 3 ); // 3 vertices per point
+if(geo_buf_rocket){
+                geo_buf_rocket.addAttribute( 'position', new THREE.BufferAttribute( positions_rocket, 3 ) );
+            }
+            // draw range
+            var drawCount_rocket = 0; // draw the first 2 points, only
+            geo_buf_rocket.setDrawRange( 0, drawCount_rocket );
+            
+            var mat_geo_rocket = new THREE.LineBasicMaterial( { color: 0xff0000, linewidth: 1 } );
+        
+            // line
+            var geo_line_rocket = new THREE.Line( geo_buf_rocket,  mat_geo_rocket );
+            
+            
+            var oldX = 1;
+            var oldY = 1;
+            var oldZ = 1;
+            var oldVec = new THREE.Vector3( oldX, oldY, oldZ);
+
+            
+function drawRocketTrail(x, y, z){
+                
+                if (drawCount_rocket > MAX_POINTS - 3) {
+                    // sliding buffer wäre besser (2x MAX_POINTS Größe)
+                    positions_rocket.copyWithin (0, 3);
+                    drawCount_rocket--;
+                }
+                
+                var currentVec = new THREE.Vector3( x, y, z);
+                //if ( Math.abs(x - oldX) >= 1e9 || Math.abs(y - oldY >= 1e11) ||  Math.abs(z - oldZ >= 1e7)){
+                //if ( Math.abs(currentVec.dot(oldVec) >= 1.2e5) ){
+                //console.log('Drawing');
+                    oldX = positions_rocket[drawCount_rocket*3]   = x;
+                    oldY = positions_rocket[drawCount_rocket*3+1] = y;
+                    oldZ = positions_rocket[drawCount_rocket*3+2] = z;  
+                    oldVec = new THREE.Vector3(oldX, oldY, oldZ);
+                    drawCount_rocket ++;
+                //}
+                
+                geo_buf_rocket.attributes.position.needsUpdate = true;
+                geo_buf_rocket.setDrawRange( 0, drawCount_rocket );
+            
+            geo_line_rocket.name = "rkt_line";
+}
+
+function drawFlightPrognosis(){
+    
+}
+
+
 function calculateGravitationRocket(difftime){
     for (var o in spaceObjects) {
         if (spaceObjects[o].name == "rocket") {
@@ -91,7 +149,7 @@ function move(difftime) {
         //current fuel mass for UI
         fuel_mass = fuel_mass - mass_lost;
         $('#fuelGauge .gauge-arrow').trigger('updateGauge', fuel_mass / saturnV.fuel_total * 100 );
-        $("#fuelGaugeLabel").text(parseInt(fuel_mass));
+        $("#fuelGaugeLabel").text(parseInt(fuel_mass / 1000));
         console.log(fuel_mass);
     } else {
         if(noStagesLeft){
@@ -129,7 +187,7 @@ function move(difftime) {
 
     //Calculate planet position for drawing ellipse
     //rocketGroup.addTrailPoint(positionX, positionY, positionZ);
-        
+    drawRocketTrail(-rocketGroup.position.x, -rocketGroup.position.y, rocketGroup.position.z);    
     
 }
 
