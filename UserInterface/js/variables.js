@@ -2,8 +2,6 @@ var globalInterfaceValues = {
     // User Einstellungen
 
     // RocketInterface
-
-    // TODO: Stages-Array mit Stages-Objekten
     stage: 1,
     stages: [{
         emptyMass: 0,

@@ -99,6 +99,13 @@ $(function() {
         chars_preset: 'num'
     });
     $heightDisplay.val(height).change();
+    
+    var $currentStageDisplay = $('#currentStageDisplay');
+    $currentStageDisplay.flapper({
+        width: 1,
+        chars_preset: 'num'
+    });
+    $currentStageDisplay.val(globalInterfaceValues.stage).change();
     /*setTimeout(function() {
         $header_display.val(000000000).change();
         var toggle = true;
