@@ -31,13 +31,29 @@ legend {
 }
 fieldset {
     border-radius: 6px;
+    margin: 5px 0px 5px 0px;
+    padding: 3px 7px 8px 7px;
 }
-.fieldSetPadding {
+/*.fieldSetPadding {
     margin-bottom: 10px;
-}
+}*/
 .valueSpan {
     font-size: 13px;
 }
+
+.ui-slider {
+    margin: 3px 0px 3px 0px;
+}
+
+.ui-tabs {
+    margin: 10px 0px 10px 0px;
+}
+
+#stages, #planetSize, #timeFactor {
+    margin: 3px 7px 3px 7px;
+}
+
+
 /* ----------- BOX POSITIONING ----------- */
 
 #loadingBox {
@@ -119,12 +135,6 @@ fieldset {
     padding: 5px;
 }*/
 
-.planetSizeBox {
-    padding-bottom: 10px;
-}
-.planetSelectLabelBox {
-    float: left;
-}
 .planetCheckbox {
     padding-top: 50px;
 }
