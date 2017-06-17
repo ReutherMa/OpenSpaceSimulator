@@ -1,7 +1,7 @@
 /* ----------- GENERAL STUFF ----------- */
 
 body {
-    font-family: Arial;
+    /*font-family: Arial;*/
     font-size: 10;
     color: #ffffff;
 }
@@ -21,9 +21,10 @@ label {
     font-size: 15px;
 }
 .ui-heading {
-    font-weight: bold;
+    font-weight: 300;
 }
 legend {
+    font-family: 'Montserrat', sans-serif;
     font-size: 16px;
     color: #ff8c00;
     font-weight: bold;
