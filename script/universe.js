@@ -11,6 +11,10 @@ var rocket;
 var rocketGroup;
 var launchpad;
 var launchpadGroup;
+
+var ground;
+var groundGroup;
+
 var spaceObjects = {};
 var camera, controls, ui_camera;
 var camFactor = 6;
@@ -27,6 +31,7 @@ var readyVars = {
     interface : false,
     navball : false,
     launchpad : false,
+    ground: false,
     skybox: false,
     earthshader : false,
     render : false
@@ -167,6 +172,9 @@ function buildUniverse() {
         buildPlanets(data);
         placeRocket();
         placeLaunchpad();
+        
+        placeGround();
+        
         buildNavBall();
         
         
@@ -407,7 +415,7 @@ function buildUniverse() {
         var earthGroup = spaceObjects.earth.group;
         var loader = new THREE.ColladaLoader(); 
         loader.options.convertUpAxis = true; 
-        loader.load("models/launchpad_mat.dae", function(collada) {
+        loader.load("models/launchpad_font.dae", function(collada) {
             launchpadGroup = new THREE.Group();
             launchpad = collada.scene;   //var skin = collada.skins[ 0 ];
             launchpad.scale.set(10, 10, 10);
@@ -424,6 +432,37 @@ function buildUniverse() {
             earthGroup.add(launchpadGroup);
         });
         readyVars.launchpad = true;
+    }
+    
+    /* Places Launchpad */
+    function placeGround() {
+        var earthGroup = spaceObjects.earth.group;
+        var loader = new THREE.ColladaLoader(); 
+        loader.options.convertUpAxis = true; 
+        loader.load("models/ground_circle.dae", function(collada) {
+            groundGroup = new THREE.Group();
+            ground = collada.scene;   //var skin = collada.skins[ 0 ];
+            //ground.scale.set(10, 10, 10);
+            groundGroup.add(ground);
+            
+            var r = spaceObjects.earth.radius;
+            var xE = r * Math.sin(Math.PI/180 * 45) * Math.cos(Math.PI/180 * 90);
+            var yE = r * Math.sin(Math.PI/180 * 45) * Math.sin(Math.PI/180 * 90);
+            var zE = r * Math.cos(Math.PI/180 * 45);
+            groundGroup.position.x = xE;
+            groundGroup.position.y = yE;
+            groundGroup.position.z = zE+1;
+            ground.rotateX(Math.PI/180 * 225);
+            earthGroup.add(groundGroup);
+        });
+        /*load texture
+        var ground_material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+        ground_material.map = loader.load("models/textures/gras_new.png");
+        groundGround = new THREE.Mesh( ground, ground_material );
+        
+    */
+        
+        readyVars.ground = true;
     }
 
     /* create a planet with mesh, position and orbit */
