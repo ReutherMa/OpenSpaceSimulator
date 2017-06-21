@@ -1,5 +1,5 @@
 body {
-    font-family:Arial;
+    font-family: 'Roboto', sans-serif;
     font-size: 26px;
     color:#ffffff;
     background-image: url("Welcome-background.jpg");
@@ -7,8 +7,18 @@ body {
     background-color: #000000;
 }
 
-h1 {
+h1, h2 {
     color:#ffffff;
+    font-family: 'Montserrat Light', sans-serif;
+}
+
+h2 {
+    font-size: 30px;
+}
+
+a {
+    color:#ffffff;
+    text-decoration: none;
 }
 
 .logo {
@@ -25,6 +35,16 @@ h1 {
     left: 50%;
     transform: translate(-50%, -50%);
     text-align:center;
+}
+
+.impressumLogoDiv {
+    text-align:center;
+}
+
+.impressum {
+    width:633px;
+    margin:0 auto;
+    padding-bottom:100px;
 }
 
 .btn {
@@ -50,11 +70,15 @@ h1 {
     font-size: 28px !important;
     }
     
-    .logo {
+    .logo, .logoImpressum {
         height: 24%;
     }
     
     .smallScreenDisclaimer {
         font-size: 35px;
+    }
+    
+    body {
+        padding-top: 200px;
     }
 }
