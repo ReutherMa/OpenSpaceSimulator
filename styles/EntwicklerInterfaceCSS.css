@@ -2,17 +2,18 @@
 
 body {
     /*font-family: Arial;*/
-    font-size: 10;
-    color: #ffffff;
-}
-h1,
-label,
-p {
+    font-size: 12px;
     color: #ffffff;
 }
 h1 {
     font-size: 15px;
     margin: 5px;
+}
+h3 {
+    font-size: 15px;
+    margin-bottom: 4px;
+    font-weight: normal;
+    margin-top: 0px;
 }
 form {
     margin-bottom: 0px;
@@ -30,6 +31,7 @@ legend {
     font-weight: bold;
 }
 fieldset {
+    background-color: rgba(255, 255, 255, 0.10);
     border-radius: 6px;
     margin: 5px 0px 5px 0px;
     padding: 3px 7px 8px 7px;
@@ -73,11 +75,11 @@ fieldset {
     /* width:100%;*/
     /*text-align:center;*/
 }
-#rocketInterface {
+#rocketInterface , #infoInterface {
     position: absolute;
     left: 3%;
     top: 11%;
-    background-color: rgba(255, 255, 255, 0.10);
+    /* background-color: rgba(255, 255, 255, 0.10); */
     padding: 5px;
     height: auto !important;
     height: 100%;
@@ -94,7 +96,7 @@ fieldset {
     top: 11%;
     /* z-index: 200; */
     /* background-color: rgba(0, 0, 0, 0.9); */
-    background-color: rgba(255, 255, 255, 0.10);
+    /* background-color: rgba(255, 255, 255, 0.10); */
     padding: 5px;
     /* min-height: 100%; */
     height: auto !important;

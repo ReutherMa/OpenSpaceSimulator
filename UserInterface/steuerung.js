@@ -2,14 +2,14 @@ var v = 0;
 var vx = 0;
 var vy = 0;
 var vz = 0;
-var w = 119;
-var s = 115;
-var a = 97;
-var d = 100;
-var q = 113;
-var e = 101;
-var space = 32;
-var b = 98;
+var w = 119; //drehung um x
+var s = 115; //drehung um x
+var a = 97; //drehung um z
+var d = 100; //drehung um z 
+var q = 113; // drehung um y
+var e = 101; //drehung um y
+var space = 32; //throttle
+//var b = 98;
 
 $(document).ready(function(){
     $(document).keypress(function(e){
@@ -35,9 +35,9 @@ $(document).ready(function(){
             case space:
                 v++;
                 break;
-            case b:
-                v--;
-                break;
+            //case b:
+            //    v--;
+            //    break;
         }
     });
 

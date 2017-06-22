@@ -27,8 +27,6 @@
     <div id="loadingBox" style="width: 100%; height: 100%; background-color: darkblue; text-align: center; z-index: 1000">Loading...</div>
     <div id="container"></div>
 
-    
-
     <!-- Imports -->
     <script src="script/jquery-3.1.1.min.js"></script>
     <script src="UserInterface/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
@@ -66,8 +64,8 @@
 
         <div class="logoBox">
             <!--<img src="logo-mit-text.png" alt="Logo" class="logo" height=15% width=auto>-->
-            <img src="LogotextMontserratLight.png" alt="Logo" height=25px width=auto>
-            <img src="nurlogo.png" alt="Logo" class="logo" height=5% width=auto>
+            <img src="logo/LogotextMontserratLight.png" alt="Logo" height=25px width=auto>
+            <img src="logo/nurlogo.png" alt="Logo" class="logo" height=5% width=auto>
         </div>
 
         <!--
@@ -81,10 +79,12 @@
     <div id="contentBox">
 
         <div id="tabBox">
-            <input type="button" id="rocket" class="btn fa ui-button ui-widget ui-corner-all menuButton" value="&#xf0ad" title="Rocket Settings" onclick="doToggle(this)">
-            <input type="button" id="developer" class="btn fa ui-button ui-widget ui-corner-all menuButton" value="&#xf0ac" title="Universe Settings" onclick="doToggle(this)">
-            <input type="button" id="game" class="btn fa ui-button ui-widget ui-corner-all menuButton" value="&#xf135" title="Flightboard" onclick="doToggleGame(this)">
-            <button type="button" name="sound" id="soundButton" class="btn fa ui-button ui-widget ui-corner-all fa-volume-up menuButton" value="" title="Sound" onclick="soundOnOff(this)"></button>
+            <input type="button" id="rocket" class="btn fa ui-button ui-widget ui-corner-all menuButton" value="&#xf135" title="Rocket Settings" onclick="doToggle(this)"> <!--value="&#xf0ad"-->
+            <input type="button" id="developer" class="btn fa ui-button ui-widget ui-corner-all menuButton" value="&#xf030" title="Universe Settings" onclick="doToggle(this)"> <!--value="&#xf0ac"-->
+            <input type="button" id="game" class="btn fa ui-button ui-widget ui-corner-all menuButton" value="&#xf0e4" title="Flightboard" onclick="doToggleGame(this)"> <!--value="&#xf135"-->
+            <button type="button" name="sound" id="soundButton" class="btn fa ui-button ui-widget ui-corner-all fa-volume-up menuButton" value="" title="Sound"
+            onclick="soundOnOff(this)"></button>
+            <input type="button" id="info" class="btn fa ui-button ui-widget ui-corner-all menuButton" value="&#xf129" title="Information" onclick="doToggle(this)">
         </div>
         <!-- Rocket Interface-->
 
@@ -401,6 +401,40 @@
             </div>
         </div>
         <!-- Game Interface End -->
+        
+        <!-- Information -->
+        
+        <div id="infoInterface" class="interfaceTab">
+                    <fieldset class="fieldSetPadding">
+                        <legend>Information</legend>
+                        <div class="interfaceInfoBox">
+                            <h3 class="infoLabel">How does the interface work?</h3>
+                            <i class="fa fa-rocket" aria-hidden="true"></i>  Build your own rocket or select an already existing one<br>
+                            <i class="fa fa-camera" aria-hidden="true"></i>  Change settings like time factor and/or change your point of view <br>
+                            <i class="fa fa-tachometer" aria-hidden="true"></i>  Rocket Dashboard: Control your Rocket and keep track of fuel and throttle <br>
+                            <i class="fa fa-volume-up" aria-hidden="true"></i>  Turn sound on or off
+                        </div>
+                        <br>
+                        <div class="keyAssignmentBox">
+                            <h3 class="infoLabel">Key Assignment:</h3>
+                            space = throttle <br>
+                            w = x rotation <br>
+                            s = x rotation <br>
+                            a = z rotation <br>
+                            d = z rotation  <br>
+                            q = y rotation <br>
+                            e = y rotation
+                        </div>
+                        <br>
+                        <div class="impressumInfoBox">
+                        <h3 class="impressumLabel">Impressum, License and Copyright:</h3>
+                            <a href="/Impressum.html" target="_blank">Read More</a>
+                        </div>
+                    </fieldset>
+        </div>
+        
+        <!-- Information End -->
+        
     </div>
     <!-- Content Box End -->
 
