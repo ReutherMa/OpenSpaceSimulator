@@ -1,12 +1,13 @@
-var prompt = 0;
+var prompty = 0;
+
 
 function prompt(errorstring) {
     //allert(errorstring);
-    if (prompt==0) {
+    if(prompty==0) {
         $("#dialog").text(errorstring);
         $("#dialog").dialog();
-        prompt=1;
     }
+    prompty = 1;  
 }
 
 
