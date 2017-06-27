@@ -343,6 +343,7 @@
             var loader = new THREE.TextureLoader();
             
                             var lulu;
+            var rocketGroup = new THREE.Group();
             
             
             init();
@@ -408,6 +409,11 @@
                     rocket.position.y = -15;
                     rocket.position.z =  0;
                     scene.add(collada.scene);
+                    
+                    var arr = rocket.children[2].children;
+                    for(i=0;i<=arr.length;i++){
+                        rocketGroup.add(arr[i]);    
+                    }
                 });
                 
                 
@@ -417,12 +423,9 @@
                 scene.add( mesh_rocket );
                 
                 
-                
                 //mesh_rocket = scene.children[1];
                 
                 /*      ---   Create all volume geometries for the objects   ---     */
-
-                
                 
                 //Torus
                 //object_vol_geometry
@@ -436,10 +439,15 @@
                 var geoVol_ground         = new THREE.BoxGeometry(75, 0.1, 75);
                 var geoVol_ground_faceNum = geoVol_ground.faces.length;
                 
+                //var pa = mesh_rocket.geometry.geometry.parameters;
+                //var geoVol_rocket         = new THREE.BoxGeometry(pa.width, pa.height, pa.depth);
+                //var geoVol_rocket_faceNum = geoVol_rocket.faces.length;
+                var geoVol_rocketArr = {};
                 
-                var pa = mesh_rocket.geometry.geometry.parameters;
-                var geoVol_rocket         = new THREE.BoxGeometry(pa.width, pa.height, pa.depth);
-                var geoVol_rocket_faceNum = geoVol_rocket.faces.length;
+                for (var i=0; i<=rocketGroup.lenght;i++){
+                    //geoVol_rocketArr           = new THREE.BoxGeometry(    
+                    var ahsvgahbsb=i;
+                }  
                 
                 //Moon
                 //moon_geo_vol
@@ -463,9 +471,9 @@
                 /*      ---   Create all arrays to iterate over faceNums and shadow volume geometries   ---     */
                 //Arrays
                 //Volume Geometry Array
-                var arr_geoVol  = { geoVol_rocket, geoVol_torus,         geoVol_ground,         geoVol_moon,         geoVol_earth,         geoVol_mars};
+                var arr_geoVol  = { geoVol_torus,         geoVol_ground,         geoVol_moon,         geoVol_earth,         geoVol_mars};
                 //faceNum Array
-                var arr_faceNum = { geoVol_rocket_faceNum, geoVol_torus_faceNum, geoVol_ground_faceNum, geoVol_moon_faceNum, geoVol_earth_faceNum, geoVol_mars_faceNum};
+                var arr_faceNum = { geoVol_torus_faceNum, geoVol_ground_faceNum, geoVol_moon_faceNum, geoVol_earth_faceNum, geoVol_mars_faceNum};
                 
                 
                 var color1 = [new THREE.Color(0x00ffff), new THREE.Color(0xff0000), new THREE.Color(0xff0000)];
@@ -527,9 +535,9 @@
                 /*      ---   Create the meshes, set the position, add shadow volume and object to the scenes ---     */
                 
                 //ROCKET
-                meshVol_rocket = new THREE.Mesh(geoVol_rocket);
-                meshVol_rocket.position.set(-7, -15, 0);
-                sceneVol.add(meshVol_rocket);
+                //meshVol_rocket = new THREE.Mesh(geoVol_rocket);
+                //meshVol_rocket.position.set(-7, -15, 0);
+                //sceneVol.add(meshVol_rocket);
                 
                 //mesh_rocket = rkt;
                 //meshVol_rocket.position.set(-7, -15, 0);
@@ -667,7 +675,7 @@
 					fragmentShader: document.getElementById('shadowVolume_fs').textContent
 				});
                        
-                meshVol_rocket.material = shadowVolume_mat;     //Rocket
+                //smeshVol_rocket.material = shadowVolume_mat;     //Rocket
                 meshVol_torus.material  = shadowVolume_mat;     //Torus
                 meshVol_ground.material = shadowVolume_mat;     //Ground Plate
                 meshVol_moon.material   = shadowVolume_mat;     //Moon

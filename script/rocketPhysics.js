@@ -19,54 +19,55 @@ var geo_buf_rocket = new THREE.BufferGeometry();
 var geo_buf_rocket_future = new THREE.BufferGeometry();
 
             
-const MAX_POINTS = 5000;
+const MAX_POINTS_R = 5000;
             
 // attributes
-var positions_rocket = new Float32Array( MAX_POINTS * 3 ); // 3 vertices per point
-if(geo_buf_rocket){
-                geo_buf_rocket.addAttribute( 'position', new THREE.BufferAttribute( positions_rocket, 3 ) );
-            }
-            // draw range
-            var drawCount_rocket = 0; // draw the first 2 points, only
-            geo_buf_rocket.setDrawRange( 0, drawCount_rocket );
-            
-            var mat_geo_rocket = new THREE.LineBasicMaterial( { color: 0xff0000, linewidth: 1 } );
-        
-            // line
-            var geo_line_rocket = new THREE.Line( geo_buf_rocket,  mat_geo_rocket );
-            
-            
-            var oldX = 1;
-            var oldY = 1;
-            var oldZ = 1;
-            var oldVec = new THREE.Vector3( oldX, oldY, oldZ);
+var positions_rocket = new Float32Array( MAX_POINTS_R * 3 ); // 3 vertices per point
 
-            
-function drawRocketTrail(x, y, z){
-                
-                if (drawCount_rocket > MAX_POINTS - 3) {
-                    // sliding buffer wäre besser (2x MAX_POINTS Größe)
-                    positions_rocket.copyWithin (0, 3);
-                    drawCount_rocket--;
-                }
-                
-                var currentVec = new THREE.Vector3( x, y, z);
-                //if ( Math.abs(x - oldX) >= 1e9 || Math.abs(y - oldY >= 1e11) ||  Math.abs(z - oldZ >= 1e7)){
-                //if ( Math.abs(currentVec.dot(oldVec) >= 1.2e5) ){
-                //console.log('Drawing');
-                    oldX = positions_rocket[drawCount_rocket*3]   = x;
-                    oldY = positions_rocket[drawCount_rocket*3+1] = y;
-                    oldZ = positions_rocket[drawCount_rocket*3+2] = z;  
-                    oldVec = new THREE.Vector3(oldX, oldY, oldZ);
-                    drawCount_rocket ++;
-                //}
-                
-                geo_buf_rocket.attributes.position.needsUpdate = true;
-                geo_buf_rocket.setDrawRange( 0, drawCount_rocket );
-            
-            geo_line_rocket.name = "rkt_line";
+if(geo_buf_rocket){
+    geo_buf_rocket.addAttribute( 'position', new THREE.BufferAttribute( positions_rocket, 3 ) );
 }
 
+// draw range
+var drawCount_rocket = 0; // draw the first 2 points, only
+geo_buf_rocket.setDrawRange( 0, drawCount_rocket );
+
+var mat_geo_rocket = new THREE.LineBasicMaterial( { color: 0xff0000, linewidth: 1 } );
+
+// line
+var geo_line_rocket = new THREE.Line( geo_buf_rocket,  mat_geo_rocket );
+
+var oldX_R = 1;
+var oldY_R = 1;
+var oldZ_R = 1;
+var oldVec_R = new THREE.Vector3( oldX_R, oldY_R, oldZ_R);
+
+function drawRocketTrail(x, y, z){
+    
+    if (drawCount_rocket > MAX_POINTS_R - 3) {
+        // sliding buffer wäre besser (2x MAX_POINTS Größe)
+        positions_rocket.copyWithin (0, 3);
+        drawCount_rocket--;
+    }
+    
+    var currentVec = new THREE.Vector3( x, y, z);
+    //if ( Math.abs(x - oldX) >= 1e9 || Math.abs(y - oldY >= 1e11) ||  Math.abs(z - oldZ >= 1e7)){
+    //if ( Math.abs(currentVec.dot(oldVec) >= 1.2e5) ){
+    //console.log('Drawing');
+     oldX_R = positions_rocket[drawCount_rocket*3]   = x;
+     oldY_R = positions_rocket[drawCount_rocket*3+1] = y;
+     oldZ_R = positions_rocket[drawCount_rocket*3+2] = z;  
+     oldVec_R = new THREE.Vector3(oldX_R, oldY_R, oldZ_R);
+     drawCount_rocket ++;
+    //}
+    
+    geo_buf_rocket.attributes.position.needsUpdate = true;
+    geo_buf_rocket.setDrawRange( 0, drawCount_rocket );
+    
+    console.log("drawCount: "+drawCount_rocket);
+
+    geo_line_rocket.name = "rkt_line";
+    }
 function drawFlightPrognosis(){
     
 }
@@ -187,7 +188,18 @@ function move(difftime) {
 
     //Calculate planet position for drawing ellipse
     //rocketGroup.addTrailPoint(positionX, positionY, positionZ);
-    drawRocketTrail(-rocketGroup.position.x, -rocketGroup.position.y, rocketGroup.position.z);    
+    
+    //multiply coords of rocket with model-matrix for correct values!
+    
+    //var earth_vec = new THREE.Vector3(0, 0, 0);
+    //var r_vec = rocketGroup.position;
+    //var earth_m = new THREE.Matrix4();
+    //earth_m = spaceObjects.earth.group.MatrixWorld;
+    //earth_vec = spaceObjects.earth.group.MatrixWorld.multiply(r_vec);
+    //earth_vec = r_vec.multiplyMatrix4( spaceObjects.earth.group.MatrixWorld );
+    
+    //drawRocketTrail(earth_vec);    
+    drawRocketTrail(rocketGroup.position.x, rocketGroup.position.y, rocketGroup.position.z);    
     
 }
 
