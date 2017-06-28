@@ -80,12 +80,12 @@
     <div id="contentBox">
 
         <div id="tabBox">
-            <input type="button" id="rocket" class="btn fa ui-button ui-widget ui-corner-all menuButton" value="&#xf135" title="Rocket Settings" onclick="doToggle(this)"> <!--value="&#xf0ad"-->
-            <input type="button" id="developer" class="btn fa ui-button ui-widget ui-corner-all menuButton" value="&#xf03d" title="Universe Settings" onclick="doToggle(this)"> <!--value="&#xf0ac"-->
-            <input type="button" id="game" class="btn fa ui-button ui-widget ui-corner-all menuButton" value="&#xf0e4" title="Flightboard" onclick="doToggleGame(this)"> <!--value="&#xf135"-->
+            <input type="button" id="rocket" class="btn fa ui-button ui-widget ui-corner-all menuButton toggleMenuButton" value="&#xf135" title="Rocket Settings" onclick="doToggle(this)"> <!--value="&#xf0ad"-->
+            <input type="button" id="developer" class="btn fa ui-button ui-widget ui-corner-all menuButton toggleMenuButton" value="&#xf03d" title="Universe Settings" onclick="doToggle(this)"> <!--value="&#xf0ac"-->
+            <input type="button" id="game" class="btn fa ui-button ui-widget ui-corner-all menuButton activeInterface" value="&#xf0e4" title="Flightboard" onclick="doToggleGame(this)"> <!--value="&#xf135"-->
             <button type="button" name="sound" id="soundButton" class="btn fa ui-button ui-widget ui-corner-all fa-volume-up menuButton" value="" title="Sound"
             onclick="soundOnOff(this)"></button>
-            <input type="button" id="info" class="btn fa ui-button ui-widget ui-corner-all menuButton" value="&#xf129" title="Information" onclick="doToggle(this)">
+            <input type="button" id="info" class="btn fa ui-button ui-widget ui-corner-all menuButton toggleMenuButton" value="&#xf129" title="Information" onclick="doToggle(this)">
         </div>
         <!-- Rocket Interface-->
 

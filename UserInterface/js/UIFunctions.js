@@ -13,10 +13,13 @@ function prompt(errorstring) {
 
 function doToggle(button) {
     $(".interfaceTab").hide(100);
+    $(".toggleMenuButton").removeClass("activeInterface");
     if ($("#" + button.id + "Interface").is(':visible')) {
         $("#" + button.id + "Interface").hide(100);
+        $("#" + button.id).removeClass("activeInterface");
     } else {
         $("#" + button.id + "Interface").show(100);
+        $("#" + button.id).addClass("activeInterface");
     }
     //$("#" + button.id + "Interface").slideToggle();
     $(".btn").blur();
@@ -24,6 +27,11 @@ function doToggle(button) {
 
 function doToggleGame(button) {
     $("#gameInterface").toggle(100);
+    if($( "#" + button.id ).hasClass( "activeInterface" )) {
+        $("#" + button.id).removeClass("activeInterface");
+    } else {
+        $("#" + button.id).addClass("activeInterface");
+    }
     $(".btn").blur();
 }
 
