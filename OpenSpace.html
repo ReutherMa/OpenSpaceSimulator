@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8">
     
-    <!-- Icons Import -->
-    <script src="https://use.fontawesome.com/06e679ac1f.js"></script>
+    <!-- Icons Import 
+    <script src="https://use.fontawesome.com/06e679ac1f.js"></script>-->
     
     <link rel="shortcut icon" href="Rakete.ico" type="x-icon">
     <link rel="icon" href="Rakete.ico" type="image/x-icon">
@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="styles/EntwicklerInterfaceCSS.css">
     <link rel="stylesheet" href="styles/cmGauge.css">
     <link rel="stylesheet" href="styles/flapper.css" type="text/css" />
+    <link rel="stylesheet" href="/UserInterface/font-awesome-4.7.0/css/font-awesome.min.css">
     
 </head>
 
@@ -80,7 +81,7 @@
 
         <div id="tabBox">
             <input type="button" id="rocket" class="btn fa ui-button ui-widget ui-corner-all menuButton" value="&#xf135" title="Rocket Settings" onclick="doToggle(this)"> <!--value="&#xf0ad"-->
-            <input type="button" id="developer" class="btn fa ui-button ui-widget ui-corner-all menuButton" value="&#xf030" title="Universe Settings" onclick="doToggle(this)"> <!--value="&#xf0ac"-->
+            <input type="button" id="developer" class="btn fa ui-button ui-widget ui-corner-all menuButton" value="&#xf03d" title="Universe Settings" onclick="doToggle(this)"> <!--value="&#xf0ac"-->
             <input type="button" id="game" class="btn fa ui-button ui-widget ui-corner-all menuButton" value="&#xf0e4" title="Flightboard" onclick="doToggleGame(this)"> <!--value="&#xf135"-->
             <button type="button" name="sound" id="soundButton" class="btn fa ui-button ui-widget ui-corner-all fa-volume-up menuButton" value="" title="Sound"
             onclick="soundOnOff(this)"></button>
@@ -121,110 +122,75 @@
                             <div id="tabs-1">
                                 <div class="massBox">
                                     <label class="emptyMassLabel ui-heading mainHeading">Empty Mass:&nbsp;</label><span id="emptyMass1Label" class="valueSpan"></span>&nbsp;kg
-                                    <br>
                                     <div id="emptyMass1"></div>
-                                    <br>
                                     <label class="fuelMassLabel ui-heading mainHeading">Fuel Mass:&nbsp;</label><span id="fuelMass1Label" class="valueSpan"></span>&nbsp;kg
-                                    <br>
                                     <div id="fuelMass1"></div>
-                                    <br>
                                     <label class="totalMassLabel ui-heading mainHeading">Total Mass:&nbsp;</label><span id="totalMass1Label" class="valueSpan"></span>&nbsp;kg
                                 </div>
-                                <br>
                                 <div class=burningTimeBox>
                                     <label class="burningTimeLabel ui-heading mainHeading">Burning Time:&nbsp;</label><span id="burningTime1Label" class="valueSpan"></span>&nbsp;s
-                                    <br>
                                     <div id="burningTime1"></div>
                                 </div>
-                                <br>
                                 <div class=thrustBox>
                                     <label class="thrustLabel ui-heading mainHeading">Thrust:&nbsp;</label><span id="thrust1Label" class="valueSpan"></span>&nbsp;N
-                                    <br>
                                     <div id="thrust1"></div>
                                 </div>
                             </div>
                             <div id="tabs-2">
                                 <div class="massBox">
                                     <label class="emptyMassLabel ui-heading mainHeading">Empty Mass:&nbsp;</label><span id="emptyMass2Label" class="valueSpan"></span>&nbsp;kg
-                                    <br>
                                     <div id="emptyMass2"></div>
-                                    <br>
                                     <label class="fuelMassLabel ui-heading mainHeading">Fuel Mass:&nbsp;</label><span id="fuelMass2Label" class="valueSpan"></span>&nbsp;kg
-                                    <br>
                                     <div id="fuelMass2"></div>
-                                    <br>
                                     <label class="totalMassLabel ui-heading mainHeading">Total Mass:&nbsp;</label><span id="totalMass2Label" class="valueSpan"></span>&nbsp;kg
                                 </div>
-                                <br>
                                 <div class=burningTimeBox>
                                     <label class="burningTimeLabel ui-heading mainHeading">Burning Time:&nbsp;</label><span id="burningTime2Label" class="valueSpan"></span>&nbsp;s
-                                    <br>
                                     <div id="burningTime2"></div>
                                 </div>
-                                <br>
                                 <div class=thrustBox>
                                     <label class="thrustLabel ui-heading mainHeading">Thrust:&nbsp;</label><span id="thrust2Label" class="valueSpan"></span>&nbsp;N
-                                    <br>
                                     <div id="thrust2"></div>
                                 </div>
                             </div>
                             <div id="tabs-3">
                                 <div class="massBox">
                                     <label class="emptyMassLabel ui-heading mainHeading">Empty Mass:&nbsp;</label><span id="emptyMass3Label" class="valueSpan"></span>&nbsp;kg
-                                    <br>
                                     <div id="emptyMass3"></div>
-                                    <br>
                                     <label class="fuelMassLabel ui-heading mainHeading">Fuel Mass:&nbsp;</label><span id="fuelMass3Label" class="valueSpan"></span>&nbsp;kg
-                                    <br>
                                     <div id="fuelMass3"></div>
-                                    <br>
                                     <label class="totalMassLabel ui-heading mainHeading">Total Mass:&nbsp;</label><span id="totalMass3Label" class="valueSpan"></span>&nbsp;kg
                                 </div>
-                                <br>
                                 <div class=burningTimeBox>
                                     <label class="burningTimeLabel ui-heading mainHeading">Burning Time:&nbsp;</label><span id="burningTime3Label" class="valueSpan"></span>&nbsp;s
-                                    <br>
                                     <div id="burningTime3"></div>
                                 </div>
-                                <br>
                                 <div class=thrustBox>
                                     <label class="thrustLabel ui-heading mainHeading">Thrust:&nbsp;</label><span id="thrust3Label" class="valueSpan"></span>&nbsp;N
-                                    <br>
                                     <div id="thrust3"></div>
                                 </div>
                             </div>
                             <div id="tabs-4">
                                 <div class="massBox">
                                     <label class="emptyMassLabel ui-heading mainHeading">Empty Mass:&nbsp;</label><span id="emptyMass4Label" class="valueSpan"></span>&nbsp;kg
-                                    <br>
                                     <div id="emptyMass4"></div>
-                                    <br>
                                     <label class="fuelMassLabel ui-heading mainHeading">Fuel Mass:&nbsp;</label><span id="fuelMass4Label" class="valueSpan"></span>&nbsp;kg
-                                    <br>
                                     <div id="fuelMass4"></div>
-                                    <br>
                                     <label class="totalMassLabel ui-heading mainHeading">Total Mass:&nbsp;</label><span id="totalMass4Label" class="valueSpan"></span>&nbsp;kg
                                 </div>
-                                <br>
                                 <div class=burningTimeBox>
                                     <label class="burningTimeLabel ui-heading mainHeading">Burning Time:&nbsp;</label><span id="burningTime4Label" class="valueSpan"></span>&nbsp;s
-                                    <br>
                                     <div id="burningTime4"></div>
                                 </div>
-                                <br>
                                 <div class=thrustBox>
                                     <label class="thrustLabel ui-heading mainHeading">Thrust:&nbsp;</label><span id="thrust4Label" class="valueSpan"></span>&nbsp;N
-                                    <br>
                                     <div id="thrust4"></div>
                                 </div>
                             </div>
                         </div>
                     <label class="rocketTotalMassLabel ui-heading mainHeading">Rocket Total Mass:&nbsp;</label><span id="rocketTotalMassLabel" class="valueSpan"></span>&nbsp;kg
                 </fieldset>
-                <br>
                 <input type="button" name="resetEditor" class="btn ui-button ui-widget ui-corner-all" value="Reset" title="Reset Editor">
-                <br>
-                
             </div>
         </div>
         <!-- Rocket Interface End -->
@@ -409,8 +375,8 @@
                         <legend>Information</legend>
                         <div class="interfaceInfoBox">
                             <h3 class="infoLabel">How does the interface work?</h3>
-                            <i class="fa fa-rocket" aria-hidden="true"></i>  Build your own rocket or select an already existing one<br>
-                            <i class="fa fa-camera" aria-hidden="true"></i>  Change settings like time factor and/or change your point of view <br>
+                            <i class="fa fa-rocket" aria-hidden="true"></i>  Build your own rocket or select a pre existing one<br>
+                            <i class="fa fa-video-camera" aria-hidden="true"></i>  Change settings like time factor and/or change your point of view <br>
                             <i class="fa fa-tachometer" aria-hidden="true"></i>  Rocket Dashboard: Control your Rocket and keep track of fuel and throttle <br>
                             <i class="fa fa-volume-up" aria-hidden="true"></i>  Turn sound on or off
                         </div>

@@ -90,10 +90,10 @@ h1 {
     float: left;
     margin-left: 4px;
 }
-#speedGaugeLabel {
+/*#speedGaugeLabel {
     margin-left: 49%;
     margin-top: 60%;
-}
+}*/
 .fuelGaugeBox {
     position: relative;
     float: left;
@@ -101,10 +101,10 @@ h1 {
     /*margin-left: 36%;*/
     margin-left: 4px;
 }
-#fuelGaugeLabel {
+/*#fuelGaugeLabel {
     margin-left: 49%;
     margin-top: 60%;
-}
+}*/
 .throttleBox {
     float: left;
 }

@@ -155,6 +155,15 @@ fieldset {
 .fa-play {
     font-family: FontAwesome, Arial, sans-serif;
 }
+
+.ui-slider {
+    margin-bottom: 3%;
+}
+
+.massBox {
+    margin-bottom: 3%;
+}
+
 /*.totalMassLabel {
     margin-left: 30%;
 }
