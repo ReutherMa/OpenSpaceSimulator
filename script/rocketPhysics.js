@@ -53,7 +53,6 @@ function drawRocketTrail(x, y, z){
     var currentVec = new THREE.Vector3( x, y, z);
     //if ( Math.abs(x - oldX) >= 1e9 || Math.abs(y - oldY >= 1e11) ||  Math.abs(z - oldZ >= 1e7)){
     //if ( Math.abs(currentVec.dot(oldVec) >= 1.2e5) ){
-    //console.log('Drawing');
      oldX_R = positions_rocket[drawCount_rocket*3]   = x;
      oldY_R = positions_rocket[drawCount_rocket*3+1] = y;
      oldZ_R = positions_rocket[drawCount_rocket*3+2] = z;  
@@ -64,7 +63,6 @@ function drawRocketTrail(x, y, z){
     geo_buf_rocket.attributes.position.needsUpdate = true;
     geo_buf_rocket.setDrawRange( 0, drawCount_rocket );
     
-    console.log("drawCount: "+drawCount_rocket);
 
     geo_line_rocket.name = "rkt_line";
     }
@@ -140,18 +138,13 @@ function move(difftime) {
         // a = (F(thrust) - F(Air Resistance)) / m(rocketMass)
         calculateAirResistance(rocketGroup.speed.length());
         accel = ((accel * mass) - airResistance)/mass;
-        console.log("thrust: "+saturnV.stage1.thrust);
-        console.log("throttle: "+throttle);
-        console.log("mass: "+mass);
-        
-        console.log("accel1: "+accel);
         //new mass without lost fuel
         mass = mass - mass_lost;
         //current fuel mass for UI
         fuel_mass = fuel_mass - mass_lost;
         $('#fuelGauge .gauge-arrow').trigger('updateGauge', fuel_mass / saturnV.fuel_total * 100 );
         $("#fuelGaugeLabel").text(parseInt(fuel_mass / 1000));
-        console.log(fuel_mass);
+        
     } else {
         if(noStagesLeft){
             prompt("No fuel left. No stages left. Aaaaahhhhhhhhh");
@@ -159,25 +152,20 @@ function move(difftime) {
         else{
             prompt("Seems like you have run out of fuel. Discard current rocket stage.");
         }
-        
-        
+                
     }
     
     var ad = accel * difftime;
-    console.log("accel: "+accel);
     
     rocketGroup.speed.addScaledVector (yAxis, ad);
     //rocketGroup.speed.addVectors (rocketGroup.speed, yAxis.multiplyScalar(ad));
-    var rocketSpeed = rocketGroup.speed.length();
-    console.log("rocket speed: " + rocketGroup.speed.x + " / " + rocketGroup.speed.y + " / " + rocketGroup.speed.z);
-    rocketGroup.position.addScaledVector (rocketGroup.speed, difftime);
+    var rocketSpeed = rocketGroup.speed.length();rocketGroup.position.addScaledVector (rocketGroup.speed, difftime);
     //rocketGroup.position.addVectors( rocketGroup.position, rocketGroup.speed.multiplyScalar( difftime ));
-    console.log(rocketGroup.position);
     
     var rocketHeight = rocketGroup.position.length() - spaceObjects.earth.radius;
     var rocketHeightSpeed = (rocketHeight - lastRocketHeight) / difftime;
     lastRocketHeight = rocketHeight;
-    console.log ("Height over Earth: " + rocketHeight + " / Speed: " + rocketHeightSpeed);
+    globalInterfaceValues.height = rocketHeight;
     
     //convert speed/difftime to km/h and then convert to percentual
     globalInterfaceValues.speed = rocketSpeed / 8000 * 100;
@@ -257,7 +245,6 @@ function rotateRocket(difftime) {
     }
     if (globalControlValues.hardSAS) {
         rocketGroup.angularMomentum.set(0,0,0,1);
-        console.log("hardSAS");
         
     }
     if (globalControlValues.sas) {
@@ -302,14 +289,10 @@ function nextStage() {
         //generic:
         var oldStage = "stage"+stage;
         var newStage = "stage"+(stage+1);
-        console.log(oldStage);
-        console.log(newStage);
         currentStage = newStage;
         if(saturnV[newStage]==undefined){
             noStagesLeft = true;
         }else{
-            console.log(saturnV[oldStage]["mass_empty"]);
-            console.log(saturnV[newStage]["mass_empty"]);
             mass = mass - saturnV[oldStage]["mass_empty"] - fuel_mass;
             fuel_mass = saturnV[newStage]["mass_empty"];
             stage++;

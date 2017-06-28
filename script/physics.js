@@ -107,7 +107,6 @@ function calculatePhysics(difftime, spaceObjects) {
         global.audio = true;
         if (throttle == 100) {
             global.started = true;
-            console.log("started 2:"+global.started);
             //prompt("Rocket successfully launched");
         }
         
@@ -116,20 +115,17 @@ function calculatePhysics(difftime, spaceObjects) {
     
     if( globalControlValues.throttle && throttle<100 ){
         throttle += 5;
-        console.log("throttle: "+throttle);
-    }
+        }
     if( !globalControlValues.throttle && throttle>0 ){
         throttle -= 5;
-        console.log("throttle: "+throttle);
-    }
+        }
     if( throttle<=0 ){
         global.audio = false;
     }
     
     if(globalControlValues.break&&throttle>=0){
         throttle-=5;
-        console.log("throttle: "+throttle);
-    }
+        }
     if(rocketGroup&&drehmoment){
         rotateRocket(factoredTime);
     }
@@ -145,7 +141,6 @@ function calculatePhysics(difftime, spaceObjects) {
     }
     
     if(global.started && rocketGroup.position.x <= (spaceObjects.earth.group.position.x + spaceObjects.earth.group.radius) && rocketGroup.position.y == (spaceObjects.earth.group.position.y + spaceObjects.earth.group.radius) && rocketGroup.position.z == (spaceObjects.earth.group.position.z + spaceObjects.earth.group.radius)){
-        console.log("collided");
         prompt("Whoopsie-daisy...");
         
     }
