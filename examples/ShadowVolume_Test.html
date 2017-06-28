@@ -345,6 +345,8 @@
                             var lulu;
             var rocketGroup = new THREE.Group();
             
+            var vert_rocket = [];
+            
             
             init();
 			animate();
@@ -408,19 +410,45 @@
                     rocket.position.x = - 7;
                     rocket.position.y = -15;
                     rocket.position.z =  0;
+                    //rocket.children[2].children.length=1;
                     scene.add(collada.scene);
                     
-                    var arr = rocket.children[2].children;
+                    /*var arr = rocket.children[2].children;
                     for(i=0;i<=arr.length;i++){
                         rocketGroup.add(arr[i]);    
+                    }   
+                    var cdcdc = "cdcdd";
+                    cdcdc += "_c_";*/
+                    function recurse_mesh(group, prepend) {
+                        for (var i in group.children){
+                            recurse_mesh (group.children[i], prepend+group.name+"-"+i+": ");
+                        }
+                        if (group.geometry !== undefined){
+                            console.log (prepend + group.geometry.faces.length + "Faces");
+                            for (var face of group.geometry.faces) {
+                                if (! (face instanceof THREE.Face3)) {
+                                    console.log ("rocket: not Face3");
+                                }
+                                vert_rocket.push (group.geometry.vertices[face.a]);
+                                vert_rocket.push (group.geometry.vertices[face.b]);
+                                vert_rocket.push (group.geometry.vertices[face.c]);
+                            }
+                        }
                     }
+                    recurse_mesh(rocket, "rocket: ");
+                    console.log ("rocket: total vertices: " + vert_rocket.length);
+                    0;
                 });
                 
-                
+                var geoVol_rocket = new THREE.Geometry();
+                for (var i; i<vert_rocket.length;i++){
+                    geoVol_rocket.vertices.push(vert_rocket[i]);  
+                }
+                0;
                 //var refObject = window.referenceModel;
-                mesh_rocket = new THREE.Mesh( scene.children[1] );
+//                mesh_rocket = new THREE.Mesh( scene.children[1] );
                 // here you can apply transformations, for this clone only
-                scene.add( mesh_rocket );
+//                scene.add( mesh_rocket );
                 
                 
                 //mesh_rocket = scene.children[1];
@@ -442,13 +470,14 @@
                 //var pa = mesh_rocket.geometry.geometry.parameters;
                 //var geoVol_rocket         = new THREE.BoxGeometry(pa.width, pa.height, pa.depth);
                 //var geoVol_rocket_faceNum = geoVol_rocket.faces.length;
-                var geoVol_rocketArr = {};
+/*                var geoVol_rocketArr = {};
                 
                 for (var i=0; i<=rocketGroup.lenght;i++){
                     //geoVol_rocketArr           = new THREE.BoxGeometry(    
                     var ahsvgahbsb=i;
                 }  
-                
+*/  
+  
                 //Moon
                 //moon_geo_vol
                 //moon_geo_faceNum
@@ -480,7 +509,7 @@
                 var color2 = [new THREE.Color(0x00ffff), new THREE.Color(0x00ffff), new THREE.Color(0xff0000)];
                 
                 
-                for (var j = 0; j<arr_faceNum.length; j++){
+                for (var j = 0; j<4; j++){
                     
                     for (var i = 0; i < arr_faceNum[j]; i++) {
                         
@@ -675,7 +704,7 @@
 					fragmentShader: document.getElementById('shadowVolume_fs').textContent
 				});
                        
-                //meshVol_rocket.material = shadowVolume_mat;     //Rocket
+//                meshVol_rocket.material = shadowVolume_mat;     //Rocket
                 meshVol_torus.material  = shadowVolume_mat;     //Torus
                 meshVol_ground.material = shadowVolume_mat;     //Ground Plate
                 meshVol_moon.material   = shadowVolume_mat;     //Moon
@@ -769,7 +798,7 @@
                 
                 
                 //Render all objects ambient material
-                mesh_rocket.material = ambient_spaceObj_mat;
+//                mesh_rocket.material = ambient_spaceObj_mat;
                 mesh_torus.material  = ambient_spaceObj_mat;
                 mesh_ground.material = ambient_spaceObj_mat;
                 mesh_moon.material   = ambient_spaceObj_mat;
@@ -791,7 +820,7 @@
                 renderer.render(sceneVol, camera);
                 
                 //Render all objects diff/spec material
-                mesh_rocket.material = shaderMat_basic;
+//                mesh_rocket.material = shaderMat_basic;
                 mesh_torus.material  = shaderMat_basic;
                 mesh_ground.material = shaderMat_basic;
                 mesh_moon.material   = shaderMat_moon;
