@@ -960,8 +960,8 @@ var clock = new THREE.Clock();
 
 
         /* Earth cloudmap moving */
-        spaceObjects.earth.group.children[0].rotateY(0.00015);
-        spaceObjects.earth.group.children[0].rotateX(0.00005);
+        spaceObjects.earth.group.children[2].rotateY(0.00015 * globalInterfaceValues.timeFactor);
+        spaceObjects.earth.group.children[2].rotateX(0.00005);
         
         
         
