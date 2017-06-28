@@ -347,9 +347,59 @@
             var vert_rocket = [];
             var geoVol_rocket;
             
+            var renderVar  = false;
+            var animateVar = false;
             
-            init();
-			animate();
+            
+            
+            
+            scene = new THREE.Scene();
+            sceneVol = new THREE.Scene();
+            
+            loadRocket();
+            //init();
+            //loadVolMeshes();
+			//animate();
+            
+            function loadRocket(){
+                var r_loader = new THREE.ColladaLoader(); 
+                r_loader.options.convertUpAxis = true; 
+                
+                r_loader.load("models/saturnV.dae", 
+                              function(collada) {
+                                    rocket = collada.scene;   //var skin = collada.skins[ 0 ];
+                                    //rocket.scale.set(695508e3, 695508e3, 695508e3);
+                                    rocket.position.x = - 7;
+                                    rocket.position.y = -15;
+                                    rocket.position.z =   0;
+                                    //rocket.children[2].children.length=1;
+                                    scene.add(collada.scene);
+                                    
+                                    function recurse_mesh(group, prepend) {
+                                        for (var i in group.children){
+                                            recurse_mesh (group.children[i], prepend+group.name+"-"+i+": ");
+                                        }
+                                        if (group.geometry !== undefined){
+                                            console.log (prepend + group.geometry.faces.length + "Faces");
+                                            for (var face of group.geometry.faces) {
+                                                if (! (face instanceof THREE.Face3)) {
+                                                    console.log ("rocket: not Face3");
+                                                }
+                                                vert_rocket.push (group.geometry.vertices[face.a]);
+                                                vert_rocket.push (group.geometry.vertices[face.b]);
+                                                vert_rocket.push (group.geometry.vertices[face.c]);
+                                            }
+                                        }
+                                    }
+                                    
+                                    recurse_mesh(rocket, "rocket: ");
+                                    console.log ("rocket: total vertices: " + vert_rocket.length);
+                                    init();
+                              },
+                              function (onLoad) {
+		                            console.log( (onLoad.loaded / onLoad.total * 100) + '% loaded' );
+	            });
+            }
             
             function init() {
                 renderer = new THREE.WebGLRenderer({
@@ -362,8 +412,7 @@
                 renderer.setSize(window.innerWidth, window.innerHeight);
                 document.body.appendChild(renderer.domElement);
                 
-                scene = new THREE.Scene();
-                sceneVol = new THREE.Scene();
+
                 
                 //axisHelper
                 var axisHelper = new THREE.AxisHelper(100); //
@@ -400,106 +449,36 @@
                 pointLight.add( mesh_light );
                 scene.add( pointLight );*/
                 
+                
+
+                /*      ---   Create all volume geometries for the objects   ---     */
+                
                 //Rocket
-                var r_loader = new THREE.ColladaLoader(); 
-                r_loader.options.convertUpAxis = true; 
-                
-                r_loader.load("models/saturnV.dae", 
-                              function(collada) {
-                                    rocket = collada.scene;   //var skin = collada.skins[ 0 ];
-                                    //rocket.scale.set(695508e3, 695508e3, 695508e3);
-                                    rocket.position.x = - 7;
-                                    rocket.position.y = -15;
-                                    rocket.position.z =   0;
-                                    //rocket.children[2].children.length=1;
-                                    scene.add(collada.scene);
-                                    
-                                    function recurse_mesh(group, prepend) {
-                                        for (var i in group.children){
-                                            recurse_mesh (group.children[i], prepend+group.name+"-"+i+": ");
-                                        }
-                                        if (group.geometry !== undefined){
-                                            console.log (prepend + group.geometry.faces.length + "Faces");
-                                            for (var face of group.geometry.faces) {
-                                                if (! (face instanceof THREE.Face3)) {
-                                                    console.log ("rocket: not Face3");
-                                                }
-                                                vert_rocket.push (group.geometry.vertices[face.a]);
-                                                vert_rocket.push (group.geometry.vertices[face.b]);
-                                                vert_rocket.push (group.geometry.vertices[face.c]);
-                                            }
-                                        }
-                                    }
-                                    
-                                    recurse_mesh(rocket, "rocket: ");
-                                    console.log ("rocket: total vertices: " + vert_rocket.length);
-                              },
-                              function (onLoad) {
-		                       console.log( (onLoad.loaded / onLoad.total * 100) + '% loaded' );
-	            });
-                
-/*                while(true){
-                    if(vert_rocket.length == 0){
-                        setTimeout(function(){ alert("...waiting..."); }, 300);
-                    }else{
-                        break;
-                    }
-                    
-                }*/
-                
                 geoVol_rocket = new THREE.Geometry();
                 for (var i; i<vert_rocket.length;i++){
                     geoVol_rocket.vertices.push(vert_rocket[i]);  
                 }
-                var geoVol_rocket_faceNum = geoVol_rocket.faces.length;
-                //var refObject = window.referenceModel;
-//                mesh_rocket = new THREE.Mesh( scene.children[1] );
-                // here you can apply transformations, for this clone only
-//                scene.add( mesh_rocket );
+                var geoVol_rocket_faceNum = geoVol_rocket.vertices.length;
                 
                 
-                //mesh_rocket = scene.children[1];
-                
-                /*      ---   Create all volume geometries for the objects   ---     */
                 
                 //Torus
-                //object_vol_geometry
-                //object_vol_geometry_faceNum
                 var geoVol_torus         = new THREE.TorusKnotGeometry(2, 0.5, 100, 16);
                 var geoVol_torus_faceNum = geoVol_torus.faces.length;
                 
                 //Ground Plate
-                //ground_vol_geometry
-                //ground_vol_geometry_faceNum
                 var geoVol_ground         = new THREE.BoxGeometry(75, 0.1, 75);
                 var geoVol_ground_faceNum = geoVol_ground.faces.length;
-                
-                //var pa = mesh_rocket.geometry.geometry.parameters;
-                //var geoVol_rocket         = new THREE.BoxGeometry(pa.width, pa.height, pa.depth);
-                //var geoVol_rocket_faceNum = geoVol_rocket.faces.length;
-/*                var geoVol_rocketArr = {};
-                
-                for (var i=0; i<=rocketGroup.lenght;i++){
-                    //geoVol_rocketArr           = new THREE.BoxGeometry(    
-                    var ahsvgahbsb=i;
-                }  
-*/  
   
                 //Moon
-                //moon_geo_vol
-                //moon_geo_faceNum
                 var geoVol_moon         = new THREE.SphereGeometry(1, 64, 64);
                 var geoVol_moon_faceNum = geoVol_moon.faces.length;
                 
                 //Earth
-                //sphere_earth_geo_vol
-                //sphere_earth_faceNum
                 var geoVol_earth         = new THREE.SphereGeometry(3, 64, 64);
                 var geoVol_earth_faceNum = geoVol_earth.faces.length;
                 
                 //Sun
-                //sun_geo
-                //sun_faceNum
                 var geoVol_mars         = new THREE.SphereGeometry(0.5, 64, 64);
                 var geoVol_mars_faceNum = geoVol_mars.faces.length;
                 
@@ -786,15 +765,23 @@
                 stats.domElement.style.left = '0px';
                 stats.domElement.style.top = '0px';
                 document.body.appendChild(stats.domElement);
+                
+                
+                renderVar = true;
+                animate();
 			}
             
              
             //Animation
             function animate() {
-				requestAnimationFrame(animate);
-                //mesh_torus.rotation.y += 0.005;
-                render();
-                stats.update();
+                
+                    requestAnimationFrame(animate);
+                    //mesh_torus.rotation.y += 0.005;
+                    if (renderVar){
+                        render();
+                        stats.update();
+                    }
+                
 			}
             
 
