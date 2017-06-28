@@ -345,6 +345,7 @@
             var rocketGroup = new THREE.Group();
             
             var vert_rocket = [];
+            var face_rocket = [];
             var geoVol_rocket;
             
             var renderVar  = false;
@@ -388,6 +389,8 @@
                                                 vert_rocket.push (group.geometry.vertices[face.a]);
                                                 vert_rocket.push (group.geometry.vertices[face.b]);
                                                 vert_rocket.push (group.geometry.vertices[face.c]);
+                                                
+                                                face_rocket.push (group.geometry.faces);
                                             }
                                         }
                                     }
@@ -455,12 +458,16 @@
                 
                 //Rocket
                 geoVol_rocket = new THREE.Geometry();
-                for (var i; i<vert_rocket.length;i++){
-                    geoVol_rocket.vertices.push(vert_rocket[i]);  
+                
+                for (var i = 0; i<vert_rocket.length;i++){
+                    geoVol_rocket.vertices.push(vert_rocket[i]);
                 }
-                var geoVol_rocket_faceNum = geoVol_rocket.vertices.length;
+                for (var j = 0; j<face_rocket.length;j++){
+                    geoVol_rocket.faces.push(face_rocket[j]);
+                }
+                //geoVol_rocket.faces = geoVol_rocket.vertices.length;
                 
-                
+                var geoVol_rocket_faceNum = geoVol_rocket.faces.length;
                 
                 //Torus
                 var geoVol_torus         = new THREE.TorusKnotGeometry(2, 0.5, 100, 16);
@@ -486,7 +493,7 @@
                 /*      ---   Create all arrays to iterate over faceNums and shadow volume geometries   ---     */
                 //Arrays
                 //Volume Geometry Array
-                var arr_geoVol  = { geoVol_rocket, geoVol_torus,         geoVol_ground,         geoVol_moon,         geoVol_earth,         geoVol_mars};
+                var arr_geoVol  = { geoVol_rocket,         geoVol_torus,         geoVol_ground,         geoVol_moon,         geoVol_earth,         geoVol_mars};
                 //faceNum Array
                 var arr_faceNum = { geoVol_rocket_faceNum, geoVol_torus_faceNum, geoVol_ground_faceNum, geoVol_moon_faceNum, geoVol_earth_faceNum, geoVol_mars_faceNum};
                 
@@ -555,7 +562,7 @@
                 sceneVol.add(meshVol_rocket);
                 
                 mesh_rocket = new THREE.Mesh(geoVol_rocket);
-                mesh_rocket.position.set(0, 0, 0);//(-7, -15, 0);
+                mesh_rocket.position.set(0, 0, 0);
                 scene.add(mesh_rocket);
                 
                 
@@ -814,7 +821,7 @@
                 renderer.render(sceneVol, camera);
                 
                 //Render all objects diff/spec material
-//                mesh_rocket.material = shaderMat_basic;
+                mesh_rocket.material = shaderMat_basic;
                 mesh_torus.material  = shaderMat_basic;
                 mesh_ground.material = shaderMat_basic;
                 mesh_moon.material   = shaderMat_moon;
