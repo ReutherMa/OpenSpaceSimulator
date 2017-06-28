@@ -78,39 +78,24 @@ var zE;
 function calculatePhysics(difftime, spaceObjects) {
 
     
-    //loadRocket();
-    //get up-vector of rocket before launch
-    if(!global.started){
-        var xAxis = new THREE.Vector3();
-        baseYAxis = new THREE.Vector3();
-        var zAxis = new THREE.Vector3();
-        if (spaceObjects.earth.group && rocketGroup){
-            rocketGroup.position.x = spaceObjects.earth.group.position.x + xE + 1;
-            rocketGroup.position.y = spaceObjects.earth.group.position.y + yE + 1;
-            rocketGroup.position.z = spaceObjects.earth.group.position.z + zE + 1;
-            console.log("rocketPosition: x: " + rocketGroup.position.x + " y: " + rocketGroup.position.y + " z: " + rocketGroup.position.z);
-        }
-        
-        if (rocketGroup) 
-        {
-            var quaternion = rocketGroup.quaternion;
-            var matrix = new THREE.Matrix4();
-            matrix = matrix.makeRotationFromQuaternion ( quaternion );
-            matrix.extractBasis(xAxis, baseYAxis, zAxis);
-        }
-    }
-    
-    if(spaceObjects.earth.group){
-        spaceObjects.earth.group.quaternion.multiply(spaceObjects.earth.group.angularMomentum);
-    }
-    
+    //difftime is in s
     timefactor = globalInterfaceValues.timeFactor;
     var factoredTime = difftime * timefactor;
+    
+    if(spaceObjects.earth.group){
+        var yAxis = new THREE.Vector3();
+        var quaternion = rocketGroup.quaternion;
+        var matrix = new THREE.Matrix4();
+        matrix = matrix.makeRotationFromQuaternion ( quaternion );
+        yAxis.setFromMatrixColumn ( matrix, 1 );
+        spaceObjects.earth.group.angularMomentum.setFromAxisAngle( yAxis, 2 * Math.PI * 0.00001157407 * factoredTime);
+        spaceObjects.earth.group.quaternion.multiply(spaceObjects.earth.group.angularMomentum);
+    }
     
     //calculate all gravitational forces between planets and objects
     for (var i in spaceObjects) {
         var spaceObject = spaceObjects[i];
-        calculateGravitation(factoredTime * 1000, spaceObjects, spaceObject);
+        calculateGravitation(factoredTime, spaceObjects, spaceObject);
     }
 
     if(global.started){
@@ -171,4 +156,28 @@ function calculatePhysics(difftime, spaceObjects) {
         ctr++;
     }
 
+    //loadRocket();
+    //get up-vector of rocket before launch
+    if(!global.started){
+        var xAxis = new THREE.Vector3();
+        baseYAxis = new THREE.Vector3();
+        var zAxis = new THREE.Vector3();
+        if (spaceObjects.earth.group && rocketGroup){
+            rocketGroup.speed.x = (spaceObjects.earth.group.position.x + xE - rocketGroup.position.x) / factoredTime;
+            rocketGroup.speed.y = (spaceObjects.earth.group.position.x + xE - rocketGroup.position.x) / factoredTime;
+            rocketGroup.speed.z = (spaceObjects.earth.group.position.x + xE - rocketGroup.position.x) / factoredTime;
+            rocketGroup.position.x = spaceObjects.earth.group.position.x + xE;
+            rocketGroup.position.y = spaceObjects.earth.group.position.y + yE;
+            rocketGroup.position.z = spaceObjects.earth.group.position.z + zE;
+        }
+        
+        if (rocketGroup) 
+        {
+            var quaternion = rocketGroup.quaternion;
+            var matrix = new THREE.Matrix4();
+            matrix = matrix.makeRotationFromQuaternion ( quaternion );
+            matrix.extractBasis(xAxis, baseYAxis, zAxis);
+        }
+    }
+    
 }

@@ -165,7 +165,11 @@ function move(difftime) {
     var rocketHeight = rocketGroup.position.length() - spaceObjects.earth.radius;
     var rocketHeightSpeed = (rocketHeight - lastRocketHeight) / difftime;
     lastRocketHeight = rocketHeight;
+    
+    // pad height-number with zero and parse to string
+    var height = zeroFill(globalInterfaceValues.height, 9);
     globalInterfaceValues.height = rocketHeight;
+    $('#heightDisplay').val(height).change();
     
     //convert speed/difftime to km/h and then convert to percentual
     globalInterfaceValues.speed = rocketSpeed / 8000 * 100;

@@ -400,9 +400,9 @@ function buildUniverse() {
             //rocketGroup.position.x = spaceObjects.earth.group.position.x + xE + 1;
             //rocketGroup.position.y = spaceObjects.earth.group.position.y + yE + 1;
             //rocketGroup.position.z = spaceObjects.earth.group.position.z + zE + 1;
-            rocketGroup.position.x =  earthGroup.position.x + xE + 1;
-            rocketGroup.position.y =  earthGroup.position.y + yE + 1;
-            rocketGroup.position.z =  earthGroup.position.z + zE + 1;
+            rocketGroup.position.x =  earthGroup.position.x + xE;
+            rocketGroup.position.y =  earthGroup.position.y + yE;
+            rocketGroup.position.z =  earthGroup.position.z + zE;
             rocketGroup.speed = new THREE.Vector3 (0, 0, 0);
             rocketGroup.rotateX(Math.PI/180 * 45);
             rocketGroup.angularMomentum = new THREE.Quaternion(0,0,0,1);
@@ -433,9 +433,9 @@ function buildUniverse() {
             var xE = r * Math.sin(Math.PI/180 * 45) * Math.cos(Math.PI/180 * 90);
             var yE = r * Math.sin(Math.PI/180 * 45) * Math.sin(Math.PI/180 * 90);
             var zE = r * Math.cos(Math.PI/180 * 45);
-            launchpadGroup.position.x = xE + 1;
-            launchpadGroup.position.y = yE + 1;
-            launchpadGroup.position.z = zE + 1;
+            launchpadGroup.position.x = xE;
+            launchpadGroup.position.y = yE;
+            launchpadGroup.position.z = zE;
             launchpad.rotateX(Math.PI/180 * 45);
             //launchpadGroup.position.set(0, 0, 0 );
             earthGroup.add(launchpadGroup);
@@ -943,6 +943,8 @@ var clock = new THREE.Clock();
 
         /* current time in ms since 1.1.1970 -> 00:00:00 UTC Worldtime */
         now = Date.now();
+        
+        //convert difftime from ms to seconds
         difftime = (now - lasttime) * 1e-3;
         if (difftime > .1) {
             difftime = .1;      // keine zu großen Zeitschritte (debugging, browser hickups)
@@ -969,8 +971,6 @@ var clock = new THREE.Clock();
         if(rocketGroup){
             spaceObjects.earth.group.children[3].material.opacity = calcOpacity();
         }
-        
-        
         
         /* Earth cloudmap moving */
         //spaceObjects.earth.rotateY(0.001);
