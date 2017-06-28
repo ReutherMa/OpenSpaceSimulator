@@ -68,6 +68,13 @@ called during every rendering
 globalControlValues: from UI, determine which keys are being pressed(boolean variables)
 global.started: boolean variable that determines whether rocket launched already
 */
+
+//variables for rocket placement on earth
+var xE;
+var yE;
+var zE;
+
+
 function calculatePhysics(difftime, spaceObjects) {
 
     
@@ -77,6 +84,13 @@ function calculatePhysics(difftime, spaceObjects) {
         var xAxis = new THREE.Vector3();
         baseYAxis = new THREE.Vector3();
         var zAxis = new THREE.Vector3();
+        if (spaceObjects.earth.group && rocketGroup){
+            rocketGroup.position.x = spaceObjects.earth.group.position.x + xE + 1;
+            rocketGroup.position.y = spaceObjects.earth.group.position.y + yE + 1;
+            rocketGroup.position.z = spaceObjects.earth.group.position.z + zE + 1;
+            console.log("rocketPosition: x: " + rocketGroup.position.x + " y: " + rocketGroup.position.y + " z: " + rocketGroup.position.z);
+        }
+        
         if (rocketGroup) 
         {
             var quaternion = rocketGroup.quaternion;
@@ -84,6 +98,10 @@ function calculatePhysics(difftime, spaceObjects) {
             matrix = matrix.makeRotationFromQuaternion ( quaternion );
             matrix.extractBasis(xAxis, baseYAxis, zAxis);
         }
+    }
+    
+    if(spaceObjects.earth.group){
+        spaceObjects.earth.group.quaternion.multiply(spaceObjects.earth.group.angularMomentum);
     }
     
     timefactor = globalInterfaceValues.timeFactor;
@@ -142,7 +160,15 @@ function calculatePhysics(difftime, spaceObjects) {
     
     if(global.started && rocketGroup.position.x <= (spaceObjects.earth.group.position.x + spaceObjects.earth.group.radius) && rocketGroup.position.y == (spaceObjects.earth.group.position.y + spaceObjects.earth.group.radius) && rocketGroup.position.z == (spaceObjects.earth.group.position.z + spaceObjects.earth.group.radius)){
         prompt("Whoopsie-daisy...");
-        
+    }
+    
+    if(ctr<1 && spaceObjects.earth){
+        //position calculation for rocket placement (on earth)
+        var r = spaceObjects.earth.radius;
+        xE = r * Math.sin(Math.PI/180 * 45) * Math.cos(Math.PI/180 * 90);
+        yE = r * Math.sin(Math.PI/180 * 45) * Math.sin(Math.PI/180 * 90);
+        zE = r * Math.cos(Math.PI/180 * 45);
+        ctr++;
     }
 
 }

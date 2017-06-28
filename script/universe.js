@@ -372,6 +372,16 @@ function buildUniverse() {
         
         
         var earthGroup = spaceObjects.earth.group;
+        earthGroup.angularMomentum = new THREE.Quaternion(0,0,0,1);
+        var xAxis = new THREE.Vector3();
+        var yAxis = new THREE.Vector3();
+        var zAxis = new THREE.Vector3();
+        var quaternion = earthGroup.quaternion;
+        var matrix = new THREE.Matrix4();
+        matrix = matrix.makeRotationFromQuaternion ( quaternion );
+        matrix.extractBasis(xAxis, yAxis, zAxis);
+        earthGroup.angularMomentum.set (yAxis.x, yAxis.y, yAxis.z, 50) .normalize ();
+        earthGroup.quaternion.multiply(earthGroup.angularMomentum);
         var loader = new THREE.ColladaLoader(); 
         loader.options.convertUpAxis = true; 
         loader.load("models/saturnV.dae", function(collada) {   
@@ -390,14 +400,14 @@ function buildUniverse() {
             //rocketGroup.position.x = spaceObjects.earth.group.position.x + xE + 1;
             //rocketGroup.position.y = spaceObjects.earth.group.position.y + yE + 1;
             //rocketGroup.position.z = spaceObjects.earth.group.position.z + zE + 1;
-            rocketGroup.position.x =  xE + 1;
-            rocketGroup.position.y =  yE + 1;
-            rocketGroup.position.z =  zE + 1;
+            rocketGroup.position.x =  earthGroup.position.x + xE + 1;
+            rocketGroup.position.y =  earthGroup.position.y + yE + 1;
+            rocketGroup.position.z =  earthGroup.position.z + zE + 1;
             rocketGroup.speed = new THREE.Vector3 (0, 0, 0);
             rocketGroup.rotateX(Math.PI/180 * 45);
             rocketGroup.angularMomentum = new THREE.Quaternion(0,0,0,1);
             rocketGroup.angularAcceleration = new THREE.Quaternion(0,0,0,1);
-            earthGroup.add(rocketGroup);
+            //earthGroup.add(rocketGroup);
             rocketGroup.add(throttleSound);
         });
 
@@ -446,9 +456,9 @@ function buildUniverse() {
         var xE = r * Math.sin(Math.PI/180 * 45) * Math.cos(Math.PI/180 * 90);
         var yE = r * Math.sin(Math.PI/180 * 45) * Math.sin(Math.PI/180 * 90);
         var zE = r * Math.cos(Math.PI/180 * 45);
-        ground_mesh.position.x = xE;
-        ground_mesh.position.y = yE;
-        ground_mesh.position.z = zE+.5;
+        ground_mesh.position.x = xE + 1;
+        ground_mesh.position.y = yE + 1;
+        ground_mesh.position.z = zE + 1;
         ground_mesh.rotateX(Math.PI/180 * -45);
 
         earthGroup.add(ground_mesh);
@@ -490,7 +500,7 @@ function buildUniverse() {
                 
                 group.add(mesh_sun);
                 
-            } else { //other plants
+            } else { //other planets
                 var path = "textures/" + name + ".png";
                 var path_tex = "textures/" + name;
                 
@@ -861,12 +871,14 @@ function buildUniverse() {
                     launchpadGroup.add(camera);
                     camera.position.x = camera.position.y = 0;
                     camera.position.z = 50;
+                    //camera.rotateY(Math.PI/180 * 120);
                     controls.update();
             }
             if (newElement == "rocket") {
                 rocketGroup.add(camera);
                 camera.position.x = camera.position.y = 0;
                 camera.position.z = 50;
+                //camera.rotateY(Math.PI/180 * 120);
                 controls.update();
             } 
             camElement = newElement;
@@ -892,7 +904,7 @@ function buildUniverse() {
             if(focusedObj == "rocket" || focusedObj == "launchpad"){
                 var nb = 1 - (rocketGroup.position.length() - spaceObjects.earth.radius) *0.00001;
                 var op = THREE.Math.clamp(nb, 0.1, 0.9);
-                console.log("Opacity: " + spaceObjects.earth.group.children[3].material.opacity);
+                //console.log("Opacity: " + spaceObjects.earth.group.children[3].material.opacity);
             }
         else {
             op = 0.1;
