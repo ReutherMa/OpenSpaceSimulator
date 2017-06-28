@@ -5,7 +5,7 @@ var global = {
 };
 
 //do we want to load textures? false for fast (and ugly) debugging mode
-var loadTextures = false;
+var loadTextures = true;
 //var throttleSound;
 var rocket;
 var rocketGroup;
@@ -437,9 +437,9 @@ function buildUniverse() {
     function placeGround() {
         var earthGroup = spaceObjects.earth.group;
         
-        var ground_geo = new THREE.CircleGeometry(1000, 64);
-        var ground_mat = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-        ground_mat.map = loader.load("models/textures/gras_new.png");
+        var ground_geo = new THREE.PlaneGeometry(5000, 5000);
+        var ground_mat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true });
+        ground_mat.map = loader.load("models/textures/launchgras.png");
         var ground_mesh = new THREE.Mesh(ground_geo, ground_mat);
 
         var r = spaceObjects.earth.radius;
