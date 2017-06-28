@@ -82,7 +82,7 @@ function calculatePhysics(difftime, spaceObjects) {
     timefactor = globalInterfaceValues.timeFactor;
     var factoredTime = difftime * timefactor;
     
-    if(spaceObjects.earth.group){
+    if(spaceObjects.earth.group && rocketGroup){
         var yAxis = new THREE.Vector3();
         var quaternion = rocketGroup.quaternion;
         var matrix = new THREE.Matrix4();
@@ -164,8 +164,8 @@ function calculatePhysics(difftime, spaceObjects) {
         var zAxis = new THREE.Vector3();
         if (spaceObjects.earth.group && rocketGroup){
             rocketGroup.speed.x = (spaceObjects.earth.group.position.x + xE - rocketGroup.position.x) / factoredTime;
-            rocketGroup.speed.y = (spaceObjects.earth.group.position.x + xE - rocketGroup.position.x) / factoredTime;
-            rocketGroup.speed.z = (spaceObjects.earth.group.position.x + xE - rocketGroup.position.x) / factoredTime;
+            rocketGroup.speed.y = (spaceObjects.earth.group.position.y + xE - rocketGroup.position.y) / factoredTime;
+            rocketGroup.speed.z = (spaceObjects.earth.group.position.z + xE - rocketGroup.position.z) / factoredTime;
             rocketGroup.position.x = spaceObjects.earth.group.position.x + xE;
             rocketGroup.position.y = spaceObjects.earth.group.position.y + yE;
             rocketGroup.position.z = spaceObjects.earth.group.position.z + zE;

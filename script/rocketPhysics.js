@@ -77,9 +77,9 @@ function calculateGravitationRocket(difftime){
             continue;
         }
         if(spaceObjects[o].name == "earth"){
-        var rx = -rocketGroup.position.x;
-        var ry = -rocketGroup.position.y;
-        var rz = -rocketGroup.position.z;
+        var rx = spaceObjects.earth.group.position.x - rocketGroup.position.x;
+        var ry = spaceObjects.earth.group.position.y - rocketGroup.position.y;
+        var rz = spaceObjects.earth.group.position.z - rocketGroup.position.z;
         var dist2 = rx * rx + ry * ry + rz * rz;
         var dist = Math.sqrt(dist2);
         var mindist = 1e-1;
@@ -159,10 +159,13 @@ function move(difftime) {
     
     rocketGroup.speed.addScaledVector (yAxis, ad);
     //rocketGroup.speed.addVectors (rocketGroup.speed, yAxis.multiplyScalar(ad));
-    var rocketSpeed = rocketGroup.speed.length();rocketGroup.position.addScaledVector (rocketGroup.speed, difftime);
+    var rocketSpeed = rocketGroup.speed.length();
+    rocketGroup.position.addScaledVector (rocketGroup.speed, difftime);
     //rocketGroup.position.addVectors( rocketGroup.position, rocketGroup.speed.multiplyScalar( difftime ));
     
-    var rocketHeight = rocketGroup.position.length() - spaceObjects.earth.radius;
+    var rocketHeightVec = rocketGroup.position.clone();
+    rocketHeightVec.addScaledVector (spaceObjects.earth.group.position, -1);
+    var rocketHeight = rocketHeightVec.length() - spaceObjects.earth.radius;
     var rocketHeightSpeed = (rocketHeight - lastRocketHeight) / difftime;
     lastRocketHeight = rocketHeight;
     

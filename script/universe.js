@@ -5,7 +5,7 @@ var global = {
 };
 
 //do we want to load textures? false for fast (and ugly) debugging mode
-var loadTextures = true;
+var loadTextures = false;
 //var throttleSound;
 var rocket;
 var rocketGroup;
@@ -23,6 +23,8 @@ var line_count = 0;
 var sphere_nav;
 var scene;
 
+//variables that indicate, if these pieces are already ready
+//are used for loading screen
 var readyVars = {
     physics : false,
     rocket : false,
@@ -1045,7 +1047,7 @@ var clock = new THREE.Clock();
                 console.log("loading done");
                 renderCounter++;
             }
-        })
+        }, 100);
         
         
         
@@ -1057,7 +1059,7 @@ var clock = new THREE.Clock();
             renderer.sortObjects = false;
             renderer.clearDepth();
             renderer.render(ui_scene, ui_camera);
-            readyVars.rener = true;
+            readyVars.render = true;
 
            
         }
