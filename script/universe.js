@@ -65,6 +65,7 @@ function buildUniverse() {
     //variables for physics
     var now, difftime;
     var lasttime;
+    var newPos, lastPos, diffPos;
     
     var counter = 1;
 
@@ -249,6 +250,10 @@ function buildUniverse() {
         //controls.addEventListener( 'change', render );
 
         lasttime = Date.now();
+        var newView = new THREE.Vector3();
+        newView.copy(camera.position);
+        var localPos = camera.localToWorld(newView);
+        lastPos = localPos;
     }
 
     /* Skybox */
@@ -875,6 +880,18 @@ var clock = new THREE.Clock();
         if (globalInterfaceValues.changed) {
             UIChanges();
         }
+        //console.log("LOC= " + camera.position.x);
+        //console.log("WOR= " + localPos.x);
+        var newView = new THREE.Vector3();
+        newView.copy(camera.position);
+        var localPos = camera.localToWorld(newView);
+        newPos = localPos;
+        //diffPos = newPos - lastPos;
+        diffPos = Math.sqrt( Math.pow((newPos.x - lastPos.x),2) + Math.pow((newPos.y - lastPos.y),2) + Math.pow((newPos.z - lastPos.z),2) ) ;
+        var vel = diffPos / difftime;
+        //console.log(vel);
+        lastPos = newPos;
+        //console.log(diffPos);
         
         /* audio check */
         if (global.audio){
