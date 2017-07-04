@@ -91,8 +91,6 @@ function buildUniverse() {
     
     var lightVec = new THREE.Vector3( -1, -1, -1);         
     var light = new THREE.Vector3().copy(lightVec).negate().normalize();
-    
-    var tween;
 
     //universe functions
     universe.init = init;
@@ -821,52 +819,7 @@ function buildUniverse() {
                     //camera.position.add( direction.multiplyScalar(spaceObjects[e].radius*3) );
                     camera.position.x = camera.position.y = 0;
                     camera.position.z = spaceObjects[e].radius*3;
-                    controls.update();
-                    
-                    /*
-                    //camera tracking shot
-                    tween = new TWEEN.Tween({x: camera.position.x, y: camera.position.y, z: camera.position.z});
-                    
-                        var toZ = spaceObjects[e].group.position.z + spaceObjects[e].radius*2;
-                        console.log("TOZ = " + toZ);
-                    //var to = {
-                    //    x: -1452276246336.8184,
-                    //    y: 705453284846.8846,
-                    //    z: 3579668441651.1973
-                    //};
-                    var to = {
-                        x: spaceObjects[e].group.position.x,
-                        y: spaceObjects[e].group.position.y,
-                        z: toZ
-                    };
-                    tween.to(to,6000)
-                    .easing(TWEEN.Easing.Linear.None)
-                    .onUpdate(function () {
-                        camera.position.set(this.x, this.y, this.z);
-                        //camera.lookAt(0,0,0);
-                        console.log(this.x, this.y, this.z);
-                    })
-                    .onComplete(function () {
-                        //camera.lookAt(0,0,0);
-                        controls.target.set(to.x, to.y, spaceObjects[e].group.position.z);
-                        camera.position.copy(controls.target).add(new THREE.Vector3(to.x, to.y, to.z));
-                        //controls.target.set(to.x, to.y, to.z);
-                        //spaceObjects[e].group.add(camera);
-                        //camera.position.x = camera.position.y = 0;
-                        //camera.position.z = spaceObjects[e].radius*3;
-                        //controls.update();
-                        console.log("DONE");
-                    })
-                    .start();
-                    controls.update();
-                    //.onUpdate(function () {
-                    //    camera.position.set(this.x, this.y, this.z);
-                    //    camera.lookAt(new THREE.Vector3(0,0,0));
-                    //})
-                    //.onComplete(function () {
-                    //    camera.lookAt(new THREE.Vector3(0,0,0));
-                    //})
-                    */
+                    controls.update(); 
                 }
             }
             if (newElement == "launchpad") {
@@ -939,9 +892,8 @@ var clock = new THREE.Clock();
         requestAnimationFrame(render);
         /* for camera tracking shot */
         //console.log(camera.position.x, camera.position.y, camera.position.z);
-        TWEEN.update();
         
-         //setTimeout (render, 1000/60);
+        //setTimeout (render, 1000/60);
 
         /* current time in ms since 1.1.1970 -> 00:00:00 UTC Worldtime */
         now = Date.now();
