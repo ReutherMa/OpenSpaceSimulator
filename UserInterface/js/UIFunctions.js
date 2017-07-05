@@ -45,19 +45,29 @@ function doToggleGame(button) {
 }
 
 function soundOnOff(button) {
-    /*if ($(button).val() == "&#xf028") {
-        $(button).val("&#xf026");
-    } else if ($(button).val() == "&#xf026") {
-      $(button).val("&#xf028");
-    } 
-    if ($(button).val() == "hi") {
-        $(button).val("bye");
-    } else if ($(button).val() == "bye") {
-      $(button).val("hi");
-    } */
     if ($(button).hasClass("fa-volume-up")) {
         $(button).removeClass('fa-volume-up').addClass('fa-volume-off');
     } else if ($(button).hasClass("fa-volume-off")) {
       $(button).removeClass("fa-volume-off").addClass("fa-volume-up")
     }
 } 
+
+
+function startNew(button) {
+    $("#startNewDialog").text("Are you sure you want to reload the entire game? Everything will be set to default.");
+    $( "#startNewDialog" ).dialog({
+      resizable: false,
+      height: "auto",
+      width: 400,
+      modal: true,
+      buttons: {
+        "Reload Game": function() {
+          $( this ).dialog( "close" );
+            window.open("Impressum.html","_self")
+        },
+        "Cancel": function() {
+          $( this ).dialog( "close" );
+        }
+      }
+    });
+}
