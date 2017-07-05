@@ -1,3 +1,14 @@
+<!--
+This program is licensed under the GNU General Public License as described in the file „LICENSE“
+Copyright (C) 2017 TH Nürnberg
+Authors: Marius Reuther Franziska Braun, Lea Uhlenbrock, Selina Forster, Theresa Breitenhuber, Marco Lingenhöl
+Contact: openspacesimulation@gmail.com
+-->
+
+
+
+
+
 <html>
 
 <head>
@@ -9,29 +20,12 @@
 
     <link rel="stylesheet" href="UserInterface/WelcomeScreenCSS.css">
     <link rel="stylesheet" href="UserInterface/jquery-ui-1.12.1.custom/jquery-ui.min.css">
-    <script>
-        $(function() {
-            $("#dialog-confirm").dialog({
-                resizable: false,
-                height: "auto",
-                width: 400,
-                modal: true,
-                buttons: {
-                    "Start New Game": function() {
-                        $(this).dialog("close");
-                    },
-                    Cancel: function() {
-                        $(this).dialog("close");
-                    }
-                }
-            });
-        });
-    </script>
+    
 </head>
 
 <body>
     <div class="links">
-         <img class="logo" src="logo/logo-mit-textMontserrat.png" alt="Logo" height=50%; width=auto>
+        <img class="logo" src="logo/logo-mit-textMontserrat.png" alt="Logo" height=50%; width=auto>
         <!--<h1>Open Space Simulator</h1>-->
         <div class="smallScreenDisclaimer">
             Sorry! Your screen is too small to play.
@@ -46,10 +40,6 @@
         <br>
         <a href="http://schorsch.efi.fh-nuernberg.de/mewiki/" target="_blank" class="btn fa ui-button ui-widget ui-corner-all">Media Engineering TH Nürnberg</a>
         <br>
-    </div>
-    
-    <div id="dialog-confirm" title="Game Over">
-        <p><span class="" style="float:left; margin:12px 12px 20px 0;"></span>Game Over Bitch</p>
     </div>
 </body>
 

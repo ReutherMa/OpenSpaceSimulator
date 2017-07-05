@@ -1,3 +1,14 @@
+/* 
+This program is licensed under the GNU General Public License as described in the file „LICENSE“
+Copyright (C) 2017 TH Nürnberg
+Authors: Marius Reuther Franziska Braun, Lea Uhlenbrock, Selina Forster, Theresa Breitenhuber, Marco Lingenhöl
+Contact: openspacesimulation@gmail.com
+*/
+
+
+
+
+
 var throttle = document.getElementsByName("throttleRange")[0].value;
 var oxigen = document.getElementsByName("oxigenRange")[0].value;
 var kerosene = document.getElementsByName("keroseneRange")[0].value;
