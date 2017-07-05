@@ -360,7 +360,7 @@
             loadRocket();
             //init();
             //loadVolMeshes();
-			//animate();
+			animate();
             
             function loadRocket(){
                 var r_loader = new THREE.ColladaLoader(); 
@@ -697,7 +697,7 @@
 					fragmentShader: document.getElementById('shadowVolume_fs').textContent
 				});
                        
-                meshVol_rocket.material = shadowVolume_mat;     //Rocket
+                //meshVol_rocket.material = shadowVolume_mat;     //Rocket
                 meshVol_torus.material  = shadowVolume_mat;     //Torus
                 meshVol_ground.material = shadowVolume_mat;     //Ground Plate
                 meshVol_moon.material   = shadowVolume_mat;     //Moon
@@ -775,7 +775,7 @@
                 
                 
                 renderVar = true;
-                animate();
+                //animate();
 			}
             
              
@@ -799,7 +799,7 @@
                 
                 
                 //Render all objects ambient material
-                mesh_rocket.material = ambient_spaceObj_mat;
+                //mesh_rocket.material = ambient_spaceObj_mat;
                 mesh_torus.material  = ambient_spaceObj_mat;
                 mesh_ground.material = ambient_spaceObj_mat;
                 mesh_moon.material   = ambient_spaceObj_mat;
@@ -821,7 +821,7 @@
                 renderer.render(sceneVol, camera);
                 
                 //Render all objects diff/spec material
-                mesh_rocket.material = shaderMat_basic;
+                //mesh_rocket.material = shaderMat_basic;
                 mesh_torus.material  = shaderMat_basic;
                 mesh_ground.material = shaderMat_basic;
                 mesh_moon.material   = shaderMat_moon;
