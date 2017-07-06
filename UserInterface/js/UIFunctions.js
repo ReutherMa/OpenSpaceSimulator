@@ -63,11 +63,17 @@ function startNew(button) {
       buttons: {
         "Reload Game": function() {
           $( this ).dialog( "close" );
-            window.open("Impressum.html","_self")
+            //window.open("OpenSpace.html","_self")
+            location.href = "OpenSpace.html";
         },
         "Cancel": function() {
           $( this ).dialog( "close" );
         }
       }
     });
+}
+
+function cheatFuel(button) {
+    $("#dialog").text("Congrats! You have unlimited fuel!");
+    $("#dialog").dialog();
 }
