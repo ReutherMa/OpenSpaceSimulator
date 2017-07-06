@@ -374,8 +374,9 @@
                                     rocket.position.y = -15;
                                     rocket.position.z =   0;
                                     //rocket.children[2].children.length=1;
-                                    scene.add(collada.scene);
+                                    //scene.add(collada.scene);
                                     
+                    /*
                                     function recurse_mesh(group, prepend) {
                                         for (var i in group.children){
                                             recurse_mesh (group.children[i], prepend+group.name+"-"+i+": ");
@@ -397,6 +398,7 @@
                                     
                                     recurse_mesh(rocket, "rocket: ");
                                     console.log ("rocket: total vertices: " + vert_rocket.length);
+                    */
                                     init();
                               },
                               function (onLoad) {
@@ -457,6 +459,7 @@
                 /*      ---   Create all volume geometries for the objects   ---     */
                 
                 //Rocket
+                /*
                 geoVol_rocket = new THREE.Geometry();
                 
                 for (var i = 0; i<vert_rocket.length;i++){
@@ -468,6 +471,7 @@
                 //geoVol_rocket.faces = geoVol_rocket.vertices.length;
                 
                 var geoVol_rocket_faceNum = geoVol_rocket.faces.length;
+                */
                 
                 //Torus
                 var geoVol_torus         = new THREE.TorusKnotGeometry(2, 0.5, 100, 16);
@@ -493,10 +497,24 @@
                 /*      ---   Create all arrays to iterate over faceNums and shadow volume geometries   ---     */
                 //Arrays
                 //Volume Geometry Array
-                var arr_geoVol  = { geoVol_rocket,         geoVol_torus,         geoVol_ground,         geoVol_moon,         geoVol_earth,         geoVol_mars};
+                var arr_geoVol  = [ /*geoVol_rocket, */        geoVol_torus,         geoVol_ground,         geoVol_moon,         geoVol_earth,         geoVol_mars ];
                 //faceNum Array
-                var arr_faceNum = { geoVol_rocket_faceNum, geoVol_torus_faceNum, geoVol_ground_faceNum, geoVol_moon_faceNum, geoVol_earth_faceNum, geoVol_mars_faceNum};
+                var arr_faceNum = [ /*geoVol_rocket_faceNum,*/ geoVol_torus_faceNum, geoVol_ground_faceNum, geoVol_moon_faceNum, geoVol_earth_faceNum, geoVol_mars_faceNum ];
+              
+                function recurse_geo(group, prepend) {
+                    for (var i in group.children){
+                        recurse_geo (group.children[i], prepend+group.name+"-"+i+": ");
+                    }
+                    if (group.geometry !== undefined){
+                        console.log (prepend + group.geometry.faces.length + "Faces");
+                        group.geometry.faces = group.geometry.faces.slice();
+                        arr_geoVol.push  (group.geometry);
+                        arr_faceNum.push (group.geometry.faces.length);
+                    }
+                };
                 
+                var rocket_vol = rocket.clone();
+                recurse_geo(rocket_vol, "rocket: ");
                 
                 var color1 = [new THREE.Color(0x00ffff), new THREE.Color(0xff0000), new THREE.Color(0xff0000)];
                 var color2 = [new THREE.Color(0x00ffff), new THREE.Color(0x00ffff), new THREE.Color(0xff0000)];
@@ -557,6 +575,7 @@
                 /*      ---   Create the meshes, set the position, add shadow volume and object to the scenes ---     */
                 
                 //ROCKET
+                /*
                 meshVol_rocket = new THREE.Mesh(geoVol_rocket);
                 meshVol_rocket.position.set(-7, -15, 0);
                 sceneVol.add(meshVol_rocket);
@@ -564,9 +583,21 @@
                 mesh_rocket = new THREE.Mesh(geoVol_rocket);
                 mesh_rocket.position.set(0, 0, 0);
                 scene.add(mesh_rocket);
+                */
+              
+                var meshVol_rocket = [];
+                for (var i in arr_geoVol) {
+                    if (i<5)
+                        continue;
+                    var mesh = new THREE.Mesh (arr_geoVol[i]);
+                    mesh.position.set (-7,-15,0);
+                    sceneVol.add (mesh);
+                    meshVol_rocket.push (mesh);
+                }
                 
-                
-                
+                rocket.position.set (-7,-15,0);
+                scene.add (rocket);
+
                 //TORUS
                 meshVol_torus = new THREE.Mesh(geoVol_torus);
                 meshVol_torus.position.set(0, 0, -5);
@@ -696,7 +727,10 @@
                     vertexColors: THREE.VertexColors,
 					fragmentShader: document.getElementById('shadowVolume_fs').textContent
 				});
-                       
+                
+                for (var i in meshVol_rocket) {
+                    meshVol_rocket[i].material = shadowVolume_mat;
+                }
                 //meshVol_rocket.material = shadowVolume_mat;     //Rocket
                 meshVol_torus.material  = shadowVolume_mat;     //Torus
                 meshVol_ground.material = shadowVolume_mat;     //Ground Plate
@@ -777,7 +811,17 @@
                 renderVar = true;
                 //animate();
 			}
-            
+          
+            function recurse_geo_material(group, material) {
+                    for (var i in group.children){
+                        recurse_geo_material (group.children[i], material);
+                    }
+                    if (group.material !== undefined){
+                        group.material = material;
+                        console.log ("STRIKE!!!")
+                    }
+                };
+
              
             //Animation
             function animate() {
@@ -799,6 +843,7 @@
                 
                 
                 //Render all objects ambient material
+                recurse_geo_material(rocket, ambient_spaceObj_mat);
                 //mesh_rocket.material = ambient_spaceObj_mat;
                 mesh_torus.material  = ambient_spaceObj_mat;
                 mesh_ground.material = ambient_spaceObj_mat;
@@ -821,6 +866,7 @@
                 renderer.render(sceneVol, camera);
                 
                 //Render all objects diff/spec material
+                recurse_geo_material(rocket, shaderMat_basic);
                 //mesh_rocket.material = shaderMat_basic;
                 mesh_torus.material  = shaderMat_basic;
                 mesh_ground.material = shaderMat_basic;
