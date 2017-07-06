@@ -14,7 +14,7 @@ var global = {
 };
 
 //do we want to load textures? false for fast (and ugly) debugging mode
-var loadTextures = false;
+var loadTextures = true;
 //var throttleSound;
 var rocket;
 var rocketGroup;
@@ -616,6 +616,7 @@ function buildUniverse() {
                     var mesh_atmos = new THREE.Mesh(geo_atmos, mat_atmos);
                     mesh_atmos.name = "mesh_atmos";
                     group.add(mesh_atmos);
+                    
                 }else {
                     material = new THREE.MeshPhongMaterial({
                         color: 0xffffff
