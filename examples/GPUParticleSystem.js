@@ -73,9 +73,9 @@ THREE.GPUParticleSystem = function( options ) {
 
 			'	gl_PointSize = ( uScale * size ) * lifeLeft;',
 
-			'	v.x = ( velocity.x - 0.5 ) * 3.0;',
-			'	v.y = ( velocity.y - 0.5 ) * 3.0;',
-			'	v.z = ( velocity.z - 0.5 ) * 3.0;',
+			'	v.x = ( velocity.x - 0.5) * 1.0;',
+			'	v.y = ( velocity.y - 0.9 ) * 2.0;',
+			'	v.z = ( velocity.z - 0.5 ) * 1.0;',
 
 			'	newPosition = positionStart + ( v * 10.0 ) * ( uTime - startTime );',
 
@@ -84,7 +84,7 @@ THREE.GPUParticleSystem = function( options ) {
 
 			'	newPosition = mix( newPosition, newPosition + vec3( noiseVel * ( turbulence * 5.0 ) ), ( timeElapsed / lifeTime ) );',
 
-			'	if( v.y > 0. && v.y < .05 ) {',
+			'	if( v.y > 0. && v.y > -.9 ) {',
 
 			'		lifeLeft = 0.0;',
 
@@ -490,3 +490,7 @@ THREE.GPUParticleContainer = function( maxParticles, particleSystem ) {
 
 THREE.GPUParticleContainer.prototype = Object.create( THREE.Object3D.prototype );
 THREE.GPUParticleContainer.prototype.constructor = THREE.GPUParticleContainer;
+
+
+
+    
