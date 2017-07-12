@@ -120,16 +120,17 @@ $(document).ready(function() {
                 globalControlValues.sas = false;
                 break;
             case keyCode.c:
-                globalControlValues.discardStage = false;
+                globalControlValues.discardStage = true;
                 break;
         }
     });
 
-    $(document).keypress(function(e) {
+    /*$(document).keypress(function(e) {
         if(e.keyCode == keyCode.c){
             globalControlValues.discardStage = true;
+            console.log("stage next");
         }
-    });
+    });*/
     
     $("#contentBox .ui-button").mousedown(function(e) {
         switch (this.name) {
@@ -153,7 +154,6 @@ $(document).ready(function() {
                 break;
             case "speed":
                 globalControlValues.throttle = true;
-                console.log("speed");
                 break;
             case "brake":
                 globalControlValues.brake = true;
@@ -190,7 +190,6 @@ $(document).ready(function() {
         switch (this.name) {
             case "up":
                 globalControlValues.up = false;
-                console.log("up released");
                 break;
             case "down":
                 globalControlValues.down = false;
@@ -209,13 +208,15 @@ $(document).ready(function() {
                 break;
             case "speed":
                 globalControlValues.throttle = false;
-                console.log("speed");
                 break;
             case "brake":
                 globalControlValues.brake = false;
                 break;
             case "sas":
                 globalControlValues.sas = false;
+                break;
+            case "discardStageButton":
+                globalControlValues.discardStage = true;
                 break;
         }
     });

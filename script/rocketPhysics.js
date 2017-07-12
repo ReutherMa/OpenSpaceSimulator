@@ -1,7 +1,7 @@
 /* 
 This program is licensed under the GNU General Public License as described in the file „LICENSE“
 Copyright (C) 2017 TH Nürnberg
-Authors: Marius Reuther Franziska Braun, Lea Uhlenbrock, Selina Forster, Theresa Breitenhuber, Marco Lingenhöl
+Authors: Marius Reuther, Franziska Braun, Lea Uhlenbrock, Selina Forster, Theresa Breitenhuber, Marco Lingenhöl
 Contact: openspacesimulation@gmail.com
 */
 
@@ -12,13 +12,13 @@ collision calculation
 TODO: trail point
 */
 
+var rocketHeight;
+
 var earthRadius = 0;
 var cotr = 0;
 var accel = 0;
 
 var currentStage = 1;
-//TO DO: remove:
-var stagesCtr = 0;
 
 //var speedVec = new THREE.Vector3();
 //var rocketSpeed = 0;
@@ -124,7 +124,7 @@ Rocket Science
 part 1: acceleration of direction and new position
 TODO: prompt
 **/
-function move(difftime) {
+function moveRocket(difftime) {
 
     //calculates fuel-mass that will be lost in difftime
     var mass_lost = difftime / saturnV.stage1.burningtime * saturnV.stage1.mass_fuel * throttle / 100;
@@ -140,7 +140,7 @@ function move(difftime) {
     
      
     //checks if enough fuel
-    if ((fuel_mass - mass_lost) >= 0) {
+    if ((fuel_mass - mass_lost) >= 0 || globalInterfaceValues.fuelCheat) {
         //a=F/m(now mass WITH fuel to lose)
         accel = (saturnV.stage1.thrust * (throttle/100)) / (mass); //rocket werte stimmen, einheiten sind richtig, berechnungsart stimmt
         // a = (F(thrust) - F(Air Resistance)) / m(rocketMass)
@@ -172,14 +172,35 @@ function move(difftime) {
     //rocketGroup.position.addVectors( rocketGroup.position, rocketGroup.speed.multiplyScalar( difftime ));
     
     var rocketHeightVec = rocketGroup.position.clone();
-    rocketHeightVec.addScaledVector (spaceObjects.earth.group.position, -1);
-    var rocketHeight = rocketHeightVec.length() - spaceObjects.earth.radius;
+    //confusing: this is the height from the actual starting position of the rocket
+    var dRocketHeight = new THREE.Vector3();
+    dRocketHeight = rocketHeightVec.addScaledVector(rocketStartPosition, -1);
+    if(dRocketHeight.length() <= 500000){
+        rocketHeight = dRocketHeight.length();
+        console.log(dRocketHeight);
+        console.log(rocketHeightVec);
+        console.log(rocketStartPosition);
+    }else{
+        //this is the height of the rocket compared to earth's surface
+        rocketHeightVec.addScaledVector (spaceObjects.earth.group.position, -1);
+        rocketHeight = rocketHeightVec.length() - spaceObjects.earth.radius;
+    }
     var rocketHeightSpeed = (rocketHeight - lastRocketHeight) / difftime;
     lastRocketHeight = rocketHeight;
     
+    if(rocketHeight <= 10000){
+    }else if(rocketHeight <= 999999999){
+        $("#heightLabel").text("km");
+        rocketHeight = rocketHeight/1000;
+    }else{
+        $("#heightLabel").text("mio km");
+        rocketHeight = rocketHeight/1000000000;
+    }
     // pad height-number with zero and parse to string
+    globalInterfaceValues.height = parseInt(rocketHeight);
+    console.log("height without zeros: "+rocketHeight);
     var height = zeroFill(globalInterfaceValues.height, 9);
-    globalInterfaceValues.height = rocketHeight;
+    console.log(height);
     $('#heightDisplay').val(height).change();
     
     //convert speed/difftime to km/h and then convert to percentual
@@ -308,12 +329,16 @@ function nextStage() {
         if(saturnV[newStage]==undefined){
             noStagesLeft = true;
             prompt("There are no stages left.");
+            console.log("no stages left, brah");
         }else{
             mass = mass - saturnV[oldStage]["mass_empty"] - fuel_mass;
             fuel_mass = saturnV[newStage]["mass_empty"];
             stage++;
             prompt("Discarded Stage "+(stage-1)+". Current Stage: "+stage);
             globalInterfaceValues.stage++;
+            $('#currentStageDisplay').val(globalInterfaceValues.stage).change();
+            globalInterfaceValues.discardStage = false;
+            console.log("yo i discarded dis stage for ya");
         }
     }else{
         //prompt("No more stages left! Sorry!");

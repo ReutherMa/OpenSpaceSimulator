@@ -14,7 +14,7 @@ var global = {
 };
 
 //do we want to load textures? false for fast (and ugly) debugging mode
-var loadTextures = true;
+var loadTextures = false;
 //var throttleSound;
 var rocket;
 var rocketGroup;
@@ -429,8 +429,7 @@ function buildUniverse() {
         //var rocketObject = new SpaceObject();
         readyVars.rocket = true;
         //var rocketObject = new SpaceObject("rocket", 0, 0, "0x000000", "rocketGroup", rocketGroup.speed.x, rocketGroup.speed.y, rocketGroup.speed.z);
-        //spaceObjects["rocket"] = planet_object;
-        
+        //spaceObjects["rocket"] = planet_object;   
     }
 
     /* Places Launchpad */
@@ -448,7 +447,7 @@ function buildUniverse() {
             var yE = r * Math.sin(Math.PI/180 * 45) * Math.sin(Math.PI/180 * 90);
             var zE = r * Math.cos(Math.PI/180 * 45);
             launchpadGroup.position.x = xE;
-            launchpadGroup.position.y = yE;
+            launchpadGroup.position.y = yE +3 ;
             launchpadGroup.position.z = zE;
             launchpad.rotateX(Math.PI/180 * 45);
             //launchpadGroup.position.set(0, 0, 0 );
@@ -1006,12 +1005,6 @@ var clock = new THREE.Clock();
         gl.depthFunc(gl.LEQUAL);
         gl.stencilFunc(gl.EQUAL, 0, 0xFF);
         renderer.render(scene, camera);
-        
-        
-        
-        
-        
-        
         
         /**if (stats !== undefined) {
             stats.update();

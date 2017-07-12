@@ -5,6 +5,8 @@ Authors: Marius Reuther Franziska Braun, Lea Uhlenbrock, Selina Forster, Theresa
 Contact: openspacesimulation@gmail.com
 */
 
+var rocketStartPosition;
+
 //universal gravitational constant
 var gravConst = 6.673e-11;
 
@@ -110,7 +112,7 @@ function calculatePhysics(difftime, spaceObjects) {
     }
     
     if (global.started) {
-        move(factoredTime);
+        moveRocket(factoredTime);
         if(globalInterfaceValues.discardStage){
             nextStage();
         }
@@ -121,9 +123,14 @@ function calculatePhysics(difftime, spaceObjects) {
         global.audio = true;
         if (throttle == 100) {
             global.started = true;
-            //prompt("Rocket successfully launched");
+            //starting point of rocket; gets initialized at launch
+            var rocketStartPos = new THREE.Vector3();
+            rocketStartPos = rocketGroup.position;
+            var rocketStartPosX = rocketStartPos.x;
+            var rocketStartPosY = rocketStartPos.y;
+            var rocketStartPosZ = rocketStartPos.z;
+            rocketStartPosition = new THREE.Vector3(rocketStartPosX, rocketStartPosY, rocketStartPosZ);
         }
-        
     }
     
     
