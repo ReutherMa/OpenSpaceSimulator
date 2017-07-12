@@ -71,6 +71,7 @@ $(function() {
 
 function inputChange() {
 
+    customRocketUsage = true;
     // "+" means parseInt   
     // RocketInterface
     globalInterfaceValues.stage = +$("#stagesLabel").text();

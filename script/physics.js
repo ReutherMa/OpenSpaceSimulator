@@ -110,7 +110,11 @@ function calculatePhysics(difftime, spaceObjects) {
     }
     
     if (global.started) {
-            move(factoredTime);
+        move(factoredTime);
+        if(globalInterfaceValues.discardStage){
+            nextStage();
+        }
+        checkForCollision();
             //throttleSound.setVolume(globalControlValues.throttle/100);
         
     } else if (globalControlValues.throttle) {
@@ -150,9 +154,6 @@ function calculatePhysics(difftime, spaceObjects) {
         nextStage();
     }
     
-    if(global.started && rocketGroup.position.x <= (spaceObjects.earth.group.position.x + spaceObjects.earth.group.radius) && rocketGroup.position.y == (spaceObjects.earth.group.position.y + spaceObjects.earth.group.radius) && rocketGroup.position.z == (spaceObjects.earth.group.position.z + spaceObjects.earth.group.radius)){
-        prompt("Whoopsie-daisy...");
-    }
     
     if(ctr<1 && spaceObjects.earth){
         //position calculation for rocket placement (on earth)

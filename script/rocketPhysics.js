@@ -85,15 +85,17 @@ function calculateGravitationRocket(difftime){
         if (spaceObjects[o].name == "rocket") {
             continue;
         }
-        if(spaceObjects[o].name == "earth"){
-        var rx = spaceObjects.earth.group.position.x - rocketGroup.position.x;
-        var ry = spaceObjects.earth.group.position.y - rocketGroup.position.y;
-        var rz = spaceObjects.earth.group.position.z - rocketGroup.position.z;
+        var rx = spaceObjects[o].group.position.x - rocketGroup.position.x;
+        var ry = spaceObjects[o].group.position.y - rocketGroup.position.y;
+        var rz = spaceObjects[o].group.position.z - rocketGroup.position.z;
         var dist2 = rx * rx + ry * ry + rz * rz;
         var dist = Math.sqrt(dist2);
-        var mindist = 1e-1;
+        var mindist = 10000;
         if(dist2 < mindist){
             prompt("You are getting dangerously close to "+spaceObjects[o].name+", watch out!");
+        }
+        if(dist <= 1){
+            explode();
         }
 
         if (dist2 > mindist) {
@@ -105,14 +107,11 @@ function calculateGravitationRocket(difftime){
             rocketGroup.speed.z += gravAccel * rz * dist * difftime;
         }
             
-        if(dist < mindist){
-            explode();
-        }
-
+        
         //rocket position before launch
         //if(launched){}
         //update rocket position
-        }
+        
 
         
     }
@@ -294,28 +293,27 @@ TODO: UI, saving score
 */
 function gameOver(){
     //UI-Funktion Game Over
-    
+    prompt("You killed Kenny! Restart game.");
 }
 
 /*
 next stage: UI-Event, initiated by user
 */
 function nextStage() {
-    if(!noStagesLeft&&stagesCtr<1){
+    if(!noStagesLeft){
         //generic:
         var oldStage = "stage"+stage;
         var newStage = "stage"+(stage+1);
         currentStage = newStage;
         if(saturnV[newStage]==undefined){
             noStagesLeft = true;
+            prompt("There are no stages left.");
         }else{
             mass = mass - saturnV[oldStage]["mass_empty"] - fuel_mass;
             fuel_mass = saturnV[newStage]["mass_empty"];
             stage++;
             prompt("Discarded Stage "+(stage-1)+". Current Stage: "+stage);
-            
-            //TO DO: remove:
-            stagesCtr++;
+            globalInterfaceValues.stage++;
         }
     }else{
         //prompt("No more stages left! Sorry!");
@@ -391,6 +389,13 @@ function calculateAirResistance(speed){
     airResistance = cwe * speed * speed;
     
     }
-    
 }
 
+function checkForCollision(){
+    for (var o in spaceObjects) {
+    if(rocketGroup.position.x <= (spaceObjects[o].group.position.x + spaceObjects[o].group.radius) && rocketGroup.position.y == (spaceObjects[o].group.position.y + spaceObjects[o].group.radius) && rocketGroup.position.z == (spaceObjects[o].group.position.z + spaceObjects[o].group.radius)){
+        prompt("Whoopsie-daisy...");
+    }
+    }
+    
+}
