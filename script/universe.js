@@ -827,15 +827,26 @@ function buildUniverse() {
         var newElement = globalInterfaceValues.planetCamera;
         //console.log(newElement);
         if (newElement != camElement) {
-            for (e in spaceObjects) {
-                if (e == newElement) {
-                    spaceObjects[e].group.add(camera);
+            
+            if (spaceObjects[newElement] !== undefined) {
+                    spaceObjects[newElement].group.add(camera);
                     //camera.position.add( direction.multiplyScalar(spaceObjects[e].radius*3) );
                     camera.position.x = camera.position.y = 0;
-                    camera.position.z = spaceObjects[e].radius*3;
-                    controls.update(); 
+                    camera.position.z = spaceObjects[newElement].radius*3;
+                    controls.update();
+                }
+            /* #######//for future development //####### 
+            if (newElement !== "sun") {  // XXXX Test only
+                if (spaceObjects[newElement] !== undefined) {
+                    spaceObjects[newElement].group.add(camera);
+                    //camera.position.add( direction.multiplyScalar(spaceObjects[e].radius*3) );
+                    camera.position.x = camera.position.y = 0;
+                    camera.position.z = spaceObjects[newElement].radius*3;
+                    controls.update();
                 }
             }
+            */
+        
             if (newElement == "launchpad") {
                     launchpadGroup.add(camera);
                     camera.position.x = camera.position.y = 0;
@@ -885,36 +896,7 @@ function buildUniverse() {
 var clock = new THREE.Clock();
     /* This renders the scene */
     function render() {
-        /* changes of User Interface */ 
-        if (globalInterfaceValues.changed) {
-            UIChanges();
-        }
-        //console.log("LOC= " + camera.position.x);
-        //console.log("WOR= " + localPos.x);
-        var newView = new THREE.Vector3();
-        newView.copy(camera.position);
-        var localPos = camera.localToWorld(newView);
-        newPos = localPos;
-        //diffPos = newPos - lastPos;
-        diffPos = Math.sqrt( Math.pow((newPos.x - lastPos.x),2) + Math.pow((newPos.y - lastPos.y),2) + Math.pow((newPos.z - lastPos.z),2) ) ;
-        var vel = diffPos / difftime;
-        //console.log(vel);
-        lastPos = newPos;
-        //console.log(diffPos);
         
-        /* audio check */
-        if (global.audio){
-            throttleSound.play();
-            global.audio = false;
-        }
-        if (globalControlValues.sound){
-            throttleSound.setVolume(0);
-            sound.setVolume(0);
-        } else {
-            sound.setVolume(1.0);
-            throttleSound.setVolume(1.0);
-        }
-
         requestAnimationFrame(render);
         /* for camera tracking shot */
         //console.log(camera.position.x, camera.position.y, camera.position.z);
@@ -940,11 +922,54 @@ var clock = new THREE.Clock();
             //console.log(spaceObjects.earth);
         }
 
+         /* camera */
+        /* #######//for future development //#######
+        scene.updateMatrixWorld();
+        var newView = new THREE.Vector3();
+        newView.copy(camera.position);
+        newPos = camera.localToWorld(newView);
+        if (globalInterfaceValues.planetCamera === "sun") {
+            var direction = new THREE.Vector3();
+            direction.subVectors( newPos, lastPos );
+            direction.multiplyScalar( 1 / (difftime * timefactor) );
+            //console.log(direction);
+            //diffPos = newPos - lastPos;
+            //diffPos = Math.sqrt( Math.pow((newPos.x - lastPos.x),2) + Math.pow((newPos.y - lastPos.y),2) + Math.pow((newPos.z - lastPos.z),2) ) ;
+            //var vel = diffPos / difftime;
+            console.log(difftime+ " * " + timefactor + " : " + direction.length());
+            scene.add (camera);
+            camera.position.copy( newPos );
+            camera.lookAt(spaceObjects.earth.group.position);
+            camera.updateMatrixWorld();
+            controls.target = new THREE.Vector3(spaceObjects.earth.group.position.x, spaceObjects.earth.group.position.y, spaceObjects.earth.group.position.z);
+            controls.update();
+            globalInterfaceValues.planetCamera = "foo";
+        }
+        */
+        
+        /* changes of User Interface */ 
+        if (globalInterfaceValues.changed) {
+            UIChanges();
+        }
+        
+        
+        /* audio check */
+        if (global.audio){
+            throttleSound.play();
+            global.audio = false;
+        }
+        if (globalControlValues.sound){
+            throttleSound.setVolume(0);
+            sound.setVolume(0);
+        } else {
+            sound.setVolume(1.0);
+            throttleSound.setVolume(1.0);
+        }
+
 
         /* Earth cloudmap moving */
         spaceObjects.earth.group.children[2].rotateY(0.00015 * globalInterfaceValues.timeFactor);
         spaceObjects.earth.group.children[2].rotateX(0.00005);
-        
         
         
         //Atmosphere
@@ -1038,6 +1063,7 @@ var clock = new THREE.Clock();
 
         //console.log (Date.now() - now);
         lasttime = now;
+        lastPos = newPos;
         renderCount++;
     }
 
