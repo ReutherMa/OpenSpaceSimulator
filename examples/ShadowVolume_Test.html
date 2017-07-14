@@ -503,7 +503,10 @@
               
                 function recurse_geo(group, prepend) {
                     for (var i in group.children){
-                        recurse_geo (group.children[i], prepend+group.name+"-"+i+": ");
+                        //recurse_geo (group.children[i], prepend+group.name+"-"+i+": ");
+                            if ( group.children[i].name == "___DUMMY_saturnv_ca" ){
+                            recurse_geo (group.children[i], prepend+group.name+"-"+i+": ");
+                        }
                     }
                     if (group.geometry !== undefined){
                         console.log (prepend + group.geometry.faces.length + "Faces");
@@ -728,9 +731,13 @@
 					fragmentShader: document.getElementById('shadowVolume_fs').textContent
 				});
                 
-                for (var i in meshVol_rocket) {
+/*                for (var i in meshVol_rocket) {
                     meshVol_rocket[i].material = shadowVolume_mat;
-                }
+                }*/
+                
+                
+  recurse_geo_material(rocket, shadowVolume_mat);              
+                
                 //meshVol_rocket.material = shadowVolume_mat;     //Rocket
                 meshVol_torus.material  = shadowVolume_mat;     //Torus
                 meshVol_ground.material = shadowVolume_mat;     //Ground Plate
@@ -814,11 +821,15 @@
           
             function recurse_geo_material(group, material) {
                     for (var i in group.children){
-                        recurse_geo_material (group.children[i], material);
+                        //if ( group.children[i].type == "Mesh" ){
+                        if ( group.children[i].name == "___DUMMY_saturnv_ca" ){
+                            recurse_geo_material (group.children[i], material);
+                        }
+                        
                     }
                     if (group.material !== undefined){
                         group.material = material;
-                        console.log ("STRIKE!!!")
+                        //console.log ("STRIKE!!!")
                     }
                 };
 
@@ -866,6 +877,8 @@
                 renderer.render(sceneVol, camera);
                 
                 //Render all objects diff/spec material
+                
+                
                 recurse_geo_material(rocket, shaderMat_basic);
                 //mesh_rocket.material = shaderMat_basic;
                 mesh_torus.material  = shaderMat_basic;
