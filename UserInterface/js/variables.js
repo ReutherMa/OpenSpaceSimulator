@@ -12,34 +12,38 @@ var globalInterfaceValues = {
     // User Einstellungen
 
     // RocketInterface
+    rocketName: "saturnV",
     stage: 1,
     stages: [{
-        emptyMass: 0,
-        fuelMass: 0,
-        totalMass: 0,
+        mass_empty: 0,
+        mass_fuel: 0,
+        mass_total: 0,
         thrust: 0,
-        burningTime: 0
+        burningtime: 0
     }, {
-        emptyMass: 0,
-        fuelMass: 0,
-        totalMass: 0,
+        mass_empty: 0,
+        mass_fuel: 0,
+        mass_total: 0,
         thrust: 0,
-        burningTime: 0
+        burningtime: 0
     }, {
-        emptyMass: 0,
-        fuelMass: 0,
-        totalMass: 0,
+        mass_empty: 0,
+        mass_fuel: 0,
+        mass_total: 0,
         thrust: 0,
-        burningTime: 0
+        burningtime: 0
     }, {
-        emptyMass: 0,
-        fuelMass: 0,
-        totalMass: 0,
+        mass_empty: 0,
+        mass_fuel: 0,
+        mass_total: 0,
         thrust: 0,
-        burningTime: 0
+        burningtime: 0
     }],
+    currentStage: 1,
     height: 0,
     rocketTotalMass: 0,
+    customRocketUsage: false,
+    fuelCheat: false,
 
     // DeveloperInterface
     planetName: "earth",
@@ -56,6 +60,7 @@ var globalInterfaceValues = {
     speed: 0,
     fuel: 0
 };
+
 
 $(function() {
 
@@ -129,3 +134,4 @@ function inputChange() {
     $("#planetSelect-button").blur();
 
 }
+>>>>>>> origin/master
