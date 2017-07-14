@@ -128,10 +128,11 @@ function inputChange() {
     globalInterfaceValues.planetCamera = $('select[name=planetCamera]').val();
     //globalInterfaceValues.reset = $('input[name=reset]').val();
     globalInterfaceValues.changed = true;
+    
+    console.log(rocketTotalMass);
 
     $(".ui-slider-handle").blur();
     $("#planetCamera-button").blur();
     $("#planetSelect-button").blur();
 
 }
->>>>>>> origin/master

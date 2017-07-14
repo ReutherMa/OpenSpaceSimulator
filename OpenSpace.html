@@ -77,7 +77,7 @@ Contact: openspacesimulation@gmail.com
         <div class="logoBox">
             <!--<img src="logo-mit-text.png" alt="Logo" class="logo" height=15% width=auto>-->
             <img src="logo/LogotextMontserratLight.png" alt="Logo" height=25px width=auto>
-            <img src="logo/nurlogo.png" alt="Logo" class="logo" height=5% width=auto onclick="cheatFuel()">
+            <img src="logo/nurlogo.png" alt="Logo" class="logo" height=5% width=auto onclick="inputChange()">
         </div>
 
         <!--
@@ -97,7 +97,7 @@ Contact: openspacesimulation@gmail.com
             <button type="button" name="sound" id="soundButton" class="btn fa ui-button ui-widget ui-corner-all fa-volume-up menuButton" value="" title="Sound"
             onclick="soundOnOff(this)"></button>
             <input type="button" id="info" class="btn fa ui-button ui-widget ui-corner-all menuButton toggleMenuButton" value="&#xf129" title="Information" onclick="doToggle(this)">
-            <input type="button" id="resetGame" class="btn fa ui-button ui-widget ui-corner-all menuButton" value="Reload Game" title="Reload Game" onclick="startNew()">
+            <input type="button" id="resetGame" class="btn ui-button ui-widget ui-corner-all" value="Reload Game" title="Reload Game" onclick="startNew()">
             <div id="startNewDialog" title="Start New?"></div>
         </div>
         <!-- Rocket Interface-->
@@ -110,6 +110,7 @@ Contact: openspacesimulation@gmail.com
                         <option value="saturnV">Saturn V</option>
                         <option value="spaceTaxi">Space Taxi</option>
                     </select>
+                    <span id="useCustomRocketButton"></span>
                 </fieldset>
             </div>
             <div id="editBox">
@@ -203,6 +204,11 @@ Contact: openspacesimulation@gmail.com
                             </div>
                         </div>
                     <label class="rocketTotalMassLabel ui-heading mainHeading">Rocket Total Mass:&nbsp;</label><span id="rocketTotalMassLabel" class="valueSpan"></span>&nbsp;kg
+                    <div id="saveCustomRocketBox">
+                    <input type="text" class="" name="customRocketNameTextfield" id="customRocketNameTextfield" value="">
+                <input type="button" id="customRocketName" class="btn ui-button ui-widget ui-corner-all" value="Save Custom Rocket" title="Save Custom Rocket" onclick="saveCustomRocket()">
+                        <input type="button" id="deleteLocalStorageButton" class="btn ui-button ui-widget ui-corner-all" value="Delete All Custom Rockets" title="Delete All Custom Rockets" onclick="deleteLocalStorage()">
+                        </div>
                 </fieldset>
        <input type="button" name="resetEditor" class="btn ui-button ui-widget ui-corner-all" value="Reset" title="Reset Editor" onclick="resetEditor">
 
@@ -315,6 +321,8 @@ Contact: openspacesimulation@gmail.com
                 </div>
 
                 <div class="dashboardBox">
+                    <div class="dashboardInnerBox">
+                        <div class="centeredDashboardBox">
                     <div class="displayBox">
                         <!-- Throttle -->
                         <div class="throttleGaugeBox">
@@ -346,16 +354,17 @@ Contact: openspacesimulation@gmail.com
                                 <span id="fuelGaugeLabel"></span> kt
                             </label>
                         </div>
-                        <!-- Height -->
                         <br>
+                            </div>
+                        <!-- Height -->
                         <div class="heightBox">
                             <div class="heightDisplayBox" title="Height">
                                 <input class="XS" id="heightDisplay"/>
                             </div>
                             <label id="heightLabel" class="ui-heading metersLabel">&nbsp;m</label>
                         </div>
-                    </div>
                     <div class="steeringBox">
+                        <div class="upperSteeringBox">
                         <div class="throttleBox">
                             <input type="button" name="throttle" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf0d8; &#xf06d;" title="More Throttle">
                             <br>
@@ -370,6 +379,12 @@ Contact: openspacesimulation@gmail.com
                             <input type="button" name="down" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf063;">
                             <input type="button" name="right" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf061;">
                         </div>
+                        </div>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <div class="lowerSteeringBox">
                         <div class="sasBox">
                             <input type="button" name="sas" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf0cc;" title="SAS Stabilisation">
                         </div>                        
@@ -380,6 +395,8 @@ Contact: openspacesimulation@gmail.com
                             <input type="button" name="discardStageButton" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf07d;" title="Discard Stage">
                         </div>
                     </div>
+                            </div>
+                        </div>
                 </div>
             </div>
         </div>

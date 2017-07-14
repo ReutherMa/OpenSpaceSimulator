@@ -151,7 +151,58 @@ function startNew(button) {
     });
 }
 
-function cheatFuel(button) {
+$(".logo").click(function () {
     $("#dialog").text("Congrats! You have unlimited fuel!");
     $("#dialog").dialog();
+});
+
+
+var customRocketButtonsString = "";
+
+/*function saveCustomRocket(button) {
+    var customRocketName = document.getElementById("customRocketNameTextfield").value;
+    var customRocketFullName = "customRocket" + customRocketName;
+    var customRocketValues = globalInterfaceValues.timeFactor;
+    localStorage.setItem(customRocketFullName, customRocketValues);
+    customRocketButtonsString += "<input type='button' id='" + customRocketFullName + "' class='btn ui-button ui-widget ui-corner-all' value='" + customRocketName + "' title='Use Custom Rocket' onclick='loadCustomRocket(this)'>";
+    showCustomRocketButtons();
+}*/
+
+function saveCustomRocket(button) {
+    var customRocketName = document.getElementById("customRocketNameTextfield").value;
+    var customRocketFullName = "customRocket" + customRocketName;
+    //var customRocketValues = globalInterfaceValues.timeFactor;
+    localStorage.setItem(customRocketFullName, JSON.stringify(globalInterfaceValues));
+    customRocketButtonsString += "<input type='button' id='" + customRocketFullName + "' class='btn ui-button ui-widget ui-corner-all' value='" + customRocketName + "' title='Use Custom Rocket' onclick='loadCustomRocket(this)'>";
+    showCustomRocketButtons();
+}
+
+function showCustomRocketButtons() {
+    $("#useCustomRocketButton").html(customRocketButtonsString);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    for (var key in localStorage){
+        if (key.startsWith("customRocket")) {
+            var customRocketName = key.replace("customRocket", "");
+            customRocketButtonsString += "<input type='button' id='" + key + "' class='btn ui-button ui-widget ui-corner-all' value='" + customRocketName + "' title='Use Custom Rocket' onclick='loadCustomRocket(this)'>";
+            showCustomRocketButtons();
+        }
+    }
+}, false);
+
+function loadCustomRocket(button) {
+    var customRocket = button.id;
+    globalInterfaceValues = JSON.parse(localStorage.getItem(customRocket));
+    console.log(globalInterfaceValues);
+    console.log(globalInterfaceValues.timeFactor);
+    console.log(globalInterfaceValues.rocketTotalMass);
+    console.log(globalInterfaceValues);
+}
+
+function deleteLocalStorage() {
+    localStorage.clear();
+    $("#useCustomRocketButton").html("");
+    customRocketButtonsString = "";
+    
 }

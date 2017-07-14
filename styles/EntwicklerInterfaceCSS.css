@@ -72,6 +72,27 @@ fieldset {
     z-index:500;
 }
 
+#customRocketNameTextfield {
+    border: 1px solid #666;
+    padding: .4em 1em;
+    vertical-align: middle;
+    text-align: center;
+    overflow: visible;
+    font-family: 'Roboto', sans-serif !important;
+    font-size: 12px !important;
+    background: #555 url(../UserInterface/jquery-ui-1.12.1.custom/images/ui-bg_glass_20_555555_1x400.png) 50% 50% repeat-x;
+    font-weight: bold;
+    color:"#eee" !important;
+    padding-bottom: 5px !important;
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
+    border-top-right-radius: 6px;
+    border-top-left-radius: 6px;
+}
+
+#saveCustomRocketBox {
+    margin-top:10px;
+}
 
 /* ----------- BOX POSITIONING ----------- */
 

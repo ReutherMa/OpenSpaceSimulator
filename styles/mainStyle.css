@@ -19,9 +19,10 @@ a {
     color:#ffffff;
 }
 
-.ui-widget {
+.ui-widget , .ui-tabs-anchor {
     font-family: 'Roboto', sans-serif !important;
     font-size: 12px !important;
+    font-weight:normal !important;
 }
 
 .ui-tabs-tab .ui-widget {
@@ -74,3 +75,6 @@ div#testUI {
     float:left;
 }
 
+input {
+    color:white;
+}
