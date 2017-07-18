@@ -32,6 +32,7 @@
 	<script src="three.js/examples/js/libs/dat.gui.min.js"></script>
 	<script src="three.js/examples/js/libs/stats.min.js"></script>
 	<script src="GPUParticleSystem.js"></script>
+    <script src="loader/ColladaLoader.js"></script>
 
 	<script>
 		var camera, tick = 0,
@@ -39,6 +40,7 @@
 			controls, container, gui = new dat.GUI( { width: 350 } ),
 			options, spawnerOptions, particleSystem;
         
+        var rocket;
         var rocketGroup = new THREE.Group();
         
 		init();
@@ -56,7 +58,7 @@
 			particleSystem = new THREE.GPUParticleSystem( {
 				maxParticles: 250000
 			} );
-			scene.add( particleSystem );
+			//scene.add( particleSystem );
             rocketGroup.add(particleSystem);
 			// options passed during each spawned
 			options = {
@@ -81,7 +83,10 @@
             
             
             //Fake-Rocket
-            buildCone();
+            //buildCone();
+            
+            //Rocket
+            buildRocket();
             
             //Axis
              var axisHelper = new THREE.AxisHelper(1e10); 
@@ -103,7 +108,10 @@
 			//stats = new Stats();
 			//container.appendChild( stats.dom );
 			//
-			renderer = new THREE.WebGLRenderer();
+			renderer = new THREE.WebGLRenderer( {
+                logarithmicDepthBuffer: true,
+                antialias: true
+            });
 			renderer.setPixelRatio( window.devicePixelRatio );
 			renderer.setSize( window.innerWidth, window.innerHeight );
 			container.appendChild( renderer.domElement );
@@ -115,8 +123,27 @@
 			controls.dynamicDampingFactor = 0.3;
 			window.addEventListener( 'resize', onWindowResize, false );
             
+
             
 		}
+        
+        function buildRocket(){
+        var loader = new THREE.ColladaLoader(); 
+        loader.options.convertUpAxis = true;
+        
+        loader.load("models/saturnV_2.dae", function(collada) {   
+            
+            rocket = collada.scene;   
+            //var skin = collada.skins[ 0 ];
+            //rocket.scale.set(695508e3, 695508e3, 695508e3);
+            rocketGroup.add(rocket);
+            scene.add(rocketGroup);
+            rocketGroup.speed = new THREE.Vector3 (0, 0, 0);
+            rocketGroup.rotateX(Math.PI/180 * 45);
+            //rocketGroup.angularMomentum = new THREE.Quaternion(0,0,0,1);
+            //rocketGroup.angularAcceleration = new THREE.Quaternion(0,0,0,1);
+             });
+        }
         
         function buildCone(){
                 var cone_geo = new THREE.ConeGeometry( 5, 20, 64)
@@ -158,7 +185,7 @@
 			render();
 			//if(stats) stats.update();
             
-          //  rocketGroup.position.y += .01;
+           //rocketGroup.position.y += .01;
             //rocketGroup.position.z += .01;
             //rocketGroup.position.x += .01;
 		}

@@ -1,7 +1,7 @@
 /* 
 This program is licensed under the GNU General Public License as described in the file „LICENSE“
 Copyright (C) 2017 TH Nürnberg
-Authors: Marius Reuther Franziska Braun, Lea Uhlenbrock, Selina Forster, Theresa Breitenhuber, Marco Lingenhöl
+Authors: Marius Reuther, Franziska Braun, Lea Uhlenbrock, Selina Forster, Theresa Breitenhuber, Marco Lingenhöl
 Contact: openspacesimulation@gmail.com
 */
 
@@ -21,6 +21,12 @@ var rocketGroup;
 var launchpad;
 var launchpadGroup;
 
+var particleSystem;
+var spawnerOptions;
+var options;
+var tick = 0;
+var clock = new THREE.Clock();
+
 var ground_mesh;
 
 var spaceObjects = {};
@@ -37,6 +43,7 @@ var scene;
 var readyVars = {
     physics : false,
     rocket : false,
+    particleSystem : false,
     planets : false,
     interface : false,
     navball : false,
@@ -44,6 +51,7 @@ var readyVars = {
     ground: false,
     skybox: false,
     earthshader : false,
+    animate : false,
     render : false
 }
 
@@ -106,6 +114,8 @@ function buildUniverse() {
     universe.init = init;
     universe.render = render;
     
+    //universe.animate = animate;
+    
     //uniforms
     uniforms1 = {
         sunPosition:     { value: new THREE.Vector4(0.0,0.0,0.0,1.0) },
@@ -161,6 +171,7 @@ function buildUniverse() {
                 throttleSound.setLoop(true);
         });
         
+        
         /* Helpers 
         //axisHelper
         var axisHelper = new THREE.AxisHelper(1e15); //
@@ -181,7 +192,6 @@ function buildUniverse() {
         buildPlanets(data);
         placeRocket();
         placeLaunchpad();
-        
         placeGround();
         
         buildNavBall();
@@ -397,10 +407,10 @@ function buildUniverse() {
         earthGroup.angularMomentum.set (yAxis.x, yAxis.y, yAxis.z, 50) .normalize ();
         earthGroup.quaternion.multiply(earthGroup.angularMomentum);
         var loader = new THREE.ColladaLoader(); 
-        loader.options.convertUpAxis = true; 
-        loader.load("models/saturnV.dae", function(collada) {   
+        loader.options.convertUpAxis = true;
+        
+        loader.load("models/saturnV_3.dae", function(collada) {   
             rocketGroup = new THREE.Group();
-            
             rocketGroup.add(mp);
             
             rocket = collada.scene;   //var skin = collada.skins[ 0 ];
@@ -423,8 +433,9 @@ function buildUniverse() {
             rocketGroup.angularAcceleration = new THREE.Quaternion(0,0,0,1);
             //earthGroup.add(rocketGroup);
             rocketGroup.add(throttleSound);
+            buildFire();
+            
         });
-
         if(geo_line_rocket) scene.add( geo_line_rocket );
         //var rocketObject = new SpaceObject();
         readyVars.rocket = true;
@@ -437,8 +448,8 @@ function buildUniverse() {
         var earthGroup = spaceObjects.earth.group;
         var loader = new THREE.ColladaLoader(); 
         loader.options.convertUpAxis = true; 
+        launchpadGroup = new THREE.Group();
         loader.load("models/launchpad_font.dae", function(collada) {
-            launchpadGroup = new THREE.Group();
             launchpad = collada.scene;   //var skin = collada.skins[ 0 ];
             launchpad.scale.set(10, 10, 10);
             launchpadGroup.add(launchpad);
@@ -448,11 +459,13 @@ function buildUniverse() {
             var zE = r * Math.cos(Math.PI/180 * 45);
             launchpadGroup.position.x = xE;
             launchpadGroup.position.y = yE +3 ;
+            launchpadGroup.position.y = yE + 4;
             launchpadGroup.position.z = zE;
             launchpad.rotateX(Math.PI/180 * 45);
             //launchpadGroup.position.set(0, 0, 0 );
             earthGroup.add(launchpadGroup);
         });
+    
         readyVars.launchpad = true;
     }
     
@@ -477,6 +490,47 @@ function buildUniverse() {
         earthGroup.add(ground_mesh);
         readyVars.ground = true;
     }
+    
+    //Rocket-Fire
+    function buildFire(){
+            particleSystem = new THREE.GPUParticleSystem( {
+				maxParticles: 10000
+			} );
+        
+          /*  var r = 0; //spaceObjects.earth.radius;
+            var xE = r * Math.sin(Math.PI/180 * 45) * Math.cos(Math.PI/180 * 90);
+            var yE = r * Math.sin(Math.PI/180 * 45) * Math.sin(Math.PI/180 * 90);
+            var zE = r * Math.cos(Math.PI/180 * 45);*/
+            particleSystem.position.x = 0;
+            particleSystem.position.z = 0;
+            particleSystem.position.y = 0;
+            //launchpadGroup.add( particleSystem );
+            rocketGroup.add(particleSystem);
+        
+        options = {
+				position: new THREE.Vector3(),
+				positionRandomness: 0,
+				velocity: new THREE.Vector3(),
+				velocityRandomness: 1.3,
+                color: 0xff5500,
+				colorRandomness: .5,
+				turbulence: 0,
+				lifetime: 2,
+				size: 4,
+				sizeRandomness: 1
+        };
+        options.position.x = 0;
+        options.position.z = 0;
+        options.position.y = 0;
+        spawnerOptions = {
+				spawnRate: 10000,
+				horizontalSpeed: 1,
+				verticalSpeed: 1,
+				timeScale: 1
+			};
+        
+        readyVars.particleSystem = true;
+    }
 
     /* create a planet with mesh, position and orbit */
     //SpaceObject(name of object, mass of object, radius(size) of object, parameters, in which group object is)
@@ -490,7 +544,7 @@ function buildUniverse() {
         this.speedx = speedx;
         this.speedy = speedy;
         this.speedz = speedz;
-
+        
         /* This builds the Body */
         this.buildBody = function() {
 
@@ -808,6 +862,7 @@ function buildUniverse() {
         
     }
     
+    
     /* This is called when UI is changed */
     function UIChanges() {
 
@@ -893,11 +948,17 @@ function buildUniverse() {
     }
     
 
-var clock = new THREE.Clock();
     /* This renders the scene */
     function render() {
         
         requestAnimationFrame(render);
+        
+        
+     //   if (particleSystem != undefined){
+       //  animate();
+        
+     //   }
+        
         /* for camera tracking shot */
         //console.log(camera.position.x, camera.position.y, camera.position.z);
         
@@ -975,6 +1036,27 @@ var clock = new THREE.Clock();
         //Atmosphere
         if(rocketGroup){
             spaceObjects.earth.group.children[3].material.opacity = calcOpacity();
+            
+            //Fire
+            var delta = difftime; //clock.getDelta() * spawnerOptions.timeScale;
+			tick += delta;
+			if ( tick < 0 ) tick = 0;
+			if ( delta > 0 ) {
+				//options.position.x = Math.sin( tick * spawnerOptions.horizontalSpeed ) * 5;
+				//options.position.y = Math.sin( tick * spawnerOptions.verticalSpeed ) * 5;
+                //options.position.z = Math.sin( tick * spawnerOptions.horizontalSpeed + spawnerOptions.verticalSpeed ) * 5;
+                //options.position.x = rocketGroup.position.x;
+                //options.position.y = rocketGroup.position.y;
+                //options.position.z = rocketGroup.position.z;
+				for ( var x = 0; x < spawnerOptions.spawnRate * delta; x++ ) {
+					particleSystem.spawnParticle( options );
+				}
+			}
+			particleSystem.update( tick );
+            //rocketGroup.position.y += .01;
+            //rocketGroup.position.z += .01;
+            //rocketGroup.position.x += .01;
+            readyVars.animate = true;
         }
         
         /* Earth cloudmap moving */
@@ -1037,7 +1119,8 @@ var clock = new THREE.Clock();
         }*/
         
         //checks if all resources are loaded, removes loading screen(div)
-        var everythingLoaded = setInterval(function() {
+        
+        var everythingLoaded = setTimeout(function() {
             if (document.readyState === "complete" && renderCounter == 0) {
                 clearInterval(everythingLoaded);
                 loadingDone();
