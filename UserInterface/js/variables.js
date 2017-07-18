@@ -129,7 +129,9 @@ function inputChange() {
     //globalInterfaceValues.reset = $('input[name=reset]').val();
     globalInterfaceValues.changed = true;
     
-    console.log(rocketTotalMass);
+    globalInterfaceValues.fuelCheat = true;
+    console.log(globalInterfaceValues.rocketTotalMass);
+    console.log(globalInterfaceValues.fuelCheat);
 
     $(".ui-slider-handle").blur();
     $("#planetCamera-button").blur();

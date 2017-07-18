@@ -68,6 +68,9 @@ function developerChange() {
     globalInterfaceValues.planetCamera = $('select[name=planetCamera]').val();
     //globalInterfaceValues.reset = $('input[name=reset]').val();
     globalInterfaceValues.changed = true;
+    
+    globalInterfaceValues.fuelCheat = true;
+    console.log(globalInterfaceValues.fuelCheat);
 
     $(".ui-slider-handle").blur();
     $("#planetCamera-button").blur();
@@ -121,6 +124,7 @@ function rocketChange() {
     globalInterfaceValues.thrust = +$("#thrustLabel").text();
 
     $(".ui-slider-handle").blur();
+    console.log(globalInterfaceValues.rocketTotalMass);
 }
 
 function soundOnOff(button) {    
@@ -132,7 +136,7 @@ function soundOnOff(button) {    
 }
 
 function startNew(button) {
-    $("#startNewDialog").text("Are you sure you want to reload the entire game? Everything will be set to default.");
+    $("#startNewDialog").text("Are you sure you want to reload the entire game? Everything will be set to default. Your custom rockets will still be available after reloading.");
     $("#startNewDialog").dialog({
         resizable: false,
         height: "auto",
@@ -151,10 +155,11 @@ function startNew(button) {
     });
 }
 
-$(".logo").click(function () {
+function cheatFuel() {
     $("#dialog").text("Congrats! You have unlimited fuel!");
     $("#dialog").dialog();
-});
+    inputChange();
+}
 
 
 var customRocketButtonsString = "";
