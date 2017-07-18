@@ -366,13 +366,13 @@
                 var r_loader = new THREE.ColladaLoader(); 
                 r_loader.options.convertUpAxis = true; 
                 
-                r_loader.load("models/saturnV.dae", 
+                r_loader.load("models/saturnV_2.dae", 
                               function(collada) {
                                     rocket = collada.scene;   //var skin = collada.skins[ 0 ];
                                     //rocket.scale.set(695508e3, 695508e3, 695508e3);
-                                    rocket.position.x = - 7;
-                                    rocket.position.y = -15;
-                                    rocket.position.z =   0;
+                                    //rocket.position.x = - 7;
+                                    //rocket.position.y = -15;
+                                    //rocket.position.z =   0;
                                     //rocket.children[2].children.length=1;
                                     //scene.add(collada.scene);
                                     
@@ -410,7 +410,7 @@
                 renderer = new THREE.WebGLRenderer({
                     logarithmicDepthBuffer: true,
                     //alpha: true,
-                    antialisa: true
+                    antialias: true
                 });
                 
                 renderer.autoClear = false;
@@ -503,10 +503,11 @@
               
                 function recurse_geo(group, prepend) {
                     for (var i in group.children){
-                        //recurse_geo (group.children[i], prepend+group.name+"-"+i+": ");
-                            if ( group.children[i].name == "___DUMMY_saturnv_ca" ){
-                            recurse_geo (group.children[i], prepend+group.name+"-"+i+": ");
-                        }
+                        //if (group.children[i].name == "___DUMMY_saturnv_ca"){
+//                        if (group.children[i].type == "Mesh"){
+                            recurse_geo (group.children[i], prepend+group.name+"-"+i+": ");   
+  //                      }
+                        
                     }
                     if (group.geometry !== undefined){
                         console.log (prepend + group.geometry.faces.length + "Faces");
@@ -532,7 +533,7 @@
                                                                   arr_geoVol[j].faces[i].a,          //vertex-position
                                                                   arr_geoVol[j].faces[i].normal,     //orientation -> light
                                                                    color2));                         //tagging-attribute for vertices
-                        
+               
                         arr_geoVol[j].faces.push(new THREE.Face3( arr_geoVol[j].faces[i].b,
                                                                   arr_geoVol[j].faces[i].b,
                                                                   arr_geoVol[j].faces[i].a,
@@ -731,14 +732,16 @@
 					fragmentShader: document.getElementById('shadowVolume_fs').textContent
 				});
                 
-/*                for (var i in meshVol_rocket) {
-                    meshVol_rocket[i].material = shadowVolume_mat;
-                }*/
-                
-                
-  recurse_geo_material(rocket, shadowVolume_mat);              
+
+recurse_geo_material(rocket, shadowVolume_mat);
                 
                 //meshVol_rocket.material = shadowVolume_mat;     //Rocket
+                //meshVol_rocket[0].material = shadowVolume_mat;
+                //meshVol_rocket.children[0].children[1].children[0].material = shadowVolume_mat;
+                //meshVol_rocket.children[0].children[2].children[0].material = shadowVolume_mat;
+                //meshVol_rocket.children[0].children[3].children[0].material = shadowVolume_mat;
+                
+                
                 meshVol_torus.material  = shadowVolume_mat;     //Torus
                 meshVol_ground.material = shadowVolume_mat;     //Ground Plate
                 meshVol_moon.material   = shadowVolume_mat;     //Moon
@@ -821,11 +824,10 @@
           
             function recurse_geo_material(group, material) {
                     for (var i in group.children){
-                        //if ( group.children[i].type == "Mesh" ){
-                        if ( group.children[i].name == "___DUMMY_saturnv_ca" ){
-                            recurse_geo_material (group.children[i], material);
-                        }
-                        
+                        //if (group.children[i].name == "___DUMMY_saturnv_ca"){
+//                        if (group.children[i].type == "Mesh"){
+                            recurse_geo_material (group.children[i], material);    
+//                        }
                     }
                     if (group.material !== undefined){
                         group.material = material;
@@ -853,9 +855,13 @@
                 var gl = renderer.context;
                 
                 
+                
+                
+                
                 //Render all objects ambient material
-                recurse_geo_material(rocket, ambient_spaceObj_mat);
-                //mesh_rocket.material = ambient_spaceObj_mat;
+recurse_geo_material(rocket, ambient_spaceObj_mat);
+                
+                //rocket.material = ambient_spaceObj_mat;
                 mesh_torus.material  = ambient_spaceObj_mat;
                 mesh_ground.material = ambient_spaceObj_mat;
                 mesh_moon.material   = ambient_spaceObj_mat;
@@ -876,11 +882,14 @@
                 gl.stencilFunc(gl.ALWAYS, 0, 0xFF);
                 renderer.render(sceneVol, camera);
                 
+                
+                
+                
+                
                 //Render all objects diff/spec material
+recurse_geo_material(rocket, shaderMat_basic);
                 
-                
-                recurse_geo_material(rocket, shaderMat_basic);
-                //mesh_rocket.material = shaderMat_basic;
+                //rocket.material = shaderMat_basic;
                 mesh_torus.material  = shaderMat_basic;
                 mesh_ground.material = shaderMat_basic;
                 mesh_moon.material   = shaderMat_moon;
