@@ -69,8 +69,6 @@ function developerChange() {
     //globalInterfaceValues.reset = $('input[name=reset]').val();
     globalInterfaceValues.changed = true;
     
-    globalInterfaceValues.fuelCheat = true;
-    console.log(globalInterfaceValues.fuelCheat);
 
     $(".ui-slider-handle").blur();
     $("#planetCamera-button").blur();
@@ -122,8 +120,14 @@ function rocketChange() {
 
     globalInterfaceValues.burningtime = +$("#burningtimeLabel").text();
     globalInterfaceValues.thrust = +$("#thrustLabel").text();
+    
+    
+    globalInterfaceValues.fuelCheat = true;
+    console.log(globalInterfaceValues.fuelCheat);
 
     $(".ui-slider-handle").blur();
+    $("#rocketSelect-button").blur();
+    $(".ui-tabs").blur();
     console.log(globalInterfaceValues.rocketTotalMass);
 }
 
@@ -158,7 +162,7 @@ function startNew(button) {
 function cheatFuel() {
     $("#dialog").text("Congrats! You have unlimited fuel!");
     $("#dialog").dialog();
-    inputChange();
+    rocketChange();
 }
 
 
@@ -179,6 +183,7 @@ function saveCustomRocket(button) {
     //var customRocketValues = globalInterfaceValues.timeFactor;
     localStorage.setItem(customRocketFullName, JSON.stringify(globalInterfaceValues));
     customRocketButtonsString += "<input type='button' id='" + customRocketFullName + "' class='btn ui-button ui-widget ui-corner-all' value='" + customRocketName + "' title='Use Custom Rocket' onclick='loadCustomRocket(this)'>";
+    $(".btn").blur();
     showCustomRocketButtons();
 }
 
@@ -203,11 +208,13 @@ function loadCustomRocket(button) {
     console.log(globalInterfaceValues.timeFactor);
     console.log(globalInterfaceValues.rocketTotalMass);
     console.log(globalInterfaceValues);
+    $(".btn").blur();
 }
 
 function deleteLocalStorage() {
     localStorage.clear();
     $("#useCustomRocketButton").html("");
     customRocketButtonsString = "";
+    $(".btn").blur();
     
 }

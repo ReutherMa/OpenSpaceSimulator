@@ -13,6 +13,7 @@ body {
     font-family: 'Roboto', sans-serif;
     /*font-style:thin;*/
     margin: 0;
+    overflow:hidden;
 }
 
 a {
