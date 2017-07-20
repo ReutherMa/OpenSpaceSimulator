@@ -165,7 +165,7 @@ function cheatFuel() {
     rocketChange();
 }
 
-
+var defaultRocketsString = "<option value='saturnV'>Saturn V</option><option value='spaceTaxi'>Space Taxi</option>";
 var customRocketButtonsString = "";
 
 /*function saveCustomRocket(button) {
@@ -177,7 +177,7 @@ var customRocketButtonsString = "";
     showCustomRocketButtons();
 }*/
 
-function saveCustomRocket(button) {
+/*function saveCustomRocket(button) {
     var customRocketName = document.getElementById("customRocketNameTextfield").value;
     var customRocketFullName = "customRocket" + customRocketName;
     //var customRocketValues = globalInterfaceValues.timeFactor;
@@ -185,18 +185,33 @@ function saveCustomRocket(button) {
     customRocketButtonsString += "<input type='button' id='" + customRocketFullName + "' class='btn ui-button ui-widget ui-corner-all' value='" + customRocketName + "' title='Use Custom Rocket' onclick='loadCustomRocket(this)'>";
     $(".btn").blur();
     showCustomRocketButtons();
+}*/
+
+function saveCustomRocket(button) {
+    var customRocketName = document.getElementById("customRocketNameTextfield").value;
+    var customRocketFullName = "customRocket" + customRocketName;
+    //var customRocketValues = globalInterfaceValues.timeFactor;
+    localStorage.setItem(customRocketFullName, JSON.stringify(globalInterfaceValues));
+    customRocketButtonsString += "<option id='" + customRocketFullName + "'  value='" + customRocketName + "' title='Use Custom Rocket' onclick='loadCustomRocket(this)'>" + customRocketName + "</option>";
+    $(".btn").blur();
+    $("#customRocketNameTextfield").blur();
+    showCustomRocketButtons();
 }
 
 function showCustomRocketButtons() {
-    $("#useCustomRocketButton").html(customRocketButtonsString);
+    //$("#useCustomRocketButton").html(customRocketButtonsString);
+    var fullRocketSelectString = defaultRocketsString + customRocketButtonsString;
+    $("#rocketSelect").html(fullRocketSelectString);
+    $("#rocketSelect").selectmenu("destroy").selectmenu({ style: "dropdown" });
 }
 
 document.addEventListener('DOMContentLoaded', function() {
     for (var key in localStorage){
         if (key.startsWith("customRocket")) {
-            var customRocketName = key.replace("customRocket", "");
-            customRocketButtonsString += "<input type='button' id='" + key + "' class='btn ui-button ui-widget ui-corner-all' value='" + customRocketName + "' title='Use Custom Rocket' onclick='loadCustomRocket(this)'>";
-            showCustomRocketButtons();
+           var customRocketName = key.replace("customRocket", "");
+           /*  customRocketButtonsString += "<input type='button' id='" + key + "' class='btn ui-button ui-widget ui-corner-all' value='" + customRocketName + "' title='Use Custom Rocket' onclick='loadCustomRocket(this)'>";*/
+        customRocketButtonsString += "<option id='" + key + "'  value='" + customRocketName + "' title='Use Custom Rocket' onclick='loadCustomRocket(this)'>" + customRocketName + "</option>";
+        showCustomRocketButtons();
         }
     }
 }, false);
@@ -213,8 +228,21 @@ function loadCustomRocket(button) {
 
 function deleteLocalStorage() {
     localStorage.clear();
-    $("#useCustomRocketButton").html("");
+    //$("#useCustomRocketButton").html("");
     customRocketButtonsString = "";
     $(".btn").blur();
+    showCustomRocketButtons();
     
 }
+
+/*function preventBubbling(evt) {
+    console.log("no bubbling yay")
+    evt.stopPropagation();
+}*/
+/*
+$(document).ready(function() {
+$( "#customRocketNameTextfield" ).keydown(function( e ) {
+  e.stopPropagation();
+  console.log("no bubbling yayy");
+});
+    });*/

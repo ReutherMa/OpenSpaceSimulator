@@ -42,7 +42,11 @@ var keyCode = {
 //TODO: Quit setzen
 $(document).ready(function() {
     $(document).keydown(function(e) {
-        switch (e.keyCode) {
+        if ($(e.target).is('input, textarea, select'))
+        {
+        return true;
+        } else {
+         switch (e.keyCode) {
             case keyCode.w:
                 globalControlValues.up = true;
                 break;
@@ -87,10 +91,15 @@ $(document).ready(function() {
             /*case keyCode.c:
                 globalControlValues.discardStage = true;
                 break;*/
+        }   
         }
     });
 
     $(document).keyup(function(e) {
+        if ($(e.target).is('input, textarea, select'))
+        {
+        return true;
+        } else {
         switch (e.keyCode) {
             case keyCode.w:
                 globalControlValues.up = false;
@@ -123,6 +132,7 @@ $(document).ready(function() {
                 globalControlValues.discardStage = true;
                 break;
         }
+}
     });
 
     /*$(document).keypress(function(e) {

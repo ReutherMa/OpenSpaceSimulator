@@ -128,9 +128,7 @@ position: relative;
     z-index: 200;
     /* background-color: rgba(49, 49, 49, 0.7); */
     padding: 10px;
-    padding-top: 12%;
     width: 300px;
-    height: 100px;
     border-radius: 6px;
     /* border: 2px solid rgb(255, 140, 0); */
     margin-right: 20px;
@@ -148,14 +146,12 @@ position: relative;
     text-align: right;
     z-index: 200;
     /* background-color: rgba(49, 49, 49, 0.7); */
-    padding: 10px;
+    padding: 10px 10px 10px 19px;
     width: 300px;
-    height: 100px;
     border-radius: 6px;
     /* border: 2px solid rgb(255, 140, 0); */
     /* margin-left: 20px; */
     /* background: radial-gradient(ellipse 170px 170px at -3% 17%, transparent 100px, rgba(49, 49, 49, 0.7) 50px); */
-    /* padding-left: 69px; */
     top: 0;
     right: 0;
     transform: translateX(100%);
@@ -163,14 +159,14 @@ position: relative;
 
 .heightBox {
     text-align: center;
-    padding-top: 77px;
+    padding-top: 58px;
 }
 
 .dashboardInnerBox {
     text-align: center;
-    width: 820px;
-    height: 106px;
-    background: radial-gradient(ellipse 170px 170px at 50% -28%, transparent 100px, rgba(49, 49, 49, 0.7) 50px);
+    width: 830px;
+    height: 85px;
+    background: radial-gradient(ellipse 170px 170px at 50% -54%, transparent 100px, rgba(49, 49, 49, 0.7) 50px);
     border-radius: 24px;
 }
 
@@ -246,5 +242,10 @@ position: relative;
 
 .controlBox, .currentStageDisplayBox , .discardStageButtonBox , .sasBox , .throttleBox {
     float: left;
+}
+
+.steeringbox .btn {
+    float:left;
+    margin:1px;
 }
 /* ---------------- ICON STYLING ---------------- */
