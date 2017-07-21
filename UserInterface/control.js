@@ -29,6 +29,10 @@ var keyCode = {
 //TODO: Quit setzen
 $(document).ready(function() {
     $(document).keydown(function(e) {
+        if ($(e.target).is('input, textarea, select'))
+        {
+        return true;
+        } else {
         switch (e.keyCode) {
             case keyCode.w:
                 globalControlValues.up = true;
@@ -73,6 +77,10 @@ $(document).ready(function() {
     });
 
     $(document).keyup(function(e) {
+        if ($(e.target).is('input, textarea, select'))
+        {
+        return true;
+        } else {
         switch (e.keyCode) {
             case keyCode.w:
                 globalControlValues.up = false;

@@ -9,6 +9,27 @@ Contact: openspacesimulation@gmail.com
 
 /* ----------- GENERAL STUFF ----------- */
 
+.ui-menu-icons .ui-menu-item-wrapper {
+    padding-left: 35px !important;
+}
+
+.ui-menu .ui-menu-item-wrapper {
+    padding: 6px 15px 3px 20px;
+}
+
+.ui-menu .ui-icon {
+    width: 30px;
+    height: 30px;
+}
+
+option.avatar {
+      background-repeat: no-repeat !important;
+      padding-left: 20px;
+    }
+    .avatar .ui-icon {
+      background-position: left top;
+    }
+
 body {
     /*font-family: Arial;*/
     font-size: 12px;

@@ -160,6 +160,8 @@ position: relative;
 .heightBox {
     text-align: center;
     padding-top: 58px;
+    margin: 0 auto;
+    display: table;
 }
 
 .dashboardInnerBox {
@@ -173,7 +175,7 @@ position: relative;
 .centeredDashboardBox {
     position: relative;
     display: inline-block;
-    width: 175px;
+    width: 150px;
 }
 
 @media (max-width: 1496px) {

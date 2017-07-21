@@ -30,7 +30,7 @@ Contact: openspacesimulation@gmail.com
     <link rel="stylesheet" href="styles/EntwicklerInterfaceCSS.css">
     <link rel="stylesheet" href="styles/cmGauge.css">
     <link rel="stylesheet" href="styles/flapper.css" type="text/css" />
-    <link rel="stylesheet" href="/UserInterface/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="UserInterface/font-awesome-4.7.0/css/font-awesome.min.css">
     
 </head>
 
@@ -223,11 +223,12 @@ Contact: openspacesimulation@gmail.com
                         </div>
                     </div>
                     <label class="rocketTotalMassLabel ui-heading mainHeading">Rocket Total Mass:&nbsp;</label><span id="rocketTotalMassLabel" class="valueSpan"></span>&nbsp;kg
+                    <br>
+                    <input type="button" id="resetEditor" class="btn ui-button ui-widget ui-corner-all" value="Reset" title="Reset Editor" onclick="resetEditor()">
                     <div id="saveCustomRocketBox">
                         <input type="text" class="" name="customRocketNameTextfield" id="customRocketNameTextfield" value="">
                         <input type="button" id="customRocketName" class="btn ui-button ui-widget ui-corner-all" value="Save Custom Rocket" title="Save Custom Rocket" onclick="saveCustomRocket()">
                         <input type="button" id="deleteLocalStorageButton" class="btn ui-button ui-widget ui-corner-all" value="Delete All Custom Rockets" title="Delete All Custom Rockets" onclick="deleteLocalStorage()">
-                        <input type="button" id="resetEditor" class="btn ui-button ui-widget ui-corner-all" value="Reset" title="Reset Editor" onclick="resetEditor()">
                     </div>
                 </fieldset>
 
@@ -258,17 +259,19 @@ Contact: openspacesimulation@gmail.com
                                 </div>
                                 <div class="planetSelectBox">
                                     <select name="planetSelect" id="planetSelect">
-                                        <option value="sun">Sun</option>
-                                        <option value="mercury">Mercury</option>
-                                        <option value="venus">Venus</option>
-                                        <option value="earth" selected="true">Earth</option>
-                                        <option value="earth_moon">Moon</option>
-                                        <option value="mars">Mars</option>
-                                        <option value="jupiter">Jupiter</option>
-                                        <option value="saturn">Saturn</option>
-                                        <option value="uranus">Uranus</option>
-                                        <option value="neptune">Neptune</option>
-                                        <option value="pluto">Pluto</option>
+                                        <option value="sun" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/sun30x30.png');">Sun</option>
+                                    <option value="mercury" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/mercury30x30.png');">Mercury</option>
+                                    <option value="venus" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/venus30x30.png');">Venus</option>
+                                    <option value="earth" selected="true" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/earth30x30.png');">Earth</option>
+                                    <option value="earth_moon" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/moon30x30.png');">Moon</option>
+                                    <option value="mars" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/mars30x30.png');">Mars</option>
+                                    <option value="jupiter" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/jupiter30x30.png');">Jupiter</option>
+                                    <option value="saturn" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/saturn30x30.png');">Saturn</option>
+                                    <option value="uranus" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/uranus30x30.png');">Uranus</option>
+                                    <option value="neptune" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/neptune30x30.png');">Neptune</option>
+                                    <option value="launchpad" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/launch30x302.png');">Launchpad</option>
+                                    <option value="rocket" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/rocket30x30.png');">Rocket</option>
+                                    <option value="pluto" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/pluto30x30.png');">Pluto</option>
                                     </select>
                                 </div>
                             </div>
@@ -301,19 +304,19 @@ Contact: openspacesimulation@gmail.com
                                 <legend>Camera</legend>
                                 <!--<select onchange="switchCamera(this.value)">-->
                                 <select name="planetCamera" id="planetCamera">
-                                    <option value="sun">Sun</option>
-                                    <option value="mercury">Mercury</option>
-                                    <option value="venus">Venus</option>
-                                    <option value="earth" selected="true">Earth</option>
-                                    <option value="earth_moon">Moon</option>
-                                    <option value="mars">Mars</option>
-                                    <option value="jupiter">Jupiter</option>
-                                    <option value="saturn">Saturn</option>
-                                    <option value="uranus">Uranus</option>
-                                    <option value="neptune">Neptune</option>
-                                    <option value="launchpad">Launchpad</option>
-                                    <option value="rocket">Rocket</option>
-                                    <option value="pluto">Pluto</option>
+                                    <option value="sun" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/sun30x30.png');">Sun</option>
+                                    <option value="mercury" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/mercury30x30.png');">Mercury</option>
+                                    <option value="venus" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/venus30x30.png');">Venus</option>
+                                    <option value="earth" selected="true" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/earth30x30.png');">Earth</option>
+                                    <option value="earth_moon" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/moon30x30.png');">Moon</option>
+                                    <option value="mars" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/mars30x30.png');">Mars</option>
+                                    <option value="jupiter" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/jupiter30x30.png');">Jupiter</option>
+                                    <option value="saturn" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/saturn30x30.png');">Saturn</option>
+                                    <option value="uranus" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/uranus30x30.png');">Uranus</option>
+                                    <option value="neptune" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/neptune30x30.png');">Neptune</option>
+                                    <option value="launchpad" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/launch30x302.png');">Launchpad</option>
+                                    <option value="rocket" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/rocket30x30.png');">Rocket</option>
+                                    <option value="pluto" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/pluto30x30.png');">Pluto</option>
                                 </select>
                             </fieldset>
                         </div>
@@ -380,8 +383,8 @@ Contact: openspacesimulation@gmail.com
                             <div class="heightBox">
                                 <div class="heightDisplayBox" title="Height">
                                     <input class="XS" id="heightDisplay" />
+                                    <label id="heightLabel" class="ui-heading metersLabel">&nbsp;m</label>
                                 </div>
-                                <label id="heightLabel" class="ui-heading metersLabel">&nbsp;m</label>
                             </div>
                             <div class="steeringBox">
                                 <!--<div class="upperSteeringBox">-->
@@ -431,8 +434,9 @@ Contact: openspacesimulation@gmail.com
                         <br>
                         <i class="fa fa-tachometer" aria-hidden="true"></i> Rocket Dashboard: Control your Rocket and keep track of fuel and throttle
                         <br>
-                        <i class="fa fa-volume-up" aria-hidden="true"></i> Turn sound on or off
-                    </div>
+                        <i class="fa fa-volume-up" aria-hidden="true"></i> Turn sound on or off <br>
+                        <i class="fa fa-refresh" aria-hidden="true"></i>  Reload page. Everything will be set to default.
+                    </div> 
                     <br>
                     <div class="keyAssignmentBox">
                         <h3 class="infoLabel">Key Assignment:</h3>

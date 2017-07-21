@@ -145,6 +145,7 @@ function soundOnOff(button) {    
     } else if ($(button).hasClass("fa-volume-off")) {      
         $(button).removeClass("fa-volume-off").addClass("fa-volume-up")    
     }
+    $(".btn").blur();
 }
 
 function startNew(button) {
@@ -316,14 +317,3 @@ function updateLoading(percentage) {
     $("#loadingPercentage").text(percentage);
 }
 
-/*function preventBubbling(evt) {
-    console.log("no bubbling yay")
-    evt.stopPropagation();
-}*/
-/*
-$(document).ready(function() {
-$( "#customRocketNameTextfield" ).keydown(function( e ) {
-  e.stopPropagation();
-  console.log("no bubbling yayy");
-});
-    });*/

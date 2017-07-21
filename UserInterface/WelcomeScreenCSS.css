@@ -97,3 +97,22 @@ a {
         padding-top: 200px;
     }
 }
+
+.menuButton {
+    width: 42px;
+    padding-bottom: 5px !important;
+}
+
+.fa {
+    font: normal normal normal 14px/1 FontAwesome !important;
+}
+
+.ui-widget {
+    outline: none;
+}
+
+.welcomeScreenButton {
+    font-family: 'Roboto', sans-serif !important;
+    font-size: 18px !important;
+    font-weight: normal !important;
+}

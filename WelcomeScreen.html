@@ -13,6 +13,9 @@ Contact: openspacesimulation@gmail.com
 
 <head>
     <meta charset="utf-8">
+    
+    <link rel="shortcut icon" href="Rakete.ico" type="x-icon">
+    <link rel="icon" href="Rakete.ico" type="image/x-icon">
 
     <title>Open Space Simulator</title>
     <script src="UserInterface/jquery-3.1.1.min.js"></script>
@@ -33,14 +36,14 @@ Contact: openspacesimulation@gmail.com
             Sorry! Your screen is too small to play.
         </div>
         <div class="startGameButtonBox">
-            <a href="/OpenSpace.html" class="btn fa ui-button ui-widget ui-corner-all">Start New Game</a>
+            <a href="OpenSpace.html" class="btn ui-button ui-widget ui-corner-all welcomeScreenButton">Start New Game</a>
             <br>
         </div>
-        <a href="http://www.openspacesimulation.wordpress.com" target="_blank" class="btn fa ui-button ui-widget ui-corner-all">View Blog</a>
+        <a href="http://www.openspacesimulation.wordpress.com" target="_blank" class="btn ui-button ui-widget ui-corner-all welcomeScreenButton">View Blog</a>
         <br>
-        <a href="Impressum.html" class="btn fa ui-button ui-widget ui-corner-all">Impressum</a>
+        <a href="Impressum.html" class="btn ui-button ui-widget ui-corner-all welcomeScreenButton">Impressum</a>
         <br>
-        <a href="http://schorsch.efi.fh-nuernberg.de/mewiki/" target="_blank" class="btn fa ui-button ui-widget ui-corner-all">Media Engineering TH Nürnberg</a>
+        <a href="http://schorsch.efi.fh-nuernberg.de/mewiki/" target="_blank" class="btn ui-button ui-widget ui-corner-all welcomeScreenButton">Media Engineering TH Nürnberg</a>
         <br>
     </div>
     <div id="IEDialog"></div>
@@ -56,7 +59,7 @@ Contact: openspacesimulation@gmail.com
     var msie = ua.indexOf('MSIE ');
     if (msie > 0) {
         // IE 10 or older => return version number
-        $("#IEDialog").text("You're using internet explorer. Please use a different browser to play.");
+        $("#IEDialog").text("You're using internet explorer. For best experience please use firefox or chrome.");
         $("#IEDialog").dialog();
         return parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10);
     }
@@ -65,7 +68,7 @@ Contact: openspacesimulation@gmail.com
     if (trident > 0) {
         // IE 11 => return version number
         var rv = ua.indexOf('rv:');
-        $("#IEDialog").text("You're using internet explorer. Please use a different browser to play.");
+        $("#IEDialog").text("You're using internet explorer. For best experience please use firefox or chrome.");
         $("#IEDialog").dialog();
         return parseInt(ua.substring(rv + 3, ua.indexOf('.', rv)), 10);
     }
@@ -73,14 +76,14 @@ Contact: openspacesimulation@gmail.com
     var edge = ua.indexOf('Edge/');
     if (edge > 0) {
        // Edge (IE 12+) => return version number
-        $("#IEDialog").text("You're using internet explorer. Please use a different browser to play.");
+        $("#IEDialog").text("You're using internet explorer. For best experience please use firefox or chrome.");
         $("#IEDialog").dialog();
        return parseInt(ua.substring(edge + 5, ua.indexOf('.', edge)), 10);
     }
 
     // other browser
-        $("#IEDialog").text("Yay youre not using IE");
-        $("#IEDialog").dialog();
+        //$("#IEDialog").text("Yay youre not using IE");
+        //$("#IEDialog").dialog();
     return false;
 
                               }, false);

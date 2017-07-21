@@ -5,6 +5,7 @@ Authors: Marius Reuther Franziska Braun, Lea Uhlenbrock, Selina Forster, Theresa
 Contact: openspacesimulation@gmail.com
 */
 
+
 #loadingRocket {
     position: absolute;
 }
@@ -15,24 +16,29 @@ Contact: openspacesimulation@gmail.com
     text-align: center;
     z-index: 1000
 }
+
+
 body {
     font-family: 'Roboto', sans-serif;
     /*font-style:thin;*/
     margin: 0;
-    overflow: hidden;
+    overflow:hidden;
 }
+
 a {
-    color: #ffffff;
+    color:#ffffff;
 }
-.ui-widget,
-.ui-tabs-anchor {
+
+.ui-widget , .ui-tabs-anchor {
     font-family: 'Roboto', sans-serif !important;
     font-size: 12px !important;
-    font-weight: normal !important;
+    font-weight:normal !important;
 }
+
 .ui-tabs-tab .ui-widget {
     font-size: 1.2em !important;
 }
+
 canvas {
     width: 100%;
     height: 100%;
@@ -54,26 +60,31 @@ div#testUI {
     //color: white;
     text-align: center;
 }
+
 .activeInterface {
     border: 1px solid #59b4d4 !important;
     background: #0078a3 url(/UserInterface/jquery-ui-1.12.1.custom/images/ui-bg_glass_40_0078a3_1x400.png) 50% 50% repeat-x !important;
     font-weight: bold !important;
     color: #ffffff !important;
 }
-.ui-widget,
-.ui-slider-handle {
+
+.ui-widget , .ui-slider-handle , .customRocketNameTextfield , .ui-tabs {
     outline: none;
 }
+
 .menuButton {
     width: 42px;
 }
-.mainHeading {
+
+.mainHeading{
     color: rgb(255, 140, 0);
     /*font-size: 17px;*/
 }
-.metersLabel {
-    float: left;
+
+.metersLabel{
+    float:left;
 }
+
 input {
-    color: white;
+    color:white;
 }
