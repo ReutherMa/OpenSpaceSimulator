@@ -518,15 +518,6 @@ function buildUniverse() {
             particleSystem = new THREE.GPUParticleSystem( {
 				maxParticles: 10000
 			} );
-        
-          /*  var r = 0; //spaceObjects.earth.radius;
-            var xE = r * Math.sin(Math.PI/180 * 45) * Math.cos(Math.PI/180 * 90);
-            var yE = r * Math.sin(Math.PI/180 * 45) * Math.sin(Math.PI/180 * 90);
-            var zE = r * Math.cos(Math.PI/180 * 45);*/
-            particleSystem.position.x = 0;
-            particleSystem.position.z = 0;
-            particleSystem.position.y = 0;
-            //launchpadGroup.add( particleSystem );
             rocketGroup.add(particleSystem);
         
         options = {
@@ -706,10 +697,11 @@ function buildUniverse() {
                 }
                     
             mesh = new THREE.Mesh(geometry, material);
+                
+            //SHADOW
+            /*
             arr_mesh.push(mesh);
 
-            //SHADOW
-                /*
             meshVol = new THREE.Mesh(geoVol);
             sceneVol.add(meshVol);
             
@@ -1064,7 +1056,6 @@ var clock = new THREE.Clock();
 			if ( delta > 0 ) {
                 spawnerOptions.spawnRate = throttle*150;
                 options.lifetime = throttle/50;
-				for ( var x = 0; x < spawnerOptions.spawnRate * delta; x++ ) {
                 for ( var x = 0; x < spawnerOptions.spawnRate * delta; x++ ) {
 					particleSystem.spawnParticle( options );
 				}
