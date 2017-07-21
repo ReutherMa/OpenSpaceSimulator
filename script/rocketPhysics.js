@@ -32,19 +32,29 @@ const MAX_POINTS_R = 5000;
             
 // attributes
 var positions_rocket = new Float32Array( MAX_POINTS_R * 3 ); // 3 vertices per point
+var positions_rocket_future = new Float32Array( MAX_POINTS_R * 3 ); // 3 vertices per point
 
 if(geo_buf_rocket){
-    geo_buf_rocket.addAttribute( 'position', new THREE.BufferAttribute( positions_rocket, 3 ) );
+    geo_buf_rocket.addAttribute( 'position', new THREE.BufferAttribute( positions_rocket_future, 3 ) );
+}
+if(geo_buf_rocket_future){
+    geo_buf_rocket_future.addAttribute( 'position', new THREE.BufferAttribute( positions_rocket, 3 ) );
 }
 
 // draw range
 var drawCount_rocket = 0; // draw the first 2 points, only
 geo_buf_rocket.setDrawRange( 0, drawCount_rocket );
+// draw range
+var drawCount_rocket_future = 0; // draw the first 2 points, only
+geo_buf_rocket_future.setDrawRange( 0, drawCount_rocket_future );
 
 var mat_geo_rocket = new THREE.LineBasicMaterial( { color: 0xff0000, linewidth: 1 } );
 
 // line
 var geo_line_rocket = new THREE.Line( geo_buf_rocket,  mat_geo_rocket );
+
+var mat_geo_rocket_future = new THREE.LineBasicMaterial( { color: 0xff00ff, linewidth: 1 } );
+var geo_line_rocket_future = new THREE.Line( geo_buf_rocket,  mat_geo_rocket_future );
 
 var oldX_R = 1;
 var oldY_R = 1;
@@ -74,17 +84,39 @@ function drawRocketTrail(x, y, z){
     
 
     geo_line_rocket.name = "rkt_line";
+}
+
+function drawFlightPrognosis(x, y, z){
+    if (drawCount_rocket_future > MAX_POINTS_R - 3) {
+        // sliding buffer wäre besser (2x MAX_POINTS Größe)
+        positions_rocket_future.copyWithin (0, 3);
+        drawCount_rocket_future--;
     }
-function drawFlightPrognosis(){
     
+    var currentVec = new THREE.Vector3( x, y, z);
+    //if ( Math.abs(x - oldX) >= 1e9 || Math.abs(y - oldY >= 1e11) ||  Math.abs(z - oldZ >= 1e7)){
+    //if ( Math.abs(currentVec.dot(oldVec) >= 1.2e5) ){
+     oldX_R = positions_rocket_future[drawCount_rocket_future*3]   = x;
+     oldY_R = positions_rocket_future[drawCount_rocket_future*3+1] = y;
+     oldZ_R = positions_rocket_future[drawCount_rocket_future*3+2] = z;  
+     oldVec_R = new THREE.Vector3(oldX_R, oldY_R, oldZ_R);
+     drawCount_rocket_future ++;
+    //}
+    
+    geo_buf_rocket_future.attributes.position.needsUpdate = true;
+    geo_buf_rocket_future.setDrawRange( 0, drawCount_rocket );
+    
+
+    geo_line_rocket_future.name = "rkt_line_future";
 }
 
 
 function calculateGravitationRocket(difftime){
     for (var o in spaceObjects) {
-        if (spaceObjects[o].name == "rocket") {
+        if ( spaceObjects[o].name == "rocket") {
             continue;
         }
+        if(spaceObjects[o].name = "earth"){
         var rx = spaceObjects[o].group.position.x - rocketGroup.position.x;
         var ry = spaceObjects[o].group.position.y - rocketGroup.position.y;
         var rz = spaceObjects[o].group.position.z - rocketGroup.position.z;
@@ -106,6 +138,7 @@ function calculateGravitationRocket(difftime){
             rocketGroup.speed.y += gravAccel * ry * dist * difftime;
             rocketGroup.speed.z += gravAccel * rz * dist * difftime;
         }
+        }
             
         
         //rocket position before launch
@@ -125,6 +158,9 @@ part 1: acceleration of direction and new position
 TODO: prompt
 **/
 function moveRocket(difftime) {
+    
+    
+    scene.updateMatrixWorld();
 
     //calculates fuel-mass that will be lost in difftime
     var mass_lost = difftime / saturnV.stage1.burningtime * saturnV.stage1.mass_fuel * throttle / 100;
@@ -199,7 +235,7 @@ function moveRocket(difftime) {
     // pad height-number with zero and parse to string
     globalInterfaceValues.height = parseInt(rocketHeight);
     console.log("height without zeros: "+rocketHeight);
-    var height = zeroFill(globalInterfaceValues.height, 9);
+    var height = zeroFill(globalInterfaceValues.height, 6);
     console.log(height);
     $('#heightDisplay').val(height).change();
     
@@ -224,6 +260,22 @@ function moveRocket(difftime) {
     
     //drawRocketTrail(earth_vec);    
     drawRocketTrail(rocketGroup.position.x, rocketGroup.position.y, rocketGroup.position.z);    
+    /*for(var i =0; i<=100; i++){
+        //look into future and calculate rocket position
+        var timeywimey = difftime * i * 100;
+        var accelF = (saturnV.stage1.thrust * (throttle/100)) / (mass);         
+        calculateAirResistance(rocketGroup.speed.length());
+        // a = (F(thrust) - F(Air Resistance)) / m(rocketMass)
+        var accelF = ((accel * mass) - airResistance)/mass;
+        //new mass without lost fuel
+        var massF = mass - mass_lost;
+        //current fuel mass for UI
+        var fuel_massF = fuel_mass - mass_lost;
+        var adF = accel * difftime;
+        var pos = new THREE.Vector3(rocketGroup.position.x, rocketGroup.position.y, rocketGroup.position.z);
+        pos.addScaledVector (rocketGroup.speed, timeywimey);
+        drawFlightPrognosis(pos.x, pos.y, pos.z);
+    }*/
     
 }
 
@@ -250,32 +302,32 @@ function rotateRocket(difftime) {
     //checks which rotation key is pressed and determines angle acceleration
     if (globalControlValues.up) {
         //accelOX = accelOX + angle_const;
-        rocketGroup.angularAcceleration.set (xAxis.x, xAxis.y, xAxis.z, 100) .normalize ();
+        rocketGroup.angularAcceleration.set (xAxis.x, xAxis.y, xAxis.z, 1000) .normalize ();
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
         
     }
     if (globalControlValues.down) {
-        rocketGroup.angularAcceleration.set (-xAxis.x, -xAxis.y, -xAxis.z, 100) .normalize ();
-        rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
-        
-    }
-    if (globalControlValues.rollLeft) {
-        rocketGroup.angularAcceleration.set (-yAxis.x, -yAxis.y, -yAxis.z, 100) .normalize ();
+        rocketGroup.angularAcceleration.set (-xAxis.x, -xAxis.y, -xAxis.z, 1000) .normalize ();
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
         
     }
     if (globalControlValues.rollRight) {
-        rocketGroup.angularAcceleration.set (yAxis.x, yAxis.y, yAxis.z, 100) .normalize ();
+        rocketGroup.angularAcceleration.set (-yAxis.x, -yAxis.y, -yAxis.z, 1000) .normalize ();
+        rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
+        
+    }
+    if (globalControlValues.rollLeft) {
+        rocketGroup.angularAcceleration.set (yAxis.x, yAxis.y, yAxis.z, 1000) .normalize ();
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
         
     }
     if (globalControlValues.left) {
-        rocketGroup.angularAcceleration.set (zAxis.x, zAxis.y, zAxis.z, 100) .normalize ();
+        rocketGroup.angularAcceleration.set (zAxis.x, zAxis.y, zAxis.z, 1000) .normalize ();
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
         
     }
     if (globalControlValues.right) {
-        rocketGroup.angularAcceleration.set (-zAxis.x, -zAxis.y, -zAxis.z, 100) .normalize ();
+        rocketGroup.angularAcceleration.set (-zAxis.x, -zAxis.y, -zAxis.z, 1000) .normalize ();
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
         
     }
@@ -296,6 +348,14 @@ function rotateRocket(difftime) {
     
     rocketGroup.quaternion.multiply (rocketGroup.angularMomentum);
     sphere_nav.quaternion.multiply(rocketGroup.angularMomentum);
+    /*var euler = new THREE.Euler( 0.5*Math.PI, 0, 0, 'XYZ' );
+    var quat = new THREE.Quaternion(0,0,0,1);
+    quat.setFromEuler(euler);
+    var quaty = new THREE.Quaternion(0,0,0,1);
+    quaty = rocketGroup.angularMomentum.clone();
+    quaty.multiply(quat);
+    sphere_nav.quaternion.multiply(quaty);
+    */
 }
 
 /*
@@ -424,3 +484,4 @@ function checkForCollision(){
     }
     
 }
+
