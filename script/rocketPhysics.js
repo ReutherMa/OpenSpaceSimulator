@@ -213,9 +213,6 @@ function moveRocket(difftime) {
     dRocketHeight = rocketHeightVec.addScaledVector(rocketStartPosition, -1);
     if(dRocketHeight.length() <= 500000){
         rocketHeight = dRocketHeight.length();
-        console.log(dRocketHeight);
-        console.log(rocketHeightVec);
-        console.log(rocketStartPosition);
     }else{
         //this is the height of the rocket compared to earth's surface
         rocketHeightVec.addScaledVector (spaceObjects.earth.group.position, -1);
@@ -234,9 +231,7 @@ function moveRocket(difftime) {
     }
     // pad height-number with zero and parse to string
     globalInterfaceValues.height = parseInt(rocketHeight);
-    console.log("height without zeros: "+rocketHeight);
     var height = zeroFill(globalInterfaceValues.height, 6);
-    console.log(height);
     $('#heightDisplay').val(height).change();
     
     //convert speed/difftime to km/h and then convert to percentual
@@ -389,7 +384,6 @@ function nextStage() {
         if(saturnV[newStage]==undefined){
             noStagesLeft = true;
             prompt("There are no stages left.");
-            console.log("no stages left, brah");
         }else{
             mass = mass - saturnV[oldStage]["mass_empty"] - fuel_mass;
             fuel_mass = saturnV[newStage]["mass_empty"];
@@ -398,7 +392,6 @@ function nextStage() {
             globalInterfaceValues.stage++;
             $('#currentStageDisplay').val(globalInterfaceValues.stage).change();
             globalInterfaceValues.discardStage = false;
-            console.log("yo i discarded dis stage for ya");
         }
     }else{
         //prompt("No more stages left! Sorry!");

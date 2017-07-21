@@ -123,7 +123,7 @@ function calculatePhysics(difftime, spaceObjects) {
         checkForCollision();
             //throttleSound.setVolume(globalControlValues.throttle/100);
         
-    } else if (globalControlValues.throttle) {
+    } else if (throttle >= 0) {
         global.audio = true;
         if (throttle == 100) {
             global.started = true;
@@ -137,6 +137,9 @@ function calculatePhysics(difftime, spaceObjects) {
         }
     }
     
+    if(throttleSound){
+        throttleSound.setVolume(throttle/100);
+    }
     
     if( globalControlValues.throttle && throttle<100 ){
         throttle += 5;
