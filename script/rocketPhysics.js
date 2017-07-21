@@ -300,13 +300,13 @@ function rotateRocket(difftime) {
     
     //rocketGroup.angularAcceleration.set (0, 0, 0, 1);
     //checks which rotation key is pressed and determines angle acceleration
-    if (globalControlValues.up) {
+    if (globalControlValues.right) {
         //accelOX = accelOX + angle_const;
         rocketGroup.angularAcceleration.set (xAxis.x, xAxis.y, xAxis.z, 1000) .normalize ();
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
         
     }
-    if (globalControlValues.down) {
+    if (globalControlValues.left) {
         rocketGroup.angularAcceleration.set (-xAxis.x, -xAxis.y, -xAxis.z, 1000) .normalize ();
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
         
@@ -321,12 +321,12 @@ function rotateRocket(difftime) {
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
         
     }
-    if (globalControlValues.left) {
+    if (globalControlValues.up) {
         rocketGroup.angularAcceleration.set (zAxis.x, zAxis.y, zAxis.z, 1000) .normalize ();
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
         
     }
-    if (globalControlValues.right) {
+    if (globalControlValues.down) {
         rocketGroup.angularAcceleration.set (-zAxis.x, -zAxis.y, -zAxis.z, 1000) .normalize ();
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
         

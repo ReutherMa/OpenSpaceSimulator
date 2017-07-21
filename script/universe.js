@@ -1,7 +1,7 @@
 /* 
 This program is licensed under the GNU General Public License as described in the file „LICENSE“
 Copyright (C) 2017 TH Nürnberg
-Authors: Marius Reuther, Franziska Braun, Lea Uhlenbrock, Selina Forster, Theresa Breitenhuber, Marco Lingenhöl
+Authors: Marius Reuther Franziska Braun, Lea Uhlenbrock, Selina Forster, Theresa Breitenhuber, Marco Lingenhöl
 Contact: openspacesimulation@gmail.com
 */
 
@@ -43,7 +43,6 @@ var scene;
 var readyVars = {
     physics : false,
     rocket : false,
-    particleSystem : false,
     planets : false,
     interface : false,
     navball : false,
@@ -51,8 +50,9 @@ var readyVars = {
     ground: false,
     skybox: false,
     earthshader : false,
-    animate : false,
-    render : false
+    render : false,
+    particleSystem : false,
+    animate : false
 }
 
 var renderCounter = 0;
@@ -68,7 +68,7 @@ function buildUniverse() {
     var container;
     //, stats
 
-    var scene, sceneVol, ui_scene, renderer;
+    var sceneVol, ui_scene, renderer;
 
     var segments = 64;
     var group_galaxy;
@@ -113,8 +113,6 @@ function buildUniverse() {
     //universe functions
     universe.init = init;
     universe.render = render;
-    
-    //universe.animate = animate;
     
     //uniforms
     uniforms1 = {
@@ -171,7 +169,6 @@ function buildUniverse() {
                 throttleSound.setLoop(true);
         });
         
-        
         /* Helpers 
         //axisHelper
         var axisHelper = new THREE.AxisHelper(1e15); //
@@ -192,9 +189,10 @@ function buildUniverse() {
         buildPlanets(data);
         placeRocket();
         placeLaunchpad();
-        placeGround();
-        buildNavBall();
         
+        placeGround();
+        
+        buildNavBall();
         
         
         //lensflare
@@ -214,7 +212,9 @@ function buildUniverse() {
         //lensFlare.position.set(0,0,0);
         scene.add( lensFlare );
         */
-
+        
+        
+        
         
         
         
@@ -246,7 +246,14 @@ function buildUniverse() {
         
         
         
-      
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -298,8 +305,8 @@ function buildUniverse() {
 
         var skyGeometry = new THREE.CubeGeometry(1e17, 1e17, 1e17); //26
         var skyMaterial = new THREE.MeshFaceMaterial(materialArray);
-        //skyMaterial.depthTest = false; for Lensflare
         var skyBox = new THREE.Mesh(skyGeometry, skyMaterial);
+        //skyMaterial.depthTest = false; for Lensflare
         scene.add(skyBox);
         readyVars.skybox = true;
     }
@@ -414,15 +421,16 @@ function buildUniverse() {
         matrix = matrix.makeRotationFromQuaternion ( quaternion );
         matrix.extractBasis(xAxis, yAxis, zAxis);
         earthGroup.angularMomentum.set (yAxis.x, yAxis.y, yAxis.z, 50) .normalize ();
-        earthGroup.quaternion.multiply(earthGroup.angularMomentum);
+        //earthGroup.quaternion.multiply(earthGroup.angularMomentum);
         var loader = new THREE.ColladaLoader(); 
-        loader.options.convertUpAxis = true;
-        
+        loader.options.convertUpAxis = true; 
         loader.load("models/saturnV_3.dae", function(collada) {   
             rocketGroup = new THREE.Group();
+            
             rocketGroup.add(mp);
             
-            rocket = collada.scene;   //var skin = collada.skins[ 0 ];
+            rocket = collada.scene;   
+            //var skin = collada.skins[ 0 ];
             //rocket.scale.set(695508e3, 695508e3, 695508e3);
             rocketGroup.add(rocket);
             scene.add(rocketGroup);
@@ -430,21 +438,25 @@ function buildUniverse() {
             var xE = r * Math.sin(Math.PI/180 * 45) * Math.cos(Math.PI/180 * 90);
             var yE = r * Math.sin(Math.PI/180 * 45) * Math.sin(Math.PI/180 * 90);
             var zE = r * Math.cos(Math.PI/180 * 45);
+            var vec = new THREE.Vector3(xE, yE, zE);
+            vec = vec.applyAxisAngle ( 1,0,0, Math.PI/180 * 120 );
             //rocketGroup.position.x = spaceObjects.earth.group.position.x + xE + 1;
             //rocketGroup.position.y = spaceObjects.earth.group.position.y + yE + 1;
             //rocketGroup.position.z = spaceObjects.earth.group.position.z + zE + 1;
             rocketGroup.position.x =  earthGroup.position.x + xE;
             rocketGroup.position.y =  earthGroup.position.y + yE;
             rocketGroup.position.z =  earthGroup.position.z + zE;
+            
+            
             rocketGroup.speed = new THREE.Vector3 (0, 0, 0);
-            rocketGroup.rotateX(Math.PI/180 * 45);
+            //rocketGroup.rotateX(Math.PI/180 * 45);
             rocketGroup.angularMomentum = new THREE.Quaternion(0,0,0,1);
             rocketGroup.angularAcceleration = new THREE.Quaternion(0,0,0,1);
             //earthGroup.add(rocketGroup);
             rocketGroup.add(throttleSound);
             buildFire();
-            
         });
+
         if(geo_line_rocket) scene.add( geo_line_rocket );
         //var rocketObject = new SpaceObject();
         readyVars.rocket = true;
@@ -457,8 +469,8 @@ function buildUniverse() {
         var earthGroup = spaceObjects.earth.group;
         var loader = new THREE.ColladaLoader(); 
         loader.options.convertUpAxis = true; 
-        launchpadGroup = new THREE.Group();
         loader.load("models/launchpad_font.dae", function(collada) {
+            launchpadGroup = new THREE.Group();
             launchpad = collada.scene;   //var skin = collada.skins[ 0 ];
             launchpad.scale.set(10, 10, 10);
             launchpadGroup.add(launchpad);
@@ -468,13 +480,11 @@ function buildUniverse() {
             var zE = r * Math.cos(Math.PI/180 * 45);
             launchpadGroup.position.x = xE;
             launchpadGroup.position.y = yE +3 ;
-            launchpadGroup.position.y = yE + 4;
             launchpadGroup.position.z = zE;
-            launchpad.rotateX(Math.PI/180 * 45);
+            launchpadGroup.rotateX(Math.PI/180 * 45);
             //launchpadGroup.position.set(0, 0, 0 );
             earthGroup.add(launchpadGroup);
         });
-    
         readyVars.launchpad = true;
     }
     
@@ -517,7 +527,7 @@ function buildUniverse() {
             rocketGroup.add(particleSystem);
         
         options = {
-				position: new THREE.Vector3(),
+            position: new THREE.Vector3(),
 				positionRandomness: 0,
 				velocity: new THREE.Vector3(),
 				velocityRandomness: 1.3,
@@ -537,8 +547,7 @@ function buildUniverse() {
 				verticalSpeed: 1,
 				timeScale: 1
 			};
-        
-        readyVars.particleSystem = true;
+            readyVars.particleSystem = true;
     }
 
     /* create a planet with mesh, position and orbit */
@@ -553,7 +562,7 @@ function buildUniverse() {
         this.speedx = speedx;
         this.speedy = speedy;
         this.speedz = speedz;
-        
+
         /* This builds the Body */
         this.buildBody = function() {
 
@@ -565,7 +574,6 @@ function buildUniverse() {
                 
                 geometry = new THREE.SphereGeometry(radius, segments, segments);
                 material = new THREE.MeshBasicMaterial();
-                //material.depthTest = false; for lensFlare
                 if(loadTextures){
                     material.map = loader.load('textures/sun_map_2.jpg');
                 }
@@ -640,6 +648,7 @@ function buildUniverse() {
                     var light_earth = new THREE.PointLight( 0xffffff, 1, 1e10, 2 );
                     
                     group.add( light_earth );
+                    //material.depthTest = false; for lensFlare
                     if(loadTextures){
 
                     material = new THREE.ShaderMaterial( {
@@ -872,7 +881,6 @@ function buildUniverse() {
         
     }
     
-    
     /* This is called when UI is changed */
     function UIChanges() {
 
@@ -958,13 +966,12 @@ function buildUniverse() {
     }
     
 
+var clock = new THREE.Clock();
     /* This renders the scene */
     function render() {
         
         requestAnimationFrame(render);
-        
-        
-     //   if (particleSystem != undefined){
+         //   if (particleSystem != undefined){
        //  animate();
         
      //   }
@@ -1058,7 +1065,7 @@ function buildUniverse() {
                 //options.position.x = rocketGroup.position.x;
                 //options.position.y = rocketGroup.position.y;
                 //options.position.z = rocketGroup.position.z;
-				for ( var x = 0; x < spawnerOptions.spawnRate * delta; x++ ) {
+                for ( var x = 0; x < spawnerOptions.spawnRate * delta; x++ ) {
 					particleSystem.spawnParticle( options );
 				}
 			}
@@ -1128,16 +1135,7 @@ function buildUniverse() {
             controls.update();
         }*/
         
-        //checks if all resources are loaded, removes loading screen(div)
         
-        var everythingLoaded = setTimeout(function() {
-            if (document.readyState === "complete" && renderCounter == 0) {
-                clearInterval(everythingLoaded);
-                loadingDone();
-                console.log("loading done");
-                renderCounter++;
-            }
-        }, 100);
         
         
         
@@ -1158,6 +1156,16 @@ function buildUniverse() {
         lasttime = now;
         lastPos = newPos;
         renderCount++;
+        
+        //checks if all resources are loaded, removes loading screen(div)
+        var everythingLoaded = setTimeout(function() {
+            if (document.readyState === "complete" && renderCounter == 0) {
+                clearInterval(everythingLoaded);
+                loadingDone();
+                console.log("loading done");
+                renderCounter++;
+            }
+        }, 100);
     }
 
     return universe;
