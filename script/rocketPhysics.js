@@ -12,6 +12,8 @@ collision calculation
 TODO: trail point
 */
 
+var rocketHeightVec = new THREE.Vector3(0, 0, 0);
+
 var rocketHeight;
 
 var earthRadius = 0;
@@ -122,7 +124,7 @@ function calculateGravitationRocket(difftime){
         var rz = spaceObjects[o].group.position.z - rocketGroup.position.z;
         var dist2 = rx * rx + ry * ry + rz * rz;
         var dist = Math.sqrt(dist2);
-        var mindist = 10000;
+        var mindist = 1;
         if(dist2 < mindist){
             prompt("You are getting dangerously close to "+spaceObjects[o].name+", watch out!");
         }
@@ -132,11 +134,12 @@ function calculateGravitationRocket(difftime){
 
         if (dist2 > mindist) {
             var gravAccel = gravConst * spaceObjects[o].mass / dist2;
+            console.log("gravAccel: " + gravAccel);
             if(ctr==0){accel=0;ctr++;}
             dist = 1 / dist;
-            rocketGroup.speed.x += gravAccel * rx * dist * difftime;
-            rocketGroup.speed.y += gravAccel * ry * dist * difftime;
-            rocketGroup.speed.z += gravAccel * rz * dist * difftime;
+            rocketGroup.speed.x -= gravAccel * rx * dist * difftime;
+            rocketGroup.speed.y -= gravAccel * ry * dist * difftime;
+            rocketGroup.speed.z -= gravAccel * rz * dist * difftime;
         }
         }
             
@@ -158,10 +161,9 @@ part 1: acceleration of direction and new position
 TODO: prompt
 **/
 function moveRocket(difftime) {
-    
-    
     scene.updateMatrixWorld();
 
+    var difftime = difftime/1000;
     //calculates fuel-mass that will be lost in difftime
     var mass_lost = difftime / saturnV.stage1.burningtime * saturnV.stage1.mass_fuel * throttle / 100;
     
@@ -207,7 +209,7 @@ function moveRocket(difftime) {
     rocketGroup.position.addScaledVector (rocketGroup.speed, difftime);
     //rocketGroup.position.addVectors( rocketGroup.position, rocketGroup.speed.multiplyScalar( difftime ));
     
-    var rocketHeightVec = rocketGroup.position.clone();
+    rocketHeightVec = rocketGroup.position.clone();
     //confusing: this is the height from the actual starting position of the rocket
     var dRocketHeight = new THREE.Vector3();
     dRocketHeight = rocketHeightVec.addScaledVector(rocketStartPosition, -1);

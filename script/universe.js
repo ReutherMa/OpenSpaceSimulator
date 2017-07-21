@@ -14,7 +14,7 @@ var global = {
 };
 
 //do we want to load textures? false for fast (and ugly) debugging mode
-var loadTextures = false;
+var loadTextures = true;
 var throttleSound;
 var rocket;
 var rocketGroup;
@@ -636,8 +636,6 @@ function buildUniverse() {
                     }*/
                     
                 if (name == "earth" ){
-                    var axisHelper = new THREE.AxisHelper(1e10); //
-                    group.add(axisHelper);
                     
                     var light_earth = new THREE.PointLight( 0xffffff, 1, 1e10, 2 );
                     
@@ -667,6 +665,7 @@ function buildUniverse() {
                         depthWrite: false
                     });
                     var cloudMesh = new THREE.Mesh(geometry_cloud, material_cloud);
+                    cloudMesh.name = "clouds";
                     group.add(cloudMesh);
                     }
                     
@@ -675,7 +674,7 @@ function buildUniverse() {
                     var mat_atmos = new THREE.MeshLambertMaterial({
                         color: 0x00bfff,
                         side: THREE.DoubleSide,
-                        opacity: 0.1,
+                        opacity: 0.0,
                         transparent: true,
                         depthWrite: false
                     });
@@ -951,9 +950,15 @@ function buildUniverse() {
     function calcOpacity(){
         var focusedObj = globalInterfaceValues.planetCamera;
             if(focusedObj == "rocket" || focusedObj == "launchpad"){
-                var nb = 1 - (rocketGroup.position.length() - spaceObjects.earth.radius) *0.00001;
-                var op = THREE.Math.clamp(nb, 0.1, 0.9);
-                //console.log("Opacity: " + spaceObjects.earth.group.children[3].material.opacity);
+                if (rocketHeightVec.length()){
+                    var vec = new THREE.Vector3();
+                    var nb = 1 - ((rocketHeightVec.length()) *0.00001);
+                    var op = THREE.Math.clamp(nb, 0.1, 0.9);
+                    console.log("vec length: " + rocketHeightVec.length());
+                    console.log("nb: " + nb);
+                    console.log("op: " + op);
+                    console.log("Opacity: " + spaceObjects.earth.group.children[2].material.opacity);   
+                }
             }
         else op = 0.1;
         return op;
@@ -1040,14 +1045,14 @@ var clock = new THREE.Clock();
 
 
         /* Earth cloudmap moving */
-        spaceObjects.earth.group.children[2].rotateY(0.00015 * globalInterfaceValues.timeFactor);
-        spaceObjects.earth.group.children[2].rotateX(0.00005);
+        spaceObjects.earth.group.children[1].rotateY(0.00015 * globalInterfaceValues.timeFactor);
+        spaceObjects.earth.group.children[1].rotateX(0.00005);
         
         
         
         if(rocketGroup){
             //Atmosphere
-            spaceObjects.earth.group.children[3].material.opacity = calcOpacity();
+            spaceObjects.earth.group.children[2].material.opacity = calcOpacity();
             
             //Rocket-Fire
             var delta = difftime; //clock.getDelta() * spawnerOptions.timeScale;
