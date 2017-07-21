@@ -206,7 +206,7 @@ function calculatePhysics(difftime, spaceObjects) {
                 scene.updateMatrixWorld();
                 rocketGroup.quaternion.setFromRotationMatrix( launchpadGroup.matrixWorld );
                 //rocketGroup.position.setFromMatrixPosition( launchpadGroup.matrixWorld );
-                rocketGroup.position.set (0, -1.5, 0);
+                rocketGroup.position.set (0.9, 1.5, -1.65);
                 launchpadGroup.localToWorld (rocketGroup.position);
             }
         }
