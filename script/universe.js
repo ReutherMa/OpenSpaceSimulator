@@ -15,7 +15,7 @@ var global = {
 
 //do we want to load textures? false for fast (and ugly) debugging mode
 var loadTextures = false;
-//var throttleSound;
+var throttleSound;
 var rocket;
 var rocketGroup;
 var launchpad;
@@ -23,8 +23,8 @@ var launchpadGroup;
 
 var particleSystem;
 var spawnerOptions;
-var firePower; 
 var options;
+var firePower; 
 var tick = 0;
 var clock = new THREE.Clock();
 
@@ -75,7 +75,7 @@ function buildUniverse() {
     var group_galaxy;
     var sun, earth, moon, mercury, venus, mars, jupiter, saturn, uranus, neptune;
     var camElement;
-    var audioLoader, audioListener, throttleSound, sound;
+    var audioLoader, audioListener, sound;
     
     var uniforms1;
     var mesh_sun;
@@ -91,17 +91,17 @@ function buildUniverse() {
     var height_atmos = 100000;
     var renderCount = 0;
     
+    //SHADOW
     
-//SHADOW    
     //Variables for shadow
     //var mesh_torus,    mesh_ground,    mesh_moon,    mesh_earth,    mesh_mars;
     //var meshVol_torus, meshVol_ground, meshVol_moon, meshVol_earth, meshVol_mars;
-/*    var arr_geoVol  = [];
+    /*var arr_geoVol  = [];
     var arr_faceNum = [];
     var arr_shader  = [];
     var arr_meshVol = [];
     var arr_mesh    = [];
-    
+    */
     var un_test = {
         texture: { value: loader.load( "textures/earth_moon_map.jpg" ) }
     };
@@ -111,7 +111,6 @@ function buildUniverse() {
     
     var lightVec = new THREE.Vector3( -1, -1, -1);         
     var light = new THREE.Vector3().copy(lightVec).negate().normalize();
-    */
 
     //universe functions
     universe.init = init;
@@ -170,6 +169,8 @@ function buildUniverse() {
                 throttleSound.setBuffer( buffer );
                 throttleSound.setRefDistance( 200 );
                 throttleSound.setLoop(true);
+                throttleSound.setVolume(0.0);
+                throttleSound.play();
         });
         
         /* Helpers 
@@ -192,7 +193,9 @@ function buildUniverse() {
         buildPlanets(data);
         placeRocket();
         placeLaunchpad();
+        
         placeGround();
+        
         buildNavBall();
         
         
@@ -215,7 +218,12 @@ function buildUniverse() {
         */
         
         
-//Shadow
+        
+        
+        
+        
+        
+        //Shadow
        /* shadowVolume_mat = new THREE.ShaderMaterial({
             vertexShader: document.getElementById('shadowVolume_vs').textContent,
             vertexColors: THREE.VertexColors,
@@ -237,6 +245,21 @@ function buildUniverse() {
             vertexShader: document.getElementById('diffSpec_spaceObj_vs').textContent,
             fragmentShader: document.getElementById('diffSpec_spaceObj_fs').textContent
         });*/
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
 
         //renderer
@@ -495,8 +518,17 @@ function buildUniverse() {
             particleSystem = new THREE.GPUParticleSystem( {
 				maxParticles: 10000
 			} );
+        
+          /*  var r = 0; //spaceObjects.earth.radius;
+            var xE = r * Math.sin(Math.PI/180 * 45) * Math.cos(Math.PI/180 * 90);
+            var yE = r * Math.sin(Math.PI/180 * 45) * Math.sin(Math.PI/180 * 90);
+            var zE = r * Math.cos(Math.PI/180 * 45);*/
+            particleSystem.position.x = 0;
+            particleSystem.position.z = 0;
+            particleSystem.position.y = 0;
+            //launchpadGroup.add( particleSystem );
             rocketGroup.add(particleSystem);
-    
+        
         options = {
             position: new THREE.Vector3(),
 				positionRandomness: 0,
@@ -509,6 +541,9 @@ function buildUniverse() {
                 size: 2,
                 sizeRandomness: 2
         };
+        options.position.x = 0;
+        options.position.z = 0;
+        options.position.y = 0;
         spawnerOptions = {
 				spawnRate: 0,
 				horizontalSpeed: 1,
@@ -518,7 +553,6 @@ function buildUniverse() {
             readyVars.particleSystem = true;
     }
 
-    
     /* create a planet with mesh, position and orbit */
     //SpaceObject(name of object, mass of object, radius(size) of object, parameters, in which group object is)
     function SpaceObject(name, mass, radius, color, group, speedx, speedy, speedz) {
@@ -560,7 +594,7 @@ function buildUniverse() {
                 
                 geometry = new THREE.SphereGeometry(radius, segments, segments);
                 
-//SHADOW
+                //SHADOW
                 /*geoVol   = new THREE.SphereGeometry(radius, segments, segments);
                 geoVol_faceNum = geoVol.faces.length;
                 
@@ -672,9 +706,10 @@ function buildUniverse() {
                 }
                     
             mesh = new THREE.Mesh(geometry, material);
-            
-//SHADOW            
-/*            arr_mesh.push(mesh);
+            arr_mesh.push(mesh);
+
+            //SHADOW
+                /*
             meshVol = new THREE.Mesh(geoVol);
             sceneVol.add(meshVol);
             
@@ -688,7 +723,19 @@ function buildUniverse() {
                 
             arr_shader.push(shaderName);*/
                 
-            group.rotateX(Math.PI/180 * 120);         
+                
+                
+                
+            
+                
+            group.rotateX(Math.PI/180 * 120);
+            
+            if(name == "earth"){
+                //group.position.x = Math.cos(0)*23.4393;
+                //group.position.y = Math.sin(0)*23.4393;
+                //group.position.z = Math.cos(0)*23.4393;
+            }
+                
             group.add(mesh);
             }
             
@@ -916,7 +963,7 @@ function buildUniverse() {
                 var op = THREE.Math.clamp(nb, 0.1, 0.9);
                 //console.log("Opacity: " + spaceObjects.earth.group.children[3].material.opacity);
             }
-            else op = 0.1;
+        else op = 0.1;
         return op;
     }
     
@@ -987,16 +1034,16 @@ var clock = new THREE.Clock();
         
         
         /* audio check */
-        if (global.audio){
+        /*if (global.audio){
             throttleSound.play();
             global.audio = false;
-        }
+        }*/
         if (globalControlValues.sound){
             throttleSound.setVolume(0);
             sound.setVolume(0);
         } else {
             sound.setVolume(1.0);
-            throttleSound.setVolume(1.0);
+            //throttleSound.setVolume(1.0);
         }
 
 
@@ -1005,27 +1052,20 @@ var clock = new THREE.Clock();
         spaceObjects.earth.group.children[2].rotateX(0.00005);
         
         
+        
         if(rocketGroup){
             //Atmosphere
             spaceObjects.earth.group.children[3].material.opacity = calcOpacity();
+            
             //Rocket-Fire
             var delta = difftime; //clock.getDelta() * spawnerOptions.timeScale;
 			tick += delta;
 			if ( tick < 0 ) tick = 0;
 			if ( delta > 0 ) {
-<<<<<<< Updated upstream
-				//options.position.x = Math.sin( tick * spawnerOptions.horizontalSpeed ) * 5;
-				//options.position.y = Math.sin( tick * spawnerOptions.verticalSpeed ) * 5;
-                //options.position.z = Math.sin( tick * spawnerOptions.horizontalSpeed + spawnerOptions.verticalSpeed ) * 5;
-                //options.position.x = rocketGroup.position.x;
-                //options.position.y = rocketGroup.position.y;
-                //options.position.z = rocketGroup.position.z;
-                for ( var x = 0; x < spawnerOptions.spawnRate * delta; x++ ) {
-=======
                 spawnerOptions.spawnRate = throttle*150;
                 options.lifetime = throttle/50;
 				for ( var x = 0; x < spawnerOptions.spawnRate * delta; x++ ) {
->>>>>>> Stashed changes
+                for ( var x = 0; x < spawnerOptions.spawnRate * delta; x++ ) {
 					particleSystem.spawnParticle( options );
 				}
 			}
@@ -1052,9 +1092,9 @@ var clock = new THREE.Clock();
         
         
         
-        
-//SHADOW
-        /*renderer.clear();
+        //SHADOW
+        /*
+        renderer.clear();
         var gl = renderer.context;
         
         for (var i = 0; i<arr_mesh; i++){
@@ -1119,7 +1159,6 @@ var clock = new THREE.Clock();
             if (document.readyState === "complete" && renderCounter == 0) {
                 clearInterval(everythingLoaded);
                 loadingDone();
-                console.log("loading done");
                 renderCounter++;
             }
         }, 100);
