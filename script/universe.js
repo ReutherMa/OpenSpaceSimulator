@@ -91,10 +91,11 @@ function buildUniverse() {
     var renderCount = 0;
     
     
+//SHADOW    
     //Variables for shadow
     //var mesh_torus,    mesh_ground,    mesh_moon,    mesh_earth,    mesh_mars;
     //var meshVol_torus, meshVol_ground, meshVol_moon, meshVol_earth, meshVol_mars;
-    var arr_geoVol  = [];
+/*    var arr_geoVol  = [];
     var arr_faceNum = [];
     var arr_shader  = [];
     var arr_meshVol = [];
@@ -109,6 +110,7 @@ function buildUniverse() {
     
     var lightVec = new THREE.Vector3( -1, -1, -1);         
     var light = new THREE.Vector3().copy(lightVec).negate().normalize();
+    */
 
     //universe functions
     universe.init = init;
@@ -189,9 +191,7 @@ function buildUniverse() {
         buildPlanets(data);
         placeRocket();
         placeLaunchpad();
-        
         placeGround();
-        
         buildNavBall();
         
         
@@ -214,14 +214,8 @@ function buildUniverse() {
         */
         
         
-        
-        
-        
-        
-        
-        
-        //Shadow
-        shadowVolume_mat = new THREE.ShaderMaterial({
+//Shadow
+       /* shadowVolume_mat = new THREE.ShaderMaterial({
             vertexShader: document.getElementById('shadowVolume_vs').textContent,
             vertexColors: THREE.VertexColors,
             fragmentShader: document.getElementById('shadowVolume_fs').textContent
@@ -241,22 +235,7 @@ function buildUniverse() {
             uniforms: { l: {type: "v3", value: light} },
             vertexShader: document.getElementById('diffSpec_spaceObj_vs').textContent,
             fragmentShader: document.getElementById('diffSpec_spaceObj_fs').textContent
-        });
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+        });*/
         
 
         //renderer
@@ -591,8 +570,8 @@ function buildUniverse() {
                 
                 geometry = new THREE.SphereGeometry(radius, segments, segments);
                 
-                //Shadow
-                geoVol   = new THREE.SphereGeometry(radius, segments, segments);
+//SHADOW
+                /*geoVol   = new THREE.SphereGeometry(radius, segments, segments);
                 geoVol_faceNum = geoVol.faces.length;
                 
                 for (var i = 0; i < geoVol_faceNum; i++) {        
@@ -639,7 +618,7 @@ function buildUniverse() {
                         geoVol.faceVertexUvs[0].push([new THREE.Vector2(), new THREE.Vector2(), new THREE.Vector2()]);
                         geoVol.faceVertexUvs[0].push([new THREE.Vector2(), new THREE.Vector2(), new THREE.Vector2()]);
                     
-                    }
+                    }*/
                     
                 if (name == "earth" ){
                     var axisHelper = new THREE.AxisHelper(1e10); //
@@ -703,9 +682,9 @@ function buildUniverse() {
                 }
                     
             mesh = new THREE.Mesh(geometry, material);
-            arr_mesh.push(mesh);
             
-            //Shadow
+//SHADOW            
+/*            arr_mesh.push(mesh);
             meshVol = new THREE.Mesh(geoVol);
             sceneVol.add(meshVol);
             
@@ -717,21 +696,9 @@ function buildUniverse() {
 				fragmentShader: document.getElementById( 'spaceObj_fs' ).textContent
             });
                 
-            arr_shader.push(shaderName);
+            arr_shader.push(shaderName);*/
                 
-                
-                
-                
-            
-                
-            group.rotateX(Math.PI/180 * 120);
-            
-            if(name == "earth"){
-                //group.position.x = Math.cos(0)*23.4393;
-                //group.position.y = Math.sin(0)*23.4393;
-                //group.position.z = Math.cos(0)*23.4393;
-            }
-                
+            group.rotateX(Math.PI/180 * 120);         
             group.add(mesh);
             }
             
@@ -959,9 +926,7 @@ function buildUniverse() {
                 var op = THREE.Math.clamp(nb, 0.1, 0.9);
                 //console.log("Opacity: " + spaceObjects.earth.group.children[3].material.opacity);
             }
-        else {
-            op = 0.1;
-        }
+            else op = 0.1;
         return op;
     }
     
@@ -1096,8 +1061,8 @@ var clock = new THREE.Clock();
         
         
         
-        //Shadow
-        renderer.clear();
+//SHADOW
+        /*renderer.clear();
         var gl = renderer.context;
         
         for (var i = 0; i<arr_mesh; i++){
@@ -1128,7 +1093,7 @@ var clock = new THREE.Clock();
         gl.stencilOpSeparate(gl.BACK, gl.KEEP, gl.KEEP, gl.KEEP);
         gl.depthFunc(gl.LEQUAL);
         gl.stencilFunc(gl.EQUAL, 0, 0xFF);
-        renderer.render(scene, camera);
+        renderer.render(scene, camera);*/
         
         /**if (stats !== undefined) {
             stats.update();
