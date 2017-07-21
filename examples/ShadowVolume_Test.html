@@ -17,6 +17,7 @@
         <!-- SHADOW VOLUME Vertex Shader -->
         <script id="shadowVolume_vs" type="x-shader/x-vertex">
             const vec3 lightpos = vec3 (0.0, 7.0, 0.0);   // in world coords
+varying vec4 col;
             
 #include <common>
 #include <logdepthbuf_pars_vertex>
@@ -32,7 +33,7 @@
                 
                 if(dot(extrudeVec_, normalVec) < 0.0 && vColor[0] != 0.0) {
                     gl_Position = projectionMatrix * (modelViewMatrix * vec4(position, 1.0) + 
-                                            vec4 (extrudeVec_, 0.0) * 1000.0);
+                                            vec4 (extrudeVec_, 0.0) * 1e3);
                 }else{
                     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
                 }
@@ -45,12 +46,14 @@
                gl_Position.z = (gl_Position.z - 1.0) * gl_Position.w;
   #endif
 #endif
+col = vec4 (color, 1.0);
             }
 		</script>
         
         
         <!-- SHADOW VOLUME Fragment Shader -->        
         <script id="shadowVolume_fs" type="x-shader/x-fragment">
+varying vec4 col;
             
 #include <logdepthbuf_pars_fragment>
 
@@ -58,8 +61,10 @@
 #if defined(USE_LOGDEPTHBUF) && defined(USE_LOGDEPTHBUF_EXT)
         gl_FragDepthEXT = log2(vFragDepth) * logDepthBufFC * 0.5;
 #endif
-                gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
-			}
+//                gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+gl_FragColor = col;
+gl_FragColor.g = 1.0;
+}
 		</script>
         
         
@@ -275,7 +280,7 @@
                 vUv = uv;
                 normal_ = normalize(normalMatrix * normal);
                 view_ = -vec3(modelViewMatrix * vec4(position, 1.0));
-                light = vec3 (viewMatrix * vec4 (0.0, 7.0, 0.0, 1.0)) + view_;  // licht in weltkoord -> light vector in augenkoord
+                light = vec3 (viewMatrix * vec4 (0.0, 7.0, 0.0, 0.0)) + view_;  // licht in weltkoord -> light vector in augenkoord
                 gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
                 
 #ifdef USE_LOGDEPTHBUF
@@ -366,7 +371,7 @@
                 var r_loader = new THREE.ColladaLoader(); 
                 r_loader.options.convertUpAxis = true; 
                 
-                r_loader.load("models/saturnV_2.dae", 
+                r_loader.load("models/cube_3.dae", 
                               function(collada) {
                                     rocket = collada.scene;   //var skin = collada.skins[ 0 ];
                                     //rocket.scale.set(695508e3, 695508e3, 695508e3);
@@ -424,7 +429,7 @@
                 scene.add(axisHelper);
                 
                 
-                var imagePrefix = "textures/stars_for_skybox1/";
+                var imagePrefix = "textures/white/";
                 var directions = ["xpos", "xneg", "ypos", "yneg", "zpos", "zneg"];
                 var imageSuffix = ".png";
         
@@ -441,44 +446,19 @@
                 scene.add(skyBox);
                 
                    
-                var lightVec = new THREE.Vector3( -1, -1, -1);         
+                var lightVec = new THREE.Vector3( -1, -1, -1);     
                 var light = new THREE.Vector3().copy(lightVec).negate().normalize();
                 
                 
-                //PointLight
-                /*var pointLight = new THREE.PointLight(lightVec);
-                geo_light = new THREE.SphereGeometry(0.5, 64, 64);
-                mat_light = new THREE.MeshBasicMaterial();
-                mesh_light = new THREE.Mesh(geo_light, mat_light);
                 
-                pointLight.add( mesh_light );
-                scene.add( pointLight );*/
-                
-                
-
                 /*      ---   Create all volume geometries for the objects   ---     */
-                
-                //Rocket
-                /*
-                geoVol_rocket = new THREE.Geometry();
-                
-                for (var i = 0; i<vert_rocket.length;i++){
-                    geoVol_rocket.vertices.push(vert_rocket[i]);
-                }
-                for (var j = 0; j<face_rocket.length;j++){
-                    geoVol_rocket.faces.push(face_rocket[j]);
-                }
-                //geoVol_rocket.faces = geoVol_rocket.vertices.length;
-                
-                var geoVol_rocket_faceNum = geoVol_rocket.faces.length;
-                */
                 
                 //Torus
                 var geoVol_torus         = new THREE.TorusKnotGeometry(2, 0.5, 100, 16);
                 var geoVol_torus_faceNum = geoVol_torus.faces.length;
                 
                 //Ground Plate
-                var geoVol_ground         = new THREE.BoxGeometry(75, 0.1, 75);
+                var geoVol_ground         = new THREE.BoxGeometry(128, 0.1, 128);
                 var geoVol_ground_faceNum = geoVol_ground.faces.length;
   
                 //Moon
@@ -501,8 +481,13 @@
                 //faceNum Array
                 var arr_faceNum = [ /*geoVol_rocket_faceNum,*/ geoVol_torus_faceNum, geoVol_ground_faceNum, geoVol_moon_faceNum, geoVol_earth_faceNum, geoVol_mars_faceNum ];
               
+                var color1 = [new THREE.Color(0x00ffff), new THREE.Color(0xff0000), new THREE.Color(0xff0000)];
+                var color2 = [new THREE.Color(0x00ffff), new THREE.Color(0x00ffff), new THREE.Color(0xff0000)];
+                
                 function recurse_geo(group, prepend) {
+                    group.children = group.children.slice();
                     for (var i in group.children){
+                        group.children[i] = group.children[i].clone();
                         //if (group.children[i].name == "___DUMMY_saturnv_ca"){
 //                        if (group.children[i].type == "Mesh"){
                             recurse_geo (group.children[i], prepend+group.name+"-"+i+": ");   
@@ -510,8 +495,14 @@
                         
                     }
                     if (group.geometry !== undefined){
+                        group.geometry = group.geometry.clone();
                         console.log (prepend + group.geometry.faces.length + "Faces");
                         group.geometry.faces = group.geometry.faces.slice();
+                        /*for (var face of group.geometry.faces) {
+                            var tmp = face.b;
+                            face.c = face.b;
+                            face.b = tmp;
+                        }*/
                         arr_geoVol.push  (group.geometry);
                         arr_faceNum.push (group.geometry.faces.length);
                     }
@@ -520,11 +511,8 @@
                 var rocket_vol = rocket.clone();
                 recurse_geo(rocket_vol, "rocket: ");
                 
-                var color1 = [new THREE.Color(0x00ffff), new THREE.Color(0xff0000), new THREE.Color(0xff0000)];
-                var color2 = [new THREE.Color(0x00ffff), new THREE.Color(0x00ffff), new THREE.Color(0xff0000)];
                 
-                
-                for (var j = 0; j<5; j++){
+                for (var j = 0; j<arr_geoVol.length; j++){
                     
                     for (var i = 0; i < arr_faceNum[j]; i++) {
                         
@@ -589,17 +577,24 @@
                 scene.add(mesh_rocket);
                 */
               
+                /*
                 var meshVol_rocket = [];
                 for (var i in arr_geoVol) {
                     if (i<5)
                         continue;
                     var mesh = new THREE.Mesh (arr_geoVol[i]);
                     mesh.position.set (-7,-15,0);
-                    sceneVol.add (mesh);
+                    //sceneVol.add (mesh);
                     meshVol_rocket.push (mesh);
                 }
+                */
                 
-                rocket.position.set (-7,-15,0);
+//                rocket_vol.position.set (-7,-15,0);
+                rocket_vol.position.set (0, 0, 0);
+                sceneVol.add (rocket_vol);
+                
+//                rocket.position.set (-7,-15,0);
+                rocket.position.set (0, 0, 0);
                 scene.add (rocket);
 
                 //TORUS
@@ -617,7 +612,7 @@
                 meshVol_ground.position.set(0, -25, 0);
                 sceneVol.add(meshVol_ground);
                 
-                mesh_ground = new THREE.Mesh(new THREE.BoxGeometry(75, 0.1, 75));
+                mesh_ground = new THREE.Mesh(new THREE.BoxGeometry(128, 0.1, 128));
                 mesh_ground.position.set(0, -25, 0);
                 scene.add(mesh_ground);
                 
@@ -670,7 +665,7 @@
                 
                 //Mars
                 meshVol_mars = new THREE.Mesh(geoVol_mars);
-                meshVol_mars.position.set(7, 0, 0);
+                meshVol_mars.position.set(-3, 0, 0);
                 sceneVol.add(meshVol_mars);
                 
                 un_mars = {
@@ -685,7 +680,7 @@
                 
                 geo_mars  = new THREE.SphereGeometry(0.5, 64, 64);
                 mesh_mars = new THREE.Mesh(geo_mars);
-                mesh_mars.position.set(7, 0, 0);
+                mesh_mars.position.set(-3, 0, 0);
                 scene.add(mesh_mars);
                 
                 
@@ -715,13 +710,13 @@
                 var extrude_size = sceneBoundingBox.box.getSize().length();
                 //var center = sceneBoundingBox.box.getCenter();
                 
-                /*
+                
                 var extrudeVec = new THREE.Vector3();
                 extrudeVec.copy(light).negate().multiplyScalar(extrude_size);
                 
-                var extrudeMat = new THREE.Matrix4();
-                extrudeMat.makeTranslation(extrudeVec.x, extrudeVec.y, extrudeVec.z);
-                */
+/*                var extrudeMat = new THREE.Matrix4();
+                extrudeMat.makeTranslation(extrudeVec.x, extrudeVec.y, extrudeVec.z);*/
+                
                 
                 /*      ---   Create the shader for the shadow materials for each object   ---     */
                 //Shadow Volume Shader for material
@@ -733,13 +728,10 @@
 				});
                 
 
-recurse_geo_material(rocket, shadowVolume_mat);
+//recurse_geo_material(rocket, shadowVolume_mat);
                 
                 //meshVol_rocket.material = shadowVolume_mat;     //Rocket
                 //meshVol_rocket[0].material = shadowVolume_mat;
-                //meshVol_rocket.children[0].children[1].children[0].material = shadowVolume_mat;
-                //meshVol_rocket.children[0].children[2].children[0].material = shadowVolume_mat;
-                //meshVol_rocket.children[0].children[3].children[0].material = shadowVolume_mat;
                 
                 
                 meshVol_torus.material  = shadowVolume_mat;     //Torus
@@ -747,29 +739,6 @@ recurse_geo_material(rocket, shadowVolume_mat);
                 meshVol_moon.material   = shadowVolume_mat;     //Moon
                 meshVol_earth.material  = shadowVolume_mat;     //Earth
                 meshVol_mars.material   = shadowVolume_mat;     //Mars
-                
-                     
-                /*      ---   Create the shaders for earth and moon   ---     */ 
-                //Moon
-/*                moon_mat_Shader = new THREE.ShaderMaterial({
-                    uniforms: uniforms1,
-                    vertexShader: document.getElementById('spaceObj_vs').textContent,
-					fragmentShader: document.getElementById('spaceObj_fs').textContent
-				});*/
-                 
-                //Earth
-/*                sphere_earth_Shader = new THREE.ShaderMaterial({
-                    uniforms: uniforms2,
-                    vertexShader: document.getElementById('spaceObj_vs').textContent,
-					fragmentShader: document.getElementById('spaceObj_fs').textContent
-				});*/
-                
-                //Sun
-/*                sun_Shader = new THREE.ShaderMaterial({
-                    uniforms: uniforms3,
-                    vertexShader: document.getElementById('spaceObj_vs').textContent,
-					fragmentShader: document.getElementById('spaceObj_fs').textContent
-				});*/
                 
                 
                 /*      ---   Create the shaders for lightning   ---     */   
@@ -817,9 +786,7 @@ recurse_geo_material(rocket, shadowVolume_mat);
                 stats.domElement.style.top = '0px';
                 document.body.appendChild(stats.domElement);
                 
-                
                 renderVar = true;
-                //animate();
 			}
           
             function recurse_geo_material(group, material) {
@@ -857,8 +824,6 @@ recurse_geo_material(rocket, shadowVolume_mat);
                 
                 
                 
-                
-                //Render all objects ambient material
 recurse_geo_material(rocket, ambient_spaceObj_mat);
                 
                 //rocket.material = ambient_spaceObj_mat;
@@ -873,7 +838,7 @@ recurse_geo_material(rocket, ambient_spaceObj_mat);
                 gl.depthFunc(gl.LESS);
                 renderer.render(scene, camera);
                 
-                gl.colorMask(false, false, false, false);
+                //gl.colorMask(false, false, false, false);
                 gl.depthMask(false);
                 gl.enable(gl.STENCIL_TEST);
                 gl.disable(gl.CULL_FACE);
@@ -885,20 +850,19 @@ recurse_geo_material(rocket, ambient_spaceObj_mat);
                 
                 
                 
-                
-                //Render all objects diff/spec material
 recurse_geo_material(rocket, shaderMat_basic);
                 
                 //rocket.material = shaderMat_basic;
                 mesh_torus.material  = shaderMat_basic;
                 mesh_ground.material = shaderMat_basic;
-                mesh_moon.material   = shaderMat_moon;
+mesh_moon.material   = shaderMat_basic;
                 mesh_earth.material  = shaderMat_earth;
                 mesh_mars.material   = shaderMat_mars;
                 
                 
                 gl.colorMask(true, true, true, true);
                 gl.depthMask(true);
+gl.enable(gl.STENCIL_TEST);
                 gl.enable(gl.CULL_FACE);
                 gl.stencilOpSeparate(gl.FRONT, gl.KEEP, gl.KEEP, gl.KEEP);
                 gl.stencilOpSeparate(gl.BACK, gl.KEEP, gl.KEEP, gl.KEEP);

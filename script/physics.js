@@ -83,6 +83,7 @@ var xE;
 var yE;
 var zE;
 
+var countr=0;
 
 function calculatePhysics(difftime, spaceObjects) {
 
@@ -97,8 +98,11 @@ function calculatePhysics(difftime, spaceObjects) {
         var matrix = new THREE.Matrix4();
         matrix = matrix.makeRotationFromQuaternion ( quaternion );
         yAxis.setFromMatrixColumn ( matrix, 1 );
-        spaceObjects.earth.group.angularMomentum.setFromAxisAngle( yAxis, 2 * Math.PI * 0.00001157407 * factoredTime);
+        spaceObjects.earth.group.angularMomentum.setFromAxisAngle( yAxis, - 2 * Math.PI * 0.00001157407 * factoredTime);
         spaceObjects.earth.group.quaternion.multiply(spaceObjects.earth.group.angularMomentum);
+        if(!global.started){
+            rocketGroup.quaternion.multiply(spaceObjects.earth.group.angularMomentum);
+        }
     }
     
     //calculate all gravitational forces between planets and objects
@@ -119,7 +123,7 @@ function calculatePhysics(difftime, spaceObjects) {
         checkForCollision();
             //throttleSound.setVolume(globalControlValues.throttle/100);
         
-    } else if (globalControlValues.throttle) {
+    } else if (throttle >= 0) {
         global.audio = true;
         if (throttle == 100) {
             global.started = true;
@@ -133,6 +137,9 @@ function calculatePhysics(difftime, spaceObjects) {
         }
     }
     
+    if(throttleSound){
+        throttleSound.setVolume(throttle/100);
+    }
     
     if( globalControlValues.throttle && throttle<100 ){
         throttle += 5;
@@ -178,21 +185,50 @@ function calculatePhysics(difftime, spaceObjects) {
         baseYAxis = new THREE.Vector3();
         var zAxis = new THREE.Vector3();
         if (spaceObjects.earth.group && rocketGroup){
+            /*
             rocketGroup.speed.x = (spaceObjects.earth.group.position.x + xE - rocketGroup.position.x) / factoredTime;
             rocketGroup.speed.y = (spaceObjects.earth.group.position.y + xE - rocketGroup.position.y) / factoredTime;
             rocketGroup.speed.z = (spaceObjects.earth.group.position.z + xE - rocketGroup.position.z) / factoredTime;
+            var vec = new THREE.Vector3(xE, yE, zE);
+            var xAxis = new THREE.Vector3();
+            var quaternion = rocketGroup.quaternion;
+            var matrix = new THREE.Matrix4();
+            matrix = matrix.makeRotationFromQuaternion ( quaternion );
+            xAxis.setFromMatrixColumn ( matrix, 0 );
+            vec = vec.applyAxisAngle ( xAxis, Math.PI/180 * 120 );
+            //rocketGroup.position.add(spaceObjects.earth.group.position);
+            //rocketGroup.position.add(new THREE.Vector3(xE, yE, zE));
             rocketGroup.position.x = spaceObjects.earth.group.position.x + xE;
             rocketGroup.position.y = spaceObjects.earth.group.position.y + yE;
             rocketGroup.position.z = spaceObjects.earth.group.position.z + zE;
+          */  
+            if (launchpadGroup !== undefined) {
+                scene.updateMatrixWorld();
+                rocketGroup.quaternion.setFromRotationMatrix( launchpadGroup.matrixWorld );
+                //rocketGroup.position.setFromMatrixPosition( launchpadGroup.matrixWorld );
+                rocketGroup.position.set (0, -1.5, 0);
+                launchpadGroup.localToWorld (rocketGroup.position);
+            }
         }
         
+        if(sphere_nav && countr==0 && rocketGroup){
+            var euler = new THREE.Euler( 0, 0.5*Math.PI, 0, 'XYZ' );
+            var quat = new THREE.Quaternion(0,0,0,1);
+            quat.setFromEuler(euler);
+            var quaty = new THREE.Quaternion(0,0,0,1);
+            quaty = rocketGroup.angularMomentum.clone();
+            quaty.multiply(quat);
+            //sphere_nav.quaternion.multiply(quaty);
+            countr++;
+        }
+        /*
         if (rocketGroup) 
         {
             var quaternion = rocketGroup.quaternion;
             var matrix = new THREE.Matrix4();
             matrix = matrix.makeRotationFromQuaternion ( quaternion );
             matrix.extractBasis(xAxis, baseYAxis, zAxis);
-        }
+        }*/
     }
     
 }

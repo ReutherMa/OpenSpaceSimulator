@@ -1,7 +1,7 @@
 /* 
 This program is licensed under the GNU General Public License as described in the file „LICENSE“
 Copyright (C) 2017 TH Nürnberg
-Authors: Marius Reuther, Franziska Braun, Lea Uhlenbrock, Selina Forster, Theresa Breitenhuber, Marco Lingenhöl
+Authors: Marius Reuther Franziska Braun, Lea Uhlenbrock, Selina Forster, Theresa Breitenhuber, Marco Lingenhöl
 Contact: openspacesimulation@gmail.com
 */
 
@@ -15,7 +15,7 @@ var global = {
 
 //do we want to load textures? false for fast (and ugly) debugging mode
 var loadTextures = false;
-//var throttleSound;
+var throttleSound;
 var rocket;
 var rocketGroup;
 var launchpad;
@@ -24,6 +24,7 @@ var launchpadGroup;
 var particleSystem;
 var spawnerOptions;
 var options;
+var firePower; 
 var tick = 0;
 var clock = new THREE.Clock();
 
@@ -43,7 +44,6 @@ var scene;
 var readyVars = {
     physics : false,
     rocket : false,
-    particleSystem : false,
     planets : false,
     interface : false,
     navball : false,
@@ -51,8 +51,9 @@ var readyVars = {
     ground: false,
     skybox: false,
     earthshader : false,
-    animate : false,
-    render : false
+    render : false,
+    particleSystem : false,
+    animate : false
 }
 
 var renderCounter = 0;
@@ -68,13 +69,13 @@ function buildUniverse() {
     var container;
     //, stats
 
-    var scene, sceneVol, ui_scene, renderer;
+    var sceneVol, ui_scene, renderer;
 
     var segments = 64;
     var group_galaxy;
     var sun, earth, moon, mercury, venus, mars, jupiter, saturn, uranus, neptune;
     var camElement;
-    var audioLoader, audioListener, throttleSound, sound;
+    var audioLoader, audioListener, sound;
     
     var uniforms1;
     var mesh_sun;
@@ -90,16 +91,17 @@ function buildUniverse() {
     var height_atmos = 100000;
     var renderCount = 0;
     
+    //SHADOW
     
     //Variables for shadow
     //var mesh_torus,    mesh_ground,    mesh_moon,    mesh_earth,    mesh_mars;
     //var meshVol_torus, meshVol_ground, meshVol_moon, meshVol_earth, meshVol_mars;
-    var arr_geoVol  = [];
+    /*var arr_geoVol  = [];
     var arr_faceNum = [];
     var arr_shader  = [];
     var arr_meshVol = [];
     var arr_mesh    = [];
-    
+    */
     var un_test = {
         texture: { value: loader.load( "textures/earth_moon_map.jpg" ) }
     };
@@ -113,8 +115,6 @@ function buildUniverse() {
     //universe functions
     universe.init = init;
     universe.render = render;
-    
-    //universe.animate = animate;
     
     //uniforms
     uniforms1 = {
@@ -169,8 +169,9 @@ function buildUniverse() {
                 throttleSound.setBuffer( buffer );
                 throttleSound.setRefDistance( 200 );
                 throttleSound.setLoop(true);
+                throttleSound.setVolume(0.0);
+                throttleSound.play();
         });
-        
         
         /* Helpers 
         //axisHelper
@@ -192,13 +193,29 @@ function buildUniverse() {
         buildPlanets(data);
         placeRocket();
         placeLaunchpad();
+        
         placeGround();
         
         buildNavBall();
         
         
-        
-        
+        //lensflare
+        /*
+        var lenslight = new THREE.PointLight( 0xffffff, 1.5, 0 );
+        lenslight.position.set(0,0,0);
+        scene.add(lenslight);
+        var textureLoader = new THREE.TextureLoader();
+        var textureFlare = textureLoader.load( "/textures/lens.png" );
+        textureFlare.depthTest = false;
+        var flareColor = new THREE.Color( 0xffffff );
+        flareColor.setHSL( 0.55, 0.9 , 0.5 + 0.5 );
+        lensFlare = new THREE.LensFlare( textureFlare, 800, 0.0, THREE.AdditiveBlending, flareColor );
+        lensFlare.add ( textureFlare, 500, 0.3, THREE.AdditiveBlending, flareColor )
+        lensFlare.add ( textureFlare, 200, 0.6, THREE.AdditiveBlending, flareColor )
+        lensFlare.position.copy( lenslight.position );
+        //lensFlare.position.set(0,0,0);
+        scene.add( lensFlare );
+        */
         
         
         
@@ -207,7 +224,7 @@ function buildUniverse() {
         
         
         //Shadow
-        shadowVolume_mat = new THREE.ShaderMaterial({
+       /* shadowVolume_mat = new THREE.ShaderMaterial({
             vertexShader: document.getElementById('shadowVolume_vs').textContent,
             vertexColors: THREE.VertexColors,
             fragmentShader: document.getElementById('shadowVolume_fs').textContent
@@ -227,7 +244,7 @@ function buildUniverse() {
             uniforms: { l: {type: "v3", value: light} },
             vertexShader: document.getElementById('diffSpec_spaceObj_vs').textContent,
             fragmentShader: document.getElementById('diffSpec_spaceObj_fs').textContent
-        });
+        });*/
         
         
         
@@ -248,7 +265,8 @@ function buildUniverse() {
         //renderer
         renderer = new THREE.WebGLRenderer({
             antialias: true,
-            logarithmicDepthBuffer: true
+            logarithmicDepthBuffer: true,
+            alpha: true
         });
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(window.innerWidth, window.innerHeight);
@@ -291,6 +309,7 @@ function buildUniverse() {
         var skyGeometry = new THREE.CubeGeometry(1e17, 1e17, 1e17); //26
         var skyMaterial = new THREE.MeshFaceMaterial(materialArray);
         var skyBox = new THREE.Mesh(skyGeometry, skyMaterial);
+        //skyMaterial.depthTest = false; for Lensflare
         scene.add(skyBox);
         readyVars.skybox = true;
     }
@@ -405,15 +424,16 @@ function buildUniverse() {
         matrix = matrix.makeRotationFromQuaternion ( quaternion );
         matrix.extractBasis(xAxis, yAxis, zAxis);
         earthGroup.angularMomentum.set (yAxis.x, yAxis.y, yAxis.z, 50) .normalize ();
-        earthGroup.quaternion.multiply(earthGroup.angularMomentum);
+        //earthGroup.quaternion.multiply(earthGroup.angularMomentum);
         var loader = new THREE.ColladaLoader(); 
-        loader.options.convertUpAxis = true;
-        
+        loader.options.convertUpAxis = true; 
         loader.load("models/saturnV_3.dae", function(collada) {   
             rocketGroup = new THREE.Group();
+            
             rocketGroup.add(mp);
             
-            rocket = collada.scene;   //var skin = collada.skins[ 0 ];
+            rocket = collada.scene;   
+            //var skin = collada.skins[ 0 ];
             //rocket.scale.set(695508e3, 695508e3, 695508e3);
             rocketGroup.add(rocket);
             scene.add(rocketGroup);
@@ -421,21 +441,25 @@ function buildUniverse() {
             var xE = r * Math.sin(Math.PI/180 * 45) * Math.cos(Math.PI/180 * 90);
             var yE = r * Math.sin(Math.PI/180 * 45) * Math.sin(Math.PI/180 * 90);
             var zE = r * Math.cos(Math.PI/180 * 45);
+            var vec = new THREE.Vector3(xE, yE, zE);
+            vec = vec.applyAxisAngle ( 1,0,0, Math.PI/180 * 120 );
             //rocketGroup.position.x = spaceObjects.earth.group.position.x + xE + 1;
             //rocketGroup.position.y = spaceObjects.earth.group.position.y + yE + 1;
             //rocketGroup.position.z = spaceObjects.earth.group.position.z + zE + 1;
             rocketGroup.position.x =  earthGroup.position.x + xE;
             rocketGroup.position.y =  earthGroup.position.y + yE;
             rocketGroup.position.z =  earthGroup.position.z + zE;
+            
+            
             rocketGroup.speed = new THREE.Vector3 (0, 0, 0);
-            rocketGroup.rotateX(Math.PI/180 * 45);
+            //rocketGroup.rotateX(Math.PI/180 * 45);
             rocketGroup.angularMomentum = new THREE.Quaternion(0,0,0,1);
             rocketGroup.angularAcceleration = new THREE.Quaternion(0,0,0,1);
             //earthGroup.add(rocketGroup);
             rocketGroup.add(throttleSound);
             buildFire();
-            
         });
+
         if(geo_line_rocket) scene.add( geo_line_rocket );
         //var rocketObject = new SpaceObject();
         readyVars.rocket = true;
@@ -448,8 +472,8 @@ function buildUniverse() {
         var earthGroup = spaceObjects.earth.group;
         var loader = new THREE.ColladaLoader(); 
         loader.options.convertUpAxis = true; 
-        launchpadGroup = new THREE.Group();
         loader.load("models/launchpad_font.dae", function(collada) {
+            launchpadGroup = new THREE.Group();
             launchpad = collada.scene;   //var skin = collada.skins[ 0 ];
             launchpad.scale.set(10, 10, 10);
             launchpadGroup.add(launchpad);
@@ -459,13 +483,11 @@ function buildUniverse() {
             var zE = r * Math.cos(Math.PI/180 * 45);
             launchpadGroup.position.x = xE;
             launchpadGroup.position.y = yE +3 ;
-            launchpadGroup.position.y = yE + 4;
             launchpadGroup.position.z = zE;
-            launchpad.rotateX(Math.PI/180 * 45);
+            launchpadGroup.rotateX(Math.PI/180 * 45);
             //launchpadGroup.position.set(0, 0, 0 );
             earthGroup.add(launchpadGroup);
         });
-    
         readyVars.launchpad = true;
     }
     
@@ -496,40 +518,30 @@ function buildUniverse() {
             particleSystem = new THREE.GPUParticleSystem( {
 				maxParticles: 10000
 			} );
-        
-          /*  var r = 0; //spaceObjects.earth.radius;
-            var xE = r * Math.sin(Math.PI/180 * 45) * Math.cos(Math.PI/180 * 90);
-            var yE = r * Math.sin(Math.PI/180 * 45) * Math.sin(Math.PI/180 * 90);
-            var zE = r * Math.cos(Math.PI/180 * 45);*/
-            particleSystem.position.x = 0;
-            particleSystem.position.z = 0;
-            particleSystem.position.y = 0;
-            //launchpadGroup.add( particleSystem );
             rocketGroup.add(particleSystem);
         
         options = {
-				position: new THREE.Vector3(),
+            position: new THREE.Vector3(),
 				positionRandomness: 0,
 				velocity: new THREE.Vector3(),
 				velocityRandomness: 1.3,
                 color: 0xff5500,
 				colorRandomness: .5,
 				turbulence: 0,
-				lifetime: 2,
-				size: 4,
-				sizeRandomness: 1
+				lifetime: 0,
+                size: 2,
+                sizeRandomness: 2
         };
         options.position.x = 0;
         options.position.z = 0;
         options.position.y = 0;
         spawnerOptions = {
-				spawnRate: 10000,
+				spawnRate: 0,
 				horizontalSpeed: 1,
 				verticalSpeed: 1,
 				timeScale: 1
 			};
-        
-        readyVars.particleSystem = true;
+            readyVars.particleSystem = true;
     }
 
     /* create a planet with mesh, position and orbit */
@@ -544,7 +556,7 @@ function buildUniverse() {
         this.speedx = speedx;
         this.speedy = speedy;
         this.speedz = speedz;
-        
+
         /* This builds the Body */
         this.buildBody = function() {
 
@@ -573,8 +585,8 @@ function buildUniverse() {
                 
                 geometry = new THREE.SphereGeometry(radius, segments, segments);
                 
-                //Shadow
-                geoVol   = new THREE.SphereGeometry(radius, segments, segments);
+                //SHADOW
+                /*geoVol   = new THREE.SphereGeometry(radius, segments, segments);
                 geoVol_faceNum = geoVol.faces.length;
                 
                 for (var i = 0; i < geoVol_faceNum; i++) {        
@@ -621,7 +633,7 @@ function buildUniverse() {
                         geoVol.faceVertexUvs[0].push([new THREE.Vector2(), new THREE.Vector2(), new THREE.Vector2()]);
                         geoVol.faceVertexUvs[0].push([new THREE.Vector2(), new THREE.Vector2(), new THREE.Vector2()]);
                     
-                    }
+                    }*/
                     
                 if (name == "earth" ){
                     var axisHelper = new THREE.AxisHelper(1e10); //
@@ -630,6 +642,7 @@ function buildUniverse() {
                     var light_earth = new THREE.PointLight( 0xffffff, 1, 1e10, 2 );
                     
                     group.add( light_earth );
+                    //material.depthTest = false; for lensFlare
                     if(loadTextures){
 
                     material = new THREE.ShaderMaterial( {
@@ -684,9 +697,11 @@ function buildUniverse() {
                 }
                     
             mesh = new THREE.Mesh(geometry, material);
+                
+            //SHADOW
+            /*
             arr_mesh.push(mesh);
-            
-            //Shadow
+
             meshVol = new THREE.Mesh(geoVol);
             sceneVol.add(meshVol);
             
@@ -698,7 +713,7 @@ function buildUniverse() {
 				fragmentShader: document.getElementById( 'spaceObj_fs' ).textContent
             });
                 
-            arr_shader.push(shaderName);
+            arr_shader.push(shaderName);*/
                 
                 
                 
@@ -862,7 +877,6 @@ function buildUniverse() {
         
     }
     
-    
     /* This is called when UI is changed */
     function UIChanges() {
 
@@ -941,20 +955,17 @@ function buildUniverse() {
                 var op = THREE.Math.clamp(nb, 0.1, 0.9);
                 //console.log("Opacity: " + spaceObjects.earth.group.children[3].material.opacity);
             }
-        else {
-            op = 0.1;
-        }
+        else op = 0.1;
         return op;
     }
     
 
+var clock = new THREE.Clock();
     /* This renders the scene */
     function render() {
         
         requestAnimationFrame(render);
-        
-        
-     //   if (particleSystem != undefined){
+         //   if (particleSystem != undefined){
        //  animate();
         
      //   }
@@ -1015,16 +1026,16 @@ function buildUniverse() {
         
         
         /* audio check */
-        if (global.audio){
+        /*if (global.audio){
             throttleSound.play();
             global.audio = false;
-        }
+        }*/
         if (globalControlValues.sound){
             throttleSound.setVolume(0);
             sound.setVolume(0);
         } else {
             sound.setVolume(1.0);
-            throttleSound.setVolume(1.0);
+            //throttleSound.setVolume(1.0);
         }
 
 
@@ -1033,29 +1044,23 @@ function buildUniverse() {
         spaceObjects.earth.group.children[2].rotateX(0.00005);
         
         
-        //Atmosphere
+        
         if(rocketGroup){
+            //Atmosphere
             spaceObjects.earth.group.children[3].material.opacity = calcOpacity();
             
-            //Fire
+            //Rocket-Fire
             var delta = difftime; //clock.getDelta() * spawnerOptions.timeScale;
 			tick += delta;
 			if ( tick < 0 ) tick = 0;
 			if ( delta > 0 ) {
-				//options.position.x = Math.sin( tick * spawnerOptions.horizontalSpeed ) * 5;
-				//options.position.y = Math.sin( tick * spawnerOptions.verticalSpeed ) * 5;
-                //options.position.z = Math.sin( tick * spawnerOptions.horizontalSpeed + spawnerOptions.verticalSpeed ) * 5;
-                //options.position.x = rocketGroup.position.x;
-                //options.position.y = rocketGroup.position.y;
-                //options.position.z = rocketGroup.position.z;
-				for ( var x = 0; x < spawnerOptions.spawnRate * delta; x++ ) {
+                spawnerOptions.spawnRate = throttle*150;
+                options.lifetime = throttle/50;
+                for ( var x = 0; x < spawnerOptions.spawnRate * delta; x++ ) {
 					particleSystem.spawnParticle( options );
 				}
 			}
 			particleSystem.update( tick );
-            //rocketGroup.position.y += .01;
-            //rocketGroup.position.z += .01;
-            //rocketGroup.position.x += .01;
             readyVars.animate = true;
         }
         
@@ -1078,8 +1083,8 @@ function buildUniverse() {
         
         
         
-        
-        //Shadow
+        //SHADOW
+        /*
         renderer.clear();
         var gl = renderer.context;
         
@@ -1111,23 +1116,14 @@ function buildUniverse() {
         gl.stencilOpSeparate(gl.BACK, gl.KEEP, gl.KEEP, gl.KEEP);
         gl.depthFunc(gl.LEQUAL);
         gl.stencilFunc(gl.EQUAL, 0, 0xFF);
-        renderer.render(scene, camera);
+        renderer.render(scene, camera);*/
         
         /**if (stats !== undefined) {
             stats.update();
             controls.update();
         }*/
         
-        //checks if all resources are loaded, removes loading screen(div)
         
-        var everythingLoaded = setTimeout(function() {
-            if (document.readyState === "complete" && renderCounter == 0) {
-                clearInterval(everythingLoaded);
-                loadingDone();
-                console.log("loading done");
-                renderCounter++;
-            }
-        }, 100);
         
         
         
@@ -1148,6 +1144,15 @@ function buildUniverse() {
         lasttime = now;
         lastPos = newPos;
         renderCount++;
+        
+        //checks if all resources are loaded, removes loading screen(div)
+        var everythingLoaded = setTimeout(function() {
+            if (document.readyState === "complete" && renderCounter == 0) {
+                clearInterval(everythingLoaded);
+                loadingDone();
+                renderCounter++;
+            }
+        }, 100);
     }
 
     return universe;
