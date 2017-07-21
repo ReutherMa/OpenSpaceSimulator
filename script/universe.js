@@ -193,14 +193,28 @@ function buildUniverse() {
         placeRocket();
         placeLaunchpad();
         placeGround();
-        
         buildNavBall();
         
         
         
-        
-        
-        
+        //lensflare
+        /*
+        var lenslight = new THREE.PointLight( 0xffffff, 1.5, 0 );
+        lenslight.position.set(0,0,0);
+        scene.add(lenslight);
+        var textureLoader = new THREE.TextureLoader();
+        var textureFlare = textureLoader.load( "/textures/lens.png" );
+        textureFlare.depthTest = false;
+        var flareColor = new THREE.Color( 0xffffff );
+        flareColor.setHSL( 0.55, 0.9 , 0.5 + 0.5 );
+        lensFlare = new THREE.LensFlare( textureFlare, 800, 0.0, THREE.AdditiveBlending, flareColor );
+        lensFlare.add ( textureFlare, 500, 0.3, THREE.AdditiveBlending, flareColor )
+        lensFlare.add ( textureFlare, 200, 0.6, THREE.AdditiveBlending, flareColor )
+        lensFlare.position.copy( lenslight.position );
+        //lensFlare.position.set(0,0,0);
+        scene.add( lensFlare );
+        */
+
         
         
         
@@ -232,14 +246,7 @@ function buildUniverse() {
         
         
         
-        
-        
-        
-        
-        
-        
-        
-        
+      
         
         
         
@@ -248,7 +255,8 @@ function buildUniverse() {
         //renderer
         renderer = new THREE.WebGLRenderer({
             antialias: true,
-            logarithmicDepthBuffer: true
+            logarithmicDepthBuffer: true,
+            alpha: true
         });
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(window.innerWidth, window.innerHeight);
@@ -290,6 +298,7 @@ function buildUniverse() {
 
         var skyGeometry = new THREE.CubeGeometry(1e17, 1e17, 1e17); //26
         var skyMaterial = new THREE.MeshFaceMaterial(materialArray);
+        //skyMaterial.depthTest = false; for Lensflare
         var skyBox = new THREE.Mesh(skyGeometry, skyMaterial);
         scene.add(skyBox);
         readyVars.skybox = true;
@@ -556,6 +565,7 @@ function buildUniverse() {
                 
                 geometry = new THREE.SphereGeometry(radius, segments, segments);
                 material = new THREE.MeshBasicMaterial();
+                //material.depthTest = false; for lensFlare
                 if(loadTextures){
                     material.map = loader.load('textures/sun_map_2.jpg');
                 }
