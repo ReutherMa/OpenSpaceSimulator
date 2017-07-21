@@ -23,6 +23,7 @@ var launchpadGroup;
 
 var particleSystem;
 var spawnerOptions;
+var firePower; 
 var options;
 var tick = 0;
 var clock = new THREE.Clock();
@@ -494,17 +495,8 @@ function buildUniverse() {
             particleSystem = new THREE.GPUParticleSystem( {
 				maxParticles: 10000
 			} );
-        
-          /*  var r = 0; //spaceObjects.earth.radius;
-            var xE = r * Math.sin(Math.PI/180 * 45) * Math.cos(Math.PI/180 * 90);
-            var yE = r * Math.sin(Math.PI/180 * 45) * Math.sin(Math.PI/180 * 90);
-            var zE = r * Math.cos(Math.PI/180 * 45);*/
-            particleSystem.position.x = 0;
-            particleSystem.position.z = 0;
-            particleSystem.position.y = 0;
-            //launchpadGroup.add( particleSystem );
             rocketGroup.add(particleSystem);
-        
+    
         options = {
             position: new THREE.Vector3(),
 				positionRandomness: 0,
@@ -513,15 +505,12 @@ function buildUniverse() {
                 color: 0xff5500,
 				colorRandomness: .5,
 				turbulence: 0,
-				lifetime: 2,
-				size: 4,
-				sizeRandomness: 1
+				lifetime: 0,
+                size: 2,
+                sizeRandomness: 2
         };
-        options.position.x = 0;
-        options.position.z = 0;
-        options.position.y = 0;
         spawnerOptions = {
-				spawnRate: 10000,
+				spawnRate: 0,
 				horizontalSpeed: 1,
 				verticalSpeed: 1,
 				timeScale: 1
@@ -529,6 +518,7 @@ function buildUniverse() {
             readyVars.particleSystem = true;
     }
 
+    
     /* create a planet with mesh, position and orbit */
     //SpaceObject(name of object, mass of object, radius(size) of object, parameters, in which group object is)
     function SpaceObject(name, mass, radius, color, group, speedx, speedy, speedz) {
@@ -1015,15 +1005,15 @@ var clock = new THREE.Clock();
         spaceObjects.earth.group.children[2].rotateX(0.00005);
         
         
-        //Atmosphere
         if(rocketGroup){
+            //Atmosphere
             spaceObjects.earth.group.children[3].material.opacity = calcOpacity();
-            
-            //Fire
+            //Rocket-Fire
             var delta = difftime; //clock.getDelta() * spawnerOptions.timeScale;
 			tick += delta;
 			if ( tick < 0 ) tick = 0;
 			if ( delta > 0 ) {
+<<<<<<< Updated upstream
 				//options.position.x = Math.sin( tick * spawnerOptions.horizontalSpeed ) * 5;
 				//options.position.y = Math.sin( tick * spawnerOptions.verticalSpeed ) * 5;
                 //options.position.z = Math.sin( tick * spawnerOptions.horizontalSpeed + spawnerOptions.verticalSpeed ) * 5;
@@ -1031,13 +1021,15 @@ var clock = new THREE.Clock();
                 //options.position.y = rocketGroup.position.y;
                 //options.position.z = rocketGroup.position.z;
                 for ( var x = 0; x < spawnerOptions.spawnRate * delta; x++ ) {
+=======
+                spawnerOptions.spawnRate = throttle*150;
+                options.lifetime = throttle/50;
+				for ( var x = 0; x < spawnerOptions.spawnRate * delta; x++ ) {
+>>>>>>> Stashed changes
 					particleSystem.spawnParticle( options );
 				}
 			}
 			particleSystem.update( tick );
-            //rocketGroup.position.y += .01;
-            //rocketGroup.position.z += .01;
-            //rocketGroup.position.x += .01;
             readyVars.animate = true;
         }
         
