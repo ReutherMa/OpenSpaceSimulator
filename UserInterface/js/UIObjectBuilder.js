@@ -13,54 +13,16 @@ $(function() {
 
     // build Sliders
     // RocketInterface
-
-
     // fill stages-array with stage-objects and create sliders
-    var stages = globalInterfaceValues.stages;
-    var rocketTotalMass = 0;
-
-    var stage = globalInterfaceValues.stage = 3;
-    rocketSlide("stages", 1, 4, 1, stage);
+    globalInterfaceValues.rocketTotalMass = 0;
+    rocketSlide("stages", 1, 4, 1, globalInterfaceValues.stage);
+    initDefaultValuesAndCreateLabels();
     for (var i = 1; i <= globalInterfaceValues.stages.length; i++) {
-        var currentStage = globalInterfaceValues.stages[i - 1];
-        if (i < 4) {
-            // get variables from SaturnV-Object
-            var mass_empty = saturnV["stage" + i].mass_empty;
-            var mass_fuel = saturnV["stage" + i].mass_fuel;
-            var mass_total = mass_empty + mass_fuel;
-            var thrust = saturnV["stage" + i].thrust;
-            var burningtime = saturnV["stage" + i].burningtime;
-        } else {
-            // get variables for Stage4-Slider
-            var mass_empty = currentStage.mass_empty;
-            var mass_fuel = currentStage.mass_fuel;
-            var mass_total = mass_empty + mass_fuel;
-            var thrust = currentStage.thrust;
-            var burningtime = currentStage.burningtime;
-        }
-        // store variables in global variable
-        currentStage = {
-            mass_empty: mass_empty,
-            mass_fuel: mass_fuel,
-            mass_total: mass_total,
-            thrust: thrust,
-            burningtime: burningtime
-        };
-
         // build slider with variables from global variable
-        rocketSlide("mass_empty" + i, 0, 100000, 100, currentStage.mass_empty);
-        rocketSlide("mass_fuel" + i, 0, 3000000, 1000, currentStage.mass_fuel);
-        rocketSlide("burningtime" + i, 0, 6000, 10, currentStage.burningtime);
-        rocketSlide("thrust" + i, 0, 50000000, 1000, currentStage.thrust);
-
-        // set labels for each stage
-        $("#mass_empty" + i + "Label").text(currentStage.mass_empty);
-        $("#mass_fuel" + i + "Label").text(currentStage.mass_fuel);
-        $("#mass_total" + i + "Label").text(currentStage.mass_total);
-        $("#burningtime" + i + "Label").text(currentStage.burningtime);
-        $("#thrust" + i + "Label").text(currentStage.thrust);
-        $("#mass_total" + i + "Label").text(currentStage.mass_total);
-        rocketTotalMass += currentStage.mass_total;
+        rocketSlide("mass_empty" + i, 0, 100000, 100, globalInterfaceValues.stages[i - 1].mass_empty);
+        rocketSlide("mass_fuel" + i, 0, 3000000, 1000, globalInterfaceValues.stages[i - 1].mass_fuel);
+        rocketSlide("burningtime" + i, 0, 6000, 10, globalInterfaceValues.stages[i - 1].burningtime);
+        rocketSlide("thrust" + i, 0, 50000000, 1000, globalInterfaceValues.stages[i - 1].thrust);
     }
 
     // DeveloperInterface
@@ -93,15 +55,13 @@ $(function() {
     $("#stagesLabel").text(globalInterfaceValues.stage);
     // set labels from stages-array
     /*for (var i = 1; i <= stages.length; i++) {
-        var currentStage = globalInterfaceValues.stages[i - 1];
-        $("#mass_empty" + i + "Label").text(currentStage.mass_empty);
-        $("#mass_fuel" + i + "Label").text(currentStage.mass_fuel);
-        $("#mass_total" + i + "Label").text(currentStage.mass_total);
-        $("#burningtime" + i + "Label").text(currentStage.burningtime);
-        $("#thrust" + i + "Label").text(currentStage.thrust);
+        var globalInterfaceValues.stages[i - 1] = globalInterfaceValues.stages[i - 1];
+        $("#mass_empty" + i + "Label").text(globalInterfaceValues.stages[i - 1].mass_empty);
+        $("#mass_fuel" + i + "Label").text(globalInterfaceValues.stages[i - 1].mass_fuel);
+        $("#mass_total" + i + "Label").text(globalInterfaceValues.stages[i - 1].mass_total);
+        $("#burningtime" + i + "Label").text(globalInterfaceValues.stages[i - 1].burningtime);
+        $("#thrust" + i + "Label").text(globalInterfaceValues.stages[i - 1].thrust);
     }*/
-
-    globalInterfaceValues.rocketTotalMass = rocketTotalMass;
     $("#rocketTotalMassLabel").text(globalInterfaceValues.rocketTotalMass);
 
     // DeveloperInterface 
@@ -134,14 +94,7 @@ $(function() {
     // build Tabs
     $("#tabs").tabs();
 
-    // hide all stages-tabs
-    for (var i = 1; i <= 4; i++) {
-        $("#stage" + i).hide();
-    }
-    // show stages-tabs for selected stages
-    for (var i = 1; i <= globalInterfaceValues.stage; i++) {
-        $("#stage" + i).show();
-    }
+    hideShowTabs();
 
     // pad height-number with zero and parse to string
     var height = zeroFill(globalInterfaceValues.height, 9);
@@ -161,11 +114,6 @@ $(function() {
     });
     $currentStageDisplay.val(globalInterfaceValues.currentStage).change();
 
-    // reset Editor
-    $("#resetEditor").click(function() {
-        loadRocketSlider();
-    });
-
     /*setTimeout(function() {
         $header_display.val(000000000).change();
         var toggle = true;
@@ -183,6 +131,7 @@ $(function() {
     //inputChange();
 
     //$("#check").checkboxradio();
+    //console.log(globalInterfaceValues);
 });
 
 function developerSlide(name, min, max, step, val) {

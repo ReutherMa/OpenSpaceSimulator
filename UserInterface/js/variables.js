@@ -13,7 +13,7 @@ var globalInterfaceValues = {
 
     // RocketInterface
     rocketName: "saturnV",
-    stage: 1,
+    stage: 3,
     stages: [{
         mass_empty: 0,
         mass_fuel: 0,

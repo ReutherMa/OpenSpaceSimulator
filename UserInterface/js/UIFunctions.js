@@ -68,7 +68,7 @@ function developerChange() {
     globalInterfaceValues.planetCamera = $('select[name=planetCamera]').val();
     //globalInterfaceValues.reset = $('input[name=reset]').val();
     globalInterfaceValues.changed = true;
-    
+
 
     $(".ui-slider-handle").blur();
     $("#planetCamera-button").blur();
@@ -79,56 +79,64 @@ function developerChange() {
 function rocketChange() {
     // RocketInterface
     // Bearbeitung
+    globalInterfaceValues.rocketName = $('select[name=rocketSelect]').val();
+    if (globalInterfaceValues.rocketName == "spaceTaxi") {
+        $("#editBox").hide();
+    } else {
+        $("#editBox").show();
+        if (!globalInterfaceValues.rocketName == "saturnV") {
+            // build CustomRocket
+        }
+    }
+
     if (this == "mass_fuel1" || this == "mass_fuel2" || this == "mass_fuel3" || this == "mass_fuel4") {
         var stage = parseInt(this.substring(9, 10));
-        console.log(stage);
+        // console.log(stage);
         //fuelMassChanged(stage);
     }
     globalInterfaceValues.changed = true;
     globalInterfaceValues.customRocketUsage = true;
-    globalInterfaceValues.rocketName = $('select[name=rocketSelect]').val();
     globalInterfaceValues.stage = +$("#stagesLabel").text();
-    // hide all stages-tabs
-    for (var i = 1; i <= 4; i++) {
-        $("#stage" + i).hide();
-    }
-    // show stages-tabs for selected stages
-    for (var i = 1; i <= globalInterfaceValues.stage; i++) {
-        $("#stage" + i).show();
-    }
+
+    hideShowTabs();
 
     // update stages-array
-    var rocketTotalMass = globalInterfaceValues.rocketTotalMass;
+    globalInterfaceValues.rocketTotalMass = 0;
     for (var i = 1; i <= globalInterfaceValues.stage; i++) {
-        var currentStage = globalInterfaceValues.stages[i - 1];
+        //var globalInterfaceValues.stages[i - 1] = globalInterfaceValues.stages[i - 1];
         var mass_empty = +$("#mass_empty" + i + "Label").text();
         var mass_fuel = +$("#mass_fuel" + i + "Label").text();
         var mass_total = mass_empty + mass_fuel;
         var thrust = +$("#thrust" + i + "Label").text();
         var burningtime = +$("#burningtime" + i + "Label").text();
-        currentStage = {
+        globalInterfaceValues.stages[i - 1] = {
             mass_empty: mass_empty,
             mass_fuel: mass_fuel,
             mass_total: mass_total,
             thrust: thrust,
             burningtime: burningtime
         };
-        $("#mass_total" + i + "Label").text(currentStage.mass_total);
-        rocketTotalMass += currentStage.mass_total;
+        // set labels for each stage
+        /*$("#mass_empty" + i + "Label").text(globalInterfaceValues.stages[i - 1].mass_empty);
+        $("#mass_fuel" + i + "Label").text(globalInterfaceValues.stages[i - 1].mass_fuel);
+       
+        $("#burningtime" + i + "Label").text(globalInterfaceValues.stages[i - 1].burningtime);
+        $("#thrust" + i + "Label").text(globalInterfaceValues.stages[i - 1].thrust);*/
+        $("#mass_total" + i + "Label").text(globalInterfaceValues.stages[i - 1].mass_total);
+        globalInterfaceValues.rocketTotalMass += globalInterfaceValues.stages[i - 1].mass_total;
     }
-    $("#rocketTotalMassLabel").text(rocketTotalMass);
+    $("#rocketTotalMassLabel").text(globalInterfaceValues.rocketTotalMass);
 
     globalInterfaceValues.burningtime = +$("#burningtimeLabel").text();
     globalInterfaceValues.thrust = +$("#thrustLabel").text();
-    
-    
-    globalInterfaceValues.fuelCheat = true;
-    console.log(globalInterfaceValues.fuelCheat);
+
 
     $(".ui-slider-handle").blur();
     $("#rocketSelect-button").blur();
     $(".ui-tabs").blur();
-    console.log(globalInterfaceValues.rocketTotalMass);
+    //console.log(globalInterfaceValues);
+
+
 }
 
 function soundOnOff(button) {    
@@ -162,7 +170,7 @@ function startNew(button) {
 function cheatFuel() {
     $("#dialog").text("Congrats! You have unlimited fuel!");
     $("#dialog").dialog();
-    rocketChange();
+    globalInterfaceValues.fuelCheat = true;
 }
 
 
@@ -192,7 +200,7 @@ function showCustomRocketButtons() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    for (var key in localStorage){
+    for (var key in localStorage) {
         if (key.startsWith("customRocket")) {
             var customRocketName = key.replace("customRocket", "");
             customRocketButtonsString += "<input type='button' id='" + key + "' class='btn ui-button ui-widget ui-corner-all' value='" + customRocketName + "' title='Use Custom Rocket' onclick='loadCustomRocket(this)'>";
@@ -216,5 +224,78 @@ function deleteLocalStorage() {
     $("#useCustomRocketButton").html("");
     customRocketButtonsString = "";
     $(".btn").blur();
-    
+
+}
+
+function resetEditor() {
+    globalInterfaceValues.rocketName = "saturnV";
+    $("#rocketSelect").val(globalInterfaceValues.rocketName);
+    $("#rocketSelect").selectmenu("refresh");
+    globalInterfaceValues.stage = 3;
+    $("#stagesLabel").text(globalInterfaceValues.stage);
+    $("#stages").slider("option", "value", globalInterfaceValues.stage);
+
+
+    initDefaultValuesAndCreateLabels();
+    for (var i = 1; i <= globalInterfaceValues.stages.length; i++) {
+        $("#mass_empty" + i).slider("option", "value", globalInterfaceValues.stages[i - 1].mass_empty);
+        $("#mass_fuel" + i).slider("option", "value", globalInterfaceValues.stages[i - 1].mass_fuel);
+        $("#burningtime" + i).slider("option", "value", globalInterfaceValues.stages[i - 1].burningtime);
+        $("#thrust" + i).slider("option", "value", globalInterfaceValues.stages[i - 1].thrust);
+    }
+
+    //console.log(globalInterfaceValues);
+    //rocketChange();
+}
+
+function hideShowTabs() {
+    // hide all stages-tabs
+    for (var i = 1; i <= 4; i++) {
+        $("#stage" + i).hide();
+    }
+    // show stages-tabs for selected stages
+    for (var i = 1; i <= globalInterfaceValues.stage; i++) {
+        $("#stage" + i).show();
+    }
+}
+
+function initDefaultValuesAndCreateLabels() {
+    globalInterfaceValues.rocketTotalMass = 0;
+    for (var i = 1; i <= globalInterfaceValues.stages.length; i++) {
+        if (i < 4) {
+            // get variables from SaturnV-Object
+            var mass_empty = saturnV["stage" + i].mass_empty;
+            var mass_fuel = saturnV["stage" + i].mass_fuel;
+            var mass_total = mass_empty + mass_fuel;
+            var thrust = saturnV["stage" + i].thrust;
+            var burningtime = saturnV["stage" + i].burningtime;
+        } else {
+            // get variables for Stage4-Slider
+            var mass_empty = globalInterfaceValues.stages[i - 1].mass_empty;
+            var mass_fuel = globalInterfaceValues.stages[i - 1].mass_fuel;
+            var mass_total = mass_empty + mass_fuel;
+            var thrust = globalInterfaceValues.stages[i - 1].thrust;
+            var burningtime = globalInterfaceValues.stages[i - 1].burningtime;
+        }
+        // store variables in global variable
+        globalInterfaceValues.stages[i - 1] = {
+            mass_empty: mass_empty,
+            mass_fuel: mass_fuel,
+            mass_total: mass_total,
+            thrust: thrust,
+            burningtime: burningtime
+        };
+        // set labels for each stage
+        $("#mass_empty" + i + "Label").text(globalInterfaceValues.stages[i - 1].mass_empty);
+        $("#mass_fuel" + i + "Label").text(globalInterfaceValues.stages[i - 1].mass_fuel);
+        $("#mass_total" + i + "Label").text(globalInterfaceValues.stages[i - 1].mass_total);
+        $("#burningtime" + i + "Label").text(globalInterfaceValues.stages[i - 1].burningtime);
+        $("#thrust" + i + "Label").text(globalInterfaceValues.stages[i - 1].thrust);
+        globalInterfaceValues.rocketTotalMass += globalInterfaceValues.stages[i - 1].mass_total;
+    }
+}
+
+function updateLoading(percentage) {
+    $("#loadingRocket").attr("src", "UserInterface/img/rocket" + percentage + ".png");
+    $("#loadingPercentage").text(percentage);
 }

@@ -36,7 +36,21 @@ Contact: openspacesimulation@gmail.com
 
 <body>
 
-    <div id="loadingBox" style="width: 100%; height: 100%; background-color: darkblue; text-align: center; z-index: 1000">Loading...</div>
+    <div id="loadingBox" style="">Loading
+    <img id="loadingRocket" src="UserInterface/img/rocket0.png" alt="Loading"/>
+    <span id="loadingPercentage">0</span>%&nbsp;please wait...
+    </div>
+     <script>
+         var percentage = 0;
+         var timer = setInterval(function(){
+             updateLoading(percentage);
+             percentage += 20;
+         }, 3000);
+         
+         if(percentage >= 80){
+             clearInterval(timer);
+         }
+    </script>
     <div id="container"></div>
 
     <!-- Imports -->
@@ -94,11 +108,13 @@ Contact: openspacesimulation@gmail.com
     <div id="contentBox">
 
         <div id="tabBox">
-            <input type="button" id="rocket" class="btn fa ui-button ui-widget ui-corner-all menuButton toggleMenuButton" value="&#xf135" title="Rocket Settings" onclick="doToggle(this)"> <!--value="&#xf0ad"-->
-            <input type="button" id="developer" class="btn fa ui-button ui-widget ui-corner-all menuButton toggleMenuButton" value="&#xf03d" title="Universe Settings" onclick="doToggle(this)"> <!--value="&#xf0ac"-->
-            <input type="button" id="game" class="btn fa ui-button ui-widget ui-corner-all menuButton activeInterface" value="&#xf0e4" title="Flightboard" onclick="doToggleGame(this)"> <!--value="&#xf135"-->
-            <button type="button" name="sound" id="soundButton" class="btn fa ui-button ui-widget ui-corner-all fa-volume-up menuButton" value="" title="Sound"
-            onclick="soundOnOff(this)"></button>
+            <input type="button" id="rocket" class="btn fa ui-button ui-widget ui-corner-all menuButton toggleMenuButton" value="&#xf135" title="Rocket Settings" onclick="doToggle(this)">
+            <!--value="&#xf0ad"-->
+            <input type="button" id="developer" class="btn fa ui-button ui-widget ui-corner-all menuButton toggleMenuButton" value="&#xf03d" title="Universe Settings" onclick="doToggle(this)">
+            <!--value="&#xf0ac"-->
+            <input type="button" id="game" class="btn fa ui-button ui-widget ui-corner-all menuButton activeInterface" value="&#xf0e4" title="Flightboard" onclick="doToggleGame(this)">
+            <!--value="&#xf135"-->
+            <button type="button" name="sound" id="soundButton" class="btn fa ui-button ui-widget ui-corner-all fa-volume-up menuButton" value="" title="Sound" onclick="soundOnOff(this)"></button>
             <input type="button" id="info" class="btn fa ui-button ui-widget ui-corner-all menuButton toggleMenuButton" value="&#xf129" title="Information" onclick="doToggle(this)">
             <input type="button" id="resetGame" class="btn ui-button ui-widget ui-corner-all fa" value="&#xf021" title="Reload Game" onclick="startNew()">
             <div id="startNewDialog" title="Start New?"></div>
@@ -119,101 +135,102 @@ Contact: openspacesimulation@gmail.com
             <div id="editBox">
                 <fieldset>
                     <legend>Editor</legend>
-                        <!--<div class="stagesLabelBox">
+                    <!--<div class="stagesLabelBox">
                         <label class="ui-heading">Stages</label><span id="stagesLabel" class="valueSpan"></span>
                     </div>-->
-                        <div class="stagesRangeBox">
-                            <label class="stagesLabel ui-heading">Stages:&nbsp;</label><span id="stagesLabel" class="valueSpan"></span>
-                            <div id="stages"></div>
-                        </div>
-                        <div id="tabs">
-                            <ul>
-                                <li><a id="stage1" href="#tabs-1">Stage 1</a>
-                                </li>
-                                <li><a id="stage2" href="#tabs-2">Stage 2</a>
-                                </li>
-                                <li><a id="stage3" href="#tabs-3">Stage 3</a>
-                                </li>
-                                <li><a id="stage4" href="#tabs-4">Stage 4</a>
-                                </li>
-                            </ul>
-                            <div id="tabs-1">
-                                <div class="massBox">
-                                    <label class="mass_emptyLabel ui-heading mainHeading">Empty Mass:&nbsp;</label><span id="mass_empty1Label" class="valueSpan"></span>&nbsp;kg
-                                    <div id="mass_empty1"></div>
-                                    <label class="mass_fuelLabel ui-heading mainHeading">Fuel Mass:&nbsp;</label><span id="mass_fuel1Label" class="valueSpan"></span>&nbsp;kg
-                                    <div id="mass_fuel1"></div>
-                                    <label class="mass_totalLabel ui-heading mainHeading">Total Mass:&nbsp;</label><span id="mass_total1Label" class="valueSpan"></span>&nbsp;kg
-                                </div>
-                                <div class=burningtimeBox>
-                                    <label class="burningtimeLabel ui-heading mainHeading">Burning Time:&nbsp;</label><span id="burningtime1Label" class="valueSpan"></span>&nbsp;s
-                                    <div id="burningtime1"></div>
-                                </div>
-                                <div class=thrustBox>
-                                    <label class="thrustLabel ui-heading mainHeading">Thrust:&nbsp;</label><span id="thrust1Label" class="valueSpan"></span>&nbsp;N
-                                    <div id="thrust1"></div>
-                                </div>
+                    <div class="stagesRangeBox">
+                        <label class="stagesLabel ui-heading">Stages:&nbsp;</label><span id="stagesLabel" class="valueSpan"></span>
+                        <div id="stages"></div>
+                    </div>
+                    <div id="tabs">
+                        <ul>
+                            <li><a id="stage1" href="#tabs-1">Stage 1</a>
+                            </li>
+                            <li><a id="stage2" href="#tabs-2">Stage 2</a>
+                            </li>
+                            <li><a id="stage3" href="#tabs-3">Stage 3</a>
+                            </li>
+                            <li><a id="stage4" href="#tabs-4">Stage 4</a>
+                            </li>
+                        </ul>
+                        <div id="tabs-1">
+                            <div class="massBox">
+                                <label class="mass_emptyLabel ui-heading mainHeading">Empty Mass:&nbsp;</label><span id="mass_empty1Label" class="valueSpan"></span>&nbsp;kg
+                                <div id="mass_empty1"></div>
+                                <label class="mass_fuelLabel ui-heading mainHeading">Fuel Mass:&nbsp;</label><span id="mass_fuel1Label" class="valueSpan"></span>&nbsp;kg
+                                <div id="mass_fuel1"></div>
+                                <label class="mass_totalLabel ui-heading mainHeading">Total Mass:&nbsp;</label><span id="mass_total1Label" class="valueSpan"></span>&nbsp;kg
                             </div>
-                            <div id="tabs-2">
-                                <div class="massBox">
-                                    <label class="mass_emptyLabel ui-heading mainHeading">Empty Mass:&nbsp;</label><span id="mass_empty2Label" class="valueSpan"></span>&nbsp;kg
-                                    <div id="mass_empty2"></div>
-                                    <label class="mass_fuelLabel ui-heading mainHeading">Fuel Mass:&nbsp;</label><span id="mass_fuel2Label" class="valueSpan"></span>&nbsp;kg
-                                    <div id="mass_fuel2"></div>
-                                    <label class="mass_totalLabel ui-heading mainHeading">Total Mass:&nbsp;</label><span id="mass_total2Label" class="valueSpan"></span>&nbsp;kg
-                                </div>
-                                <div class=burningtimeBox>
-                                    <label class="burningtimeLabel ui-heading mainHeading">Burning Time:&nbsp;</label><span id="burningtime2Label" class="valueSpan"></span>&nbsp;s
-                                    <div id="burningtime2"></div>
-                                </div>
-                                <div class=thrustBox>
-                                    <label class="thrustLabel ui-heading mainHeading">Thrust:&nbsp;</label><span id="thrust2Label" class="valueSpan"></span>&nbsp;N
-                                    <div id="thrust2"></div>
-                                </div>
+                            <div class=burningtimeBox>
+                                <label class="burningtimeLabel ui-heading mainHeading">Burning Time:&nbsp;</label><span id="burningtime1Label" class="valueSpan"></span>&nbsp;s
+                                <div id="burningtime1"></div>
                             </div>
-                            <div id="tabs-3">
-                                <div class="massBox">
-                                    <label class="mass_emptyLabel ui-heading mainHeading">Empty Mass:&nbsp;</label><span id="mass_empty3Label" class="valueSpan"></span>&nbsp;kg
-                                    <div id="mass_empty3"></div>
-                                    <label class="mass_fuelLabel ui-heading mainHeading">Fuel Mass:&nbsp;</label><span id="mass_fuel3Label" class="valueSpan"></span>&nbsp;kg
-                                    <div id="mass_fuel3"></div>
-                                    <label class="mass_totalLabel ui-heading mainHeading">Total Mass:&nbsp;</label><span id="mass_total3Label" class="valueSpan"></span>&nbsp;kg
-                                </div>
-                                <div class=burningtimeBox>
-                                    <label class="burningtimeLabel ui-heading mainHeading">Burning Time:&nbsp;</label><span id="burningtime3Label" class="valueSpan"></span>&nbsp;s
-                                    <div id="burningtime3"></div>
-                                </div>
-                                <div class=thrustBox>
-                                    <label class="thrustLabel ui-heading mainHeading">Thrust:&nbsp;</label><span id="thrust3Label" class="valueSpan"></span>&nbsp;N
-                                    <div id="thrust3"></div>
-                                </div>
-                            </div>
-                            <div id="tabs-4">
-                                <div class="massBox">
-                                    <label class="mass_emptyLabel ui-heading mainHeading">Empty Mass:&nbsp;</label><span id="mass_empty4Label" class="valueSpan"></span>&nbsp;kg
-                                    <div id="mass_empty4"></div>
-                                    <label class="mass_fuelLabel ui-heading mainHeading">Fuel Mass:&nbsp;</label><span id="mass_fuel4Label" class="valueSpan"></span>&nbsp;kg
-                                    <div id="mass_fuel4"></div>
-                                    <label class="mass_totalLabel ui-heading mainHeading">Total Mass:&nbsp;</label><span id="mass_total4Label" class="valueSpan"></span>&nbsp;kg
-                                </div>
-                                <div class=burningtimeBox>
-                                    <label class="burningtimeLabel ui-heading mainHeading">Burning Time:&nbsp;</label><span id="burningtime4Label" class="valueSpan"></span>&nbsp;s
-                                    <div id="burningtime4"></div>
-                                </div>
-                                <div class=thrustBox>
-                                    <label class="thrustLabel ui-heading mainHeading">Thrust:&nbsp;</label><span id="thrust4Label" class="valueSpan"></span>&nbsp;N
-                                    <div id="thrust4"></div>
-                                </div>
+                            <div class=thrustBox>
+                                <label class="thrustLabel ui-heading mainHeading">Thrust:&nbsp;</label><span id="thrust1Label" class="valueSpan"></span>&nbsp;N
+                                <div id="thrust1"></div>
                             </div>
                         </div>
+                        <div id="tabs-2">
+                            <div class="massBox">
+                                <label class="mass_emptyLabel ui-heading mainHeading">Empty Mass:&nbsp;</label><span id="mass_empty2Label" class="valueSpan"></span>&nbsp;kg
+                                <div id="mass_empty2"></div>
+                                <label class="mass_fuelLabel ui-heading mainHeading">Fuel Mass:&nbsp;</label><span id="mass_fuel2Label" class="valueSpan"></span>&nbsp;kg
+                                <div id="mass_fuel2"></div>
+                                <label class="mass_totalLabel ui-heading mainHeading">Total Mass:&nbsp;</label><span id="mass_total2Label" class="valueSpan"></span>&nbsp;kg
+                            </div>
+                            <div class=burningtimeBox>
+                                <label class="burningtimeLabel ui-heading mainHeading">Burning Time:&nbsp;</label><span id="burningtime2Label" class="valueSpan"></span>&nbsp;s
+                                <div id="burningtime2"></div>
+                            </div>
+                            <div class=thrustBox>
+                                <label class="thrustLabel ui-heading mainHeading">Thrust:&nbsp;</label><span id="thrust2Label" class="valueSpan"></span>&nbsp;N
+                                <div id="thrust2"></div>
+                            </div>
+                        </div>
+                        <div id="tabs-3">
+                            <div class="massBox">
+                                <label class="mass_emptyLabel ui-heading mainHeading">Empty Mass:&nbsp;</label><span id="mass_empty3Label" class="valueSpan"></span>&nbsp;kg
+                                <div id="mass_empty3"></div>
+                                <label class="mass_fuelLabel ui-heading mainHeading">Fuel Mass:&nbsp;</label><span id="mass_fuel3Label" class="valueSpan"></span>&nbsp;kg
+                                <div id="mass_fuel3"></div>
+                                <label class="mass_totalLabel ui-heading mainHeading">Total Mass:&nbsp;</label><span id="mass_total3Label" class="valueSpan"></span>&nbsp;kg
+                            </div>
+                            <div class=burningtimeBox>
+                                <label class="burningtimeLabel ui-heading mainHeading">Burning Time:&nbsp;</label><span id="burningtime3Label" class="valueSpan"></span>&nbsp;s
+                                <div id="burningtime3"></div>
+                            </div>
+                            <div class=thrustBox>
+                                <label class="thrustLabel ui-heading mainHeading">Thrust:&nbsp;</label><span id="thrust3Label" class="valueSpan"></span>&nbsp;N
+                                <div id="thrust3"></div>
+                            </div>
+                        </div>
+                        <div id="tabs-4">
+                            <div class="massBox">
+                                <label class="mass_emptyLabel ui-heading mainHeading">Empty Mass:&nbsp;</label><span id="mass_empty4Label" class="valueSpan"></span>&nbsp;kg
+                                <div id="mass_empty4"></div>
+                                <label class="mass_fuelLabel ui-heading mainHeading">Fuel Mass:&nbsp;</label><span id="mass_fuel4Label" class="valueSpan"></span>&nbsp;kg
+                                <div id="mass_fuel4"></div>
+                                <label class="mass_totalLabel ui-heading mainHeading">Total Mass:&nbsp;</label><span id="mass_total4Label" class="valueSpan"></span>&nbsp;kg
+                            </div>
+                            <div class=burningtimeBox>
+                                <label class="burningtimeLabel ui-heading mainHeading">Burning Time:&nbsp;</label><span id="burningtime4Label" class="valueSpan"></span>&nbsp;s
+                                <div id="burningtime4"></div>
+                            </div>
+                            <div class=thrustBox>
+                                <label class="thrustLabel ui-heading mainHeading">Thrust:&nbsp;</label><span id="thrust4Label" class="valueSpan"></span>&nbsp;N
+                                <div id="thrust4"></div>
+                            </div>
+                        </div>
+                    </div>
                     <label class="rocketTotalMassLabel ui-heading mainHeading">Rocket Total Mass:&nbsp;</label><span id="rocketTotalMassLabel" class="valueSpan"></span>&nbsp;kg
                     <div id="saveCustomRocketBox">
-                    <input type="text" class="" name="customRocketNameTextfield" id="customRocketNameTextfield" value="">
-                <input type="button" id="customRocketName" class="btn ui-button ui-widget ui-corner-all" value="Save Custom Rocket" title="Save Custom Rocket" onclick="saveCustomRocket()">
+                        <input type="text" class="" name="customRocketNameTextfield" id="customRocketNameTextfield" value="">
+                        <input type="button" id="customRocketName" class="btn ui-button ui-widget ui-corner-all" value="Save Custom Rocket" title="Save Custom Rocket" onclick="saveCustomRocket()">
                         <input type="button" id="deleteLocalStorageButton" class="btn ui-button ui-widget ui-corner-all" value="Delete All Custom Rockets" title="Delete All Custom Rockets" onclick="deleteLocalStorage()">
-                        </div>
+                        <input type="button" id="resetEditor" class="btn ui-button ui-widget ui-corner-all" value="Reset" title="Reset Editor" onclick="resetEditor()">
+                    </div>
                 </fieldset>
-       <input type="button" name="resetEditor" class="btn ui-button ui-widget ui-corner-all" value="Reset" title="Reset Editor" onclick="resetEditor">
+                
 
             </div>
         </div>
@@ -326,146 +343,136 @@ Contact: openspacesimulation@gmail.com
                 <div class="dashboardBox">
                     <div class="dashboardInnerBox">
                         <div class="centeredDashboardBox">
-                    <div class="displayBox">
-                        <!-- Throttle -->
-                        <div class="throttleGaugeBox">
-                            <div id="throttleGauge" class="gauge gauge-big gauge-orange" title="Throttle">
-                                <div class="gauge-arrow" data-percentage="40" style="transform: rotate(0deg);"></div>
+                            <div class="displayBox">
+                                <!-- Throttle -->
+                                <div class="throttleGaugeBox">
+                                    <div id="throttleGauge" class="gauge gauge-big gauge-orange" title="Throttle">
+                                        <div class="gauge-arrow" data-percentage="40" style="transform: rotate(0deg);"></div>
+                                    </div>
+                                    <br>
+                                    <label>
+                                        <span id="throttleGaugeLabel"></span> %
+                                    </label>
+                                </div>
+                                <!-- Speed -->
+                                <div class="speedGaugeBox">
+                                    <div id="speedGauge" class="gauge gauge-big gauge-orange" title="Speed">
+                                        <div class="gauge-arrow" data-percentage="40" style="transform: rotate(0deg);"></div>
+                                    </div>
+                                    <br>
+                                    <label>
+                                        <span id="speedGaugeLabel"></span> m/s
+                                    </label>
+                                </div>
+                                <!-- Fuel -->
+                                <div class="fuelGaugeBox">
+                                    <div id="fuelGauge" class="gauge gauge-small gauge-orange" title="Fuel">
+                                        <div class="gauge-arrow" data-percentage="40" style="transform: rotate(0deg);"></div>
+                                    </div>
+                                    <br>
+                                    <label>
+                                        <span id="fuelGaugeLabel"></span> kt
+                                    </label>
+                                </div>
+                                <br>
                             </div>
-                            <br>
-                            <label>
-                                <span id="throttleGaugeLabel"></span> N
-                            </label>
-                        </div>
-                        <!-- Speed -->
-                        <div class="speedGaugeBox">
-                            <div id="speedGauge" class="gauge gauge-big gauge-orange" title="Speed">
-                                <div class="gauge-arrow" data-percentage="40" style="transform: rotate(0deg);"></div>
+                            <!-- Height -->
+                            <div class="heightBox">
+                                <div class="heightDisplayBox" title="Height">
+                                    <input class="XS" id="heightDisplay" />
+                                </div>
+                                <label id="heightLabel" class="ui-heading metersLabel">&nbsp;m</label>
                             </div>
-                            <br>
-                            <label>
-                                <span id="speedGaugeLabel"></span> m/s
-                            </label>
-                        </div>
-                        <!-- Fuel -->
-                        <div class="fuelGaugeBox">
-                            <div id="fuelGauge" class="gauge gauge-small gauge-orange" title="Fuel">
-                                <div class="gauge-arrow" data-percentage="40" style="transform: rotate(0deg);"></div>
-                            </div>
-                            <br>
-                            <label>
-                                <span id="fuelGaugeLabel"></span> kt
-                            </label>
-                        </div>
-                        <br>
-                            </div>
-                        <!-- Height -->
-                        <div class="heightBox">
-                            <div class="heightDisplayBox" title="Height">
-                                <input class="XS" id="heightDisplay"/>
-                            </div>
-                            <label id="heightLabel" class="ui-heading metersLabel">&nbsp;m</label>
-                        </div>
-                    <div class="steeringBox">
-                        <!--<div class="upperSteeringBox">-->
-                        <div class="throttleBox">
-                            <input type="button" name="throttle" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf0d8; &#xf06d;" title="More Throttle">
-                            <br>
-                            <input type="button" name="brake" class="btn fa ui-button ui-widget ui-corner-all fa-flip-vertical" value="&#xf0d8; &#xf06d;" title="Less Throttle">
-                        </div>
-                        <div class="controlBox">
-                            <input type="button" name="rollLeft" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf0e2;">
-                            <input type="button" name="up" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf062;">
-                            <input type="button" name="rollRight" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf01e;">
-                            <br>
-                            <input type="button" name="left" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf060;">
-                            <input type="button" name="down" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf063;">
-                            <input type="button" name="right" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf061;">
-                        </div>
-                        <!--</div>-->
-                        <br>
-                        <br>
-                        <br>
-                        <br>
-                        <!--<div class="lowerSteeringBox">-->
-                        <div class="sasBox">
-                            <input type="button" name="sas" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf0cc;" title="SAS Stabilisation">
-                        </div>                        
-                        <div class="currentStageDisplayBox" title="Current Stage">
-                            <input class="XS" id="currentStageDisplay"/>
-                        </div>
-                        <div class="discardStageButtonBox">
-                            <input type="button" name="discardStageButton" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf07d;" title="Discard Stage">
-                        </div>
-                    <!--</div>-->
+                            <div class="steeringBox">
+                                <!--<div class="upperSteeringBox">-->
+                                <div class="throttleBox">
+                                    <input type="button" name="throttle" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf0d8; &#xf06d;" title="More Throttle">
+                                    <br>
+                                    <input type="button" name="brake" class="btn fa ui-button ui-widget ui-corner-all fa-flip-vertical" value="&#xf0d8; &#xf06d;" title="Less Throttle">
+                                </div>
+                                <div class="controlBox">
+                                    <input type="button" name="rollLeft" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf0e2;">
+                                    <input type="button" name="up" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf062;">
+                                    <input type="button" name="rollRight" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf01e;">
+                                    <br>
+                                    <input type="button" name="left" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf060;">
+                                    <input type="button" name="down" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf063;">
+                                    <input type="button" name="right" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf061;">
+                                </div>
+                                <!--</div>-->
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <!--<div class="lowerSteeringBox">-->
+                                <div class="sasBox">
+                                    <input type="button" name="sas" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf0cc;" title="SAS Stabilisation">
+                                </div>
+                                <div class="currentStageDisplayBox" title="Current Stage">
+                                    <input class="XS" id="currentStageDisplay" />
+                                </div>
+                                <div class="discardStageButtonBox">
+                                    <input type="button" name="discardStageButton" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf07d;" title="Discard Stage">
+                                </div>
+                                <!--</div>-->
                             </div>
                         </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        <!-- Game Interface End -->
-        <!--<img id="loadingRocket" src="rocket.png" alt="Loading"/> -->
-        <script>
-        /*var alpha = 0;
-        var loadingRocket = document.getElementById("loadingRocket").style;
-            move();
-        function move() {
-            for (p = 1; p < 101; p++) {
-                loadingRocket.left = 125 + 100 * Math.cos(alpha + 0.0628 * p);
-                loadingRocket.top = 110 + 100 * Math.sin(alpha + 0.0628 * p);
-            }
+            <!-- Game Interface End -->
 
-            // Winkel-Geschwindigkeit
-            alpha = alpha - 0.01;
-            setTimeout('move()', 50);
-        }*/
-        </script>
-        <!-- Information -->
-        
-        <div id="infoInterface" class="interfaceTab">
-                    <fieldset class="fieldSetPadding">
-                        <legend>Information</legend>
-                        <div class="interfaceInfoBox">
-                            <h3 class="infoLabel">How does the interface work?</h3>
-                            <i class="fa fa-rocket" aria-hidden="true"></i>  Build your own rocket or select a pre existing one<br>
-                            <i class="fa fa-video-camera" aria-hidden="true"></i>  Change settings like time factor and/or change your point of view <br>
-                            <i class="fa fa-tachometer" aria-hidden="true"></i>  Rocket Dashboard: Control your Rocket and keep track of fuel and throttle <br>
-                            <i class="fa fa-volume-up" aria-hidden="true"></i>  Turn sound on or off
-                        </div>
+            <!-- Information -->
+
+            <div id="infoInterface" class="interfaceTab">
+                <fieldset class="fieldSetPadding">
+                    <legend>Information</legend>
+                    <div class="interfaceInfoBox">
+                        <h3 class="infoLabel">How does the interface work?</h3>
+                        <i class="fa fa-rocket" aria-hidden="true"></i> Build your own rocket or select a pre existing one
                         <br>
-                        <div class="keyAssignmentBox">
-                            <h3 class="infoLabel">Key Assignment:</h3>
-                            space = throttle <br>
-                            w = x rotation <br>
-                            s = x rotation <br>
-                            a = z rotation <br>
-                            d = z rotation  <br>
-                            q = y rotation <br>
-                            e = y rotation
-                        </div>
+                        <i class="fa fa-video-camera" aria-hidden="true"></i> Change settings like time factor and/or change your point of view
                         <br>
-                        <div class="impressumInfoBox">
+                        <i class="fa fa-tachometer" aria-hidden="true"></i> Rocket Dashboard: Control your Rocket and keep track of fuel and throttle
+                        <br>
+                        <i class="fa fa-volume-up" aria-hidden="true"></i> Turn sound on or off
+                    </div>
+                    <br>
+                    <div class="keyAssignmentBox">
+                        <h3 class="infoLabel">Key Assignment:</h3>
+                        space = throttle
+                        <br>w = x rotation
+                        <br>s = x rotation
+                        <br>a = z rotation
+                        <br>d = z rotation
+                        <br>q = y rotation
+                        <br>e = y rotation
+                    </div>
+                    <br>
+                    <div class="impressumInfoBox">
                         <h3 class="impressumLabel">Impressum, License and Copyright:</h3>
-                            <a href="/Impressum.html" target="_blank">Read More</a>
-                        </div>
-                    </fieldset>
+                        <a href="/Impressum.html" target="_blank">Read More</a>
+                    </div>
+                </fieldset>
+            </div>
         </div>
-        
-        <!-- Information End -->
-        
-    </div>
-    <!-- Content Box End -->
+            <!-- Information End -->
+            
+           
 
-    <!-- Footer Box -->
-    <!--
+        </div>
+        <!-- Content Box End -->
+
+        <!-- Footer Box -->
+        <!--
             <div id="footerBox">
                 <div class="impressumBox">
                     <a href="impressum.jsp">Impressum</a>
                 </div>
             </div>
     -->
-</div>
-<!-- User Inreface End -->
+    </div>
+    <!-- User Inreface End -->
 
 
     <!-- Vertex  -->
@@ -962,7 +969,11 @@ Contact: openspacesimulation@gmail.com
         
         
         function loadingDone(){
-            $("#loadingBox").remove();
+            percentage = 100;
+            updateLoading(100);
+            setTimeout(function(){
+              $("#loadingBox").remove();  
+            }, 1000);  
         }
     </script>
 
