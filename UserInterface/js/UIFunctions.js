@@ -207,10 +207,14 @@ function saveCustomRocket(button) {
     showCustomRocketButtons();
 }
 
-function showCustomRocketButtons() {
+function createSelectString() {
     //$("#useCustomRocketButton").html(customRocketButtonsString);
     var fullRocketSelectString = defaultRocketsString + customRocketButtonsString;
     $("#rocketSelect").html(fullRocketSelectString);
+}
+
+function showCustomRocketButtons() {
+    createSelectString();
     $("#rocketSelect").selectmenu("destroy").selectmenu({ style: "dropdown" });
 }
 
@@ -222,7 +226,7 @@ document.addEventListener('DOMContentLoaded', function() {
            var customRocketName = key.replace("customRocket", "");
            /*  customRocketButtonsString += "<input type='button' id='" + key + "' class='btn ui-button ui-widget ui-corner-all' value='" + customRocketName + "' title='Use Custom Rocket' onclick='loadCustomRocket(this)'>";*/
         customRocketButtonsString += "<option id='" + key + "'  value='" + customRocketName + "' title='Use Custom Rocket' onclick='loadCustomRocket(this)'>" + customRocketName + "</option>";
-        showCustomRocketButtons();
+        createSelectString();
         }
     }
 }, false);
