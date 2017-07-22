@@ -215,6 +215,8 @@ function showCustomRocketButtons() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+    $("#dialog").html("How to play: <br> <i class='fa fa-rocket' aria-hidden='true'></i>  Select or build a rocket in the rocket editor <br> <i class='fa fa-video-camera' aria-hidden='true'></i> Watch your rocket take off and fly or discover our solar system <br> <i class='fa fa-tachometer' aria-hidden='true'></i> Control your rocket <br><i class='fa fa-info' aria-hidden='true'></i> For further information and key assignments check out the infobox<br> <strong>Enjoy</strong>");
+    $("#dialog").dialog();
     for (var key in localStorage) {
         if (key.startsWith("customRocket")) {
            var customRocketName = key.replace("customRocket", "");

@@ -227,8 +227,8 @@ Contact: openspacesimulation@gmail.com
                     <input type="button" id="resetEditor" class="btn ui-button ui-widget ui-corner-all" value="Reset" title="Reset Editor" onclick="resetEditor()">
                     <div id="saveCustomRocketBox">
                         <input type="text" class="" name="customRocketNameTextfield" id="customRocketNameTextfield" value="">
-                        <input type="button" id="customRocketName" class="btn ui-button ui-widget ui-corner-all" value="Save Custom Rocket" title="Save Custom Rocket" onclick="saveCustomRocket()">
-                        <input type="button" id="deleteLocalStorageButton" class="btn ui-button ui-widget ui-corner-all" value="Delete All Custom Rockets" title="Delete All Custom Rockets" onclick="deleteLocalStorage()">
+                        <input type="button" id="customRocketName" class="btn ui-button ui-widget ui-corner-all" value="Save" title="Save Custom Rocket" onclick="saveCustomRocket()">
+                        <input type="button" id="deleteLocalStorageButton" class="btn ui-button ui-widget ui-corner-all" value="Delete All" title="Delete All Custom Rockets" onclick="deleteLocalStorage()">
                     </div>
                 </fieldset>
 
@@ -325,6 +325,43 @@ Contact: openspacesimulation@gmail.com
             </div>
         </div>
         <!-- Developer Interface End -->
+        
+        <!-- Information -->
+
+            <div id="infoInterface" class="interfaceTab">
+                <fieldset class="fieldSetPadding">
+                    <legend>Information</legend>
+                    <div class="interfaceInfoBox">
+                        <h3 class="infoLabel">How does the interface work?</h3>
+                        <i class="fa fa-rocket" aria-hidden="true"></i> Build your own rocket or select a pre existing one
+                        <br>
+                        <i class="fa fa-video-camera" aria-hidden="true"></i> Change settings like time factor and/or change your point of view
+                        <br>
+                        <i class="fa fa-tachometer" aria-hidden="true"></i> Rocket Dashboard: Control your Rocket and keep track of fuel and throttle
+                        <br>
+                        <i class="fa fa-volume-up" aria-hidden="true"></i> Turn sound on or off <br>
+                        <i class="fa fa-refresh" aria-hidden="true"></i>  Reload page. Everything will be set to default.
+                    </div> 
+                    <br>
+                    <div class="keyAssignmentBox">
+                        <h3 class="infoLabel">Key Assignment:</h3>
+                        space = throttle
+                        <br>w = x rotation
+                        <br>s = x rotation
+                        <br>a = z rotation
+                        <br>d = z rotation
+                        <br>q = y rotation
+                        <br>e = y rotation
+                    </div>
+                    <br>
+                    <div class="impressumInfoBox">
+                        <h3 class="impressumLabel">Impressum, License and Copyright:</h3>
+                        <a href="/Impressum.html" target="_blank">Read More</a>
+                    </div>
+                </fieldset>
+            </div>
+            <!-- Information End -->
+        
 
         <!-- Game Interface-->
         <div id="gameInterface">
@@ -419,44 +456,9 @@ Contact: openspacesimulation@gmail.com
                     </div>
                 </div>
             </div>
-            <!-- Game Interface End -->
-
-            <!-- Information -->
-
-            <div id="infoInterface" class="interfaceTab">
-                <fieldset class="fieldSetPadding">
-                    <legend>Information</legend>
-                    <div class="interfaceInfoBox">
-                        <h3 class="infoLabel">How does the interface work?</h3>
-                        <i class="fa fa-rocket" aria-hidden="true"></i> Build your own rocket or select a pre existing one
-                        <br>
-                        <i class="fa fa-video-camera" aria-hidden="true"></i> Change settings like time factor and/or change your point of view
-                        <br>
-                        <i class="fa fa-tachometer" aria-hidden="true"></i> Rocket Dashboard: Control your Rocket and keep track of fuel and throttle
-                        <br>
-                        <i class="fa fa-volume-up" aria-hidden="true"></i> Turn sound on or off <br>
-                        <i class="fa fa-refresh" aria-hidden="true"></i>  Reload page. Everything will be set to default.
-                    </div> 
-                    <br>
-                    <div class="keyAssignmentBox">
-                        <h3 class="infoLabel">Key Assignment:</h3>
-                        space = throttle
-                        <br>w = x rotation
-                        <br>s = x rotation
-                        <br>a = z rotation
-                        <br>d = z rotation
-                        <br>q = y rotation
-                        <br>e = y rotation
-                    </div>
-                    <br>
-                    <div class="impressumInfoBox">
-                        <h3 class="impressumLabel">Impressum, License and Copyright:</h3>
-                        <a href="/Impressum.html" target="_blank">Read More</a>
-                    </div>
-                </fieldset>
-            </div>
         </div>
-        <!-- Information End -->
+        <!-- Game Interface End -->
+        
 
 
 

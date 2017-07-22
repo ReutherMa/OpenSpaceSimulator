@@ -193,7 +193,18 @@ position: relative;
 @media screen and (max-height: 760px) {
     .dashboardBox {
         bottom:0%;
-         background: radial-gradient(ellipse 170px 170px at 50% 0%, transparent 100px, rgba(49, 49, 49, 0.7) 50px);
+    }
+}
+
+@media screen and (max-height: 700px) {
+    .dashboardInnerBox {
+        background: radial-gradient(ellipse 170px 170px at 50% 0%, transparent 100px, rgba(49, 49, 49, 0.7) 50px);
+    }
+    .steeringBox {
+       padding: 10px 10px 10px 30px; 
+    }
+    .displayBox {
+        padding: 10px 10px 10px 21px;
     }
 }
 
@@ -214,8 +225,7 @@ position: relative;
     float: left;
 }
 #throttleGaugeLabel {
-    margin-left: 49%;
-    margin-top: 60%;
+    /*margin-top: 60%;*/
 }
 .speedGaugeBox {
     position: relative;
