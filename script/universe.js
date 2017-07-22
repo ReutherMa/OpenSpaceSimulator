@@ -39,6 +39,8 @@ var line_count = 0;
 var sphere_nav;
 var scene;
 
+var renderNavball = true;
+
 //variables that indicate, if these pieces are already ready
 //are used for loading screen
 var readyVars = {
@@ -1137,11 +1139,13 @@ var clock = new THREE.Clock();
             renderer.render(scene, camera);
            
             //render second Scene
-            renderer.sortObjects = false;
-            renderer.clearDepth();
-            renderer.render(ui_scene, ui_camera);
-            readyVars.render = true;
-
+            if( renderNavball ){
+                renderer.sortObjects = false;
+                renderer.clearDepth();
+                renderer.render(ui_scene, ui_camera);
+            
+            }
+        readyVars.render = true;
            
         }
 
