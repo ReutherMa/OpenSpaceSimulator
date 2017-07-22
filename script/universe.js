@@ -1140,11 +1140,19 @@ var clock = new THREE.Clock();
            
             //render second Scene
             if( renderNavball ){
-                renderer.sortObjects = false;
-                renderer.clearDepth();
-                renderer.render(ui_scene, ui_camera);
+                //ui_scene.visible = false;
+                ui_scene.children[0].visible = true;
+                ui_scene.children[1].visible = true;
             
             }
+            else {
+                ui_scene.children[0].visible = false;
+                ui_scene.children[1].visible = false;
+            }
+            
+            renderer.sortObjects = false;
+            renderer.clearDepth();
+            renderer.render(ui_scene, ui_camera);
         readyVars.render = true;
            
         }
