@@ -5,13 +5,15 @@ Authors: Marius Reuther Franziska Braun, Lea Uhlenbrock, Selina Forster, Theresa
 Contact: openspacesimulation@gmail.com
 */
 
-var rocketStartPosition;
+var startDiffTime;
+var rocketStartPosition = new THREE.Vector3(0,0,0);
 
 //universal gravitational constant
 var gravConst = 6.673e-11;
 
 //counter for things and stuff
 var ctr = 0;
+var ctrStart = 0;
 
 var customRocketUsage = false;
 
@@ -114,11 +116,23 @@ function calculatePhysics(difftime, spaceObjects) {
     if(global.started){
         calculateGravitationRocket(factoredTime);
     }
-    
-    if (global.started) {
+    /*if(global.started && ctrStart == 0){
+        //speed rocket with earth rotation when started
+        var earthRotationSpeed = new THREE.Vector3(0,0,0);
+        earthRotationSpeed = rocketGroup.position.clone();
+        earthRotationSpeed.sub(rocketStartPosition);
+        rocketGroup.speed.addScaledVector(earthRotationSpeed, difftime/startDiffTime);
+        ctrStart++;
+    }*/
+    if (global.started && !gameOverVar) {
+            
         moveRocket(factoredTime);
+        if(rocketGroup&&drehmoment){
+        rotateRocket(factoredTime);
+        }
         if(globalInterfaceValues.discardStage){
             nextStage();
+            globalInterfaceValues.discardStage = false;
         }
         checkForCollision();
             //throttleSound.setVolume(globalControlValues.throttle/100);
@@ -127,13 +141,7 @@ function calculatePhysics(difftime, spaceObjects) {
         global.audio = true;
         if (throttle == 100) {
             global.started = true;
-            //starting point of rocket; gets initialized at launch
-            var rocketStartPos = new THREE.Vector3();
-            rocketStartPos = rocketGroup.position;
-            var rocketStartPosX = rocketStartPos.x;
-            var rocketStartPosY = rocketStartPos.y;
-            var rocketStartPosZ = rocketStartPos.z;
-            rocketStartPosition = new THREE.Vector3(rocketStartPosX, rocketStartPosY, rocketStartPosZ);
+            
         }
     }
     
@@ -154,9 +162,7 @@ function calculatePhysics(difftime, spaceObjects) {
     if(globalControlValues.break&&throttle>=0){
         throttle-=5;
         }
-    if(rocketGroup&&drehmoment){
-        rotateRocket(factoredTime);
-    }
+    
     $('#throttleGauge .gauge-arrow').trigger('updateGauge', throttle);
     $("#throttleGaugeLabel").text(parseInt(throttle));  
     /*
@@ -164,9 +170,7 @@ function calculatePhysics(difftime, spaceObjects) {
     */
     
             
-    if (globalControlValues.discardStage) {
-        nextStage();
-    }
+    
     
     
     if(ctr<1 && spaceObjects.earth){
@@ -202,13 +206,13 @@ function calculatePhysics(difftime, spaceObjects) {
             rocketGroup.position.y = spaceObjects.earth.group.position.y + yE;
             rocketGroup.position.z = spaceObjects.earth.group.position.z + zE;
           */  
-            if (launchpadGroup !== undefined) {
+            /*if (launchpadGroup !== undefined) {
                 scene.updateMatrixWorld();
                 rocketGroup.quaternion.setFromRotationMatrix( launchpadGroup.matrixWorld );
                 //rocketGroup.position.setFromMatrixPosition( launchpadGroup.matrixWorld );
                 rocketGroup.position.set (0.9, 1.5, -1.65);
                 launchpadGroup.localToWorld (rocketGroup.position);
-            }
+            }*/
         }
         
         if(sphere_nav && countr==0 && rocketGroup){

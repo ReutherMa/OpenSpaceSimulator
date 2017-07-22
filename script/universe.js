@@ -448,21 +448,23 @@ function buildUniverse() {
             //rocketGroup.position.x = spaceObjects.earth.group.position.x + xE + 1;
             //rocketGroup.position.y = spaceObjects.earth.group.position.y + yE + 1;
             //rocketGroup.position.z = spaceObjects.earth.group.position.z + zE + 1;
-            rocketGroup.position.x =  earthGroup.position.x + xE;
-            rocketGroup.position.y =  earthGroup.position.y + yE;
-            rocketGroup.position.z =  earthGroup.position.z + zE;
             
-            
-            rocketGroup.speed = new THREE.Vector3 (0, 0, 0);
-            //rocketGroup.rotateX(Math.PI/180 * 45);
-            rocketGroup.angularMomentum = new THREE.Quaternion(0,0,0,1);
-            rocketGroup.angularAcceleration = new THREE.Quaternion(0,0,0,1);
-            //earthGroup.add(rocketGroup);
-            rocketGroup.add(throttleSound);
+            rocketGroup.position.x =  xE + 2;
+            rocketGroup.position.y =  yE + 5;
+            rocketGroup.position.z =  zE ;
+             rocketGroup.speed = new THREE.Vector3 (0, 0, 0);
+             rocketGroup.rotateX(Math.PI/180 * 45);
+             rocketGroup.angularMomentum = new THREE.Quaternion(0,0,0,1);
+             rocketGroup.angularAcceleration = new THREE.Quaternion(0,0,0,1);
+             earthGroup.add(rocketGroup);
+             rocketGroup.add(throttleSound);
             buildFire();
         });
 
         if(geo_line_rocket) scene.add( geo_line_rocket );
+        earthGroup.add(geo_line_rocket);
+        if(geo_line_rocket_future) scene.add( geo_line_rocket_future );
+        earthGroup.add(geo_line_rocket_future);
         //var rocketObject = new SpaceObject();
         readyVars.rocket = true;
         //var rocketObject = new SpaceObject("rocket", 0, 0, "0x000000", "rocketGroup", rocketGroup.speed.x, rocketGroup.speed.y, rocketGroup.speed.z);
@@ -952,14 +954,12 @@ function buildUniverse() {
     function calcOpacity(){
         var focusedObj = globalInterfaceValues.planetCamera;
             if(focusedObj == "rocket" || focusedObj == "launchpad"){
-                if (rocketHeightVec.length()){
+                if (rocketHeight){
                     var vec = new THREE.Vector3();
-                    var nb = 1 - ((rocketHeightVec.length()) *0.00001);
-                    var op = THREE.Math.clamp(nb, 0.1, 0.9);
-                    console.log("vec length: " + rocketHeightVec.length());
-                    console.log("nb: " + nb);
-                    console.log("op: " + op);
-                    console.log("Opacity: " + spaceObjects.earth.group.children[2].material.opacity);   
+                    var nb = 1 - (rocketHeight *0.00001);
+                    var op = THREE.Math.clamp(nb, 0.1, 0.9);  
+                }else{
+                    var op = 0.9;
                 }
             }
         else op = 0.1;
@@ -1149,11 +1149,11 @@ var clock = new THREE.Clock();
                 ui_scene.children[0].visible = false;
                 ui_scene.children[1].visible = false;
             }
-            
             renderer.sortObjects = false;
             renderer.clearDepth();
             renderer.render(ui_scene, ui_camera);
-        readyVars.render = true;
+            readyVars.render = true;
+
            
         }
 

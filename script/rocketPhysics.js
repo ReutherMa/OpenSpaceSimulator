@@ -11,10 +11,14 @@ Contact: openspacesimulation@gmail.com
 collision calculation
 TODO: trail point
 */
-
+var ctr=0;
 var rocketHeightVec = new THREE.Vector3(0, 0, 0);
-
+var dRocketHeight = new THREE.Vector3();
+var lastRocketPos = new THREE.Vector3(0,0,0);
 var rocketHeight;
+var gameOverVar = false;
+
+var watchoutearth = false;
 
 var earthRadius = 0;
 var cotr = 0;
@@ -114,44 +118,58 @@ function drawFlightPrognosis(x, y, z){
 
 
 function calculateGravitationRocket(difftime){
-    for (var o in spaceObjects) {
-        if ( spaceObjects[o].name == "rocket") {
-            continue;
-        }
-        if(spaceObjects[o].name = "earth"){
-        var rx = spaceObjects[o].group.position.x - rocketGroup.position.x;
-        var ry = spaceObjects[o].group.position.y - rocketGroup.position.y;
-        var rz = spaceObjects[o].group.position.z - rocketGroup.position.z;
-        var dist2 = rx * rx + ry * ry + rz * rz;
-        var dist = Math.sqrt(dist2);
-        var mindist = 1;
-        if(dist2 < mindist){
-            prompt("You are getting dangerously close to "+spaceObjects[o].name+", watch out!");
-        }
-        if(dist <= 1){
-            explode();
-        }
-
-        if (dist2 > mindist) {
-            var gravAccel = gravConst * spaceObjects[o].mass / dist2;
-            console.log("gravAccel: " + gravAccel);
+    
+            var rx = - rocketGroup.position.x;
+            var ry = - rocketGroup.position.y;
+            var rz = - rocketGroup.position.z;
+            var dist2 = rx * rx + ry * ry + rz * rz;
+            var dist = Math.sqrt(dist2);
+            var mindist = 100;
+            if(rocketHeight > 120){
+                watchoutearth = true;
+            }
+            if(watchoutearth && (dist - spaceObjects.earth.radius) < mindist){
+                prompt("You are getting dangerously close to "+spaceObjects.earth.name+", watch out!");
+            }
+            if(dist - spaceObjects.earth.radius <= 1){
+                explode();
+            }
             if(ctr==0){accel=0;ctr++;}
+            
+            /*var gravAccel = gravConst * spaceObjects[o].mass / dist2;
+            console.log("gravAccel: " + gravAccel);
+
+            var gravSpeedVec = new THREE.Vector3(rx * dist, ry * dist, rz * dist);
+            console.log("gravSpeed:");
+            console.log(gravSpeedVec);
+            console.log("speed before grav: ");
+            console.log(rocketGroup.speed);
+            rocketGroup.speed.addScaledVector (gravSpeedVec, gravAccel * difftime);
+            console.log("speed after grav: ");
+            console.log(rocketGroup.speed);
+            */
+            //rocketGroup.speed.addScaledVector (gravSpeedVec, gravAccel * difftime);
+            //if(ctr==0){accel=0;ctr++;}
             dist = 1 / dist;
-            rocketGroup.speed.x -= gravAccel * rx * dist * difftime;
+            
+            
+            var gravAccel = gravConst * spaceObjects.earth.mass / dist2;
+            rocketGroup.speed.x += gravAccel * rx * dist * difftime;
+            rocketGroup.speed.y += gravAccel * ry * dist * difftime;
+            rocketGroup.speed.z += gravAccel * rz * dist * difftime;
+            
+            /*rocketGroup.speed.x -= gravAccel * rx * dist * difftime;
             rocketGroup.speed.y -= gravAccel * ry * dist * difftime;
             rocketGroup.speed.z -= gravAccel * rz * dist * difftime;
-        }
+            */
+            
+                
+            
         }
             
         
-        //rocket position before launch
-        //if(launched){}
-        //update rocket position
         
-
-        
-    }
-}
+    
 
 
 var lastRocketHeight = 0;
@@ -163,7 +181,7 @@ TODO: prompt
 function moveRocket(difftime) {
     scene.updateMatrixWorld();
 
-    var difftime = difftime/1000;
+    //var difftime = difftime/1000;
     //calculates fuel-mass that will be lost in difftime
     var mass_lost = difftime / saturnV.stage1.burningtime * saturnV.stage1.mass_fuel * throttle / 100;
     
@@ -175,15 +193,19 @@ function moveRocket(difftime) {
     matrix = matrix.makeRotationFromQuaternion ( quaternion );
     matrix.extractBasis(xAxis, yAxis, zAxis);
     
+    lastRocketPos = rocketGroup.position;
     
      
     //checks if enough fuel
     if ((fuel_mass - mass_lost) >= 0 || globalInterfaceValues.fuelCheat) {
         //a=F/m(now mass WITH fuel to lose)
         accel = (saturnV.stage1.thrust * (throttle/100)) / (mass); //rocket werte stimmen, einheiten sind richtig, berechnungsart stimmt
+        
         // a = (F(thrust) - F(Air Resistance)) / m(rocketMass)
-        calculateAirResistance(rocketGroup.speed.length());
-        accel = ((accel * mass) - airResistance)/mass;
+        //calculateAirResistance(rocketGroup.speed.length());
+        //console.log("airResistance: " + airResistance);
+        //accel = ((accel * mass) - airResistance)/mass;
+        //console.log("rocket accel after: " + accel);
         //new mass without lost fuel
         mass = mass - mass_lost;
         //current fuel mass for UI
@@ -193,7 +215,7 @@ function moveRocket(difftime) {
         
     } else {
         if(noStagesLeft){
-            prompt("No fuel left. No stages left. Aaaaahhhhhhhhh");
+            prompt("No fuel left. No stages left. Restart or... do your thing, Major Tom.");
         }
         else{
             prompt("Seems like you have run out of fuel. Discard current rocket stage.");
@@ -211,35 +233,32 @@ function moveRocket(difftime) {
     
     rocketHeightVec = rocketGroup.position.clone();
     //confusing: this is the height from the actual starting position of the rocket
-    var dRocketHeight = new THREE.Vector3();
     dRocketHeight = rocketHeightVec.addScaledVector(rocketStartPosition, -1);
     if(dRocketHeight.length() <= 500000){
         rocketHeight = dRocketHeight.length();
     }else{
         //this is the height of the rocket compared to earth's surface
-        rocketHeightVec.addScaledVector (spaceObjects.earth.group.position, -1);
         rocketHeight = rocketHeightVec.length() - spaceObjects.earth.radius;
     }
     var rocketHeightSpeed = (rocketHeight - lastRocketHeight) / difftime;
     lastRocketHeight = rocketHeight;
     
     if(rocketHeight <= 10000){
+        $("#heightLabel").text("m");
+        globalInterfaceValues.height = parseInt(rocketHeight);
     }else if(rocketHeight <= 999999999){
         $("#heightLabel").text("km");
-        rocketHeight = rocketHeight/1000;
+        var height = rocketHeight/1000;
+        globalInterfaceValues.height = parseInt(height);
     }else{
         $("#heightLabel").text("mio km");
-        rocketHeight = rocketHeight/1000000000;
+        var height = rocketHeight/1000000000
+        globalInterfaceValues.height = parseInt(height);
     }
     // pad height-number with zero and parse to string
-    globalInterfaceValues.height = parseInt(rocketHeight);
+    
     var height = zeroFill(globalInterfaceValues.height, 6);
     $('#heightDisplay').val(height).change();
-    
-    //convert speed/difftime to km/h and then convert to percentual
-    globalInterfaceValues.speed = rocketSpeed / 8000 * 100;
-    $('#speedGauge .gauge-arrow').trigger('updateGauge', globalInterfaceValues.speed);
-    $("#speedGaugeLabel").text(parseInt(rocketSpeed));
     
   
 
@@ -274,6 +293,15 @@ function moveRocket(difftime) {
         drawFlightPrognosis(pos.x, pos.y, pos.z);
     }*/
     
+    var speedV = lastRocketPos.clone();
+    speedV.sub(rocketGroup.position);
+    var speed = speedV.length();
+    speed = speed / difftime;
+    
+    //convert speed/difftime to km/h and then convert to percentual
+    globalInterfaceValues.speed = speed / 8000 * 100;
+    $('#speedGauge .gauge-arrow').trigger('updateGauge', globalInterfaceValues.speed);
+    $("#speedGaugeLabel").text(parseInt(rocketSpeed));
 }
 
 /**
@@ -297,33 +325,33 @@ function rotateRocket(difftime) {
     
     //rocketGroup.angularAcceleration.set (0, 0, 0, 1);
     //checks which rotation key is pressed and determines angle acceleration
-    if (globalControlValues.right) {
+    if (globalControlValues.up) {
         //accelOX = accelOX + angle_const;
         rocketGroup.angularAcceleration.set (xAxis.x, xAxis.y, xAxis.z, 1000) .normalize ();
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
         
     }
-    if (globalControlValues.left) {
+    if (globalControlValues.down) {
         rocketGroup.angularAcceleration.set (-xAxis.x, -xAxis.y, -xAxis.z, 1000) .normalize ();
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
         
     }
-    if (globalControlValues.rollRight) {
+    if (globalControlValues.rollLeft) {
         rocketGroup.angularAcceleration.set (-yAxis.x, -yAxis.y, -yAxis.z, 1000) .normalize ();
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
         
     }
-    if (globalControlValues.rollLeft) {
+    if (globalControlValues.rollRight) {
         rocketGroup.angularAcceleration.set (yAxis.x, yAxis.y, yAxis.z, 1000) .normalize ();
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
         
     }
-    if (globalControlValues.up) {
+    if (globalControlValues.left) {
         rocketGroup.angularAcceleration.set (zAxis.x, zAxis.y, zAxis.z, 1000) .normalize ();
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
         
     }
-    if (globalControlValues.down) {
+    if (globalControlValues.right) {
         rocketGroup.angularAcceleration.set (-zAxis.x, -zAxis.y, -zAxis.z, 1000) .normalize ();
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
         
@@ -371,7 +399,8 @@ TODO: UI, saving score
 */
 function gameOver(){
     //UI-Funktion Game Over
-    prompt("You killed Kenny! Restart game.");
+    prompt("Looks like you hit a tiny obstacle. Restart game.");
+    gameOverVar = true;
 }
 
 /*
@@ -474,7 +503,7 @@ function calculateAirResistance(speed){
 function checkForCollision(){
     for (var o in spaceObjects) {
     if(rocketGroup.position.x <= (spaceObjects[o].group.position.x + spaceObjects[o].group.radius) && rocketGroup.position.y == (spaceObjects[o].group.position.y + spaceObjects[o].group.radius) && rocketGroup.position.z == (spaceObjects[o].group.position.z + spaceObjects[o].group.radius)){
-        prompt("Whoopsie-daisy...");
+        prompt("Whoopsie...");
     }
     }
     
