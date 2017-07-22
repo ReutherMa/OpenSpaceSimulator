@@ -407,6 +407,7 @@ function gameOver(){
 next stage: UI-Event, initiated by user
 */
 function nextStage() {
+    console.log("nextstage called");
     if(!noStagesLeft){
         //generic:
         var oldStage = "stage"+stage;
@@ -420,12 +421,12 @@ function nextStage() {
             fuel_mass = saturnV[newStage]["mass_empty"];
             stage++;
             prompt("Discarded Stage "+(stage-1)+". Current Stage: "+stage);
-            globalInterfaceValues.stage++;
+            globalInterfaceValues.currentStage++;
             $('#currentStageDisplay').val(globalInterfaceValues.stage).change();
-            globalInterfaceValues.discardStage = false;
+            
         }
     }else{
-        //prompt("No more stages left! Sorry!");
+        prompt("No more stages left! Sorry!");
     }
     
    /*if (stage == 1) {
@@ -437,7 +438,7 @@ function nextStage() {
         mass = mass - saturnV.stage2.mass_empty - rocket.stage2.mass_fuel;
         stage = 3;
     } */
-    
+    globalInterfaceValues.discardStage = false;
     
 }
 

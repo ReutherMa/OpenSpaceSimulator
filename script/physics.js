@@ -130,9 +130,8 @@ function calculatePhysics(difftime, spaceObjects) {
         if(rocketGroup&&drehmoment){
         rotateRocket(factoredTime);
         }
-        if(globalInterfaceValues.discardStage){
+        if(globalControlValues.discardStage){
             nextStage();
-            globalInterfaceValues.discardStage = false;
         }
         checkForCollision();
             //throttleSound.setVolume(globalControlValues.throttle/100);
