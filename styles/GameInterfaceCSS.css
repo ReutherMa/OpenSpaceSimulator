@@ -193,6 +193,7 @@ position: relative;
 @media screen and (max-height: 760px) {
     .dashboardBox {
         bottom:0%;
+         background: radial-gradient(ellipse 170px 170px at 50% 0%, transparent 100px, rgba(49, 49, 49, 0.7) 50px);
     }
 }
 
