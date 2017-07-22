@@ -33,7 +33,7 @@ varying vec4 col;
                 
                 if(dot(extrudeVec_, normalVec) < 0.0 && vColor[0] != 0.0) {
                     gl_Position = projectionMatrix * (modelViewMatrix * vec4(position, 1.0) + 
-                                            vec4 (extrudeVec_, 0.0) * 1e3);
+                                            vec4 (extrudeVec_, 0.0) * 1e2);
                 }else{
                     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
                 }
@@ -356,6 +356,9 @@ gl_FragColor.g = 1.0;
             var renderVar  = false;
             var animateVar = false;
             
+            var group_earth = new THREE.Group();
+            var groupVol_earth = new THREE.Group();;
+            
             
             
             
@@ -374,36 +377,7 @@ gl_FragColor.g = 1.0;
                 r_loader.load("models/cube_3.dae", 
                               function(collada) {
                                     rocket = collada.scene;   //var skin = collada.skins[ 0 ];
-                                    //rocket.scale.set(695508e3, 695508e3, 695508e3);
-                                    //rocket.position.x = - 7;
-                                    //rocket.position.y = -15;
-                                    //rocket.position.z =   0;
-                                    //rocket.children[2].children.length=1;
-                                    //scene.add(collada.scene);
-                                    
-                    /*
-                                    function recurse_mesh(group, prepend) {
-                                        for (var i in group.children){
-                                            recurse_mesh (group.children[i], prepend+group.name+"-"+i+": ");
-                                        }
-                                        if (group.geometry !== undefined){
-                                            console.log (prepend + group.geometry.faces.length + "Faces");
-                                            for (var face of group.geometry.faces) {
-                                                if (! (face instanceof THREE.Face3)) {
-                                                    console.log ("rocket: not Face3");
-                                                }
-                                                vert_rocket.push (group.geometry.vertices[face.a]);
-                                                vert_rocket.push (group.geometry.vertices[face.b]);
-                                                vert_rocket.push (group.geometry.vertices[face.c]);
-                                                
-                                                face_rocket.push (group.geometry.faces);
-                                            }
-                                        }
-                                    }
-                                    
-                                    recurse_mesh(rocket, "rocket: ");
-                                    console.log ("rocket: total vertices: " + vert_rocket.length);
-                    */
+                    
                                     init();
                               },
                               function (onLoad) {
@@ -429,7 +403,7 @@ gl_FragColor.g = 1.0;
                 scene.add(axisHelper);
                 
                 
-                var imagePrefix = "textures/white/";
+                var imagePrefix = "textures/stars_for_skybox2/";
                 var directions = ["xpos", "xneg", "ypos", "yneg", "zpos", "zneg"];
                 var imageSuffix = ".png";
         
@@ -462,7 +436,7 @@ gl_FragColor.g = 1.0;
                 var geoVol_ground_faceNum = geoVol_ground.faces.length;
   
                 //Moon
-                var geoVol_moon         = new THREE.SphereGeometry(1, 64, 64);
+                var geoVol_moon         = new THREE.SphereGeometry(0.5, 64, 64);
                 var geoVol_moon_faceNum = geoVol_moon.faces.length;
                 
                 //Earth
@@ -520,19 +494,19 @@ gl_FragColor.g = 1.0;
                                                                   arr_geoVol[j].faces[i].b,          //vertex-position
                                                                   arr_geoVol[j].faces[i].a,          //vertex-position
                                                                   arr_geoVol[j].faces[i].normal,     //orientation -> light
-                                                                   color2));                         //tagging-attribute for vertices
+                                                                  color2));c                         //tagging-attribute for vertices
                
                         arr_geoVol[j].faces.push(new THREE.Face3( arr_geoVol[j].faces[i].b,
                                                                   arr_geoVol[j].faces[i].b,
                                                                   arr_geoVol[j].faces[i].a,
                                                                   arr_geoVol[j].faces[i].normal,
-                                                                   color1));
+                                                                  color1));
                         
                         arr_geoVol[j].faces.push(new THREE.Face3( arr_geoVol[j].faces[i].b,
                                                                   arr_geoVol[j].faces[i].c,
                                                                   arr_geoVol[j].faces[i].b,
                                                                   arr_geoVol[j].faces[i].normal,
-                                                                      color2));
+                                                                  color2));
                         
                         arr_geoVol[j].faces.push(new THREE.Face3(  arr_geoVol[j].faces[i].c,
                                                                    arr_geoVol[j].faces[i].c,
@@ -591,17 +565,26 @@ gl_FragColor.g = 1.0;
                 
 //                rocket_vol.position.set (-7,-15,0);
                 rocket_vol.position.set (0, 0, 0);
-                sceneVol.add (rocket_vol);
+ //               sceneVol.add (rocket_vol);
                 
 //                rocket.position.set (-7,-15,0);
                 rocket.position.set (0, 0, 0);
-                scene.add (rocket);
+//                scene.add (rocket);
 
                 //TORUS
                 meshVol_torus = new THREE.Mesh(geoVol_torus);
                 meshVol_torus.position.set(0, 0, -5);
                 sceneVol.add(meshVol_torus);
                 
+                un_tor = {
+                    texture: { value: loader.load( "textures/torus.jpg" ) }
+                };   
+                
+                shaderMat_tor = new THREE.ShaderMaterial( {
+						uniforms: un_tor,
+						vertexShader: document.getElementById( 'spaceObj_vs' ).textContent,
+						fragmentShader: document.getElementById( 'spaceObj_fs' ).textContent
+				    } );
                 mesh_torus = new THREE.Mesh(new THREE.TorusKnotGeometry(2, 0.5, 100, 16));
                 mesh_torus.position.set(0, 0, -5);
                 scene.add(mesh_torus);
@@ -612,9 +595,25 @@ gl_FragColor.g = 1.0;
                 meshVol_ground.position.set(0, -25, 0);
                 sceneVol.add(meshVol_ground);
                 
+                
+                un_ground = {
+                    texture: { value: loader.load( "textures/ground.jpg" ) }
+                };   
+                
+                shaderMat_ground = new THREE.ShaderMaterial( {
+						uniforms: un_ground,
+						vertexShader: document.getElementById( 'spaceObj_vs' ).textContent,
+						fragmentShader: document.getElementById( 'spaceObj_fs' ).textContent
+				    } );
                 mesh_ground = new THREE.Mesh(new THREE.BoxGeometry(128, 0.1, 128));
                 mesh_ground.position.set(0, -25, 0);
                 scene.add(mesh_ground);
+                
+                
+                
+                
+                
+            
                 
                 
                 //MOON
@@ -635,7 +634,7 @@ gl_FragColor.g = 1.0;
 				    } );
                 
                 
-                geo_moon  = new THREE.SphereGeometry(1, 64, 64);
+                geo_moon  = new THREE.SphereGeometry(0.5, 64, 64);
                 mesh_moon = new THREE.Mesh(geo_moon);
                 mesh_moon.position.set(0, 2, 5);
                 scene.add(mesh_moon);
@@ -661,7 +660,7 @@ gl_FragColor.g = 1.0;
                 mesh_earth = new THREE.Mesh(geoVol_earth);
                 mesh_earth.position.set(0, 0, 10);
                 scene.add(mesh_earth);
-
+    
                 
                 //Mars
                 meshVol_mars = new THREE.Mesh(geoVol_mars);
@@ -703,7 +702,7 @@ gl_FragColor.g = 1.0;
                 
                 
                 
-                //Bounding Box
+/*                //Bounding Box
                 var sceneBoundingBox = new THREE.BoundingBoxHelper(scene);
                 sceneBoundingBox.update();
                 
@@ -712,7 +711,7 @@ gl_FragColor.g = 1.0;
                 
                 
                 var extrudeVec = new THREE.Vector3();
-                extrudeVec.copy(light).negate().multiplyScalar(extrude_size);
+                extrudeVec.copy(light).negate().multiplyScalar(extrude_size);*/
                 
 /*                var extrudeMat = new THREE.Matrix4();
                 extrudeMat.makeTranslation(extrudeVec.x, extrudeVec.y, extrudeVec.z);*/
@@ -728,7 +727,7 @@ gl_FragColor.g = 1.0;
 				});
                 
 
-//recurse_geo_material(rocket, shadowVolume_mat);
+recurse_geo_material(rocket, shadowVolume_mat);
                 
                 //meshVol_rocket.material = shadowVolume_mat;     //Rocket
                 //meshVol_rocket[0].material = shadowVolume_mat;
@@ -838,7 +837,7 @@ recurse_geo_material(rocket, ambient_spaceObj_mat);
                 gl.depthFunc(gl.LESS);
                 renderer.render(scene, camera);
                 
-                //gl.colorMask(false, false, false, false);
+                gl.colorMask(false, false, false, false);
                 gl.depthMask(false);
                 gl.enable(gl.STENCIL_TEST);
                 gl.disable(gl.CULL_FACE);
@@ -853,9 +852,9 @@ recurse_geo_material(rocket, ambient_spaceObj_mat);
 recurse_geo_material(rocket, shaderMat_basic);
                 
                 //rocket.material = shaderMat_basic;
-                mesh_torus.material  = shaderMat_basic;
-                mesh_ground.material = shaderMat_basic;
-mesh_moon.material   = shaderMat_basic;
+                mesh_torus.material  = shaderMat_tor;
+                mesh_ground.material = shaderMat_ground;
+                mesh_moon.material   = shaderMat_moon;
                 mesh_earth.material  = shaderMat_earth;
                 mesh_mars.material   = shaderMat_mars;
                 
@@ -871,6 +870,9 @@ gl.enable(gl.STENCIL_TEST);
                 renderer.render(scene, camera);
                 
                 mesh_earth.rotateY(0.0025);
+                meshVol_earth.rotateY(0.0025);
+                mesh_torus.rotateZ(0.01);
+                meshVol_torus.rotateZ(0.01);
                 
 			}
 		</script>  
