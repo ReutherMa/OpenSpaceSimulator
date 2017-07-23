@@ -22,6 +22,8 @@ var rocketGroup;
 var launchpad;
 var launchpadGroup;
 
+var spaceTaxiUsed = false;
+
 var particleSystem;
 var spawnerOptions;
 var options;
@@ -430,12 +432,15 @@ function buildUniverse() {
         //earthGroup.quaternion.multiply(earthGroup.angularMomentum);
         var loader = new THREE.ColladaLoader(); 
         loader.options.convertUpAxis = true; 
+      
         loader.load("models/saturnV_3.dae", function(collada) {   
             rocketGroup = new THREE.Group();
             
             rocketGroup.add(mp);
             
-            rocket = collada.scene;   
+            rocket = collada.scene;
+            rocket.name = "saturnV";
+            spaceTaxiUsed = false;
             //var skin = collada.skins[ 0 ];
             //rocket.scale.set(695508e3, 695508e3, 695508e3);
             rocketGroup.add(rocket);
@@ -973,11 +978,7 @@ var clock = new THREE.Clock();
     function render() {
         
         requestAnimationFrame(render);
-         //   if (particleSystem != undefined){
-       //  animate();
-        
-     //   }
-        
+         
         /* for camera tracking shot */
         //console.log(camera.position.x, camera.position.y, camera.position.z);
         
@@ -1054,6 +1055,32 @@ var clock = new THREE.Clock();
         
         
         if(rocketGroup){
+            //Choice Rocket
+            if (globalInterfaceValues.rocketName == "spaceTaxi" && spaceTaxiUsed == false){
+                rocket.visible = false;
+                var loader = new THREE.ColladaLoader(); 
+                loader.options.convertUpAxis = true; 
+                loader.load("models/taxi_y.dae", function(collada) {   
+                    rocket = collada.scene;   
+                    rocket.name = "spaceTaxi";
+                    rocketGroup.add(rocket);         
+                    rocket.visible = true;
+                });
+                spaceTaxiUsed = true;
+            } else if (globalInterfaceValues.rocketName == "saturnV" && spaceTaxiUsed == true){
+                rocket.visible = false;
+                var loader = new THREE.ColladaLoader(); 
+                loader.options.convertUpAxis = true; 
+                loader.load("models/saturnV_3.dae", function(collada) {   
+                    rocket = collada.scene;   
+                    rocket.name = "saturnV";
+                    rocketGroup.add(rocket);       
+                    rocket.visible = true;
+                });
+                 spaceTaxiUsed = false;
+                
+            }
+            
             //Atmosphere
             spaceObjects.earth.group.children[2].material.opacity = calcOpacity();
             
