@@ -183,7 +183,7 @@ function moveRocket(difftime) {
 
     //var difftime = difftime/1000;
     //calculates fuel-mass that will be lost in difftime
-    var mass_lost = difftime / saturnV["stage" + globalInterface.currentStage].burningtime * saturnV["stage" + globalInterface.currentStage].mass_fuel * throttle / 100;
+    var mass_lost = difftime / saturnV["stage" + globalInterfaceValues.currentStage].burningtime * saturnV["stage" + globalInterfaceValues.currentStage].mass_fuel * throttle / 100;
     
     var xAxis = new THREE.Vector3();
     var yAxis = new THREE.Vector3();
@@ -199,7 +199,7 @@ function moveRocket(difftime) {
     //checks if enough fuel
     if ((fuel_mass - mass_lost) >= 0 || globalInterfaceValues.fuelCheat) {
         //a=F/m(now mass WITH fuel to lose)
-        accel = (saturnV["stage" + globalInterface.currentStage].thrust * (throttle/100)) / (mass); //rocket werte stimmen, einheiten sind richtig, berechnungsart stimmt
+        accel = (saturnV["stage" + globalInterfaceValues.currentStage].thrust * (throttle/100)) / (mass); //rocket werte stimmen, einheiten sind richtig, berechnungsart stimmt
         
         // a = (F(thrust) - F(Air Resistance)) / m(rocketMass)
         calculateAirResistance(rocketGroup.speed.length());
@@ -329,32 +329,39 @@ function rotateRocket(difftime) {
     //checks which rotation key is pressed and determines angle acceleration
     if (globalControlValues.down) {
         //accelOX = accelOX + angle_const;
-        rocketGroup.angularAcceleration.set (xAxis.x, xAxis.y, xAxis.z, 1000) .normalize ();
+        //rocketGroup.angularAcceleration.set (xAxis.x, xAxis.y, xAxis.z, 1000) .normalize ();
+        //rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
+        rocketGroup.angularAcceleration.set (1, 0, 0, 1000) .normalize ();
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
         
     }
     if (globalControlValues.up) {
         rocketGroup.angularAcceleration.set (xAxis.x, xAxis.y, xAxis.z, -1000) .normalize ();
+        rocketGroup.angularAcceleration.set (1, 0, 0, -1000) .normalize ();
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
         
     }
     if (globalControlValues.rollLeft) {
         rocketGroup.angularAcceleration.set (yAxis.x, yAxis.y, yAxis.z, -1000) .normalize ();
+        rocketGroup.angularAcceleration.set (0, 1, 0, -1000) .normalize ();
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
         
     }
     if (globalControlValues.rollRight) {
         rocketGroup.angularAcceleration.set (yAxis.x, yAxis.y, yAxis.z, 1000) .normalize ();
+        rocketGroup.angularAcceleration.set (0, 1, 0, 1000) .normalize ();
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
         
     }
     if (globalControlValues.right) {
         rocketGroup.angularAcceleration.set (zAxis.x, zAxis.y, zAxis.z, 1000) .normalize ();
+        rocketGroup.angularAcceleration.set (0, 0, 1, -1000) .normalize ();
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
         
     }
     if (globalControlValues.left) {
         rocketGroup.angularAcceleration.set (zAxis.x, zAxis.y, zAxis.z, -1000) .normalize ();
+        rocketGroup.angularAcceleration.set (0, 0, 1, 1000) .normalize ();
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
         
     }
@@ -375,7 +382,6 @@ function rotateRocket(difftime) {
     
     rocketGroup.quaternion.multiply (rocketGroup.angularMomentum);
     sphere_nav.quaternion.multiply(rocketGroup.angularMomentum);
-    scene.updateMatrixWorld();
     /*var euler = new THREE.Euler( 0.5*Math.PI, 0, 0, 'XYZ' );
     var quat = new THREE.Quaternion(0,0,0,1);
     quat.setFromEuler(euler);
