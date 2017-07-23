@@ -333,12 +333,18 @@ function rotateRocket(difftime) {
         //rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
         rocketGroup.angularAcceleration.set (1, 0, 0, 1000) .normalize ();
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
+        sphere_nav.angularAcceleration.set (0, 0, 1, -1000) .normalize ();
+        sphere_nav.angularMomentum.multiply (sphere_nav.angularAcceleration);
         
     }
     if (globalControlValues.up) {
         rocketGroup.angularAcceleration.set (xAxis.x, xAxis.y, xAxis.z, -1000) .normalize ();
         rocketGroup.angularAcceleration.set (1, 0, 0, -1000) .normalize ();
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
+        sphere_nav.angularAcceleration.set (0, 0, 1, 1000) .normalize ();
+        sphere_nav.angularMomentum.multiply (sphere_nav.angularAcceleration);
+        
+        
         
     }
     if (globalControlValues.rollLeft) {
@@ -346,11 +352,16 @@ function rotateRocket(difftime) {
         rocketGroup.angularAcceleration.set (0, 1, 0, -1000) .normalize ();
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
         
+        sphere_nav.angularAcceleration.set (0, 1, 0, -1000) .normalize ();
+        sphere_nav.angularMomentum.multiply (sphere_nav.angularAcceleration);
+        
     }
     if (globalControlValues.rollRight) {
         rocketGroup.angularAcceleration.set (yAxis.x, yAxis.y, yAxis.z, 1000) .normalize ();
         rocketGroup.angularAcceleration.set (0, 1, 0, 1000) .normalize ();
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
+        sphere_nav.angularAcceleration.set (0, 1, 0, 1000) .normalize ();
+        sphere_nav.angularMomentum.multiply (sphere_nav.angularAcceleration);
         
     }
     if (globalControlValues.right) {
@@ -358,11 +369,18 @@ function rotateRocket(difftime) {
         rocketGroup.angularAcceleration.set (0, 0, 1, -1000) .normalize ();
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
         
+        sphere_nav.angularAcceleration.set (1, 0, 0, -1000) .normalize ();
+        sphere_nav.angularMomentum.multiply (sphere_nav.angularAcceleration);
+        
+        
     }
     if (globalControlValues.left) {
         rocketGroup.angularAcceleration.set (zAxis.x, zAxis.y, zAxis.z, -1000) .normalize ();
         rocketGroup.angularAcceleration.set (0, 0, 1, 1000) .normalize ();
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
+        sphere_nav.angularAcceleration.set (1, 0, 0, 1000) .normalize ();
+        sphere_nav.angularMomentum.multiply (sphere_nav.angularAcceleration);
+        
         
     }
     if (globalControlValues.hardSAS) {
@@ -372,6 +390,7 @@ function rotateRocket(difftime) {
     if (globalControlValues.sas) {
         var uniQuad = new THREE.Quaternion(0,0,0,1);
         rocketGroup.angularMomentum.slerp(uniQuad, 0.1);
+        sphere_nav.angularMomentum.slerp(uniQuad, 0.1);
     }
    
     /*
@@ -381,7 +400,7 @@ function rotateRocket(difftime) {
     
     
     rocketGroup.quaternion.multiply (rocketGroup.angularMomentum);
-    sphere_nav.quaternion.multiply(rocketGroup.angularMomentum);
+    sphere_nav.quaternion.multiply(sphere_nav.angularMomentum);
     /*var euler = new THREE.Euler( 0.5*Math.PI, 0, 0, 'XYZ' );
     var quat = new THREE.Quaternion(0,0,0,1);
     quat.setFromEuler(euler);

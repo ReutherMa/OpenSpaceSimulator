@@ -909,6 +909,8 @@ function buildUniverse() {
         sphere_nav.angularAcceleration = new THREE.Quaternion(0,0,0,1);
         ui_scene.add(sphere_nav);
         readyVars.navball = true;
+        var axisHelper = new THREE.AxisHelper(1e15); //
+        sphere_nav.add(axisHelper);
         
     }
     
@@ -969,8 +971,9 @@ function buildUniverse() {
                 camera.near = 0.1;
                 camera.updateProjectionMatrix();
                 rocketGroup.add(camera);
-                camera.position.y = camera.position.z = 20;
-                camera.position.x = 50;
+                camera.position.y = 20;
+                    camera.position.z = -20;
+                camera.position.x = -50;
                 //camera.rotateY(Math.PI/180 * 120);
                 controls.update();
             } 
