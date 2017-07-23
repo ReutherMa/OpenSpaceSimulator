@@ -85,6 +85,13 @@ div#testUI {
     color: #ffffff !important;
 }
 
+.disabledInterfaceButton {
+    /*border: 1px solid #59b4d4 !important;*/
+    background: black !important;
+    font-weight: bold !important;
+    color: #ffffff !important;
+}
+
 .ui-widget , .ui-slider-handle , .customRocketNameTextfield , .ui-tabs {
     outline: none;
 }

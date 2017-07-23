@@ -13,7 +13,11 @@ Contact: openspacesimulation@gmail.com
 function prompt(errorstring) {
     if (global.fuelPrompt == false) {
         $("#dialog").text(errorstring);
-        $("#dialog").dialog();
+        $("#dialog").dialog({
+            open: function(event, ui){
+     setTimeout("$('#dialog').dialog('close')",3000);
+    }
+        });
         global.fuelPrompt == true;
     }   
 }
@@ -41,6 +45,12 @@ function doToggleGame(button) {
         $("#" + button.id).addClass("activeInterface");
     }
     $(".btn").blur();
+}
+
+function hideRocketInterface() {
+    $("#rocketInterface").hide(100);
+    $("#rocket").prop("disabled",true).removeClass("activeInterface").addClass("disabledInterfaceButton");
+    
 }
 
 // Move Body around another body
