@@ -54,8 +54,10 @@ Contact: openspacesimulation@gmail.com
     <div id="container"></div>
 
     <!-- Imports -->
+    
     <script src="script/jquery-3.1.1.min.js"></script>
     <script src="UserInterface/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
+    <script src="UserInterface/js/variables.js"></script>
     <script src="three.js/build/three_64.js"></script>
     <script src="three.js/examples/Detector.js"></script>
     <script src="three.js/examples/js/libs/stats.min.js"></script>
@@ -75,7 +77,7 @@ Contact: openspacesimulation@gmail.com
     <script src="three.js/Tween.js"></script>
     
      <!-- UI Imports -->
-    <script src="UserInterface/js/variables.js"></script>
+    
     <script src="UserInterface/js/UIObjectBuilder.js"></script>
     <script src="UserInterface/js/control.js"></script>
     <script src="UserInterface/js/cmGauge.js"></script>
@@ -151,8 +153,8 @@ Contact: openspacesimulation@gmail.com
                             </li>
                             <li><a id="stage3" href="#tabs-3">Stage 3</a>
                             </li>
-                            <li><a id="stage4" href="#tabs-4">Stage 4</a>
-                            </li>
+                            <!--<li><a id="stage4" href="#tabs-4">Stage 4</a>
+                            </li>-->
                         </ul>
                         <div id="tabs-1">
                             <div class="massBox">
@@ -164,7 +166,6 @@ Contact: openspacesimulation@gmail.com
                             </div>
                             <div class=burningtimeBox>
                                 <label class="burningtimeLabel ui-heading mainHeading">Burning Time:&nbsp;</label><span id="burningtime1Label" class="valueSpan"></span>&nbsp;s
-                                <div id="burningtime1"></div>
                             </div>
                             <div class=thrustBox>
                                 <label class="thrustLabel ui-heading mainHeading">Thrust:&nbsp;</label><span id="thrust1Label" class="valueSpan"></span>&nbsp;N
@@ -181,7 +182,6 @@ Contact: openspacesimulation@gmail.com
                             </div>
                             <div class=burningtimeBox>
                                 <label class="burningtimeLabel ui-heading mainHeading">Burning Time:&nbsp;</label><span id="burningtime2Label" class="valueSpan"></span>&nbsp;s
-                                <div id="burningtime2"></div>
                             </div>
                             <div class=thrustBox>
                                 <label class="thrustLabel ui-heading mainHeading">Thrust:&nbsp;</label><span id="thrust2Label" class="valueSpan"></span>&nbsp;N
@@ -198,14 +198,13 @@ Contact: openspacesimulation@gmail.com
                             </div>
                             <div class=burningtimeBox>
                                 <label class="burningtimeLabel ui-heading mainHeading">Burning Time:&nbsp;</label><span id="burningtime3Label" class="valueSpan"></span>&nbsp;s
-                                <div id="burningtime3"></div>
                             </div>
                             <div class=thrustBox>
                                 <label class="thrustLabel ui-heading mainHeading">Thrust:&nbsp;</label><span id="thrust3Label" class="valueSpan"></span>&nbsp;N
                                 <div id="thrust3"></div>
                             </div>
                         </div>
-                        <div id="tabs-4">
+                        <!--<div id="tabs-4">
                             <div class="massBox">
                                 <label class="mass_emptyLabel ui-heading mainHeading">Empty Mass:&nbsp;</label><span id="mass_empty4Label" class="valueSpan"></span>&nbsp;kg
                                 <div id="mass_empty4"></div>
@@ -215,14 +214,15 @@ Contact: openspacesimulation@gmail.com
                             </div>
                             <div class=burningtimeBox>
                                 <label class="burningtimeLabel ui-heading mainHeading">Burning Time:&nbsp;</label><span id="burningtime4Label" class="valueSpan"></span>&nbsp;s
-                                <div id="burningtime4"></div>
                             </div>
                             <div class=thrustBox>
                                 <label class="thrustLabel ui-heading mainHeading">Thrust:&nbsp;</label><span id="thrust4Label" class="valueSpan"></span>&nbsp;N
                                 <div id="thrust4"></div>
                             </div>
-                        </div>
+                        </div>-->
                     </div>
+                    <!--<label class="fuelTotalMassLabel ui-heading mainHeading">Fuel Total Mass:&nbsp;</label><span id="fuelTotalMassLabel" class="valueSpan"></span>&nbsp;kg
+                    <br>-->
                     <label class="rocketTotalMassLabel ui-heading mainHeading">Rocket Total Mass:&nbsp;</label><span id="rocketTotalMassLabel" class="valueSpan"></span>&nbsp;kg
                     <br>
                     <input type="button" id="resetEditor" class="btn ui-button ui-widget ui-corner-all" value="Reset" title="Reset Editor" onclick="resetEditor()">

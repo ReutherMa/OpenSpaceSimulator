@@ -51,12 +51,13 @@ var rocket = rockets.saturn5;
 }*/
 //custom Rocket creation
 
-if(customRocketUsage){
+/*if(customRocketUsage){
+    
 var customRocket={};
 
 for(s in globalInterfaceValues.stages){
     var stage = "stage"+s;
-    customRocket.stages[s].mass_empty = globalInterfaceValues.customRocket[stage].mass_empty;
+    customRocket.stages[s].mass_empty = globalInterfaceValues.stages[s-1].mass_empty;
     customRocket.stages[s].mass_fuel = globalInterfaceValues.customRocket[stage].mass_fuel;
     customRocket.stages[s].burningtime = globalInterfaceValues.customRocket[stage].burningtime;
     customRocket.stages[s].thrust = globalInterfaceValues.customRocket[stage].thrust;
@@ -65,20 +66,14 @@ for(s in globalInterfaceValues.stages){
 customRocket.fuel_total = globalInterfaceValues.customRocket.fuel_total;
 customRocket.mass_total = globalInterfaceValues.customRocket.mass_total;
 customRocket.thrust_launch = 9.81 * customRocket.mass_total;
-}
+}*/
 
 function fuelMassChanged(stage) {
-    globalInterfaceValues.stages[stage].burningtime = ( globalInterfaceValues.stages[stage].mass_empty + globalInterfaceValues.stages[stage].mass_fuel ) / ( globalInterfaceValues.stages[stage].thrust / ( specificImpulse * gravity ) );
-
-    for(s in globalInterfaceValues.customRocket.stages){
-        var stage = "stage"+s;
-        globalInterfaceValues.customRocket.fuel_total += globalInterfaceValues.customRocket[stage].mass_fuel;
-        globalInterfaceValues.customRocket.mass_total += globalInterfaceValues.customRocket[stage].mass_fuel + globalInterfaceValues.stages[stage].mass_empty;
-    }
-    customRocket.thrust_launch = globalInterfaceValues.customRocket.mass_total * gravity;
+    globalInterfaceValues.stages[stage - 1].burningtime = parseInt((globalInterfaceValues.stages[stage - 1].mass_empty + globalInterfaceValues.stages[stage - 1].mass_fuel) / (globalInterfaceValues.stages[stage - 1].thrust / (specificImpulse * gravity)));
+    //customRocket.thrust_launch = globalInterfaceValues.customRocket.mass_total * gravity;
 }
 
-function burningtimeChanged(stage) {
+/*function burningtimeChanged(stage) {
     globalInterfaceValues.stages[stage].mass_fuel = globalInterfaceValues.stages[stage].burningtime * ( globalInterfaceValues.stages[stage].thrust / ( specificImpulse * gravity ) ) - globalInterfaceValues.stages[stage].mass_empty;
     
     for(s in globalInterfaceValues.stages){
@@ -87,19 +82,14 @@ function burningtimeChanged(stage) {
         globalInterfaceValues.customRocket.mass_total += globalInterfaceValues.stages[stage].mass_fuel + globalInterfaceValues.stages[stage].mass_empty;
     }
     customRocket.thrust_launch = globalInterfaceValues.customRocket.mass_total * gravity;
-}
+}*/
 
-function thrustChanged(stage){
-    globalInterfaceValues.stages[stage].mass_empty = globalInterfaceValues.stages[stage].thrust * emptyWeightToThrustRatio;
-    
-    globalInterfaceValues.stages[stage].burningtime = ( globalInterfaceValues.stages[stage].mass_empty + globalInterfaceValues.stages[stage].mass_fuel ) / ( globalInterfaceValues.stages[stage].thrust / ( specificImpulse * gravity ) );
-    
-    for(s in globalInterfaceValues.stages){
-        var stage = "stage"+s;
-        globalInterfaceValues.customRocket.fuel_total += globalInterfaceValues.stages[stage].mass_fuel;
-        globalInterfaceValues.customRocket.mass_total += globalInterfaceValues.stages[stage].mass_fuel + globalInterfaceValues.stages[stage].mass_empty;
-    }
-    customRocket.thrust_launch = globalInterfaceValues.customRocket.mass_total * gravity;
+function thrustChanged(stage) {
+    globalInterfaceValues.stages[stage - 1].mass_empty = parseInt(globalInterfaceValues.stages[stage - 1].thrust * emptyWeightToThrustRatio);
+
+    globalInterfaceValues.stages[stage - 1].burningtime = parseInt((globalInterfaceValues.stages[stage - 1].mass_empty + globalInterfaceValues.stages[stage - 1].mass_fuel) / (globalInterfaceValues.stages[stage - 1].thrust / (specificImpulse * gravity)));
+
+    /*customRocket.thrust_launch = globalInterfaceValues.customRocket.mass_total * gravity;*/
 }
 
 /*Formulas:

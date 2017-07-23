@@ -14,12 +14,12 @@ function prompt(errorstring) {
     if (global.fuelPrompt == false) {
         $("#dialog").text(errorstring);
         $("#dialog").dialog({
-            open: function(event, ui){
-     setTimeout("$('#dialog').dialog('close')",3000);
-    }
+            open: function(event, ui) {
+                setTimeout("$('#dialog').dialog('close')", 3000);
+            }
         });
         global.fuelPrompt == true;
-    }   
+    }
 }
 
 
@@ -49,8 +49,8 @@ function doToggleGame(button) {
 
 function hideRocketInterface() {
     $("#rocketInterface").hide(100);
-    $("#rocket").prop("disabled",true).removeClass("activeInterface").addClass("disabledInterfaceButton");
-    
+    $("#rocket").prop("disabled", true).removeClass("activeInterface").addClass("disabledInterfaceButton");
+
 }
 
 // Move Body around another body
@@ -86,6 +86,7 @@ function developerChange() {
 }
 
 function rocketSelectChange() {
+    console.log(this);
     globalInterfaceValues.rocketName = $('select[name=rocketSelect]').val();
     if (globalInterfaceValues.rocketName == "spaceTaxi") {
         $("#editBox").hide();
@@ -104,31 +105,49 @@ function rocketSelectChange() {
     $("#rocketSelect-button").blur();
 }
 
+function fuelChange() {
+    var stage = parseInt(this.substring(9, 10));
+    //console.log(this);
+    fuelMassChanged(stage);
+    $("#burningtime" + stage + "Label").text(globalInterfaceValues.stages[stage - 1].burningtime);
+    rocketChange();
+}
+
+function thrustChange() {
+    var stage = parseInt(this.substring(6, 7));
+    //console.log(this);
+    thrustChanged(stage);
+    $("#burningtime" + stage + "Label").text(globalInterfaceValues.stages[stage - 1].burningtime);
+    $("#mass_empty" + stage + "Label").text(globalInterfaceValues.stages[stage - 1].mass_empty);
+    $("#mass_empty" + stage).slider("option", "value", globalInterfaceValues.stages[stage - 1].mass_empty);
+    rocketChange();
+
+}
 
 function rocketChange() {
     // RocketInterface
     // Bearbeitung
-    
-    if (this == "mass_fuel1" || this == "mass_fuel2" || this == "mass_fuel3" || this == "mass_fuel4") {
-        var stage = parseInt(this.substring(9, 10));
-        // console.log(stage);
-        //fuelMassChanged(stage);
-    }
     globalInterfaceValues.changed = true;
-    //globalInterfaceValues.customRocketUsage = true;
     globalInterfaceValues.stage = +$("#stagesLabel").text();
-
     hideShowTabs();
-
     // update stages-array
+    globalInterfaceValues.fuel_total = 0;
     globalInterfaceValues.rocketTotalMass = 0;
-    for (var i = 1; i <= globalInterfaceValues.stage; i++) {
-        //var globalInterfaceValues.stages[i - 1] = globalInterfaceValues.stages[i - 1];
-        var mass_empty = +$("#mass_empty" + i + "Label").text();
-        var mass_fuel = +$("#mass_fuel" + i + "Label").text();
-        var mass_total = mass_empty + mass_fuel;
-        var thrust = +$("#thrust" + i + "Label").text();
-        var burningtime = +$("#burningtime" + i + "Label").text();
+    for (var i = 1; i <= globalInterfaceValues.stages.length; i++) {
+        if (i <= globalInterfaceValues.stage) {
+            var mass_empty = +$("#mass_empty" + i + "Label").text();
+            var mass_fuel = +$("#mass_fuel" + i + "Label").text();
+            var mass_total = mass_empty + mass_fuel;
+            var thrust = +$("#thrust" + i + "Label").text();
+            var burningtime = +$("#burningtime" + i + "Label").text();
+        } else {
+            var mass_empty = 0;
+            var mass_fuel = 0;
+            var mass_total = mass_empty + mass_fuel;
+            var thrust = 0;
+            var burningtime = 0;
+        }
+
         globalInterfaceValues.stages[i - 1] = {
             mass_empty: mass_empty,
             mass_fuel: mass_fuel,
@@ -136,29 +155,46 @@ function rocketChange() {
             thrust: thrust,
             burningtime: burningtime
         };
+
         // set labels for each stage
-        /*$("#mass_empty" + i + "Label").text(globalInterfaceValues.stages[i - 1].mass_empty);
+        $("#mass_empty" + i + "Label").text(globalInterfaceValues.stages[i - 1].mass_empty);
         $("#mass_fuel" + i + "Label").text(globalInterfaceValues.stages[i - 1].mass_fuel);
-       
-        $("#burningtime" + i + "Label").text(globalInterfaceValues.stages[i - 1].burningtime);
-        $("#thrust" + i + "Label").text(globalInterfaceValues.stages[i - 1].thrust);*/
-    
         $("#mass_total" + i + "Label").text(globalInterfaceValues.stages[i - 1].mass_total);
+        $("#burningtime" + i + "Label").text(globalInterfaceValues.stages[i - 1].burningtime);
+        $("#thrust" + i + "Label").text(globalInterfaceValues.stages[i - 1].thrust);
+
+        // set values for rocketObject
+        var stage = "stage" + i;
+        if (i <= globalInterfaceValues.stage) {
+            saturnV[stage].mass_empty = globalInterfaceValues.stages[i - 1].mass_empty;
+            saturnV[stage].mass_fuel = globalInterfaceValues.stages[i - 1].mass_fuel;
+            saturnV[stage].burningtime = globalInterfaceValues.stages[i - 1].burningtime;
+            saturnV[stage].thrust = globalInterfaceValues.stages[i - 1].thrust;
+        } else {
+            saturnV[stage].mass_empty = 0;
+            saturnV[stage].mass_fuel = 0;
+            saturnV[stage].burningtime = 0;
+            saturnV[stage].thrust = 0;
+        }
+        // calculate rocketTotalMass
         globalInterfaceValues.rocketTotalMass += globalInterfaceValues.stages[i - 1].mass_total;
+        // calculate fuelTotalMass
+        globalInterfaceValues.fuel_total += globalInterfaceValues.stages[i - 1].mass_fuel;
     }
+
+    // set values for rocketObject
+    saturnV.fuel_total = globalInterfaceValues.fuel_total;
+    saturnV.mass_total = globalInterfaceValues.rocketTotalMass;
+    //$("#fuelTotalMassLabel").text(globalInterfaceValues.fuel_total);
     $("#rocketTotalMassLabel").text(globalInterfaceValues.rocketTotalMass);
-
-    globalInterfaceValues.burningtime = +$("#burningtimeLabel").text();
-    globalInterfaceValues.thrust = +$("#thrustLabel").text();
-
 
     $(".ui-slider-handle").blur();
     $("#rocketSelect-button").blur();
     $(".ui-tabs").blur();
-    //console.log(globalInterfaceValues);
-
-
 }
+
+
+
 
 function soundOnOff(button) {    
     if ($(button).hasClass("fa-volume-up")) {        
@@ -171,9 +207,9 @@ function soundOnOff(button) {    
 
 function startNew(value) {
     $(".btn").blur();
-    if (value=="button") {
+    if (value == "button") {
         $("#startNewDialog").text("Are you sure you want to reload the entire game? Everything will be set to default. Your custom rockets will still be available after reloading.");
-    } else if (value=="obstacle") {
+    } else if (value == "obstacle") {
         $("#startNewDialog").text("Looks like you hit an obstacle. Restart game.");
     }
     $("#startNewDialog").dialog({
@@ -246,7 +282,9 @@ function createSelectString() {
 
 function showCustomRocketButtons() {
     createSelectString();
-    $("#rocketSelect").selectmenu("destroy").selectmenu({ change:rocketSelectChange });
+    $("#rocketSelect").selectmenu("destroy").selectmenu({
+        change: rocketSelectChange
+    });
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -254,10 +292,10 @@ document.addEventListener('DOMContentLoaded', function() {
     $("#dialog").dialog();
     for (var key in localStorage) {
         if (key.startsWith("customRocket")) {
-           var customRocketName = key.replace("customRocket", "");
-           /*  customRocketButtonsString += "<input type='button' id='" + key + "' class='btn ui-button ui-widget ui-corner-all' value='" + customRocketName + "' title='Use Custom Rocket' onclick='loadCustomRocket(this)'>";*/
-        customRocketButtonsString += "<option id='" + key + "'  value='" + customRocketName + "' title='Use Custom Rocket' onclick='loadCustomRocket(this)'>" + customRocketName + "</option>";
-        createSelectString();
+            var customRocketName = key.replace("customRocket", "");
+            /*  customRocketButtonsString += "<input type='button' id='" + key + "' class='btn ui-button ui-widget ui-corner-all' value='" + customRocketName + "' title='Use Custom Rocket' onclick='loadCustomRocket(this)'>";*/
+            customRocketButtonsString += "<option id='" + key + "'  value='" + customRocketName + "' title='Use Custom Rocket' onclick='loadCustomRocket(this)'>" + customRocketName + "</option>";
+            createSelectString();
         }
     }
 }, false);
@@ -278,7 +316,7 @@ function deleteLocalStorage() {
     customRocketButtonsString = "";
     $(".btn").blur();
     showCustomRocketButtons();
-    
+
 }
 
 function resetEditor() {
@@ -295,7 +333,7 @@ function resetEditor() {
     for (var i = 1; i <= globalInterfaceValues.stages.length; i++) {
         $("#mass_empty" + i).slider("option", "value", globalInterfaceValues.stages[i - 1].mass_empty);
         $("#mass_fuel" + i).slider("option", "value", globalInterfaceValues.stages[i - 1].mass_fuel);
-        $("#burningtime" + i).slider("option", "value", globalInterfaceValues.stages[i - 1].burningtime);
+        //$("#burningtime" + i).slider("option", "value", globalInterfaceValues.stages[i - 1].burningtime);
         $("#thrust" + i).slider("option", "value", globalInterfaceValues.stages[i - 1].thrust);
     }
 
@@ -324,14 +362,15 @@ function initDefaultValuesAndCreateLabels() {
             var mass_total = mass_empty + mass_fuel;
             var thrust = saturnV["stage" + i].thrust;
             var burningtime = saturnV["stage" + i].burningtime;
-        } else {
+        }
+        /*else {
             // get variables for Stage4-Slider
             var mass_empty = globalInterfaceValues.stages[i - 1].mass_empty;
             var mass_fuel = globalInterfaceValues.stages[i - 1].mass_fuel;
             var mass_total = mass_empty + mass_fuel;
             var thrust = globalInterfaceValues.stages[i - 1].thrust;
             var burningtime = globalInterfaceValues.stages[i - 1].burningtime;
-        }
+        }*/
         // store variables in global variable
         globalInterfaceValues.stages[i - 1] = {
             mass_empty: mass_empty,
@@ -395,13 +434,13 @@ function setSliderValuesAndLabels() {
         $("#thrust" + i + "Label").text(globalInterfaceValues.stages[i - 1].thrust);
         globalInterfaceValues.rocketTotalMass += globalInterfaceValues.stages[i - 1].mass_total;
     }
-    
+    $("#rocketTotalMassLabel").text(globalInterfaceValues.rocketTotalMass);
     $("#stagesLabel").text(globalInterfaceValues.stage);
     $("#stages").slider("value", globalInterfaceValues.stage);
     for (var i = 1; i <= globalInterfaceValues.stages.length; i++) {
         $("#mass_empty" + i).slider("option", "value", globalInterfaceValues.stages[i - 1].mass_empty);
         $("#mass_fuel" + i).slider("option", "value", globalInterfaceValues.stages[i - 1].mass_fuel);
-        $("#burningtime" + i).slider("option", "value", globalInterfaceValues.stages[i - 1].burningtime);
+        //$("#burningtime" + i).slider("option", "value", globalInterfaceValues.stages[i - 1].burningtime);
         $("#thrust" + i).slider("option", "value", globalInterfaceValues.stages[i - 1].thrust);
     }
 }

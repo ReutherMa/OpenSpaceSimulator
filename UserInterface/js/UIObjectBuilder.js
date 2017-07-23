@@ -20,9 +20,9 @@ $(function() {
     for (var i = 1; i <= globalInterfaceValues.stages.length; i++) {
         // build slider with variables from global variable
         rocketSlide("mass_empty" + i, 0, 100000, 100, globalInterfaceValues.stages[i - 1].mass_empty);
-        rocketSlide("mass_fuel" + i, 0, 3000000, 1000, globalInterfaceValues.stages[i - 1].mass_fuel);
-        rocketSlide("burningtime" + i, 0, 6000, 10, globalInterfaceValues.stages[i - 1].burningtime);
-        rocketSlide("thrust" + i, 0, 50000000, 1000, globalInterfaceValues.stages[i - 1].thrust);
+        fuelSlide("mass_fuel" + i, 0, 3000000, 1000, globalInterfaceValues.stages[i - 1].mass_fuel);
+        //rocketSlide("burningtime" + i, 0, 6000, 10, globalInterfaceValues.stages[i - 1].burningtime);
+        thrustSlide("thrust" + i, 0, 50000000, 1000, globalInterfaceValues.stages[i - 1].thrust);
     }
 
     // DeveloperInterface
@@ -44,31 +44,33 @@ $(function() {
     /*$("#planetCamera, #planetSelect").selectmenu({
         change: developerChange
     });*/
-    
-    $.widget( "custom.iconselectmenu", $.ui.selectmenu, {
-      _renderItem: function( ul, item ) {
-        var li = $( "<li>" ),
-          wrapper = $( "<div>", { text: item.label } );
- 
-        if ( item.disabled ) {
-          li.addClass( "ui-state-disabled" );
+
+    $.widget("custom.iconselectmenu", $.ui.selectmenu, {
+        _renderItem: function(ul, item) {
+            var li = $("<li>"),
+                wrapper = $("<div>", {
+                    text: item.label
+                });
+
+            if (item.disabled) {
+                li.addClass("ui-state-disabled");
+            }
+
+            $("<span>", {
+                style: item.element.attr("data-style"),
+                "class": "ui-icon " + item.element.attr("data-class")
+            })
+                .appendTo(wrapper);
+
+            return li.append(wrapper).appendTo(ul);
         }
- 
-        $( "<span>", {
-          style: item.element.attr( "data-style" ),
-          "class": "ui-icon " + item.element.attr( "data-class" )
-        })
-          .appendTo( wrapper );
- 
-        return li.append( wrapper ).appendTo( ul );
-      }
     });
-    $( "#planetCamera , #planetSelect" )
-      .iconselectmenu({
-        change: developerChange
-    })
-      .iconselectmenu( "menuWidget")
-        .addClass( "ui-menu-icons avatar" );
+    $("#planetCamera , #planetSelect")
+        .iconselectmenu({
+            change: developerChange
+        })
+        .iconselectmenu("menuWidget")
+        .addClass("ui-menu-icons avatar");
     $("#rocketSelect").selectmenu({
         change: rocketSelectChange
     })
@@ -138,6 +140,8 @@ $(function() {
         chars_preset: 'num'
     });
     $currentStageDisplay.val(globalInterfaceValues.currentStage).change();
+    
+    globalInterfaceValues.fuel_total = saturnV.fuel_total;
 
     /*setTimeout(function() {
         $header_display.val(000000000).change();
@@ -185,6 +189,31 @@ function rocketSlide(name, min, max, step, val) {
     });
 }
 
+function thrustSlide(name, min, max, step, val) {
+    $("#" + name).slider({
+        min: min,
+        max: max,
+        value: val,
+        step: step,
+        slide: function(event, ui) {
+            $("#" + name + "Label").text(ui.value);
+        },
+        change: thrustChange.bind(name)
+    });
+}
+
+function fuelSlide(name, min, max, step, val) {
+    $("#" + name).slider({
+        min: min,
+        max: max,
+        value: val,
+        step: step,
+        slide: function(event, ui) {
+            $("#" + name + "Label").text(ui.value);
+        },
+        change: fuelChange.bind(name)
+    });
+}
 /*function watchglob(glob) {
     var tmp_glob = glob;
     setTimeout(function() {
