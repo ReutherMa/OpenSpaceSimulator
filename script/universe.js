@@ -905,7 +905,8 @@ function buildUniverse() {
         sphere_nav.position.y = -75;
         sphere_nav.rotateX(Math.PI/180 * 90);
         sphere_nav.rotateY(Math.PI/180 * 90);
-        sphere_nav.rotateZ(Math.PI/180 * 90);
+        sphere_nav.angularMomentum = new THREE.Quaternion(0,0,0,1);
+        sphere_nav.angularAcceleration = new THREE.Quaternion(0,0,0,1);
         ui_scene.add(sphere_nav);
         readyVars.navball = true;
         
