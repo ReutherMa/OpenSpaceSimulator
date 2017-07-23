@@ -140,6 +140,7 @@ function calculatePhysics(difftime, spaceObjects) {
         global.audio = true;
         if (throttle == 100) {
             global.started = true;
+            hideRocketInterface();
             
         }
     }

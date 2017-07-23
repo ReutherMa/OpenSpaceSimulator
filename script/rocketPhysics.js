@@ -399,8 +399,9 @@ TODO: UI, saving score
 */
 function gameOver(){
     //UI-Funktion Game Over
-    prompt("Looks like you hit a tiny obstacle. Restart game.");
     gameOverVar = true;
+    startNew("obstacle");
+    
 }
 
 /*
@@ -438,7 +439,7 @@ function nextStage() {
         mass = mass - saturnV.stage2.mass_empty - rocket.stage2.mass_fuel;
         stage = 3;
     } */
-    globalInterfaceValues.discardStage = false;
+    globalControlValues.discardStage = false;
     
 }
 
