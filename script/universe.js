@@ -34,7 +34,7 @@ var clock = new THREE.Clock();
 var ground_mesh;
 
 var spaceObjects = {};
-var camera, controls, ui_camera;
+var camera, controls, ui_camera, lens_camera;
 var camFactor = 6;
 
 var line_count = 0;
@@ -74,7 +74,7 @@ function buildUniverse() {
     var container;
     //, stats
 
-    var sceneVol, ui_scene, renderer;
+    var sceneVol, ui_scene, renderer, lens_scene;
 
     var segments = 64;
     var group_galaxy;
@@ -145,13 +145,14 @@ function buildUniverse() {
 
         //second scene + camera for UI
         ui_scene = new THREE.Scene();
+        lens_scene = new THREE.Scene();
         ui_camera = new THREE.OrthographicCamera( -window.innerWidth/camFactor,         
                                                     window.innerWidth/camFactor,
                                                     window.innerHeight/camFactor,
                                                     -window.innerHeight/camFactor, 
                                                     0, 1e27);
         ui_camera.position.set(0, 0, 10);
-
+        lens_camera = camera;
         //building the skybox
         buildSkybox();
         
@@ -203,30 +204,44 @@ function buildUniverse() {
         
         buildNavBall();
         
-        
         //lensflare
-        /*
+        
         var lenslight = new THREE.PointLight( 0xffffff, 1.5, 0 );
-        lenslight.position.set(0,0,0);
+        lenslight.position.set(0,0,0); //695508e3 + 1000
         scene.add(lenslight);
         var textureLoader = new THREE.TextureLoader();
-        var textureFlare = textureLoader.load( "/textures/lens.png" );
-        textureFlare.depthTest = false;
+        var textureFlare1 = textureLoader.load( "/textures/lens1.png" );
+		var textureFlare2 = textureLoader.load( "/textures/lens2.png" );
+		var textureFlare3 = textureLoader.load( "/textures/lens3.png" );
+
+        //textureFlare.depthTest = false;
         var flareColor = new THREE.Color( 0xffffff );
         flareColor.setHSL( 0.55, 0.9 , 0.5 + 0.5 );
-        lensFlare = new THREE.LensFlare( textureFlare, 800, 0.0, THREE.AdditiveBlending, flareColor );
-        lensFlare.add ( textureFlare, 500, 0.3, THREE.AdditiveBlending, flareColor )
-        lensFlare.add ( textureFlare, 200, 0.6, THREE.AdditiveBlending, flareColor )
+        
+        lensFlare = new THREE.LensFlare( textureFlare1, 800, 0.0, THREE.AdditiveBlending, flareColor );
+        //lensFlare.add ( textureFlare2, 30, 0.1, THREE.AdditiveBlending, flareColor );
+        //lensFlare.add ( textureFlare2, 40, 0.2, THREE.AdditiveBlending, flareColor );
+        //lensFlare.add ( textureFlare2, 80, 0.2, THREE.AdditiveBlending, flareColor );
+        //lensFlare.add ( textureFlare2, 20, 0.4, THREE.AdditiveBlending, flareColor );
+        //lensFlare.add ( textureFlare2, 20, 0.5, THREE.AdditiveBlending, flareColor );
+        lensFlare.add ( textureFlare2, 50, 0.6, THREE.AdditiveBlending, flareColor );
+        lensFlare.add ( textureFlare2, 90, 0.7, THREE.AdditiveBlending, flareColor );
+        lensFlare.add ( textureFlare2, 100, 0.7, THREE.AdditiveBlending, flareColor );
+        lensFlare.add ( textureFlare2, 300, 0.8, THREE.AdditiveBlending, flareColor );
+        lensFlare.add ( textureFlare2, 60, 0.8, THREE.AdditiveBlending, flareColor );
+        lensFlare.add ( textureFlare2, 100, 0.9, THREE.AdditiveBlending, flareColor );
+        lensFlare.add ( textureFlare2, 70, 0.95, THREE.AdditiveBlending, flareColor );
+        
+        lensFlare.add ( textureFlare3, 1000, 0.0, THREE.AdditiveBlending, flareColor );
+        lensFlare.add ( textureFlare3, 1200, 0.0, THREE.AdditiveBlending, flareColor );
+        
         lensFlare.position.copy( lenslight.position );
         //lensFlare.position.set(0,0,0);
         scene.add( lensFlare );
-        */
         
         
         
-        
-        
-        
+
         
         //Shadow
        /* shadowVolume_mat = new THREE.ShaderMaterial({
@@ -315,7 +330,8 @@ function buildUniverse() {
         var skyMaterial = new THREE.MeshFaceMaterial(materialArray);
         var skyBox = new THREE.Mesh(skyGeometry, skyMaterial);
         //skyMaterial.depthTest = false; for Lensflare
-        scene.add(skyBox);
+        //scene.add(skyBox);
+        lens_scene.add(skyBox);
         readyVars.skybox = true;
     }
 
@@ -430,6 +446,7 @@ function buildUniverse() {
         matrix.extractBasis(xAxis, yAxis, zAxis);
         earthGroup.angularMomentum.set (yAxis.x, yAxis.y, yAxis.z, 50) .normalize ();
         //earthGroup.quaternion.multiply(earthGroup.angularMomentum);
+        
         var loader = new THREE.ColladaLoader(); 
         loader.options.convertUpAxis = true; 
       
@@ -584,6 +601,7 @@ function buildUniverse() {
                 
                 geometry = new THREE.SphereGeometry(radius, segments, segments);
                 material = new THREE.MeshBasicMaterial();
+                material.depthTest = false; //for lensFlare
                 if(loadTextures){
                     material.map = loader.load('textures/sun_map_2.jpg');
                 }
@@ -913,6 +931,9 @@ function buildUniverse() {
         if (newElement != camElement) {
             
             if (spaceObjects[newElement] !== undefined) {
+                    lensFlare.visible = true;
+                    camera.near = 100000;
+                    camera.updateProjectionMatrix();
                     spaceObjects[newElement].group.add(camera);
                     //camera.position.add( direction.multiplyScalar(spaceObjects[e].radius*3) );
                     camera.position.x = camera.position.y = 0;
@@ -932,16 +953,22 @@ function buildUniverse() {
             */
         
             if (newElement == "launchpad") {
+                    lensFlare.visible = false;
+                    camera.near = 0.1;
+                    camera.updateProjectionMatrix();
                     launchpadGroup.add(camera);
-                    camera.position.x = camera.position.y = 0;
-                    camera.position.z = 50;
+                    camera.position.y = camera.position.z = 20;
+                    camera.position.x = 50;
                     //camera.rotateY(Math.PI/180 * 120);
                     controls.update();
             }
             if (newElement == "rocket") {
+                lensFlare.visible = false;
+                camera.near = 0.1;
+                camera.updateProjectionMatrix();
                 rocketGroup.add(camera);
-                camera.position.x = camera.position.y = 0;
-                camera.position.z = 50;
+                camera.position.y = camera.position.z = 20;
+                camera.position.x = 50;
                 //camera.rotateY(Math.PI/180 * 120);
                 controls.update();
             } 
@@ -1172,9 +1199,15 @@ var clock = new THREE.Clock();
         
         if (renderer !== undefined) {
             renderer.clear();
-            renderer.render(scene, camera);
+            renderer.render(lens_scene, camera);
            
-            //render second Scene
+            
+            //render second scene
+            renderer.sortObjects = false;
+            renderer.clearDepth();
+            renderer.render(scene, camera);
+            
+            //render third Scene
             if( renderNavball ){
                 //ui_scene.visible = false;
                 ui_scene.children[0].visible = true;
