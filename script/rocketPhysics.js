@@ -202,9 +202,9 @@ function moveRocket(difftime) {
         accel = (saturnV.stage1.thrust * (throttle/100)) / (mass); //rocket werte stimmen, einheiten sind richtig, berechnungsart stimmt
         
         // a = (F(thrust) - F(Air Resistance)) / m(rocketMass)
-        //calculateAirResistance(rocketGroup.speed.length());
+        calculateAirResistance(rocketGroup.speed.length());
         //console.log("airResistance: " + airResistance);
-        //accel = ((accel * mass) - airResistance)/mass;
+        accel = ((accel * mass) - airResistance)/mass;
         //console.log("rocket accel after: " + accel);
         //new mass without lost fuel
         mass = mass - mass_lost;
@@ -399,9 +399,8 @@ TODO: UI, saving score
 */
 function gameOver(){
     //UI-Funktion Game Over
+    prompt("Looks like you hit a tiny obstacle. Restart game.");
     gameOverVar = true;
-    startNew("obstacle");
-    
 }
 
 /*
@@ -439,7 +438,7 @@ function nextStage() {
         mass = mass - saturnV.stage2.mass_empty - rocket.stage2.mass_fuel;
         stage = 3;
     } */
-    globalControlValues.discardStage = false;
+    globalInterfaceValues.discardStage = false;
     
 }
 
