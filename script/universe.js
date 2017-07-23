@@ -15,7 +15,7 @@ var global = {
 };
 
 //do we want to load textures? false for fast (and ugly) debugging mode
-var loadTextures = true;
+var loadTextures = false;
 var throttleSound;
 var rocket;
 var rocketGroup;
@@ -464,6 +464,8 @@ function buildUniverse() {
              rocketGroup.angularAcceleration = new THREE.Quaternion(0,0,0,1);
              earthGroup.add(rocketGroup);
              rocketGroup.add(throttleSound);
+            var axisH = new THREE.AxisHelper(1e7);
+            rocketGroup.add(axisH);
             buildFire();
         });
 
@@ -495,6 +497,10 @@ function buildUniverse() {
             launchpadGroup.position.y = yE +3 ;
             launchpadGroup.position.z = zE;
             launchpadGroup.rotateX(Math.PI/180 * 45);
+            
+            
+            var axisH_launch = new THREE.AxisHelper(1e6);
+            launchpadGroup.add(axisH_launch);
             //launchpadGroup.position.set(0, 0, 0 );
             earthGroup.add(launchpadGroup);
         });
@@ -959,7 +965,7 @@ function buildUniverse() {
     //calculate opacity fot atmosphere
     function calcOpacity(){
         var focusedObj = globalInterfaceValues.planetCamera;
-            if(focusedObj == "rocket" || focusedObj == "launchpad"){
+            if(focusedObj == "rocket"){
                 if (rocketHeight){
                     var vec = new THREE.Vector3();
                     var nb = 1 - (rocketHeight *0.00001);
@@ -967,6 +973,8 @@ function buildUniverse() {
                 }else{
                     var op = 0.9;
                 }
+            }else if(focusedObj == "launchpad"){
+                var op = 0.9;
             }
         else op = 0.1;
         return op;

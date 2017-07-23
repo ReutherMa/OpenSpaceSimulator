@@ -95,6 +95,8 @@ function calculatePhysics(difftime, spaceObjects) {
     var factoredTime = difftime * timefactor;
     
     if(spaceObjects.earth.group && rocketGroup){
+         rotateRocket(factoredTime);
+        /*
         var yAxis = new THREE.Vector3();
         var quaternion = rocketGroup.quaternion;
         var matrix = new THREE.Matrix4();
@@ -105,7 +107,9 @@ function calculatePhysics(difftime, spaceObjects) {
         if(!global.started){
             rocketGroup.quaternion.multiply(spaceObjects.earth.group.angularMomentum);
         }
+        */
     }
+   
     
     //calculate all gravitational forces between planets and objects
     for (var i in spaceObjects) {
@@ -128,7 +132,7 @@ function calculatePhysics(difftime, spaceObjects) {
             
         moveRocket(factoredTime);
         if(rocketGroup&&drehmoment){
-        rotateRocket(factoredTime);
+        //rotateRocket(factoredTime);
         }
         if(globalControlValues.discardStage){
             nextStage();
@@ -225,6 +229,8 @@ function calculatePhysics(difftime, spaceObjects) {
             //sphere_nav.quaternion.multiply(quaty);
             countr++;
         }
+        
+        
         /*
         if (rocketGroup) 
         {

@@ -129,7 +129,7 @@ function calculateGravitationRocket(difftime){
                 watchoutearth = true;
             }
             if(watchoutearth && (dist - spaceObjects.earth.radius) < mindist){
-                prompt("You are getting dangerously close to "+spaceObjects.earth.name+", watch out!");
+                //prompt("You are getting dangerously close to "+spaceObjects.earth.name+", watch out!");
             }
             if(dist - spaceObjects.earth.radius <= 1){
                 explode();
@@ -183,7 +183,7 @@ function moveRocket(difftime) {
 
     //var difftime = difftime/1000;
     //calculates fuel-mass that will be lost in difftime
-    var mass_lost = difftime / saturnV.stage1.burningtime * saturnV.stage1.mass_fuel * throttle / 100;
+    var mass_lost = difftime / saturnV["stage" + globalInterface.currentStage].burningtime * saturnV["stage" + globalInterface.currentStage].mass_fuel * throttle / 100;
     
     var xAxis = new THREE.Vector3();
     var yAxis = new THREE.Vector3();
@@ -199,7 +199,7 @@ function moveRocket(difftime) {
     //checks if enough fuel
     if ((fuel_mass - mass_lost) >= 0 || globalInterfaceValues.fuelCheat) {
         //a=F/m(now mass WITH fuel to lose)
-        accel = (saturnV.stage1.thrust * (throttle/100)) / (mass); //rocket werte stimmen, einheiten sind richtig, berechnungsart stimmt
+        accel = (saturnV["stage" + globalInterface.currentStage].thrust * (throttle/100)) / (mass); //rocket werte stimmen, einheiten sind richtig, berechnungsart stimmt
         
         // a = (F(thrust) - F(Air Resistance)) / m(rocketMass)
         calculateAirResistance(rocketGroup.speed.length());
@@ -207,7 +207,9 @@ function moveRocket(difftime) {
         accel = ((accel * mass) - airResistance)/mass;
         //console.log("rocket accel after: " + accel);
         //new mass without lost fuel
-        mass = mass - mass_lost;
+        if(!globalInterfaceValues.fuelCheat){
+            mass = mass - mass_lost;
+        }
         //current fuel mass for UI
         fuel_mass = fuel_mass - mass_lost;
         $('#fuelGauge .gauge-arrow').trigger('updateGauge', fuel_mass / saturnV.fuel_total * 100 );
@@ -325,19 +327,19 @@ function rotateRocket(difftime) {
     
     //rocketGroup.angularAcceleration.set (0, 0, 0, 1);
     //checks which rotation key is pressed and determines angle acceleration
-    if (globalControlValues.up) {
+    if (globalControlValues.down) {
         //accelOX = accelOX + angle_const;
         rocketGroup.angularAcceleration.set (xAxis.x, xAxis.y, xAxis.z, 1000) .normalize ();
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
         
     }
-    if (globalControlValues.down) {
-        rocketGroup.angularAcceleration.set (-xAxis.x, -xAxis.y, -xAxis.z, 1000) .normalize ();
+    if (globalControlValues.up) {
+        rocketGroup.angularAcceleration.set (xAxis.x, xAxis.y, xAxis.z, -1000) .normalize ();
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
         
     }
     if (globalControlValues.rollLeft) {
-        rocketGroup.angularAcceleration.set (-yAxis.x, -yAxis.y, -yAxis.z, 1000) .normalize ();
+        rocketGroup.angularAcceleration.set (yAxis.x, yAxis.y, yAxis.z, -1000) .normalize ();
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
         
     }
@@ -346,13 +348,13 @@ function rotateRocket(difftime) {
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
         
     }
-    if (globalControlValues.left) {
+    if (globalControlValues.right) {
         rocketGroup.angularAcceleration.set (zAxis.x, zAxis.y, zAxis.z, 1000) .normalize ();
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
         
     }
-    if (globalControlValues.right) {
-        rocketGroup.angularAcceleration.set (-zAxis.x, -zAxis.y, -zAxis.z, 1000) .normalize ();
+    if (globalControlValues.left) {
+        rocketGroup.angularAcceleration.set (zAxis.x, zAxis.y, zAxis.z, -1000) .normalize ();
         rocketGroup.angularMomentum.multiply (rocketGroup.angularAcceleration);
         
     }
@@ -373,6 +375,7 @@ function rotateRocket(difftime) {
     
     rocketGroup.quaternion.multiply (rocketGroup.angularMomentum);
     sphere_nav.quaternion.multiply(rocketGroup.angularMomentum);
+    scene.updateMatrixWorld();
     /*var euler = new THREE.Euler( 0.5*Math.PI, 0, 0, 'XYZ' );
     var quat = new THREE.Quaternion(0,0,0,1);
     quat.setFromEuler(euler);
@@ -407,13 +410,12 @@ function gameOver(){
 next stage: UI-Event, initiated by user
 */
 function nextStage() {
-    console.log("nextstage called");
     if(!noStagesLeft){
         //generic:
         var oldStage = "stage"+stage;
         var newStage = "stage"+(stage+1);
         currentStage = newStage;
-        if(saturnV[newStage]==undefined){
+        if(newStage > globalInterfaceValues.stage){
             noStagesLeft = true;
             prompt("There are no stages left.");
         }else{
@@ -438,7 +440,7 @@ function nextStage() {
         mass = mass - saturnV.stage2.mass_empty - rocket.stage2.mass_fuel;
         stage = 3;
     } */
-    globalInterfaceValues.discardStage = false;
+    globalControlValues.discardStage = false;
     
 }
 
@@ -452,9 +454,9 @@ function calculateAirResistance(speed){
     
     
     //distance form earth
-    var x = (rocketGroup.position.x - spaceObjects.earth.group.position.x);
-    var y = (rocketGroup.position.y - spaceObjects.earth.group.position.y);
-    var z = (rocketGroup.position.z - spaceObjects.earth.group.position.z);
+    var x = (rocketGroup.position.x);
+    var y = (rocketGroup.position.y);
+    var z = (rocketGroup.position.z);
     
     var height2 = x*x + y*y + z*z;
     var height = Math.sqrt(height2);
@@ -467,15 +469,16 @@ function calculateAirResistance(speed){
     var earthHeight = 148483220086.37973;
     
     height = height - earthRadius;
-    height = height / 1000;
+    //height = height / 1000;
     
-    if(height < 11000){
+    if(height < 36000){
     //calculation of pressure: https://de.wikipedia.org/wiki/Barometrische_H%C3%B6henformel#Internationale_H.C3.B6henformel
-    var pressure = 1013.25 * (Math.pow((1 - ((0.0065*height)/288.15)), 5.255));
+    // old value: var pressure = 1013.25 * (Math.pow((1 - ((0.0065*height)/288.15)), 5.255));
+    var pressure = 101325 * (Math.pow((1 - ((0.0065*height)/288.15)), 5.255));
     
     //cross sectional area
-    var A = Math.PI * Math.pow(5,2);
-    
+    //var A = Math.PI * Math.pow(5,2);
+    var A = 78.53;
     //resistance constant for rocket form
     var cw = 0.06;
     var p = pressure;
@@ -492,12 +495,14 @@ function calculateAirResistance(speed){
     var M = 0.0289;
     var R = 287.058;
     var T = 298.15;
-    var d = p * M / (R * T);
+    var d = p * M / (R * T); //kg/m^3
         
     var cwe = cw * A * d * 0.5;
     
     airResistance = cwe * speed * speed;
     
+    }else{
+        airResistance = 0;
     }
 }
 
