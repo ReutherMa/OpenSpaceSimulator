@@ -44,12 +44,11 @@ Contact: openspacesimulation@gmail.com
          var percentage = 0;
          var timer = setInterval(function(){
              updateLoading(percentage);
-             percentage += 20;
-         }, 3000);
-         
-         if(percentage >= 80){
+             if(percentage >= 80){
              clearInterval(timer);
-         }
+             }
+             percentage += 20;
+         }, 2500);
     </script>
     <div id="container"></div>
 
@@ -936,10 +935,10 @@ Contact: openspacesimulation@gmail.com
         
         function loadingDone(){
             percentage = 100;
-            updateLoading(100);
+            updateLoading(percentage);
             setTimeout(function(){
               $("#loadingBox").remove();  
-            }, 1000);  
+            }, 1000);
         }
     </script>
 
