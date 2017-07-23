@@ -15,11 +15,22 @@ function prompt(errorstring) {
         $("#dialog").text(errorstring);
         $("#dialog").dialog({
             open: function(event, ui) {
-                setTimeout("$('#dialog').dialog('close')", 3000);
+                setTimeout("$('#dialog').dialog('close')", 2500);
             }
         });
         global.fuelPrompt == true;
     }
+}
+
+$(".ui-menu-item").click(function(e) {
+    $("#rocketSelect-button").blur();
+})
+
+function blurSelectMenu() {
+    $("#rocketSelect-button").blur();
+    $("#planetCamera-button").blur();
+    $("#planetSelect-button").blur();
+    $(".ui-tabs-anchor").blur();
 }
 
 
@@ -205,12 +216,16 @@ function soundOnOff(button) {    
     $(".btn").blur();
 }
 
+var obstaclePromptDisplayed = false; //false means it hasnt been shown yet
+
 function startNew(value) {
     $(".btn").blur();
-    if (value == "button") {
+    if (value=="button" || obstaclePromptDisplayed == false) {
+        if (value=="button") {
         $("#startNewDialog").text("Are you sure you want to reload the entire game? Everything will be set to default. Your custom rockets will still be available after reloading.");
-    } else if (value == "obstacle") {
+        } else if (value=="obstacle") {
         $("#startNewDialog").text("Looks like you hit an obstacle. Restart game.");
+        obstaclePromptDisplayed = true;
     }
     $("#startNewDialog").dialog({
         resizable: false,
@@ -228,6 +243,7 @@ function startNew(value) {
             }
         }
     });
+    }
 }
 
 /*$(".btn").mouseup(function(e) {

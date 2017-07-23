@@ -67,12 +67,14 @@ $(function() {
     });
     $("#planetCamera , #planetSelect")
         .iconselectmenu({
-            change: developerChange
+            change: developerChange,
+            close: blurSelectMenu
         })
         .iconselectmenu("menuWidget")
         .addClass("ui-menu-icons avatar");
     $("#rocketSelect").selectmenu({
-        change: rocketSelectChange
+        change: rocketSelectChange,
+        close: blurSelectMenu
     })
 
     // build Labels
@@ -119,7 +121,9 @@ $(function() {
     $("#fuelGaugeLabel").text(globalInterfaceValues.fuel);
 
     // build Tabs
-    $("#tabs").tabs();
+    $("#tabs").tabs({
+        activate: blurSelectMenu   
+    });
 
     hideShowTabs();
 

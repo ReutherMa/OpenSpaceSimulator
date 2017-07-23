@@ -146,7 +146,7 @@ position: relative;
     text-align: right;
     z-index: 200;
     /* background-color: rgba(49, 49, 49, 0.7); */
-    padding: 10px 10px 10px 19px;
+    padding: 10px 10px 10px 41px;
     width: 300px;
     border-radius: 6px;
     /* border: 2px solid rgb(255, 140, 0); */
@@ -255,6 +255,11 @@ position: relative;
 
 .controlBox, .currentStageDisplayBox , .discardStageButtonBox , .sasBox , .throttleBox {
     float: left;
+}
+
+.currentStageDisplayBox {
+    margin-left: 10px;
+    margin-top: 4px;
 }
 
 .steeringbox .btn {

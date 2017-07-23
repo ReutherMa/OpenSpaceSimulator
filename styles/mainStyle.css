@@ -23,16 +23,42 @@ Contact: openspacesimulation@gmail.com
     font-style: normal;
 }
 
-#loadingRocket {
-    position: absolute;
+#loadingBoxContent {
+    /*position: absolute;*/
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align:center;
 }
 
 #loadingBox {
     width: 100%;
     height: 100%;
-    background-image: url("/UserInterface/img/loadingBackground.png");
+    background-color:black;
+    background-image: url("/UserInterface/img/loadingBackground.jpg");
     text-align: center;
-    z-index: 1000
+    z-index: 1000;
+}
+
+.loadingLabel, #loadingPercentage {
+    font-family: 'Roboto', sans-serif;
+    font-weight:600;
+    color:#ff8c00;
+}
+
+.loadingLabel {
+    font-size:24px;
+}
+
+#loadingPercentage {
+    font-size:30px;
+}
+
+#loadingRocket {
+    -ms-transform: rotate(45deg); /* IE 9 */
+    -webkit-transform: rotate(45deg); /* Chrome, Safari, Opera */
+    transform: rotate(45deg);
 }
 
 body {
@@ -86,10 +112,15 @@ div#testUI {
 }
 
 .disabledInterfaceButton {
-    /*border: 1px solid #59b4d4 !important;*/
-    background: black !important;
+    border: 1px solid #3e3e3e !important;
+    /*background: black !important;*/
+    background: grey url(/UserInterface/jquery-ui-1.12.1.custom/images/ui-bg_glass_20_555555_1x400_disabled.png) 50% 50% repeat-x !important;
     font-weight: bold !important;
-    color: #ffffff !important;
+    color: #676767 !important;
+}
+
+.disabledInterfaceButton:hover {
+    border: 1px solid #3e3e3e !important;
 }
 
 .ui-widget , .ui-slider-handle , .customRocketNameTextfield , .ui-tabs {

@@ -164,7 +164,7 @@ $(document).ready(function() {
             case "rollRight":
                 globalControlValues.rollRight = true;
                 break;
-            case "speed":
+            case "throttle":
                 globalControlValues.throttle = true;
                 break;
             case "brake":
@@ -218,7 +218,7 @@ $(document).ready(function() {
             case "rollRight":
                 globalControlValues.rollRight = false;
                 break;
-            case "speed":
+            case "throttle":
                 globalControlValues.throttle = false;
                 break;
             case "brake":
