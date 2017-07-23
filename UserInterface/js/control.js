@@ -90,6 +90,7 @@ $(document).ready(function() {
                 break;
             /*case keyCode.c:
                 globalControlValues.discardStage = true;
+                global.fuelPrompt = false;
                 break;*/
         }   
         }
@@ -130,6 +131,7 @@ $(document).ready(function() {
                 break;
             case keyCode.c:
                 globalControlValues.discardStage = true;
+                global.fuelPrompt = false;
                 break;
         }
 }
@@ -227,8 +229,11 @@ $(document).ready(function() {
                 break;
             case "discardStageButton":
                 globalControlValues.discardStage = true;
+                global.fuelPrompt = false;
+                console.log("discard: " + globalControlValues.discardStage + " fuel: " + global.fuelPrompt)
                 break;
         }
+        $(".btn").blur();
     });
 
 });

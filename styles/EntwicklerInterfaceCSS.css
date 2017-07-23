@@ -52,7 +52,7 @@ label {
     font-size: 13px;
 }
 .ui-heading {
-    font-weight: 300;
+    font-weight: 400;
 }
 
 .ui-tabs-tab {
@@ -62,7 +62,7 @@ legend {
     font-family: 'Montserrat', sans-serif;
     font-size: 16px;
     color: #ff8c00;
-    font-weight: bold;
+    font-weight: 500;
 }
 fieldset {
     background-color: rgba(49, 49, 49, 0.7);
@@ -102,13 +102,14 @@ fieldset {
     font-family: 'Roboto', sans-serif !important;
     font-size: 12px !important;
     background: #555 url(../UserInterface/jquery-ui-1.12.1.custom/images/ui-bg_glass_20_555555_1x400.png) 50% 50% repeat-x;
-    font-weight: bold;
+    font-weight: normal;
     color:"#eee" !important;
     padding-bottom: 5px !important;
     border-bottom-right-radius: 6px;
     border-bottom-left-radius: 6px;
     border-top-right-radius: 6px;
     border-top-left-radius: 6px;
+    outline:none;
 }
 
 #saveCustomRocketBox {

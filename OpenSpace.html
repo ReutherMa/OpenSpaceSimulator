@@ -22,7 +22,7 @@ Contact: openspacesimulation@gmail.com
 
     <title>Open Space Simulation</title>
     
-    <link href="https://fonts.googleapis.com/css?family=Montserrat|Roboto" rel="stylesheet">
+    <!--<link href="https://fonts.googleapis.com/css?family=Montserrat|Roboto" rel="stylesheet">-->
     
     <link rel="stylesheet" href="styles/mainStyle.css">
     <link rel="stylesheet" href="UserInterface/jquery-ui-1.12.1.custom/jquery-ui.min.css">
@@ -226,6 +226,7 @@ Contact: openspacesimulation@gmail.com
                     <br>
                     <input type="button" id="resetEditor" class="btn ui-button ui-widget ui-corner-all" value="Reset" title="Reset Editor" onclick="resetEditor()">
                     <div id="saveCustomRocketBox">
+                        <label class="ui-heading mainHeading">Save Custom Rocket:&nbsp;</label> <br>
                         <input type="text" class="" name="customRocketNameTextfield" id="customRocketNameTextfield" value="">
                         <input type="button" id="customRocketName" class="btn ui-button ui-widget ui-corner-all" value="Save" title="Save Custom Rocket" onclick="saveCustomRocket()">
                         <input type="button" id="deleteLocalStorageButton" class="btn ui-button ui-widget ui-corner-all" value="Delete All" title="Delete All Custom Rockets" onclick="deleteLocalStorage()">
@@ -350,6 +351,8 @@ Contact: openspacesimulation@gmail.com
                         <br>d = z rotation
                         <br>q = y rotation
                         <br>e = y rotation
+                        <br>x = SAS
+                        <br>c = Discard Stage
                     </div>
                     <br>
                     <div class="impressumInfoBox">

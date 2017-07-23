@@ -10,7 +10,8 @@ Contact: openspacesimulation@gmail.com
 //fill global with key-values, datatype: boolean
 var global = {
     started: false,
-    audio: false
+    audio: false,
+    fuelPrompt: false //false means hasnt been shown yet
 };
 
 //do we want to load textures? false for fast (and ugly) debugging mode

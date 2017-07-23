@@ -7,16 +7,15 @@ Contact: openspacesimulation@gmail.com
 
 
 
-var prompty = 0;
+//var prompty = 0;
 
 
 function prompt(errorstring) {
-    //allert(errorstring);
-    if (prompty == 0) {
+    if (global.fuelPrompt == false) {
         $("#dialog").text(errorstring);
         $("#dialog").dialog();
-    }
-    prompty = 1;
+        global.fuelPrompt == true;
+    }   
 }
 
 
@@ -76,26 +75,37 @@ function developerChange() {
 
 }
 
-function rocketChange() {
-    // RocketInterface
-    // Bearbeitung
+function rocketSelectChange() {
     globalInterfaceValues.rocketName = $('select[name=rocketSelect]').val();
     if (globalInterfaceValues.rocketName == "spaceTaxi") {
         $("#editBox").hide();
-    } else {
+    } else if (globalInterfaceValues.rocketName == "saturnV") {
         $("#editBox").show();
-        if (!globalInterfaceValues.rocketName == "saturnV") {
-            // build CustomRocket
-        }
+        console.log(globalInterfaceValues);
+        resetEditor();
+    } else {
+        var customRocket = "customRocket" + globalInterfaceValues.rocketName;
+        $("#editBox").show();
+        globalInterfaceValues = JSON.parse(localStorage.getItem(customRocket));
+        console.log(globalInterfaceValues);
+        globalInterfaceValues.customRocketUsage = true;
+        setSliderValuesAndLabels();
     }
+    $("#rocketSelect-button").blur();
+}
 
+
+function rocketChange() {
+    // RocketInterface
+    // Bearbeitung
+    
     if (this == "mass_fuel1" || this == "mass_fuel2" || this == "mass_fuel3" || this == "mass_fuel4") {
         var stage = parseInt(this.substring(9, 10));
         // console.log(stage);
         //fuelMassChanged(stage);
     }
     globalInterfaceValues.changed = true;
-    globalInterfaceValues.customRocketUsage = true;
+    //globalInterfaceValues.customRocketUsage = true;
     globalInterfaceValues.stage = +$("#stagesLabel").text();
 
     hideShowTabs();
@@ -122,6 +132,7 @@ function rocketChange() {
        
         $("#burningtime" + i + "Label").text(globalInterfaceValues.stages[i - 1].burningtime);
         $("#thrust" + i + "Label").text(globalInterfaceValues.stages[i - 1].thrust);*/
+    
         $("#mass_total" + i + "Label").text(globalInterfaceValues.stages[i - 1].mass_total);
         globalInterfaceValues.rocketTotalMass += globalInterfaceValues.stages[i - 1].mass_total;
     }
@@ -149,6 +160,7 @@ function soundOnOff(button) {    
 }
 
 function startNew(button) {
+    $(".btn").blur();
     $("#startNewDialog").text("Are you sure you want to reload the entire game? Everything will be set to default. Your custom rockets will still be available after reloading.");
     $("#startNewDialog").dialog({
         resizable: false,
@@ -167,6 +179,10 @@ function startNew(button) {
         }
     });
 }
+
+/*$(".btn").mouseup(function(e) {
+    $(this).blur();
+})*/
 
 function cheatFuel() {
     $("#dialog").text("Congrats! You have unlimited fuel!");
@@ -199,6 +215,7 @@ var customRocketButtonsString = "";
 function saveCustomRocket(button) {
     var customRocketName = document.getElementById("customRocketNameTextfield").value;
     var customRocketFullName = "customRocket" + customRocketName;
+    globalInterfaceValues.rocketName = customRocketName;
     //var customRocketValues = globalInterfaceValues.timeFactor;
     localStorage.setItem(customRocketFullName, JSON.stringify(globalInterfaceValues));
     customRocketButtonsString += "<option id='" + customRocketFullName + "'  value='" + customRocketName + "' title='Use Custom Rocket' onclick='loadCustomRocket(this)'>" + customRocketName + "</option>";
@@ -215,7 +232,7 @@ function createSelectString() {
 
 function showCustomRocketButtons() {
     createSelectString();
-    $("#rocketSelect").selectmenu("destroy").selectmenu({ style: "dropdown" });
+    $("#rocketSelect").selectmenu("destroy").selectmenu({ change:rocketSelectChange });
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -251,6 +268,7 @@ function deleteLocalStorage() {
 }
 
 function resetEditor() {
+    $(".btn").blur();
     globalInterfaceValues.rocketName = "saturnV";
     $("#rocketSelect").val(globalInterfaceValues.rocketName);
     $("#rocketSelect").selectmenu("refresh");
@@ -323,3 +341,53 @@ function updateLoading(percentage) {
     $("#loadingPercentage").text(percentage);
 }
 
+
+function setSliderValuesAndLabels() {
+    globalInterfaceValues.rocketTotalMass = 0;
+    for (var i = 1; i <= globalInterfaceValues.stage; i++) {
+        if (i <= globalInterfaceValues.stage) {
+            // get variables from SaturnV-Object
+            var mass_empty = globalInterfaceValues.stages[i - 1].mass_empty;
+            var mass_fuel = globalInterfaceValues.stages[i - 1].mass_fuel;
+            var mass_total = mass_empty + mass_fuel;
+            var thrust = globalInterfaceValues.stages[i - 1].thrust;
+            var burningtime = globalInterfaceValues.stages[i - 1].burningtime;
+        } else {
+            // get variables for Stage4-Slider
+            /*var mass_empty = globalInterfaceValues.stages[i - 1].mass_empty;
+            var mass_fuel = globalInterfaceValues.stages[i - 1].mass_fuel;
+            var mass_total = mass_empty + mass_fuel;
+            var thrust = globalInterfaceValues.stages[i - 1].thrust;
+            var burningtime = globalInterfaceValues.stages[i - 1].burningtime;*/
+            globalInterfaceValues.stages[i - 1].mass_empty = 0;
+            globalInterfaceValues.stages[i - 1].mass_fuel = 0;
+            var mass_total = mass_empty + mass_fuel;
+            globalInterfaceValues.stages[i - 1].thrust = 0;
+            globalInterfaceValues.stages[i - 1].burningtime = 0;
+        }
+        // store variables in global variable
+        globalInterfaceValues.stages[i - 1] = {
+            mass_empty: mass_empty,
+            mass_fuel: mass_fuel,
+            mass_total: mass_total,
+            thrust: thrust,
+            burningtime: burningtime
+        };
+        // set labels for each stage
+        $("#mass_empty" + i + "Label").text(globalInterfaceValues.stages[i - 1].mass_empty);
+        $("#mass_fuel" + i + "Label").text(globalInterfaceValues.stages[i - 1].mass_fuel);
+        $("#mass_total" + i + "Label").text(globalInterfaceValues.stages[i - 1].mass_total);
+        $("#burningtime" + i + "Label").text(globalInterfaceValues.stages[i - 1].burningtime);
+        $("#thrust" + i + "Label").text(globalInterfaceValues.stages[i - 1].thrust);
+        globalInterfaceValues.rocketTotalMass += globalInterfaceValues.stages[i - 1].mass_total;
+    }
+    
+    $("#stagesLabel").text(globalInterfaceValues.stage);
+    $("#stages").slider("value", globalInterfaceValues.stage);
+    for (var i = 1; i <= globalInterfaceValues.stages.length; i++) {
+        $("#mass_empty" + i).slider("option", "value", globalInterfaceValues.stages[i - 1].mass_empty);
+        $("#mass_fuel" + i).slider("option", "value", globalInterfaceValues.stages[i - 1].mass_fuel);
+        $("#burningtime" + i).slider("option", "value", globalInterfaceValues.stages[i - 1].burningtime);
+        $("#thrust" + i).slider("option", "value", globalInterfaceValues.stages[i - 1].thrust);
+    }
+}

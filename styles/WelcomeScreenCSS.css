@@ -5,15 +5,30 @@ Authors: Marius Reuther Franziska Braun, Lea Uhlenbrock, Selina Forster, Theresa
 Contact: openspacesimulation@gmail.com
 */
 
+@font-face {
+    font-family: 'Roboto';
+    src: url('../UserInterface/Fonts/webfonts/roboto_thin_macroman/Roboto-thin-webfont.woff');
+   /* src: url('Roboto-Regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('Roboto-Regular-webfont.woff') format('woff'),
+         url('Roboto-Regular-webfont.ttf') format('truetype'),
+         url('Roboto-Regular-webfont.svg#RobotoRegular') format('svg');*/
+    font-weight: normal;
+    font-style: normal;
+}
 
-
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../UserInterface/Fonts/montserrat-v10-latin-300.woff');
+    font-weight: normal;
+    font-style: normal;
+}
 
 
 body {
     font-family: 'Roboto', sans-serif;
     font-size: 18px;
     color:#ffffff;
-    background-image: url("backgroundpic01.jpg");
+    background-image: url("../UserInterface/backgroundpic01.jpg");
     background-size: cover;
     background-color: #000000;
 }
@@ -114,5 +129,5 @@ a {
 .welcomeScreenButton {
     font-family: 'Roboto', sans-serif !important;
     font-size: 18px !important;
-    font-weight: normal !important;
+    font-weight: bold !important;
 }

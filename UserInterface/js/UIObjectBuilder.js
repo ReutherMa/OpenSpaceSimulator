@@ -70,7 +70,7 @@ $(function() {
       .iconselectmenu( "menuWidget")
         .addClass( "ui-menu-icons avatar" );
     $("#rocketSelect").selectmenu({
-        change: rocketChange
+        change: rocketSelectChange
     })
 
     // build Labels
