@@ -169,9 +169,13 @@ function soundOnOff(button) {    
     $(".btn").blur();
 }
 
-function startNew(button) {
+function startNew(value) {
     $(".btn").blur();
-    $("#startNewDialog").text("Are you sure you want to reload the entire game? Everything will be set to default. Your custom rockets will still be available after reloading.");
+    if (value=="button") {
+        $("#startNewDialog").text("Are you sure you want to reload the entire game? Everything will be set to default. Your custom rockets will still be available after reloading.");
+    } else if (value=="obstacle") {
+        $("#startNewDialog").text("Looks like you hit an obstacle. Restart game.");
+    }
     $("#startNewDialog").dialog({
         resizable: false,
         height: "auto",
