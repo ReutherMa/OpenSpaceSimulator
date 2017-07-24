@@ -209,9 +209,10 @@ function moveRocket(difftime) {
         //new mass without lost fuel
         if(!globalInterfaceValues.fuelCheat){
             mass = mass - mass_lost;
+            //current fuel mass for UI
+            fuel_mass = fuel_mass - mass_lost;
         }
-        //current fuel mass for UI
-        fuel_mass = fuel_mass - mass_lost;
+        
         $('#fuelGauge .gauge-arrow').trigger('updateGauge', fuel_mass / saturnV.fuel_total * 100 );
         $("#fuelGaugeLabel").text(parseInt(fuel_mass / 1000));
         
@@ -436,6 +437,8 @@ next stage: UI-Event, initiated by user
 */
 function nextStage() {
     if(!noStagesLeft){
+        console.log("nxstage called");
+        console.log(globalControlValues.discardStage);
         //generic:
         var oldStage = "stage"+stage;
         var newStage = "stage"+(stage+1);
@@ -449,7 +452,8 @@ function nextStage() {
             stage++;
             prompt("Discarded Stage "+(stage-1)+". Current Stage: "+stage);
             globalInterfaceValues.currentStage++;
-            $('#currentStageDisplay').val(globalInterfaceValues.stage).change();
+            $('#currentStageDisplay').val(globalInterfaceValues.currentStage).change();
+            console.log("current stage:"+stage);
             
         }
     }else{
@@ -466,6 +470,7 @@ function nextStage() {
         stage = 3;
     } */
     globalControlValues.discardStage = false;
+    console.log(globalControlValues.discardStage);
     
 }
 

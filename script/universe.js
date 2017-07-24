@@ -74,9 +74,7 @@ function buildUniverse() {
     var container;
     //, stats
 
-    //Shadow
-    /*var sceneVol;*/
-    var ui_scene, renderer, lens_scene;
+    var sceneVol, ui_scene, renderer, lens_scene;
 
     var segments = 64;
     var group_galaxy;
@@ -108,7 +106,7 @@ function buildUniverse() {
     var arr_shader  = [];
     var arr_meshVol = [];
     var arr_mesh    = [];
-    
+    */
     var un_test = {
         texture: { value: loader.load( "textures/earth_moon_map.jpg" ) }
     };
@@ -117,7 +115,7 @@ function buildUniverse() {
     var color2 = [new THREE.Color(0x00ffff), new THREE.Color(0x00ffff), new THREE.Color(0xff0000)];
     
     var lightVec = new THREE.Vector3( -1, -1, -1);         
-    var light = new THREE.Vector3().copy(lightVec).negate().normalize();*/
+    var light = new THREE.Vector3().copy(lightVec).negate().normalize();
 
     //universe functions
     universe.init = init;
@@ -139,8 +137,7 @@ function buildUniverse() {
     function init(data) {
         //creating a scene, camera
         scene    = new THREE.Scene();
-        //Shadow
-        /*sceneVol = new THREE.Scene();*/
+        sceneVol = new THREE.Scene();
         camera   = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1e27); //1e27
         //camera.position.set(0, 0, 695508e3 + 10e10);
         //camera.lookAt (scene.position);
@@ -268,6 +265,21 @@ function buildUniverse() {
             vertexShader: document.getElementById('diffSpec_spaceObj_vs').textContent,
             fragmentShader: document.getElementById('diffSpec_spaceObj_fs').textContent
         });*/
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
 
         //renderer
@@ -465,12 +477,12 @@ function buildUniverse() {
             rocketGroup.position.z =  zE ;
              rocketGroup.speed = new THREE.Vector3 (0, 0, 0);
              rocketGroup.rotateX(Math.PI/180 * 45);
+            rocketGroup.rotateY(Math.PI/180 * -135);
              rocketGroup.angularMomentum = new THREE.Quaternion(0,0,0,1);
              rocketGroup.angularAcceleration = new THREE.Quaternion(0,0,0,1);
              earthGroup.add(rocketGroup);
              rocketGroup.add(throttleSound);
-            var axisH = new THREE.AxisHelper(1e7);
-            rocketGroup.add(axisH);
+            
             buildFire();
         });
 
@@ -504,8 +516,7 @@ function buildUniverse() {
             launchpadGroup.rotateX(Math.PI/180 * 45);
             
             
-            var axisH_launch = new THREE.AxisHelper(1e6);
-            launchpadGroup.add(axisH_launch);
+            
             //launchpadGroup.position.set(0, 0, 0 );
             earthGroup.add(launchpadGroup);
         });
@@ -659,7 +670,7 @@ function buildUniverse() {
                     
                 if (name == "earth" ){
                     
-                    var light_earth = new THREE.PointLight( 0xffffff, 1, 8e3, 2 );
+                    var light_earth = new THREE.PointLight( 0xffffff, 1, 1e10, 2 );
                     
                     group.add( light_earth );
                     //material.depthTest = false; for lensFlare
@@ -897,8 +908,7 @@ function buildUniverse() {
         sphere_nav.angularAcceleration = new THREE.Quaternion(0,0,0,1);
         ui_scene.add(sphere_nav);
         readyVars.navball = true;
-        var axisHelper = new THREE.AxisHelper(1e15); //
-        sphere_nav.add(axisHelper);
+        
         
     }
     
@@ -959,9 +969,9 @@ function buildUniverse() {
                 camera.near = 0.1;
                 camera.updateProjectionMatrix();
                 rocketGroup.add(camera);
-                camera.position.y = 20;
-                    camera.position.z = -20;
-                camera.position.x = -50;
+                camera.position.y = 0;
+                    camera.position.z = 50;
+                camera.position.x = 0;
                 //camera.rotateY(Math.PI/180 * 120);
                 controls.update();
             } 
@@ -1201,11 +1211,16 @@ var clock = new THREE.Clock();
             renderer.render(scene, camera);
             
             //render third Scene
+            if( renderNavball ){
+                //ui_scene.visible = false;
+                ui_scene.children[0].visible = true;
+                ui_scene.children[1].visible = true;
             
-            //Render Navball if UI elements are visible, else not
-            ui_scene.children[0].visible = renderNavball;
-            ui_scene.children[1].visible = renderNavball;
-            
+            }
+            else {
+                ui_scene.children[0].visible = false;
+                ui_scene.children[1].visible = false;
+            }
             renderer.sortObjects = false;
             renderer.clearDepth();
             renderer.render(ui_scene, ui_camera);
