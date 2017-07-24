@@ -74,7 +74,9 @@ function buildUniverse() {
     var container;
     //, stats
 
-    var sceneVol, ui_scene, renderer, lens_scene;
+    //Shadow
+    /*var sceneVol;*/
+    var ui_scene, renderer, lens_scene;
 
     var segments = 64;
     var group_galaxy;
@@ -106,7 +108,7 @@ function buildUniverse() {
     var arr_shader  = [];
     var arr_meshVol = [];
     var arr_mesh    = [];
-    */
+    
     var un_test = {
         texture: { value: loader.load( "textures/earth_moon_map.jpg" ) }
     };
@@ -115,7 +117,7 @@ function buildUniverse() {
     var color2 = [new THREE.Color(0x00ffff), new THREE.Color(0x00ffff), new THREE.Color(0xff0000)];
     
     var lightVec = new THREE.Vector3( -1, -1, -1);         
-    var light = new THREE.Vector3().copy(lightVec).negate().normalize();
+    var light = new THREE.Vector3().copy(lightVec).negate().normalize();*/
 
     //universe functions
     universe.init = init;
@@ -137,7 +139,8 @@ function buildUniverse() {
     function init(data) {
         //creating a scene, camera
         scene    = new THREE.Scene();
-        sceneVol = new THREE.Scene();
+        //Shadow
+        /*sceneVol = new THREE.Scene();*/
         camera   = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1e27); //1e27
         //camera.position.set(0, 0, 695508e3 + 10e10);
         //camera.lookAt (scene.position);
@@ -265,21 +268,6 @@ function buildUniverse() {
             vertexShader: document.getElementById('diffSpec_spaceObj_vs').textContent,
             fragmentShader: document.getElementById('diffSpec_spaceObj_fs').textContent
         });*/
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
 
         //renderer
@@ -671,7 +659,7 @@ function buildUniverse() {
                     
                 if (name == "earth" ){
                     
-                    var light_earth = new THREE.PointLight( 0xffffff, 1, 1e10, 2 );
+                    var light_earth = new THREE.PointLight( 0xffffff, 1, 8e3, 2 );
                     
                     group.add( light_earth );
                     //material.depthTest = false; for lensFlare
@@ -1213,16 +1201,11 @@ var clock = new THREE.Clock();
             renderer.render(scene, camera);
             
             //render third Scene
-            if( renderNavball ){
-                //ui_scene.visible = false;
-                ui_scene.children[0].visible = true;
-                ui_scene.children[1].visible = true;
             
-            }
-            else {
-                ui_scene.children[0].visible = false;
-                ui_scene.children[1].visible = false;
-            }
+            //Render Navball if UI elements are visible, else not
+            ui_scene.children[0].visible = renderNavball;
+            ui_scene.children[1].visible = renderNavball;
+            
             renderer.sortObjects = false;
             renderer.clearDepth();
             renderer.render(ui_scene, ui_camera);
