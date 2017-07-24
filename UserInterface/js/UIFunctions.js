@@ -113,7 +113,6 @@ function rocketSelectChange() {
         setSliderValuesAndLabels();
     }
     $("#rocketSelect-button").blur();
-    console.log(saturnV);
 }
 
 function fuelChange() {
@@ -197,8 +196,6 @@ function rocketChange() {
     //$("#fuelTotalMassLabel").text(globalInterfaceValues.fuel_total);
     $("#rocketTotalMassLabel").text(globalInterfaceValues.rocketTotalMass);
     
-    console.log(saturnV);
-
     $(".ui-slider-handle").blur();
     $("#rocketSelect-button").blur();
     $(".ui-tabs").blur();

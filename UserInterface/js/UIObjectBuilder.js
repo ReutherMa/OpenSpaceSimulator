@@ -18,7 +18,7 @@ $(function() {
     initDefaultValuesAndCreateLabels();
     for (var i = 1; i <= globalInterfaceValues.stages.length; i++) {
         // build slider with variables from global variable
-        rocketSlide("mass_empty" + i, 0, 100000, 100, globalInterfaceValues.stages[i - 1].mass_empty);
+        rocketSlide("mass_empty" + i, 100, 100000, 100, globalInterfaceValues.stages[i - 1].mass_empty);
         fuelSlide("mass_fuel" + i, 0, 3000000, 1000, globalInterfaceValues.stages[i - 1].mass_fuel);
         //rocketSlide("burningtime" + i, 0, 6000, 10, globalInterfaceValues.stages[i - 1].burningtime);
         thrustSlide("thrust" + i, 0, 50000000, 1000, globalInterfaceValues.stages[i - 1].thrust);
