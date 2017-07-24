@@ -374,7 +374,7 @@ gl_FragColor.g = 1.0;
                 var r_loader = new THREE.ColladaLoader(); 
                 r_loader.options.convertUpAxis = true; 
                 
-                r_loader.load("models/cube_3.dae", 
+                r_loader.load("models/cube_4.dae", 
                               function(collada) {
                                     rocket = collada.scene;   //var skin = collada.skins[ 0 ];
                     
@@ -455,8 +455,11 @@ gl_FragColor.g = 1.0;
                 //faceNum Array
                 var arr_faceNum = [ /*geoVol_rocket_faceNum,*/ geoVol_torus_faceNum, geoVol_ground_faceNum, geoVol_moon_faceNum, geoVol_earth_faceNum, geoVol_mars_faceNum ];
               
-                var color1 = [new THREE.Color(0x00ffff), new THREE.Color(0xff0000), new THREE.Color(0xff0000)];
-                var color2 = [new THREE.Color(0x00ffff), new THREE.Color(0x00ffff), new THREE.Color(0xff0000)];
+//                var color1 = [new THREE.Color(0x00ffff), new THREE.Color(0xff0000), new THREE.Color(0xff0000)];
+//                var color2 = [new THREE.Color(0x00ffff), new THREE.Color(0x00ffff), new THREE.Color(0xff0000)];
+                                                                                    
+                var color1 = [new THREE.Color(0xff0000 ), new THREE.Color(0xff0000), new THREE.Color(0x00ffff)];
+                var color2 = [new THREE.Color(0xff0000), new THREE.Color(0x00ffff), new THREE.Color(0x00ffff)];
                 
                 function recurse_geo(group, prepend) {
                     group.children = group.children.slice();
@@ -494,7 +497,7 @@ gl_FragColor.g = 1.0;
                                                                   arr_geoVol[j].faces[i].b,          //vertex-position
                                                                   arr_geoVol[j].faces[i].a,          //vertex-position
                                                                   arr_geoVol[j].faces[i].normal,     //orientation -> light
-                                                                  color2));                         //tagging-attribute for vertices
+                                                                  color2));                          //tagging-attribute for vertices
                
                         arr_geoVol[j].faces.push(new THREE.Face3( arr_geoVol[j].faces[i].b,
                                                                   arr_geoVol[j].faces[i].b,
@@ -564,12 +567,14 @@ gl_FragColor.g = 1.0;
                 */
                 
 //                rocket_vol.position.set (-7,-15,0);
-                rocket_vol.position.set (0, 0, 0);
- //               sceneVol.add (rocket_vol);
+                
+                meshVol_rocket = new THREE.Mesh(rocket_vol.children[0].children[0].geometry);
+                meshVol_rocket.position.set (0, 0, 0);
+                sceneVol.add (meshVol_rocket);
                 
 //                rocket.position.set (-7,-15,0);
                 rocket.position.set (0, 0, 0);
-//                scene.add (rocket);
+                scene.add (rocket);
 
                 //TORUS
                 meshVol_torus = new THREE.Mesh(geoVol_torus);
@@ -664,7 +669,7 @@ gl_FragColor.g = 1.0;
                 
                 //Mars
                 meshVol_mars = new THREE.Mesh(geoVol_mars);
-                meshVol_mars.position.set(-3, 0, 0);
+                meshVol_mars.position.set( 0, -5, 0);
                 sceneVol.add(meshVol_mars);
                 
                 un_mars = {
@@ -679,7 +684,7 @@ gl_FragColor.g = 1.0;
                 
                 geo_mars  = new THREE.SphereGeometry(0.5, 64, 64);
                 mesh_mars = new THREE.Mesh(geo_mars);
-                mesh_mars.position.set(-3, 0, 0);
+                mesh_mars.position.set(0, -5, 0);
                 scene.add(mesh_mars);
                 
                 
@@ -871,8 +876,8 @@ gl.enable(gl.STENCIL_TEST);
                 
                 mesh_earth.rotateY(0.0025);
                 meshVol_earth.rotateY(0.0025);
-                mesh_torus.rotateZ(0.01);
-                meshVol_torus.rotateZ(0.01);
+                //mesh_torus.rotateZ(0.01);
+                //meshVol_torus.rotateZ(0.01);
                 
 			}
 		</script>  
