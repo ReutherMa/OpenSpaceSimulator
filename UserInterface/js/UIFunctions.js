@@ -119,7 +119,7 @@ function fuelChange() {
     var stage = parseInt(this.substring(9, 10));
     fuelMassChanged(stage);
     $("#burningtime" + stage + "Label").text(globalInterfaceValues.stages[stage - 1].burningtime);
-    //rocketChange();
+    rocketChange();
 }
 
 function thrustChange() {
@@ -128,7 +128,7 @@ function thrustChange() {
     $("#burningtime" + stage + "Label").text(globalInterfaceValues.stages[stage - 1].burningtime);
     $("#mass_empty" + stage + "Label").text(globalInterfaceValues.stages[stage - 1].mass_empty);
     $("#mass_empty" + stage).slider("option", "value", globalInterfaceValues.stages[stage - 1].mass_empty);
-    //rocketChange();
+    rocketChange();
 
 }
 
@@ -260,40 +260,30 @@ function cheatFuel() {
 var defaultRocketsString = "<option value='saturnV'>Saturn V</option><option value='spaceTaxi'>Space Taxi</option>";
 var customRocketButtonsString = "";
 
-/*function saveCustomRocket(button) {
-    var customRocketName = document.getElementById("customRocketNameTextfield").value;
-    var customRocketFullName = "customRocket" + customRocketName;
-    var customRocketValues = globalInterfaceValues.timeFactor;
-    localStorage.setItem(customRocketFullName, customRocketValues);
-    customRocketButtonsString += "<input type='button' id='" + customRocketFullName + "' class='btn ui-button ui-widget ui-corner-all' value='" + customRocketName + "' title='Use Custom Rocket' onclick='loadCustomRocket(this)'>";
-    showCustomRocketButtons();
-}*/
-
-/*function saveCustomRocket(button) {
-    var customRocketName = document.getElementById("customRocketNameTextfield").value;
-    var customRocketFullName = "customRocket" + customRocketName;
-    //var customRocketValues = globalInterfaceValues.timeFactor;
-    localStorage.setItem(customRocketFullName, JSON.stringify(globalInterfaceValues));
-    customRocketButtonsString += "<input type='button' id='" + customRocketFullName + "' class='btn ui-button ui-widget ui-corner-all' value='" + customRocketName + "' title='Use Custom Rocket' onclick='loadCustomRocket(this)'>";
-    $(".btn").blur();
-    showCustomRocketButtons();
-}*/
 
 function saveCustomRocket(button) {
     var customRocketName = document.getElementById("customRocketNameTextfield").value;
-    var customRocketFullName = "customRocket" + customRocketName;
-    globalInterfaceValues.rocketName = customRocketName;
-    //var customRocketValues = globalInterfaceValues.timeFactor;
-    localStorage.setItem(customRocketFullName, JSON.stringify(globalInterfaceValues));
-    customRocketButtonsString += "<option id='" + customRocketFullName + "'  value='" + customRocketName + "' title='Use Custom Rocket' selected>" + customRocketName + "</option>";
     $(".btn").blur();
-    $("#customRocketNameTextfield").blur().val("");
-    $("#dialog").html("Custom Rocket successfully saved! You can find it in the rocket selectbox. <br> Your custom rockets will still be available after reloading the game.").dialog({
+    if(customRocketName != "") {
+        var customRocketFullName = "customRocket" + customRocketName;
+        globalInterfaceValues.rocketName = customRocketName;
+        //var customRocketValues = globalInterfaceValues.timeFactor;
+        localStorage.setItem(customRocketFullName, JSON.stringify(globalInterfaceValues));
+        customRocketButtonsString += "<option id='" + customRocketFullName + "'  value='" + customRocketName + "' title='Use Custom Rocket' selected>" + customRocketName + "</option>";
+        $("#customRocketNameTextfield").blur().val("");
+        $("#dialog").html("Custom Rocket successfully saved! You can find it in the rocket selectbox. <br> Your custom rockets will still be available after reloading the game.").dialog({
             open: function(event, ui) {
                 setTimeout("$('#dialog').dialog('close')", 2500);
             }
         });
-    showCustomRocketButtons();
+        showCustomRocketButtons();
+        } else {
+           $("#dialog").html("Please give your rocket a name.").dialog({
+            open: function(event, ui) {
+                setTimeout("$('#dialog').dialog('close')", 2500);
+            }
+        }); 
+        }
 }
 
 function createSelectString() {
@@ -358,7 +348,6 @@ function resetEditor() {
         //$("#burningtime" + i).slider("option", "value", globalInterfaceValues.stages[i - 1].burningtime);
         $("#thrust" + i).slider("option", "value", globalInterfaceValues.stages[i - 1].thrust);
     }
-
     //rocketChange();
 }
 
