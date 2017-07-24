@@ -278,7 +278,7 @@ function moveRocket(difftime) {
     //earth_vec = r_vec.multiplyMatrix4( spaceObjects.earth.group.MatrixWorld );
     
     //drawRocketTrail(earth_vec);    
-    drawRocketTrail(rocketGroup.position.x, rocketGroup.position.y, rocketGroup.position.z);    
+    //drawRocketTrail(rocketGroup.position.x, rocketGroup.position.y, rocketGroup.position.z);    
     /*for(var i =0; i<=100; i++){
         //look into future and calculate rocket position
         var timeywimey = difftime * i * 100;
@@ -428,8 +428,9 @@ TODO: UI, saving score
 */
 function gameOver(){
     //UI-Funktion Game Over
-    prompt("Looks like you hit a tiny obstacle. Restart game.");
+    
     gameOverVar = true;
+    startNew("obstacle");
 }
 
 /*

@@ -1101,6 +1101,7 @@ var clock = new THREE.Clock();
                 loader.load("models/taxi_y.dae", function(collada) {   
                     rocket = collada.scene;   
                     rocket.name = "spaceTaxi";
+                    rocket.rotateY(Math.PI);
                     rocketGroup.add(rocket);         
                     rocket.visible = true;
                 });

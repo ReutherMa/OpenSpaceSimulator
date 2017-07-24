@@ -119,7 +119,7 @@ function fuelChange() {
     var stage = parseInt(this.substring(9, 10));
     fuelMassChanged(stage);
     $("#burningtime" + stage + "Label").text(globalInterfaceValues.stages[stage - 1].burningtime);
-    rocketChange();
+    //rocketChange();
 }
 
 function thrustChange() {
@@ -128,7 +128,7 @@ function thrustChange() {
     $("#burningtime" + stage + "Label").text(globalInterfaceValues.stages[stage - 1].burningtime);
     $("#mass_empty" + stage + "Label").text(globalInterfaceValues.stages[stage - 1].mass_empty);
     $("#mass_empty" + stage).slider("option", "value", globalInterfaceValues.stages[stage - 1].mass_empty);
-    rocketChange();
+    //rocketChange();
 
 }
 
