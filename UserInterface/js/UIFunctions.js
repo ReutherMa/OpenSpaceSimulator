@@ -52,8 +52,10 @@ function doToggleGame(button) {
     $("#gameInterface").toggle(100);
     if ($("#" + button.id).hasClass("activeInterface")) {
         $("#" + button.id).removeClass("activeInterface");
+        renderNavball = false;
     } else {
         $("#" + button.id).addClass("activeInterface");
+        renderNavball = true;
     }
     $(".btn").blur();
 }
