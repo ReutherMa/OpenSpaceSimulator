@@ -249,7 +249,11 @@ function startNew(value) {
 
 function cheatFuel() {
     $("#dialog").text("Congrats! You have unlimited fuel!");
-    $("#dialog").dialog();
+    $("#dialog").dialog({
+            open: function(event, ui) {
+                setTimeout("$('#dialog').dialog('close')", 2500);
+            }
+        });
     globalInterfaceValues.fuelCheat = true;
 }
 
@@ -283,7 +287,12 @@ function saveCustomRocket(button) {
     localStorage.setItem(customRocketFullName, JSON.stringify(globalInterfaceValues));
     customRocketButtonsString += "<option id='" + customRocketFullName + "'  value='" + customRocketName + "' title='Use Custom Rocket' selected>" + customRocketName + "</option>";
     $(".btn").blur();
-    $("#customRocketNameTextfield").blur();
+    $("#customRocketNameTextfield").blur().val("");
+    $("#dialog").html("Custom Rocket successfully saved! You can find it in the rocket selectbox. <br> Your custom rockets will still be available after reloading the game.").dialog({
+            open: function(event, ui) {
+                setTimeout("$('#dialog').dialog('close')", 2500);
+            }
+        });
     showCustomRocketButtons();
 }
 
@@ -324,6 +333,11 @@ function deleteLocalStorage() {
     //$("#useCustomRocketButton").html("");
     customRocketButtonsString = "";
     $(".btn").blur();
+    $("#dialog").html("All Custom Rockets have been deleted.").dialog({
+            open: function(event, ui) {
+                setTimeout("$('#dialog').dialog('close')", 2500);
+            }
+        });
     showCustomRocketButtons();
 
 }
