@@ -95,7 +95,7 @@ function calculatePhysics(difftime, spaceObjects) {
     var factoredTime = difftime * timefactor;
     
     if(spaceObjects.earth.group && rocketGroup){
-         rotateRocket(factoredTime);
+         
         /*
         var yAxis = new THREE.Vector3();
         var quaternion = rocketGroup.quaternion;
@@ -119,6 +119,7 @@ function calculatePhysics(difftime, spaceObjects) {
 
     if(global.started){
         calculateGravitationRocket(factoredTime);
+        rotateRocket(factoredTime);
     }
     /*if(global.started && ctrStart == 0){
         //speed rocket with earth rotation when started
