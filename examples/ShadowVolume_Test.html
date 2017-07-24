@@ -400,7 +400,7 @@ gl_FragColor.g = 1.0;
                 
                 //axisHelper
                 var axisHelper = new THREE.AxisHelper(100); //
-                scene.add(axisHelper);
+                //scene.add(axisHelper);
                 
                 
                 var imagePrefix = "textures/stars_for_skybox2/";
@@ -455,11 +455,11 @@ gl_FragColor.g = 1.0;
                 //faceNum Array
                 var arr_faceNum = [ /*geoVol_rocket_faceNum,*/ geoVol_torus_faceNum, geoVol_ground_faceNum, geoVol_moon_faceNum, geoVol_earth_faceNum, geoVol_mars_faceNum ];
               
-//                var color1 = [new THREE.Color(0x00ffff), new THREE.Color(0xff0000), new THREE.Color(0xff0000)];
-//                var color2 = [new THREE.Color(0x00ffff), new THREE.Color(0x00ffff), new THREE.Color(0xff0000)];
+                var color1 = [new THREE.Color(0x00ffff), new THREE.Color(0xff0000), new THREE.Color(0xff0000)];
+                var color2 = [new THREE.Color(0x00ffff), new THREE.Color(0x00ffff), new THREE.Color(0xff0000)];
                                                                                     
-                var color1 = [new THREE.Color(0xff0000 ), new THREE.Color(0xff0000), new THREE.Color(0x00ffff)];
-                var color2 = [new THREE.Color(0xff0000), new THREE.Color(0x00ffff), new THREE.Color(0x00ffff)];
+                //var color1 = [new THREE.Color(0xff0000 ), new THREE.Color(0xff0000), new THREE.Color(0x00ffff)];
+                //var color2 = [new THREE.Color(0xff0000), new THREE.Color(0x00ffff), new THREE.Color(0x00ffff)];
                 
                 function recurse_geo(group, prepend) {
                     group.children = group.children.slice();
@@ -570,16 +570,16 @@ gl_FragColor.g = 1.0;
                 
                 meshVol_rocket = new THREE.Mesh(rocket_vol.children[0].children[0].geometry);
                 meshVol_rocket.position.set (0, 0, 0);
-                sceneVol.add (meshVol_rocket);
+                //sceneVol.add (meshVol_rocket);
                 
 //                rocket.position.set (-7,-15,0);
                 rocket.position.set (0, 0, 0);
-                scene.add (rocket);
+                //scene.add (rocket);
 
                 //TORUS
                 meshVol_torus = new THREE.Mesh(geoVol_torus);
                 meshVol_torus.position.set(0, 0, -5);
-                sceneVol.add(meshVol_torus);
+               // sceneVol.add(meshVol_torus);
                 
                 un_tor = {
                     texture: { value: loader.load( "textures/torus.jpg" ) }
@@ -592,7 +592,7 @@ gl_FragColor.g = 1.0;
 				    } );
                 mesh_torus = new THREE.Mesh(new THREE.TorusKnotGeometry(2, 0.5, 100, 16));
                 mesh_torus.position.set(0, 0, -5);
-                scene.add(mesh_torus);
+                //scene.add(mesh_torus);
                 
                 
                 //GROUND-PLATE
