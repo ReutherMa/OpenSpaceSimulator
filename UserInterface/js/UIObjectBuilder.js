@@ -14,8 +14,7 @@ $(function() {
     // build Sliders
     // RocketInterface
     // fill stages-array with stage-objects and create sliders
-    globalInterfaceValues.rocketTotalMass = 0;
-    rocketSlide("stages", 1, 4, 1, globalInterfaceValues.stage);
+    rocketSlide("stages", 1, 3, 1, globalInterfaceValues.stage);
     initDefaultValuesAndCreateLabels();
     for (var i = 1; i <= globalInterfaceValues.stages.length; i++) {
         // build slider with variables from global variable
@@ -176,7 +175,7 @@ function developerSlide(name, min, max, step, val) {
         slide: function(event, ui) {
             $("#" + name + "Label").text(ui.value);
         },
-        change: developerChange
+        stop: developerChange
     });
 }
 
@@ -189,7 +188,7 @@ function rocketSlide(name, min, max, step, val) {
         slide: function(event, ui) {
             $("#" + name + "Label").text(ui.value);
         },
-        change: rocketChange.bind(name)
+        stop: rocketChange.bind(name)
     });
 }
 
@@ -202,7 +201,7 @@ function thrustSlide(name, min, max, step, val) {
         slide: function(event, ui) {
             $("#" + name + "Label").text(ui.value);
         },
-        change: thrustChange.bind(name)
+        stop: thrustChange.bind(name)
     });
 }
 
@@ -215,7 +214,7 @@ function fuelSlide(name, min, max, step, val) {
         slide: function(event, ui) {
             $("#" + name + "Label").text(ui.value);
         },
-        change: fuelChange.bind(name)
+        stop: fuelChange.bind(name)
     });
 }
 /*function watchglob(glob) {
@@ -238,4 +237,8 @@ function zeroFill(number, width) {
         return new Array(width + (/\./.test(number) ? 2 : 1)).join('0') + number;
     }
     return number + ""; // always return a string
+}
+
+function buildSaturnVSliders(){
+    
 }

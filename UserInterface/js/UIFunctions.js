@@ -99,28 +99,25 @@ function developerChange() {
 }
 
 function rocketSelectChange() {
-    console.log(this);
     globalInterfaceValues.rocketName = $('select[name=rocketSelect]').val();
     if (globalInterfaceValues.rocketName == "spaceTaxi") {
         $("#editBox").hide();
     } else if (globalInterfaceValues.rocketName == "saturnV") {
         $("#editBox").show();
-        console.log(globalInterfaceValues);
         resetEditor();
     } else {
         var customRocket = "customRocket" + globalInterfaceValues.rocketName;
         $("#editBox").show();
         globalInterfaceValues = JSON.parse(localStorage.getItem(customRocket));
-        console.log(globalInterfaceValues);
         globalInterfaceValues.customRocketUsage = true;
         setSliderValuesAndLabels();
     }
     $("#rocketSelect-button").blur();
+    console.log(saturnV);
 }
 
 function fuelChange() {
     var stage = parseInt(this.substring(9, 10));
-    //console.log(this);
     fuelMassChanged(stage);
     $("#burningtime" + stage + "Label").text(globalInterfaceValues.stages[stage - 1].burningtime);
     rocketChange();
@@ -128,7 +125,6 @@ function fuelChange() {
 
 function thrustChange() {
     var stage = parseInt(this.substring(6, 7));
-    //console.log(this);
     thrustChanged(stage);
     $("#burningtime" + stage + "Label").text(globalInterfaceValues.stages[stage - 1].burningtime);
     $("#mass_empty" + stage + "Label").text(globalInterfaceValues.stages[stage - 1].mass_empty);
@@ -147,19 +143,18 @@ function rocketChange() {
     globalInterfaceValues.fuel_total = 0;
     globalInterfaceValues.rocketTotalMass = 0;
     for (var i = 1; i <= globalInterfaceValues.stages.length; i++) {
+        var mass_empty = 0;
+        var mass_fuel = 0;
+        var mass_total = 0;
+        var thrust = 0;
+        var burningtime = 0;
         if (i <= globalInterfaceValues.stage) {
-            var mass_empty = +$("#mass_empty" + i + "Label").text();
-            var mass_fuel = +$("#mass_fuel" + i + "Label").text();
-            var mass_total = mass_empty + mass_fuel;
-            var thrust = +$("#thrust" + i + "Label").text();
-            var burningtime = +$("#burningtime" + i + "Label").text();
-        } else {
-            var mass_empty = 0;
-            var mass_fuel = 0;
-            var mass_total = mass_empty + mass_fuel;
-            var thrust = 0;
-            var burningtime = 0;
-        }
+            mass_empty = +$("#mass_empty" + i + "Label").text();
+            mass_fuel = +$("#mass_fuel" + i + "Label").text();
+            mass_total = mass_empty + mass_fuel;
+            thrust = +$("#thrust" + i + "Label").text();
+            burningtime = +$("#burningtime" + i + "Label").text();
+        } 
 
         globalInterfaceValues.stages[i - 1] = {
             mass_empty: mass_empty,
@@ -193,6 +188,7 @@ function rocketChange() {
         globalInterfaceValues.rocketTotalMass += globalInterfaceValues.stages[i - 1].mass_total;
         // calculate fuelTotalMass
         globalInterfaceValues.fuel_total += globalInterfaceValues.stages[i - 1].mass_fuel;
+
     }
 
     // set values for rocketObject
@@ -200,6 +196,8 @@ function rocketChange() {
     saturnV.mass_total = globalInterfaceValues.rocketTotalMass;
     //$("#fuelTotalMassLabel").text(globalInterfaceValues.fuel_total);
     $("#rocketTotalMassLabel").text(globalInterfaceValues.rocketTotalMass);
+    
+    console.log(saturnV);
 
     $(".ui-slider-handle").blur();
     $("#rocketSelect-button").blur();
@@ -222,29 +220,29 @@ var obstaclePromptDisplayed = false; //false means it hasnt been shown yet
 
 function startNew(value) {
     $(".btn").blur();
-    if (value=="button" || obstaclePromptDisplayed == false) {
-        if (value=="button") {
-        $("#startNewDialog").text("Are you sure you want to reload the entire game? Everything will be set to default. Your custom rockets will still be available after reloading.");
-        } else if (value=="obstacle") {
-        $("#startNewDialog").text("Looks like you hit an obstacle. Restart game.");
-        obstaclePromptDisplayed = true;
-    }
-    $("#startNewDialog").dialog({
-        resizable: false,
-        height: "auto",
-        width: 400,
-        modal: true,
-        buttons: {
-            "Reload Game": function() {
-                $(this).dialog("close");
-                //window.open("OpenSpace.html","_self")
-                location.href = "OpenSpace.html";
-            },
-            "Cancel": function() {
-                $(this).dialog("close");
-            }
+    if (value == "button" || obstaclePromptDisplayed == false) {
+        if (value == "button") {
+            $("#startNewDialog").text("Are you sure you want to reload the entire game? Everything will be set to default. Your custom rockets will still be available after reloading.");
+        } else if (value == "obstacle") {
+            $("#startNewDialog").text("Looks like you hit an obstacle. Restart game.");
+            obstaclePromptDisplayed = true;
         }
-    });
+        $("#startNewDialog").dialog({
+            resizable: false,
+            height: "auto",
+            width: 400,
+            modal: true,
+            buttons: {
+                "Reload Game": function() {
+                    $(this).dialog("close");
+                    //window.open("OpenSpace.html","_self")
+                    location.href = "OpenSpace.html";
+                },
+                "Cancel": function() {
+                    $(this).dialog("close");
+                }
+            }
+        });
     }
 }
 
@@ -286,7 +284,7 @@ function saveCustomRocket(button) {
     globalInterfaceValues.rocketName = customRocketName;
     //var customRocketValues = globalInterfaceValues.timeFactor;
     localStorage.setItem(customRocketFullName, JSON.stringify(globalInterfaceValues));
-    customRocketButtonsString += "<option id='" + customRocketFullName + "'  value='" + customRocketName + "' title='Use Custom Rocket' onclick='loadCustomRocket(this)'>" + customRocketName + "</option>";
+    customRocketButtonsString += "<option id='" + customRocketFullName + "'  value='" + customRocketName + "' title='Use Custom Rocket' selected>" + customRocketName + "</option>";
     $(".btn").blur();
     $("#customRocketNameTextfield").blur();
     showCustomRocketButtons();
@@ -321,10 +319,6 @@ document.addEventListener('DOMContentLoaded', function() {
 function loadCustomRocket(button) {
     var customRocket = button.id;
     globalInterfaceValues = JSON.parse(localStorage.getItem(customRocket));
-    console.log(globalInterfaceValues);
-    console.log(globalInterfaceValues.timeFactor);
-    console.log(globalInterfaceValues.rocketTotalMass);
-    console.log(globalInterfaceValues);
     $(".btn").blur();
 }
 
@@ -345,8 +339,7 @@ function resetEditor() {
     globalInterfaceValues.stage = 3;
     $("#stagesLabel").text(globalInterfaceValues.stage);
     $("#stages").slider("option", "value", globalInterfaceValues.stage);
-
-
+    initializeRocket();
     initDefaultValuesAndCreateLabels();
     for (var i = 1; i <= globalInterfaceValues.stages.length; i++) {
         $("#mass_empty" + i).slider("option", "value", globalInterfaceValues.stages[i - 1].mass_empty);
@@ -355,7 +348,6 @@ function resetEditor() {
         $("#thrust" + i).slider("option", "value", globalInterfaceValues.stages[i - 1].thrust);
     }
 
-    //console.log(globalInterfaceValues);
     //rocketChange();
 }
 
@@ -460,5 +452,24 @@ function setSliderValuesAndLabels() {
         $("#mass_fuel" + i).slider("option", "value", globalInterfaceValues.stages[i - 1].mass_fuel);
         //$("#burningtime" + i).slider("option", "value", globalInterfaceValues.stages[i - 1].burningtime);
         $("#thrust" + i).slider("option", "value", globalInterfaceValues.stages[i - 1].thrust);
+    }
+    
+    //destroyAndRecreateSlider();
+}
+
+function destroyAndRecreateSlider(){
+    rocketSlide("stages", 1, 3, 1, globalInterfaceValues.stage);
+    initDefaultValuesAndCreateLabels();
+    for (var i = 1; i <= globalInterfaceValues.stages.length; i++) {
+        $( "#mass_empty" + i ).slider( "destroy" );
+        $( "#mass_fuel" + i ).slider( "destroy" );
+        $( "fuel" + i ).slider( "destroy" );
+    }
+    for (var i = 1; i <= globalInterfaceValues.stages.length; i++) {
+    // build slider with variables from global variable
+        rocketSlide("mass_empty" + i, 0, 100000, 100, globalInterfaceValues.stages[i - 1].mass_empty);
+        fuelSlide("mass_fuel" + i, 0, 3000000, 1000, globalInterfaceValues.stages[i - 1].mass_fuel);
+        //rocketSlide("burningtime" + i, 0, 6000, 10, globalInterfaceValues.stages[i - 1].burningtime);
+        thrustSlide("thrust" + i, 0, 50000000, 1000, globalInterfaceValues.stages[i - 1].thrust);
     }
 }

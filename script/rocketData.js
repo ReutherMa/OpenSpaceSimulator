@@ -8,9 +8,9 @@ Contact: openspacesimulation@gmail.com
 
 
 var rockets = loadRocketData("data/rockets.json");
-var rocket = rockets.saturn5;
+var rocketJSON = rockets.saturn5;
 var customRocketUsage = false;
-
+var saturnV = {};
 //from saturnV:
 var emptyWeightToThrustRatio = 0.006;
 
@@ -19,30 +19,34 @@ var specificImpulse = 3000;
 
 var gravity = 9.81;
 
-var saturnV = {
-    fuel_total: rocket.stage1.mass_fuel + rocket.stage2.mass_fuel + rocket.stage3.mass_fuel,
-    stage1: {
-        mass_empty: rocket.stage1.mass_empty,
-        mass_fuel: rocket.stage1.mass_fuel,
-        burningtime: rocket.stage1.burningtime,
-        thrust: rocket.stage1.thrust
-    },
-    stage2: {
-        mass_empty: rocket.stage2.mass_empty,
-        mass_fuel: rocket.stage2.mass_fuel,
-        burningtime: rocket.stage2.burningtime,
-        thrust: rocket.stage2.thrust
-    },
-    stage3: {
-        mass_empty: rocket.stage3.mass_empty,
-        mass_fuel: rocket.stage3.mass_fuel,
-        burningtime: rocket.stage3.burningtime,
-        thrust: rocket.stage3.thrust
-    },
-    height: rocket.height,
-    mass_total: rocket.mass_total,
-    thrust_launch: rocket.thrust_launch
-};
+initializeRocket();
+
+function initializeRocket() {
+    saturnV = {
+        fuel_total: rocketJSON.stage1.mass_fuel + rocketJSON.stage2.mass_fuel + rocketJSON.stage3.mass_fuel,
+        stage1: {
+            mass_empty: rocketJSON.stage1.mass_empty,
+            mass_fuel: rocketJSON.stage1.mass_fuel,
+            burningtime: rocketJSON.stage1.burningtime,
+            thrust: rocketJSON.stage1.thrust
+        },
+        stage2: {
+            mass_empty: rocketJSON.stage2.mass_empty,
+            mass_fuel: rocketJSON.stage2.mass_fuel,
+            burningtime: rocketJSON.stage2.burningtime,
+            thrust: rocketJSON.stage2.thrust
+        },
+        stage3: {
+            mass_empty: rocketJSON.stage3.mass_empty,
+            mass_fuel: rocketJSON.stage3.mass_fuel,
+            burningtime: rocketJSON.stage3.burningtime,
+            thrust: rocketJSON.stage3.thrust
+        },
+        height: rocketJSON.height,
+        mass_total: rocketJSON.mass_total,
+        thrust_launch: rocketJSON.thrust_launch
+    };
+}
 
 /*function loadRocket(){
 if(!customRocketUsage){
