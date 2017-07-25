@@ -68,6 +68,8 @@ $(function() {
         .iconselectmenu({
             change: developerChange,
             close: blurSelectMenu
+            
+        
         })
         .iconselectmenu("menuWidget")
         .addClass("ui-menu-icons avatar");

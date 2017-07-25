@@ -210,9 +210,9 @@ function buildUniverse() {
         lenslight.position.set(0,0,0); //695508e3 + 1000
         scene.add(lenslight);
         var textureLoader = new THREE.TextureLoader();
-        var textureFlare1 = textureLoader.load( "/textures/lens1.png" );
-		var textureFlare2 = textureLoader.load( "/textures/lens2.png" );
-		var textureFlare3 = textureLoader.load( "/textures/lens3.png" );
+        var textureFlare1 = textureLoader.load( "textures/lens1.png" );
+		var textureFlare2 = textureLoader.load( "textures/lens2.png" );
+		var textureFlare3 = textureLoader.load( "textures/lens3.png" );
 
         //textureFlare.depthTest = false;
         var flareColor = new THREE.Color( 0xffffff );

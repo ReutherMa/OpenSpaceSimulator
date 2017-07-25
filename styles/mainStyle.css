@@ -7,7 +7,7 @@ Contact: openspacesimulation@gmail.com
 
 @font-face {
     font-family: 'Roboto';
-    src: url('/UserInterface/Fonts/webfonts/roboto_light_macroman/Roboto-light-webfont.woff');
+    src: url('../UserInterface/Fonts/webfonts/roboto_light_macroman/Roboto-light-webfont.woff');
    /* src: url('Roboto-Regular-webfont.eot?#iefix') format('embedded-opentype'),
          url('Roboto-Regular-webfont.woff') format('woff'),
          url('Roboto-Regular-webfont.ttf') format('truetype'),
@@ -36,7 +36,7 @@ Contact: openspacesimulation@gmail.com
     width: 100%;
     height: 100%;
     background-color:black;
-    background-image: url("/UserInterface/img/loadingBackground.jpg");
+    background-image: url("../UserInterface/img/loadingBackground.jpg");
     text-align: center;
     z-index: 1000;
 }
@@ -106,7 +106,7 @@ div#testUI {
 
 .activeInterface {
     border: 1px solid #59b4d4 !important;
-    background: #0078a3 url(/UserInterface/jquery-ui-1.12.1.custom/images/ui-bg_glass_40_0078a3_1x400.png) 50% 50% repeat-x !important;
+    background: #0078a3 url(../UserInterface/jquery-ui-1.12.1.custom/images/ui-bg_glass_40_0078a3_1x400.png) 50% 50% repeat-x !important;
     font-weight: bold !important;
     color: #ffffff !important;
 }
@@ -114,7 +114,7 @@ div#testUI {
 .disabledInterfaceButton {
     border: 1px solid #3e3e3e !important;
     /*background: black !important;*/
-    background: grey url(/UserInterface/jquery-ui-1.12.1.custom/images/ui-bg_glass_20_555555_1x400_disabled.png) 50% 50% repeat-x !important;
+    background: grey url(../UserInterface/jquery-ui-1.12.1.custom/images/ui-bg_glass_20_555555_1x400_disabled.png) 50% 50% repeat-x !important;
     font-weight: bold !important;
     color: #676767 !important;
 }
