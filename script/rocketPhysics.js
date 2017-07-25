@@ -119,9 +119,16 @@ function drawFlightPrognosis(x, y, z){
 
 function calculateGravitationRocket(difftime){
     
-            var rx = - rocketGroup.position.x;
-            var ry = - rocketGroup.position.y;
-            var rz = - rocketGroup.position.z;
+    
+    for (var o in spaceObjects) {
+
+        var rx = spaceObjects[o].group.position.x - spaceObjects.earth.group.position.x + rocketGroup.position.x;
+        var ry = spaceObjects[o].group.position.y - spaceObjects.earth.group.position.y + rocketGroup.position.y;
+        var rz = spaceObjects[o].group.position.z - spaceObjects.earth.group.position.z + rocketGroup.position.z;
+    
+            //var rx = - rocketGroup.position.x;
+            //var ry = - rocketGroup.position.y;
+            //var rz = - rocketGroup.position.z;
             var dist2 = rx * rx + ry * ry + rz * rz;
             var dist = Math.sqrt(dist2);
             var mindist = 100;
@@ -154,6 +161,7 @@ function calculateGravitationRocket(difftime){
             
             
             var gravAccel = gravConst * spaceObjects.earth.mass / dist2;
+            //console.log(gravAccel);
             rocketGroup.speed.x += gravAccel * rx * dist * difftime;
             rocketGroup.speed.y += gravAccel * ry * dist * difftime;
             rocketGroup.speed.z += gravAccel * rz * dist * difftime;
@@ -163,7 +171,7 @@ function calculateGravitationRocket(difftime){
             rocketGroup.speed.z -= gravAccel * rz * dist * difftime;
             */
             
-                
+    }
             
         }
             

@@ -73,10 +73,10 @@ customRocket.thrust_launch = 9.81 * customRocket.mass_total;
 }*/
 
 function fuelMassChanged(stage) {
-    if(globalInterfaceValues.stages[stage - 1].thrust == 0){
+    if (globalInterfaceValues.stages[stage - 1].thrust == 0) {
         globalInterfaceValues.stages[stage - 1].burningtime = 0;
-    }else{
-    globalInterfaceValues.stages[stage - 1].burningtime = parseInt((globalInterfaceValues.stages[stage - 1].mass_empty + globalInterfaceValues.stages[stage - 1].mass_fuel) / (globalInterfaceValues.stages[stage - 1].thrust / (specificImpulse * gravity)));
+    } else {
+        globalInterfaceValues.stages[stage - 1].burningtime = parseInt((globalInterfaceValues.stages[stage - 1].mass_empty + globalInterfaceValues.stages[stage - 1].mass_fuel) / (globalInterfaceValues.stages[stage - 1].thrust / (specificImpulse * gravity)));
     }
     //customRocket.thrust_launch = globalInterfaceValues.customRocket.mass_total * gravity;
 }
@@ -92,14 +92,24 @@ function fuelMassChanged(stage) {
     customRocket.thrust_launch = globalInterfaceValues.customRocket.mass_total * gravity;
 }*/
 
-function thrustChanged(stage) {
-    if(globalInterfaceValues.stages[stage - 1].thrust == 0){
-        globalInterfaceValues.stages[stage - 1].mass_empty = 0;
-        globalInterfaceValues.stages[stage - 1].burningtime = 0;
-    }else{
-    globalInterfaceValues.stages[stage - 1].mass_empty = parseInt(globalInterfaceValues.stages[stage - 1].thrust * emptyWeightToThrustRatio);
+function emptyMassChanged(stage) {
 
     globalInterfaceValues.stages[stage - 1].burningtime = parseInt((globalInterfaceValues.stages[stage - 1].mass_empty + globalInterfaceValues.stages[stage - 1].mass_fuel) / (globalInterfaceValues.stages[stage - 1].thrust / (specificImpulse * gravity)));
+
+    var thrust = parseInt(( globalInterfaceValues.stages[stage - 1].mass_empty) / emptyWeightToThrustRatio);
+    if(thrust < globalInterfaceValues.stages[stage - 1].thrust){
+        globalInterfaceValues.stages[stage - 1].thrust = thrust;
+    }
+}
+
+function thrustChanged(stage) {
+    if (globalInterfaceValues.stages[stage - 1].thrust == 0) {
+        globalInterfaceValues.stages[stage - 1].mass_empty = 0;
+        globalInterfaceValues.stages[stage - 1].burningtime = 0;
+    } else {
+        globalInterfaceValues.stages[stage - 1].mass_empty = parseInt(globalInterfaceValues.stages[stage - 1].thrust * emptyWeightToThrustRatio);
+
+        globalInterfaceValues.stages[stage - 1].burningtime = parseInt((globalInterfaceValues.stages[stage - 1].mass_empty + globalInterfaceValues.stages[stage - 1].mass_fuel) / (globalInterfaceValues.stages[stage - 1].thrust / (specificImpulse * gravity)));
     }
 
     /*customRocket.thrust_launch = globalInterfaceValues.customRocket.mass_total * gravity;*/

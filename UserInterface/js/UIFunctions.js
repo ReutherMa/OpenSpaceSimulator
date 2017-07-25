@@ -112,6 +112,7 @@ function rocketSelectChange() {
         globalInterfaceValues.customRocketUsage = true;
         setSliderValuesAndLabels();
     }
+    rocketChange();
     $("#rocketSelect-button").blur();
 }
 
@@ -129,7 +130,16 @@ function thrustChange() {
     $("#mass_empty" + stage + "Label").text(globalInterfaceValues.stages[stage - 1].mass_empty);
     $("#mass_empty" + stage).slider("option", "value", globalInterfaceValues.stages[stage - 1].mass_empty);
     rocketChange();
+}
 
+function massChange() {
+    console.log(this.substring(10, 11));
+    var stage = parseInt(this.substring(10, 11));
+    emptyMassChanged(stage);
+    $("#burningtime" + stage + "Label").text(globalInterfaceValues.stages[stage - 1].burningtime);
+    $("#thrust" + stage + "Label").text(globalInterfaceValues.stages[stage - 1].thrust);
+    $("#thrust" + stage).slider("option", "value", globalInterfaceValues.stages[stage - 1].thrust);
+    rocketChange();
 }
 
 function rocketChange() {
@@ -195,7 +205,7 @@ function rocketChange() {
     saturnV.mass_total = globalInterfaceValues.rocketTotalMass;
     //$("#fuelTotalMassLabel").text(globalInterfaceValues.fuel_total);
     $("#rocketTotalMassLabel").text(globalInterfaceValues.rocketTotalMass);
-    
+        
     $(".ui-slider-handle").blur();
     $("#rocketSelect-button").blur();
     $(".ui-tabs").blur();
@@ -260,7 +270,6 @@ function cheatFuel() {
 var defaultRocketsString = "<option value='saturnV'>Saturn V</option><option value='spaceTaxi'>Space Taxi</option>";
 var customRocketButtonsString = "";
 
-
 function saveCustomRocket(button) {
     var customRocketName = document.getElementById("customRocketNameTextfield").value;
     $(".btn").blur();
@@ -276,7 +285,7 @@ function saveCustomRocket(button) {
                 setTimeout("$('#dialog').dialog('close')", 2500);
             }
         });
-        showCustomRocketButtons();
+    showCustomRocketButtons();
         } else {
            $("#dialog").html("Please give your rocket a name.").dialog({
             open: function(event, ui) {
@@ -295,7 +304,7 @@ function createSelectString() {
 function showCustomRocketButtons() {
     createSelectString();
     $("#rocketSelect").selectmenu("destroy").selectmenu({
-        change: rocketSelectChange
+        select: rocketSelectChange
     });
 }
 
@@ -348,6 +357,9 @@ function resetEditor() {
         //$("#burningtime" + i).slider("option", "value", globalInterfaceValues.stages[i - 1].burningtime);
         $("#thrust" + i).slider("option", "value", globalInterfaceValues.stages[i - 1].thrust);
     }
+    console.log(globalInterfaceValues);
+    console.log(saturnV);
+    
     //rocketChange();
 }
 

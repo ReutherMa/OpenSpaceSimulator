@@ -15,7 +15,7 @@ var global = {
 };
 
 //do we want to load textures? false for fast (and ugly) debugging mode
-var loadTextures = false;
+var loadTextures = true;
 var throttleSound;
 var rocket;
 var rocketGroup;
@@ -969,7 +969,7 @@ function buildUniverse() {
                 camera.near = 0.1;
                 camera.updateProjectionMatrix();
                 rocketGroup.add(camera);
-                camera.position.y = 0;
+                camera.position.y = 20;
                     camera.position.z = 50;
                 camera.position.x = 0;
                 //camera.rotateY(Math.PI/180 * 120);

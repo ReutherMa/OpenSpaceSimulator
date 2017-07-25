@@ -18,7 +18,7 @@ $(function() {
     initDefaultValuesAndCreateLabels();
     for (var i = 1; i <= globalInterfaceValues.stages.length; i++) {
         // build slider with variables from global variable
-        rocketSlide("mass_empty" + i, 100, 100000, 100, globalInterfaceValues.stages[i - 1].mass_empty);
+        massSlide("mass_empty" + i, 100, 300000, 100, globalInterfaceValues.stages[i - 1].mass_empty);
         fuelSlide("mass_fuel" + i, 0, 3000000, 1000, globalInterfaceValues.stages[i - 1].mass_fuel);
         //rocketSlide("burningtime" + i, 0, 6000, 10, globalInterfaceValues.stages[i - 1].burningtime);
         thrustSlide("thrust" + i, 0, 50000000, 1000, globalInterfaceValues.stages[i - 1].thrust);
@@ -72,7 +72,7 @@ $(function() {
         .iconselectmenu("menuWidget")
         .addClass("ui-menu-icons avatar");
     $("#rocketSelect").selectmenu({
-        change: rocketSelectChange,
+        select: rocketSelectChange,
         close: blurSelectMenu
     })
 
@@ -176,6 +176,19 @@ function developerSlide(name, min, max, step, val) {
             $("#" + name + "Label").text(ui.value);
         },
         stop: developerChange
+    });
+}
+
+function massSlide(name, min, max, step, val) {
+    $("#" + name).slider({
+        min: min,
+        max: max,
+        value: val,
+        step: step,
+        slide: function(event, ui) {
+            $("#" + name + "Label").text(ui.value);
+        },
+        stop: massChange.bind(name)
     });
 }
 
