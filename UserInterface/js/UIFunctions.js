@@ -33,6 +33,9 @@ function blurSelectMenu() {
     $(".ui-tabs-anchor").blur();
 }
 
+function deleteTextfieldValue() {
+    $("#customRocketNameTextfield").val("");
+}
 
 function doToggle(button) {
     $(".interfaceTab").hide(100);
