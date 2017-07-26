@@ -377,6 +377,7 @@ gl_FragColor.g = 1.0;
                 r_loader.load("models/cube_4.dae", 
                               function(collada) {
                                     rocket = collada.scene;   //var skin = collada.skins[ 0 ];
+                    rocket.position.set(-5, 0, 0);
                     
                                     init();
                               },
@@ -568,12 +569,12 @@ gl_FragColor.g = 1.0;
                 
 //                rocket_vol.position.set (-7,-15,0);
                 
-                meshVol_rocket = new THREE.Mesh(rocket_vol.children[0].children[0].geometry);
-                meshVol_rocket.position.set (0, 0, 0);
+                meshVol_rocket = new THREE.Mesh(rocket.children[0].children[0].geometry);
+                meshVol_rocket.position.set (-5, 0, 0);
                 //sceneVol.add (meshVol_rocket);
                 
 //                rocket.position.set (-7,-15,0);
-                rocket.position.set (0, 0, 0);
+                rocket.position.set (-5, 0, 0);
                 //scene.add (rocket);
 
                 //TORUS
@@ -623,7 +624,7 @@ gl_FragColor.g = 1.0;
                 
                 //MOON
                 meshVol_moon = new THREE.Mesh(geoVol_moon);
-                meshVol_moon.position.set(0, 2, 5);
+                meshVol_moon.position.set(0, 3, 5);
                 sceneVol.add(meshVol_moon);
                 
                 
@@ -641,7 +642,7 @@ gl_FragColor.g = 1.0;
                 
                 geo_moon  = new THREE.SphereGeometry(0.5, 64, 64);
                 mesh_moon = new THREE.Mesh(geo_moon);
-                mesh_moon.position.set(0, 2, 5);
+                mesh_moon.position.set(0, 3, 5);
                 scene.add(mesh_moon);
                 
                 
@@ -783,12 +784,12 @@ recurse_geo_material(rocket, shadowVolume_mat);
                 controls.update();
                 
                 //Stats
-                stats = new Stats();
-                stats.setMode(0);
-                stats.domElement.style.position = 'absolute';
-                stats.domElement.style.left = '0px';
-                stats.domElement.style.top = '0px';
-                document.body.appendChild(stats.domElement);
+                //stats = new Stats();
+                //stats.setMode(0);
+                //stats.domElement.style.position = 'absolute';
+                //stats.domElement.style.left = '0px';
+                //stats.domElement.style.top = '0px';
+                //document.body.appendChild(stats.domElement);
                 
                 renderVar = true;
 			}
@@ -814,7 +815,7 @@ recurse_geo_material(rocket, shadowVolume_mat);
                     //mesh_torus.rotation.y += 0.005;
                     if (renderVar){
                         render();
-                        stats.update();
+                        //stats.update();
                     }
                 
 			}
