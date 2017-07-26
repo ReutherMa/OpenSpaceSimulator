@@ -121,14 +121,17 @@ function calculateGravitationRocket(difftime){
     
     
     for (var o in spaceObjects) {
+        if(spaceObjects[o].name =="earth"){
+            
+            var rx = - rocketGroup.position.x;
+            var ry = - rocketGroup.position.y;
+            var rz = - rocketGroup.position.z;
+        }else{
 
         var rx = spaceObjects[o].group.position.x - spaceObjects.earth.group.position.x + rocketGroup.position.x;
         var ry = spaceObjects[o].group.position.y - spaceObjects.earth.group.position.y + rocketGroup.position.y;
         var rz = spaceObjects[o].group.position.z - spaceObjects.earth.group.position.z + rocketGroup.position.z;
-    
-            //var rx = - rocketGroup.position.x;
-            //var ry = - rocketGroup.position.y;
-            //var rz = - rocketGroup.position.z;
+    }
             var dist2 = rx * rx + ry * ry + rz * rz;
             var dist = Math.sqrt(dist2);
             var mindist = 100;
@@ -138,7 +141,7 @@ function calculateGravitationRocket(difftime){
             if(watchoutearth && (dist - spaceObjects.earth.radius) < mindist){
                 //prompt("You are getting dangerously close to "+spaceObjects.earth.name+", watch out!");
             }
-            if(dist - spaceObjects.earth.radius <= 1){
+            if(rocketHeight <=0){
                 explode();
             }
             if(ctr==0){accel=0;ctr++;}
@@ -159,23 +162,26 @@ function calculateGravitationRocket(difftime){
             //if(ctr==0){accel=0;ctr++;}
             dist = 1 / dist;
             
-            
-            var gravAccel = gravConst * spaceObjects.earth.mass / dist2;
+            console.log("speed befor:"+rocketGroup.speed.length());
+            var gravAccel = gravConst * spaceObjects[o].mass / dist2;
             //console.log(gravAccel);
             rocketGroup.speed.x += gravAccel * rx * dist * difftime;
             rocketGroup.speed.y += gravAccel * ry * dist * difftime;
             rocketGroup.speed.z += gravAccel * rz * dist * difftime;
+            console.log("gravaccel:" +  gravAccel);
+            console.log(gravAccel * rx * dist * difftime);
+            console.log("speed after:"+rocketGroup.speed.length());
             
             /*rocketGroup.speed.x -= gravAccel * rx * dist * difftime;
             rocketGroup.speed.y -= gravAccel * ry * dist * difftime;
             rocketGroup.speed.z -= gravAccel * rz * dist * difftime;
             */
             
-    }
+    
             
         }
             
-        
+}
         
     
 
