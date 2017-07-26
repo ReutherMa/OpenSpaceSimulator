@@ -688,7 +688,7 @@ function buildUniverse() {
                     }
                     //material.depthTest = false;
                     
-                    var geometry_cloud = new THREE.SphereGeometry(radius * 1.02, segments, segments);
+                    var geometry_cloud = new THREE.SphereGeometry(radius * 1.002, segments, segments);
                     if(loadTextures){
                         var material_cloud = new THREE.MeshLambertMaterial({
                         map: loader.load(path_tex + "_mapcloud.png"),
