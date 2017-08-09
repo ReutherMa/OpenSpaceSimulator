@@ -195,7 +195,6 @@ TODO: prompt
 function moveRocket(difftime) {
     scene.updateMatrixWorld();
 
-    //var difftime = difftime/1000;
     //calculates fuel-mass that will be lost in difftime
     var mass_lost = difftime / saturnV["stage" + globalInterfaceValues.currentStage].burningtime * saturnV["stage" + globalInterfaceValues.currentStage].mass_fuel * throttle / 100;
     
@@ -213,8 +212,7 @@ function moveRocket(difftime) {
     //checks if enough fuel
     if ((fuel_mass - mass_lost) >= 0 || globalInterfaceValues.fuelCheat) {
         //a=F/m(now mass WITH fuel to lose)
-        accel = (saturnV["stage" + globalInterfaceValues.currentStage].thrust * (throttle/100)) / (mass); //rocket werte stimmen, einheiten sind richtig, berechnungsart stimmt
-        
+        accel = (saturnV["stage" + globalInterfaceValues.currentStage].thrust * (throttle/100)) / (mass);         
         // a = (F(thrust) - F(Air Resistance)) / m(rocketMass)
         calculateAirResistance(rocketGroup.speed.length());
         //console.log("airResistance: " + airResistance);
@@ -463,7 +461,7 @@ function nextStage() {
             prompt("There are no stages left.");
         }else{
             mass = mass - saturnV[oldStage]["mass_empty"] - fuel_mass;
-            fuel_mass = saturnV[newStage]["mass_empty"];
+            fuel_mass = saturnV[newStage]["mass_fuel"];
             stage++;
             prompt("Discarded Stage "+(stage-1)+". Current Stage: "+stage);
             globalInterfaceValues.currentStage++;
@@ -514,11 +512,9 @@ function calculateAirResistance(speed){
     var earthHeight = 148483220086.37973;
     
     height = height - earthRadius;
-    //height = height / 1000;
     
     if(height < 36000){
     //calculation of pressure: https://de.wikipedia.org/wiki/Barometrische_H%C3%B6henformel#Internationale_H.C3.B6henformel
-    // old value: var pressure = 1013.25 * (Math.pow((1 - ((0.0065*height)/288.15)), 5.255));
     var pressure = 101325 * (Math.pow((1 - ((0.0065*height)/288.15)), 5.255));
     
     //cross sectional area
