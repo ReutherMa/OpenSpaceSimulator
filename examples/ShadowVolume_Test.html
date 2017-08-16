@@ -46,7 +46,6 @@ varying vec4 col;
                gl_Position.z = (gl_Position.z - 1.0) * gl_Position.w;
   #endif
 #endif
-col = vec4 (color, 1.0);
             }
 		</script>
         
@@ -374,7 +373,7 @@ gl_FragColor.g = 1.0;
                 var r_loader = new THREE.ColladaLoader(); 
                 r_loader.options.convertUpAxis = true; 
                 
-                r_loader.load("models/cube_4.dae", 
+                r_loader.load("models/launchpad.dae", 
                               function(collada) {
                                     rocket = collada.scene;   //var skin = collada.skins[ 0 ];
                     rocket.position.set(-5, 0, 0);
@@ -530,14 +529,9 @@ gl_FragColor.g = 1.0;
                                                                    arr_geoVol[j].faces[i].normal,
                                                                    color1));
                         
-                        
-                        arr_geoVol[j].faceVertexUvs[0].push([new THREE.Vector2(), new THREE.Vector2(), new THREE.Vector2()]);
-                        arr_geoVol[j].faceVertexUvs[0].push([new THREE.Vector2(), new THREE.Vector2(), new THREE.Vector2()]);
-                        arr_geoVol[j].faceVertexUvs[0].push([new THREE.Vector2(), new THREE.Vector2(), new THREE.Vector2()]);
-                        arr_geoVol[j].faceVertexUvs[0].push([new THREE.Vector2(), new THREE.Vector2(), new THREE.Vector2()]);
-                        arr_geoVol[j].faceVertexUvs[0].push([new THREE.Vector2(), new THREE.Vector2(), new THREE.Vector2()]);
-                        arr_geoVol[j].faceVertexUvs[0].push([new THREE.Vector2(), new THREE.Vector2(), new THREE.Vector2()]);
-                    
+                        for (var uV = 0; uV <6; uV++){
+                            arr_geoVol[j].faceVertexUvs[0].push([new THREE.Vector2(), new THREE.Vector2(), new THREE.Vector2()]);
+                        }
                     }
                 }
                 
@@ -571,11 +565,11 @@ gl_FragColor.g = 1.0;
                 
                 meshVol_rocket = new THREE.Mesh(rocket.children[0].children[0].geometry);
                 meshVol_rocket.position.set (-5, 0, 0);
-                //sceneVol.add (meshVol_rocket);
+                sceneVol.add (meshVol_rocket);
                 
 //                rocket.position.set (-7,-15,0);
                 rocket.position.set (-5, 0, 0);
-                //scene.add (rocket);
+                scene.add (rocket);
 
                 //TORUS
                 meshVol_torus = new THREE.Mesh(geoVol_torus);
@@ -829,7 +823,7 @@ recurse_geo_material(rocket, shadowVolume_mat);
                 
                 
                 
-recurse_geo_material(rocket, ambient_spaceObj_mat);
+                recurse_geo_material(rocket, ambient_spaceObj_mat);
                 
                 //rocket.material = ambient_spaceObj_mat;
                 mesh_torus.material  = ambient_spaceObj_mat;
@@ -855,7 +849,7 @@ recurse_geo_material(rocket, ambient_spaceObj_mat);
                 
                 
                 
-recurse_geo_material(rocket, shaderMat_basic);
+                recurse_geo_material(rocket, shaderMat_basic);
                 
                 //rocket.material = shaderMat_basic;
                 mesh_torus.material  = shaderMat_tor;
@@ -867,7 +861,7 @@ recurse_geo_material(rocket, shaderMat_basic);
                 
                 gl.colorMask(true, true, true, true);
                 gl.depthMask(true);
-gl.enable(gl.STENCIL_TEST);
+                gl.enable(gl.STENCIL_TEST);
                 gl.enable(gl.CULL_FACE);
                 gl.stencilOpSeparate(gl.FRONT, gl.KEEP, gl.KEEP, gl.KEEP);
                 gl.stencilOpSeparate(gl.BACK, gl.KEEP, gl.KEEP, gl.KEEP);
@@ -877,8 +871,8 @@ gl.enable(gl.STENCIL_TEST);
                 
                 mesh_earth.rotateY(0.0025);
                 meshVol_earth.rotateY(0.0025);
-                //mesh_torus.rotateZ(0.01);
-                //meshVol_torus.rotateZ(0.01);
+                mesh_torus.rotateZ(0.01);
+                meshVol_torus.rotateZ(0.01);
                 
 			}
 		</script>  
