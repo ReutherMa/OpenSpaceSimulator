@@ -206,7 +206,7 @@ function buildUniverse() {
         
         //lensflare
         
-        //var lenslight = new THREE.PointLight( 0xffffff, 1.5, 0 );
+        var lenslight = new THREE.PointLight( 0xffffff, 1.5, 0 );
         //lenslight.position.set(0,0,0); //695508e3 + 1000
         //scene.add(lenslight);
         var textureLoader = new THREE.TextureLoader();
@@ -235,7 +235,7 @@ function buildUniverse() {
         lensFlare.add ( textureFlare3, 1000, 0.0, THREE.AdditiveBlending, flareColor );
         lensFlare.add ( textureFlare3, 1200, 0.0, THREE.AdditiveBlending, flareColor );
         
-        //lensFlare.position.copy( lenslight.position );
+        lensFlare.position.copy( lenslight.position );
         //lensFlare.position.set(0,0,0);
         scene.add( lensFlare );
         
@@ -821,7 +821,7 @@ function buildUniverse() {
                 geo_buf.setDrawRange( 0, drawCount );
             };
             this.trailLine = geo_line;
-            //scene.add( geo_line );
+            scene.add( geo_line );
         }
 
         /* Set Position of the Planet */
