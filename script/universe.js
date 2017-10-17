@@ -267,20 +267,6 @@ function buildUniverse() {
         });*/
         
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
 
         //renderer
         renderer = new THREE.WebGLRenderer({
