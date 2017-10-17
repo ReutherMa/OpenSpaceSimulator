@@ -162,15 +162,15 @@ function calculateGravitationRocket(difftime){
             //if(ctr==0){accel=0;ctr++;}
             dist = 1 / dist;
             
-            console.log("speed befor:"+rocketGroup.speed.length());
+            //console.log("speed befor:"+rocketGroup.speed.length());
             var gravAccel = gravConst * spaceObjects[o].mass / dist2;
             //console.log(gravAccel);
             rocketGroup.speed.x += gravAccel * rx * dist * difftime;
             rocketGroup.speed.y += gravAccel * ry * dist * difftime;
             rocketGroup.speed.z += gravAccel * rz * dist * difftime;
-            console.log("gravaccel:" +  gravAccel);
-            console.log(gravAccel * rx * dist * difftime);
-            console.log("speed after:"+rocketGroup.speed.length());
+            //console.log("gravaccel:" +  gravAccel);
+            //console.log(gravAccel * rx * dist * difftime);
+            //console.log("speed after:"+rocketGroup.speed.length());
             
             /*rocketGroup.speed.x -= gravAccel * rx * dist * difftime;
             rocketGroup.speed.y -= gravAccel * ry * dist * difftime;
@@ -450,8 +450,8 @@ next stage: UI-Event, initiated by user
 */
 function nextStage() {
     if(!noStagesLeft){
-        console.log("nxstage called");
-        console.log(globalControlValues.discardStage);
+        //console.log("nxstage called");
+        //console.log(globalControlValues.discardStage);
         //generic:
         var oldStage = "stage"+stage;
         var newStage = "stage"+(stage+1);
@@ -462,11 +462,10 @@ function nextStage() {
         }else{
             mass = mass - saturnV[oldStage]["mass_empty"] - fuel_mass;
             fuel_mass = saturnV[newStage]["mass_fuel"];
-            stage++;
-            prompt("Discarded Stage "+(stage-1)+". Current Stage: "+stage);
             globalInterfaceValues.currentStage++;
+            prompt("Discarded Stage "+(globalInterfaceValues.currentStage-1)+". Current Stage: "+globalInterfaceValues.currentStage);
             $('#currentStageDisplay').val(globalInterfaceValues.currentStage).change();
-            console.log("current stage:"+stage);
+            //console.log("current stage:"+stage);
             
         }
     }else{
@@ -483,7 +482,7 @@ function nextStage() {
         stage = 3;
     } */
     globalControlValues.discardStage = false;
-    console.log(globalControlValues.discardStage);
+    //console.log(globalControlValues.discardStage);
     
 }
 
