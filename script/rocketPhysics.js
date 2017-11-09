@@ -225,7 +225,11 @@ function moveRocket(difftime) {
             fuel_mass = fuel_mass - mass_lost;
         }
         
-        $('#fuelGauge .gauge-arrow').trigger('updateGauge', fuel_mass / saturnV.fuel_total * 100 );
+        var curstage = "stage" + stage;
+        console.log(stage);
+        console.log(saturnV[curstage].mass_fuel);
+        $('#fuelGauge .gauge-arrow').trigger('updateGauge', fuel_mass / saturnV[curstage].mass_fuel * 100 );
+        
         $("#fuelGaugeLabel").text(parseInt(fuel_mass / 1000));
         
     } else {
@@ -455,14 +459,16 @@ function nextStage() {
         //generic:
         var oldStage = "stage"+stage;
         var newStage = "stage"+(stage+1);
+        throttle=0;
         currentStage = newStage;
-        if(newStage > globalInterfaceValues.stage){
+        if(newStage > globalInterfaceValues.stage  || saturnV[newStage] == undefined){
             noStagesLeft = true;
             prompt("There are no stages left.");
         }else{
             mass = mass - saturnV[oldStage]["mass_empty"] - fuel_mass;
             fuel_mass = saturnV[newStage]["mass_fuel"];
             globalInterfaceValues.currentStage++;
+            stage++;
             prompt("Discarded Stage "+(globalInterfaceValues.currentStage-1)+". Current Stage: "+globalInterfaceValues.currentStage);
             $('#currentStageDisplay').val(globalInterfaceValues.currentStage).change();
             //console.log("current stage:"+stage);

@@ -15,6 +15,8 @@ var globalControlValues = {
     rollLeft: false,
     rollRight: false,
     throttle: false,
+    throttleUp: false,
+    throttleDown: false,
     brake: false,
     startPause: false,
     reset: false,
@@ -36,7 +38,10 @@ var keyCode = {
     enter: 13,
     r: 82,
     x: 88,
-    c: 67
+    c: 67,
+    alt: 18,
+    shift: 16,
+    ctrl: 17
 };
 
 //TODO: Quit setzen
@@ -65,8 +70,11 @@ $(document).ready(function() {
             case keyCode.e:
                 globalControlValues.rollRight = true;
                 break;
-            case keyCode.space:
-                globalControlValues.throttle = true;
+            case keyCode.shift:
+                globalControlValues.throttleUp = true;
+                break;
+            case keyCode.ctrl:
+                globalControlValues.throttleDown = true;
                 break;
             case keyCode.b:
                 globalControlValues.brake = true;
@@ -120,8 +128,11 @@ $(document).ready(function() {
             case keyCode.e:
                 globalControlValues.rollRight = false;
                 break;
-            case keyCode.space:
-                globalControlValues.throttle = false;
+            case keyCode.shift:
+                globalControlValues.throttleUp = false;
+                break;
+            case keyCode.ctrl:
+                globalControlValues.throttleDown = false;
                 break;
             case keyCode.b:
                 globalControlValues.brake = false;
@@ -165,7 +176,10 @@ $(document).ready(function() {
                 globalControlValues.rollRight = true;
                 break;
             case "throttle":
-                globalControlValues.throttle = true;
+                globalControlValues.throttleUp = true;
+                break;
+            case "throttledown":
+                globalControlValues.throttleDown = true;
                 break;
             case "brake":
                 globalControlValues.brake = true;
@@ -219,7 +233,10 @@ $(document).ready(function() {
                 globalControlValues.rollRight = false;
                 break;
             case "throttle":
-                globalControlValues.throttle = false;
+                globalControlValues.throttleUp = false;
+                break;
+            case "throttledown":
+                globalControlValues.throttleDown = false;
                 break;
             case "brake":
                 globalControlValues.brake = false;

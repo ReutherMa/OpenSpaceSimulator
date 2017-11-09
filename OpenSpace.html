@@ -255,6 +255,31 @@ Contact: openspacesimulation@gmail.com
     -->
             </div>
             <div class="gameBox">
+                 <div class="simulationBox">
+                    <div class="developerBox">
+                        <div id="cameraBox">
+                            <fieldset>
+                                <legend>Camera</legend>
+                                <!--<select onchange="switchCamera(this.value)">-->
+                                <select name="planetCamera" id="planetCamera">
+                                    <option value="sun" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/sun30x30.png');">Sun</option>
+                                    <option value="mercury" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/mercury30x30.png');">Mercury</option>
+                                    <option value="venus" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/venus30x30.png');">Venus</option>
+                                    <option value="earth" selected="true" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/earth30x30.png');">Earth</option>
+                                    <option value="earth_moon" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/moon30x30.png');">Moon</option>
+                                    <option value="mars" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/mars30x30.png');">Mars</option>
+                                    <option value="jupiter" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/jupiter30x30.png');">Jupiter</option>
+                                    <option value="saturn" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/saturn30x30.png');">Saturn</option>
+                                    <option value="uranus" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/uranus30x30.png');">Uranus</option>
+                                    <option value="neptune" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/neptune30x30.png');">Neptune</option>
+                                    <option value="launchpad" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/launch30x302.png');">Launchpad</option>
+                                    <option value="rocket" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/rocket30x30.png');">Rocket</option>
+                                    <option value="pluto" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/pluto30x30.png');">Pluto</option>
+                                </select>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
                 <div class="controlBox">
                     <fieldset class="fieldSetPadding">
                         <legend>Planet Size</legend>
@@ -301,31 +326,6 @@ Contact: openspacesimulation@gmail.com
                             <input type="reset" name="reset" value="Reset" />
                         </div>-->
                 </div>
-                <div class="simulationBox">
-                    <div class="developerBox">
-                        <div id="cameraBox">
-                            <fieldset>
-                                <legend>Camera</legend>
-                                <!--<select onchange="switchCamera(this.value)">-->
-                                <select name="planetCamera" id="planetCamera">
-                                    <option value="sun" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/sun30x30.png');">Sun</option>
-                                    <option value="mercury" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/mercury30x30.png');">Mercury</option>
-                                    <option value="venus" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/venus30x30.png');">Venus</option>
-                                    <option value="earth" selected="true" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/earth30x30.png');">Earth</option>
-                                    <option value="earth_moon" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/moon30x30.png');">Moon</option>
-                                    <option value="mars" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/mars30x30.png');">Mars</option>
-                                    <option value="jupiter" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/jupiter30x30.png');">Jupiter</option>
-                                    <option value="saturn" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/saturn30x30.png');">Saturn</option>
-                                    <option value="uranus" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/uranus30x30.png');">Uranus</option>
-                                    <option value="neptune" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/neptune30x30.png');">Neptune</option>
-                                    <option value="launchpad" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/launch30x302.png');">Launchpad</option>
-                                    <option value="rocket" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/rocket30x30.png');">Rocket</option>
-                                    <option value="pluto" data-class="avatar" data-style="background-image: url('/UserInterface/PlanetPNGs/pluto30x30.png');">Pluto</option>
-                                </select>
-                            </fieldset>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
         <!-- Developer Interface End -->
@@ -349,7 +349,8 @@ Contact: openspacesimulation@gmail.com
                     <br>
                     <div class="keyAssignmentBox">
                         <h3 class="infoLabel">Key Assignment:</h3>
-                        space = throttle
+                        Shift = throttle Up
+                        <br>Ctrl / Strg = Throttle Down
                         <br>w = tilt forwards (X rotation)
                         <br>s = tilt backwards (X rotation)
                         <br>a = tilt leftwards (Z rotation)
@@ -441,13 +442,15 @@ Contact: openspacesimulation@gmail.com
                                     <input type="button" name="left" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf060;" title="tilt leftwards">
                                     <input type="button" name="down" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf063;" title="tilt backwards">
                                     <input type="button" name="right" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf061;" title="tilt rightwards">
-                                    <input type="button" name="sas" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf0cc;" title="SAS Stabilisation">
+                                    <input type="button" name="throttledown" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf0d7; &#xf06d;" title="Less Throttle">
                                 </div>
                                 <div class="currentStageDisplayBox" title="Current Stage">
                                     <input class="XS" id="currentStageDisplay" />
                                 </div>
                                 <div class="discardStageButtonBox">
                                     <input type="button" name="discardStageButton" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf07d;" title="Discard Stage">
+                                    <br>
+                                    <input type="button" name="sas" class="btn fa ui-button ui-widget ui-corner-all" value="&#xf0cc;" title="SAS Stabilisation">
                                 </div>
                             </div>
                         </div>

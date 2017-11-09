@@ -154,10 +154,10 @@ function calculatePhysics(difftime, spaceObjects) {
         throttleSound.setVolume(throttle/100);
     }
     
-    if( globalControlValues.throttle && throttle<100 ){
+    if( globalControlValues.throttleUp && throttle<100 ){
         throttle += 5;
         }
-    if( !globalControlValues.throttle && throttle>0 ){
+    if( globalControlValues.throttleDown && throttle>0 ){
         throttle -= 5;
         }
     if( throttle<=0 ){
