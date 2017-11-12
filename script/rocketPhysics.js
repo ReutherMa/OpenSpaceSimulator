@@ -24,6 +24,8 @@ var earthRadius = 0;
 var cotr = 0;
 var accel = 0;
 
+
+
 var currentStage = 1;
 
 //var speedVec = new THREE.Vector3();
@@ -211,6 +213,7 @@ function moveRocket(difftime) {
      
     //checks if enough fuel
     if ((fuel_mass - mass_lost) >= 0 || globalInterfaceValues.fuelCheat) {
+        
         //a=F/m(now mass WITH fuel to lose)
         accel = (saturnV["stage" + globalInterfaceValues.currentStage].thrust * (throttle/100)) / (mass);         
         // a = (F(thrust) - F(Air Resistance)) / m(rocketMass)
@@ -238,7 +241,11 @@ function moveRocket(difftime) {
         }
         else{
             prompt("Seems like you have run out of fuel. Discard current rocket stage.");
+            enough_fuel_left = false;
         }
+        throttle = 0;
+        $('#throttleGauge .gauge-arrow').trigger('updateGauge', throttle);
+        $("#throttleGaugeLabel").text(parseInt(throttle)); 
                 
     }
     
@@ -460,6 +467,8 @@ function nextStage() {
         var oldStage = "stage"+stage;
         var newStage = "stage"+(stage+1);
         throttle=0;
+        $('#throttleGauge .gauge-arrow').trigger('updateGauge', throttle);
+        $("#throttleGaugeLabel").text(parseInt(throttle)); 
         currentStage = newStage;
         if(newStage > globalInterfaceValues.stage  || saturnV[newStage] == undefined){
             noStagesLeft = true;
@@ -471,6 +480,7 @@ function nextStage() {
             stage++;
             prompt("Discarded Stage "+(globalInterfaceValues.currentStage-1)+". Current Stage: "+globalInterfaceValues.currentStage);
             $('#currentStageDisplay').val(globalInterfaceValues.currentStage).change();
+            enough_fuel_left = true;
             //console.log("current stage:"+stage);
             
         }

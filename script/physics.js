@@ -30,6 +30,8 @@ var accelOX=0;
 var accelOY=0;
 var accelOZ=0;
 
+var enough_fuel_left = true;
+
 //another counter for stuff
 var count = 0;
 
@@ -154,11 +156,11 @@ function calculatePhysics(difftime, spaceObjects) {
         throttleSound.setVolume(throttle/100);
     }
     
-    if( globalControlValues.throttleUp && throttle<100 ){
-        throttle += 5;
+    if( globalControlValues.throttleUp && throttle<100 && enough_fuel_left){
+        throttle += 1;
         }
     if( globalControlValues.throttleDown && throttle>0 ){
-        throttle -= 5;
+        throttle -= 1;
         }
     if( throttle<=0 ){
         global.audio = false;
